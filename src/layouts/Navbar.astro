@@ -1,0 +1,13 @@
+---
+import NavbarTitle from '../components/navbar/NavbarTitle.astro'
+import NavbarNav from '../components/navbar/NavbarNav.astro'
+import NavbarUtility from '../components/navbar/NavbarUtility.astro'
+
+const {siteTitle} = Astro.props
+---
+
+<nav class="solitude-navbar flex flex-row items-center h-24">
+    <NavbarTitle siteTitle={siteTitle}/>
+    <NavbarNav/>
+    <NavbarUtility/>
+</nav>
