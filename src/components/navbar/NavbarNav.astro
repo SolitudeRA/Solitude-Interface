@@ -1,6 +1,19 @@
 ---
+interface Props {
+    navItemList: string[];
+}
 
+const {navItemList} = Astro.props;
 ---
-<div>
 
+<div class="solitude-navbar-nav-container flex items-center space-x-14 h-full">
+    {
+        navItemList.map((navItem: string) => {
+            return (
+                    <span class="text-center">
+                            <a>{navItem}</a>
+                    </span>
+            );
+        })
+    }
 </div>

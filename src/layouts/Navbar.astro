@@ -1,13 +1,24 @@
 ---
-import NavbarTitle from '../components/navbar/NavbarTitle.astro'
-import NavbarNav from '../components/navbar/NavbarNav.astro'
-import NavbarUtility from '../components/navbar/NavbarUtility.astro'
+import NavbarTitle from '../components/navbar/NavbarBrand.astro';
+import NavbarNav from '../components/navbar/NavbarNav.astro';
+import NavbarUtility from '../components/navbar/NavbarUtility.astro';
+import NavbarBrand from "../components/navbar/NavbarBrand.astro";
 
-const {siteTitle} = Astro.props
+import type {ImageMetadata} from "astro";
+
+interface Props {
+    logoImage: ImageMetadata
+    siteTitle: string;
+    navItemList: string[];
+}
+
+const {logoImage, siteTitle, navItemList} = Astro.props;
 ---
 
-<nav class="solitude-navbar flex flex-row items-center h-24">
-    <NavbarTitle siteTitle={siteTitle}/>
-    <NavbarNav/>
-    <NavbarUtility/>
+<nav class="solitude-navbar">
+    <div class="flex h-36">
+        <NavbarBrand logoImage={logoImage} siteTitle={siteTitle}/>
+        <NavbarNav navItemList={navItemList}/>
+        <NavbarUtility/>
+    </div>
 </nav>
