@@ -1,3 +1,11 @@
+---
+interface Props {
+    siteTitle: string
+}
+
+const {siteTitle} = Astro.props
+---
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,9 +14,15 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
     <meta name="generator" content={Astro.generator}/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Astro Basics</title>
+    <title>{siteTitle}</title>
 </head>
-<body class="h-lvh">
+<body class="solitude-body h-lvh">
 <slot/>
 </body>
 </html>
+
+<style>
+    .solitude-body {
+
+    }
+</style>

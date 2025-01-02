@@ -13,9 +13,13 @@
   "dependencies": {
     "@astrojs/react": "^4.1.2",
     "@astrojs/tailwind": "^5.1.4",
+    "@fontsource-variable/noto-sans-sc": "^5.1.1",
+    "@fontsource-variable/noto-serif-sc": "^5.1.1",
+    "@nextui-org/react": "^2.6.10",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "astro": "^5.1.1",
+    "framer-motion": "^11.15.0",
     "jotai": "^2.11.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

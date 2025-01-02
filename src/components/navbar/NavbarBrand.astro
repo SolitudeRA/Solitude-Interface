@@ -4,15 +4,26 @@ import type {ImageMetadata} from "astro";
 
 interface Props {
     logoImage: ImageMetadata,
-    siteTitle: string
+    siteTitle: string,
+    siteSubTitle: string
 }
 
-const {logoImage, siteTitle} = Astro.props;
+const {logoImage, siteTitle, siteSubTitle} = Astro.props;
 ---
 
-<div class="solitude-navbar-title-container h-full">
-    <div class="flex items-center px-10 space-x-10 h-full">
-        <Image class="h-24 w-auto" src={logoImage} alt="logo-image"/>
-        <a class="text-center text-4xl font-bold subpixel-antialiased">{siteTitle}</a>
+<div class="solitude-navbar-brand tw-flex tw-items-center tw-px-10 tw-space-x-10 tw-h-full">
+    <Image src={logoImage} alt="brand-logo" loading="eager"/>
+    <div class="tw-grid tw-grid-cols-1 tw-gap-3">
+        <a class="tw-text-4xl tw-font-bold tw-subpixel-antialiased">{siteTitle}</a>
+        <a class="tw-text-xl tw-font-medium tw-subpixel-antialiased">{siteSubTitle}</a>
     </div>
 </div>
+
+<style>
+    .solitude-navbar-brand img {
+        border-radius : 20%;
+        height        : 50%;
+        min-height    : 100px;
+        width         : auto;
+    }
+</style>

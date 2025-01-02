@@ -1,0 +1,28 @@
+---
+interface Props {
+    navItemList: string[];
+}
+
+const {navItemList} = Astro.props;
+---
+
+<div class="solitude-docker-nav tw-flex tw-items-center tw-justify-center tw-space-x-20 tw-text-white tw-bg-zinc-800 tw-shadow-xl">
+    {
+        navItemList.map((navItem: string) => {
+            return (
+                    <div>
+                        <a class="tw-font-medium">{navItem}</a>
+                    </div>
+            );
+        })
+    }
+</div>
+
+<style>
+    .solitude-docker-nav {
+        border-radius : 1.5vw;
+        width         : 35vw;
+        height        : 60%;
+        opacity       : 85%;
+    }
+</style>

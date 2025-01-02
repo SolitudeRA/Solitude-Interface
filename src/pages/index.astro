@@ -2,13 +2,16 @@
 import '../styles/global.css';
 
 import Layout from '../layouts/Layout.astro';
-import Navbar from '../layouts/Navbar.astro';
 import logoImage from '../assets/solitude-logo.png'
+import IndexMain from "../layouts/index/IndexMain.astro";
+import Navbar from "../layouts/index/Navbar.astro";
+import Dock from "../layouts/global/Dock.astro";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import '@fontsource-variable/noto-sans-sc';
 ---
 
-<Layout>
-    <Navbar logoImage={logoImage} siteTitle="protogalaxy" navItemList={["Home", "Steam", "About me", "Contact", "RSS", "Privacy Policy"]}/>
+<Layout siteTitle="Protogalaxy">
+    <Navbar logoImage={logoImage} siteTitle="Protogalaxy" siteSubTitle="In solitude, where we are least alone"/>
+    <IndexMain siteTitle="Protogalaxy"/>
+    <Dock navItemList={["Home", "Posts", "About Me", "Contact", "RSS", "Privacy Policy"]}/>
 </Layout>

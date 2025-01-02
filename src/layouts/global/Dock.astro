@@ -1,0 +1,18 @@
+---
+import DockNav from "../../components/dock/DockNav.astro";
+
+interface Props {
+    navItemList: string[]
+}
+
+const {navItemList} = Astro.props;
+---
+<div class="solitude-dock tw-flex tw-justify-center">
+    <DockNav navItemList={navItemList}/>
+</div>
+
+<style>
+    .solitude-dock {
+        height: 10vh;
+    }
+</style>
