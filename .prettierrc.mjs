@@ -10,5 +10,6 @@ export default {
         },
     ],
     tabWidth: 4,
+    endOfLine: 'lf',
     singleQuote: true,
 };

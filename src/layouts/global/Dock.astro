@@ -7,12 +7,13 @@ interface Props {
 
 const {navItemList} = Astro.props;
 ---
-<div class="solitude-dock tw-flex tw-justify-center">
+<div class="solitude-dock flex justify-center">
     <DockNav navItemList={navItemList}/>
 </div>
 
 <style>
     .solitude-dock {
-        height: 10vh;
+        height : 10vh;
+        padding-top: 2em;
     }
 </style>

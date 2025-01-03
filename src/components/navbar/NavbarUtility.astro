@@ -1,7 +1,14 @@
 ---
-
+import ThemeSwitch from "./ThemeSwitch";
 ---
 
-<div class="">
-
+<div class="solitude-navbar-utility grow flex flex-row-reverse items-center">
+    <ThemeSwitch client:visible/>
 </div>
+
+<style>
+    .solitude-navbar-utility {
+        height: inherit;
+        padding-right: 2em;
+    }
+</style>

@@ -15,3 +15,27 @@ import '@fontsource-variable/noto-sans-sc';
     <IndexMain siteTitle="Protogalaxy"/>
     <Dock navItemList={["Home", "Posts", "About Me", "Contact", "RSS", "Privacy Policy"]}/>
 </Layout>
+
+<script is:inline>
+    const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme') ?? "light";
+        }
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+        }
+        return 'light';
+    })();
+
+    window.localStorage.setItem('theme', theme);
+
+    window.addEventListener("storage", function (e) {
+        if (e.detail.key === "theme") {
+            if (e.detail.newValue === "dark") {
+                document.documentElement.classList.add('dark');
+            } else if (e.detail.newValue === "light") {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+    })
+</script>
