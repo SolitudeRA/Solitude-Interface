@@ -21,8 +21,8 @@ const {siteTitle} = Astro.props
 </body>
 </html>
 
-<style>
-    .solitude-body {
-
-    }
-</style>
+<script>
+    const storedTheme = localStorage.getItem('theme');
+    const themeMode = storedTheme ? JSON.parse(storedTheme).state.themeMode : 'light';
+    document.documentElement.classList.add(themeMode)
+</script>

@@ -19,5 +19,13 @@ export default {
     },
     darkMode: "class",
     plugins: [nextui({
+        themes: {
+            light: {
+
+            },
+            dark: {
+
+            }
+        }
     })],
 };

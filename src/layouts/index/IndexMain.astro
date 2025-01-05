@@ -1,16 +1,13 @@
 ---
-
+import IndexPostsContainer from "../../components/index/main/IndexPostsContainer.astro";
 ---
 
-<div class="solitude-index-main">
-
+<div class="solitude-index-main grid grid-cols-4">
+    <IndexPostsContainer/>
 </div>
 
 <style>
     .solitude-index-main {
         height : 75vh;
-    }
-    .dark .solitude-index-main{
-        background-color: black;
     }
 </style>

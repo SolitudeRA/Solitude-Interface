@@ -6,7 +6,7 @@ interface Props {
 const {navItemList} = Astro.props;
 ---
 
-<div class="solitude-docker-nav flex items-center justify-center space-x-20 text-white bg-zinc-800 shadow-xl">
+<div class="solitude-docker-nav flex items-center justify-center space-x-14 text-white bg-zinc-800 shadow-xl">
     {
         navItemList.map((navItem: string) => {
             return (
@@ -20,9 +20,9 @@ const {navItemList} = Astro.props;
 
 <style>
     .solitude-docker-nav {
-        border-radius : 1.5em;
-        width         : 35vw;
-        height        : 50%;
+        border-radius : 2em;
+        width         : 45em;
+        height        : 3.5em;
         min-height    : 50px;
         opacity       : 85%;
     }
