@@ -2,20 +2,18 @@
 import NavbarUtility from '../../components/index/navbar/NavbarUtility.astro';
 import NavbarBrand from "../../components/index/navbar/NavbarBrand.astro";
 
-import type {ImageMetadata} from "astro";
-
 interface Props {
-    logoImage: ImageMetadata
+    logoImageUrl: string
     siteTitle: string,
     siteSubTitle: string
 }
 
-const {logoImage, siteTitle, siteSubTitle} = Astro.props;
+const {logoImageUrl, siteTitle, siteSubTitle} = Astro.props;
 ---
 
 <nav class="solitude-navbar">
     <div class="flex h-full">
-        <NavbarBrand logoImage={logoImage} siteTitle={siteTitle} siteSubTitle={siteSubTitle}/>
+        <NavbarBrand logoImageUrl={logoImageUrl} siteTitle={siteTitle} siteSubTitle={siteSubTitle}/>
         <NavbarUtility/>
     </div>
 </nav>

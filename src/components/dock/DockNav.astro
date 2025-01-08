@@ -1,17 +1,19 @@
 ---
+import type {SiteNavigation} from "../../apiClients/ghostSettings";
+
 interface Props {
-    navItemList: string[];
+    navItemList: SiteNavigation[];
 }
 
 const {navItemList} = Astro.props;
 ---
 
-<div class="solitude-docker-nav flex items-center justify-center space-x-14 text-white bg-zinc-800 shadow-xl">
+<div class="solitude-dock-nav flex items-center justify-center space-x-14 text-white bg-zinc-800 shadow-xl">
     {
-        navItemList.map((navItem: string) => {
+        navItemList.map((navItem: SiteNavigation) => {
             return (
                     <div>
-                        <a class="font-medium">{navItem}</a>
+                        <a class="font-medium">{navItem.label}</a>
                     </div>
             );
         })
@@ -19,7 +21,7 @@ const {navItemList} = Astro.props;
 </div>
 
 <style>
-    .solitude-docker-nav {
+    .solitude-dock-nav {
         border-radius : 2em;
         width         : 45em;
         height        : 3.5em;

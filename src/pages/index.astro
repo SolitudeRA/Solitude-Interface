@@ -2,26 +2,43 @@
 import '../styles/global.css';
 
 import Layout from '../layouts/Layout.astro';
-import logoImage from '../assets/solitude-logo.png'
 import IndexMain from "../layouts/index/IndexMain.astro";
 import Navbar from "../layouts/index/Navbar.astro";
 import Dock from "../layouts/global/Dock.astro";
+import DockNav from '../components/dock/DockNav.astro';
 
 import '@fontsource-variable/noto-sans-sc';
+
+import {indexGetHighlightPosts} from "../apiClients/ghostPosts";
+import {getSiteInformation} from "../apiClients/ghostSettings";
+import {ProxyWorkers} from '../apiClients/utilities';
+
+const siteInformation = await getSiteInformation();
+const indexPosts = await indexGetHighlightPosts();
+
+const utilities = new ProxyWorkers();
+const logoUrl = utilities.convertToWorkersUrl(siteInformation.logo);
+indexPosts.map((post) => {
+    post.feature_image = utilities.convertToWorkersUrl(post.feature_image)
+})
 ---
 
 <Layout siteTitle="Protogalaxy">
-    <Navbar logoImage={logoImage} siteTitle="Protogalaxy" siteSubTitle="In solitude, where we are least alone"/>
-    <IndexMain siteTitle="Protogalaxy"/>
-    <Dock navItemList={["Home", "Posts", "About Me", "Contact", "RSS", "Privacy Policy"]}/>
+    <Navbar logoImageUrl={logoUrl.toString()} siteTitle={siteInformation.title} siteSubTitle={siteInformation.description}/>
+    <IndexMain posts={indexPosts}/>
+    <Dock>
+        <DockNav navItemList={siteInformation.navigation}/>
+    </Dock>
 </Layout>
 
 <script is:inline>
     window.addEventListener("themeModeChanged", function (e) {
         if (e.detail.newValue === "dark") {
-            document.documentElement.classList.replace('dark');
+            document.documentElement.classList.remove('light');
+            document.documentElement.classList.add('dark')
         } else if (e.detail.newValue === "light") {
-            document.documentElement.classList.replace('light');
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light')
         }
     })
 </script>

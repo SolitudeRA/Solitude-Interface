@@ -1,18 +1,17 @@
 ---
-import {Image} from "astro:assets";
-import type {ImageMetadata} from "astro";
+import {Image} from 'astro:assets'
 
 interface Props {
-    logoImage: ImageMetadata,
+    logoImageUrl: string,
     siteTitle: string,
     siteSubTitle: string
 }
 
-const {logoImage, siteTitle, siteSubTitle} = Astro.props;
+const {logoImageUrl, siteTitle, siteSubTitle} = Astro.props;
 ---
 
 <div class="solitude-navbar-brand flex items-center px-10 space-x-10 h-full">
-    <Image src={logoImage} alt="brand-logo" loading="eager"/>
+    <Image src={logoImageUrl} height={400} width={400} alt="brand-logo" />
     <div class="grid grid-cols-1 gap-3">
         <a class="text-4xl font-bold subpixel-antialiased">{siteTitle}</a>
         <a class="text-xl font-medium subpixel-antialiased">{siteSubTitle}</a>

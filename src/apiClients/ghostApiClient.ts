@@ -52,7 +52,7 @@ export class GhostAPIClient {
                     });
     }
 
-    async get<T = any>(options: GhostApiClientOptions): Promise<T> {
+    public async get<T = any>(options: GhostApiClientOptions): Promise<T> {
         try {
             const response = await this.axiosInstance.get<T>(options.endpoint, {
                 params: options.params,

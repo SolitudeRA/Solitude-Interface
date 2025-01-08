@@ -1,24 +1,24 @@
 import {GhostAPIClient} from "./ghostApiClient";
 import type {AxiosError} from "axios";
 
-const ghostApiClient = new GhostAPIClient();
-
 interface IndexHighlightPostsResponse {
     posts: IndexHighlightPost[];
 }
 
-interface IndexHighlightPost {
+export interface IndexHighlightPost {
     title: string;
-    url: string;
-    feature_image: string;
+    url: URL;
+    feature_image: URL;
     published_at: string;
 }
 
-export async function indexGetHighlightPosts(limit: number = 10, fields: string = "title,url,feature_image,published_at"): Promise<IndexHighlightPost[]> {
+const ghostApiClient = new GhostAPIClient();
+
+export async function indexGetHighlightPosts(limit: number = 4, fields: string = "title,url,feature_image,published_at"): Promise<IndexHighlightPost[]> {
     try {
         const response = await ghostApiClient
             .get<IndexHighlightPostsResponse>({
-                                                  endpoint: "posts/",
+                                                  endpoint: "/posts/",
                                                   params: {
                                                       limit,
                                                       fields
