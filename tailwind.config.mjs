@@ -14,18 +14,9 @@ export default {
             serif: ['Noto Serif SC Variable', defaultTheme.fontFamily.serif]
         },
         extend: {
-            colors: {}
+            layout: {}
         }
     },
     darkMode: "class",
-    plugins: [nextui({
-        themes: {
-            light: {
-
-            },
-            dark: {
-
-            }
-        }
-    })],
+    plugins: [nextui()],
 };

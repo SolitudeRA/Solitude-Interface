@@ -1,9 +1,12 @@
 ---
 interface Props {
-    siteTitle: string
+    siteTitle: string,
+    backgroundUrl: URL
 }
 
-const {siteTitle} = Astro.props
+const {siteTitle, backgroundUrl} = Astro.props
+const coverImageLightUrl = `linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)),url(${backgroundUrl.toString()})`;
+const coverImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),url(${backgroundUrl.toString()})`;
 ---
 
 <!doctype html>
@@ -20,6 +23,18 @@ const {siteTitle} = Astro.props
 <slot/>
 </body>
 </html>
+
+<style define:vars={{coverImageLightUrl, coverImageDarkUrl}}>
+    html {
+        background-size  : cover;
+        background-image : var(--coverImageLightUrl);
+    }
+
+    .dark {
+        background-size  : cover;
+        background-image : var(--coverImageDarkUrl);
+    }
+</style>
 
 <script>
     const storedTheme = localStorage.getItem('theme');

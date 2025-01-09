@@ -18,12 +18,13 @@ const indexPosts = await indexGetHighlightPosts();
 
 const utilities = new ProxyWorkers();
 const logoUrl = utilities.convertToWorkersUrl(siteInformation.logo);
+const coverImageUrl = utilities.convertToWorkersUrl(siteInformation.cover_image);
 indexPosts.map((post) => {
     post.feature_image = utilities.convertToWorkersUrl(post.feature_image)
 })
 ---
 
-<Layout siteTitle="Protogalaxy">
+<Layout siteTitle="Protogalaxy" backgroundUrl={coverImageUrl}>
     <Navbar logoImageUrl={logoUrl.toString()} siteTitle={siteInformation.title} siteSubTitle={siteInformation.description}/>
     <IndexMain posts={indexPosts}/>
     <Dock>
