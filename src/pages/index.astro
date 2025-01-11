@@ -6,12 +6,15 @@ import IndexMain from "../layouts/index/IndexMain.astro";
 import Navbar from "../layouts/index/Navbar.astro";
 import Dock from "../layouts/global/Dock.astro";
 import DockNav from '../components/dock/DockNav.astro';
+import DockTimeline from '../components/dock/DockTimeline.astro';
+import DockSocial from "../components/dock/DockSocial.astro";
 
 import '@fontsource-variable/noto-sans-sc';
 
 import {indexGetHighlightPosts} from "../apiClients/ghostPosts";
 import {getSiteInformation} from "../apiClients/ghostSettings";
 import {ProxyWorkers} from '../apiClients/utilities';
+
 
 const siteInformation = await getSiteInformation();
 const indexPosts = await indexGetHighlightPosts();
@@ -28,7 +31,9 @@ indexPosts.map((post) => {
     <Navbar logoImageUrl={logoUrl.toString()} siteTitle={siteInformation.title} siteSubTitle={siteInformation.description}/>
     <IndexMain posts={indexPosts}/>
     <Dock>
+        <DockTimeline/>
         <DockNav navItemList={siteInformation.navigation}/>
+        <DockSocial/>
     </Dock>
 </Layout>
 

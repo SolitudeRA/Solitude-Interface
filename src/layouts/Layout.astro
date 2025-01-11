@@ -38,6 +38,6 @@ const coverImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6
 
 <script>
     const storedTheme = localStorage.getItem('theme');
-    const themeMode = storedTheme ? JSON.parse(storedTheme).state.themeMode : 'light';
+    const themeMode = storedTheme ? JSON.parse(storedTheme).state.themeMode : 'dark';
     document.documentElement.classList.add(themeMode)
 </script>

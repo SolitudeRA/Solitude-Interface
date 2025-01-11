@@ -7,17 +7,18 @@ interface Props {
 
 const {navItemList} = Astro.props;
 ---
-
-<div class="solitude-dock-nav flex items-center justify-center space-x-14 text-white bg-zinc-800 shadow-xl">
-    {
-        navItemList.map((navItem: SiteNavigation) => {
-            return (
-                    <div>
-                        <a class="font-medium">{navItem.label}</a>
-                    </div>
-            );
-        })
-    }
+<div class="justify-items-center">
+    <div class="solitude-dock-nav flex items-center justify-center space-x-14 bg-gray-100  dark:bg-zinc-800 shadow-xl">
+        {
+            navItemList.map((navItem: SiteNavigation) => {
+                return (
+                        <div>
+                            <a class="font-medium">{navItem.label}</a>
+                        </div>
+                );
+            })
+        }
+    </div>
 </div>
 
 <style>

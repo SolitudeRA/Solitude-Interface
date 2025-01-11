@@ -9,7 +9,7 @@ interface ThemeState {
 export const useThemeStore = create<ThemeState>()(
     persist(
         (setState) => ({
-            themeMode: 'light',
+            themeMode: 'dark',
             setThemeMode: (themeMode: string) => {
                 setState({themeMode: themeMode})
                 const event = new CustomEvent('themeModeChanged', {

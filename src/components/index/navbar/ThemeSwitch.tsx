@@ -6,20 +6,23 @@ import {GrSun, GrMoon} from "react-icons/gr";
 
 export default function ThemeSwitch() {
 
-    const { themeMode, setThemeMode } = useThemeStore();
+    const {themeMode, setThemeMode} = useThemeStore();
 
-    const isDarkMode = themeMode === 'dark';
+    const isLightMode = themeMode === 'light';
 
     return (
         <Switch
-            isSelected={isDarkMode}
-            color="success"
+            isSelected={isLightMode}
+            classNames={{
+                wrapper: "bg-default-200"
+            }}
+            color="warning"
             size="lg"
-            startContent={<GrMoon/>}
-            endContent={<GrSun/>}
+            startContent={<GrSun/>}
+            endContent={<GrMoon/>}
             className={"shadow-xl rounded-2xl"}
             onValueChange={(isSelected: boolean) => {
-                isSelected ? setThemeMode("dark") : setThemeMode("light")
+                isSelected ?  setThemeMode("light") : setThemeMode("dark")
             }}
         />
     );
