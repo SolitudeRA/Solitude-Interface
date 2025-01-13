@@ -12,9 +12,6 @@ import '@fontsource-variable/noto-sans-sc';
 
 import {getSiteInformation} from "../apiClients/ghostSettings";
 import {ProxyWorkers} from '../apiClients/utilities';
-import PostContent from "../layouts/posts/PostContent.astro";
-import PolicyContent from "../components/privacy-policy/PolicyContent.astro";
-
 
 const siteInformation = await getSiteInformation();
 const utilities = new ProxyWorkers();
@@ -22,14 +19,12 @@ const logoUrl = utilities.convertToWorkersUrl(siteInformation.logo).toString();
 const coverImageUrl = utilities.convertToWorkersUrl(siteInformation.cover_image);
 ---
 
-<Layout siteTitle="Protogalaxy - Privacy Policy" backgroundUrl={coverImageUrl}>
+<Layout siteTitle="Protogalaxy - About Me" backgroundUrl={coverImageUrl}>
     <Navbar>
         <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteInformation.title} siteSubTitle={siteInformation.description}/>
         <NavbarUtility/>
     </Navbar>
-    <PostContent>
-        <PolicyContent/>
-    </PostContent>
+    <slot/>
     <Dock isPinned>
         <DockTimeline/>
         <DockNav/>

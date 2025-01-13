@@ -5,8 +5,8 @@ interface Props {
 }
 
 const {siteTitle, backgroundUrl} = Astro.props
-const coverImageLightUrl = `linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)),url(${backgroundUrl.toString()})`;
-const coverImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),url(${backgroundUrl.toString()})`;
+const coverImageLightUrl = `linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),url(${backgroundUrl.toString()})`;
+const coverImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url(${backgroundUrl.toString()})`;
 ---
 
 <!doctype html>
@@ -19,18 +19,25 @@ const coverImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>{siteTitle}</title>
 </head>
-<body class="solitude-body">
+<body>
+<div class="solitude-body"></div>
 <slot/>
 </body>
 </html>
 
 <style define:vars={{coverImageLightUrl, coverImageDarkUrl}}>
-    html {
+    .solitude-body {
+        top              : 0;
+        left             : 0;
+        position         : fixed;
+        z-index          : -10;
+        height           : 100vh;
+        width            : 100vw;
         background-size  : cover;
         background-image : var(--coverImageLightUrl);
     }
 
-    .dark {
+    .dark .solitude-body{
         background-image : var(--coverImageDarkUrl);
     }
 </style>
