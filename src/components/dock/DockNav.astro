@@ -1,23 +1,26 @@
 ---
-import type {SiteNavigation} from "../../apiClients/ghostSettings";
 
-interface Props {
-    navItemList: SiteNavigation[];
-}
-
-const {navItemList} = Astro.props;
 ---
 <div class="justify-items-center">
     <div class="solitude-dock-nav flex items-center justify-center space-x-14 bg-gray-100  dark:bg-zinc-800 shadow-xl">
-        {
-            navItemList.map((navItem: SiteNavigation) => {
-                return (
-                        <div>
-                            <a class="font-medium">{navItem.label}</a>
-                        </div>
-                );
-            })
-        }
+        <div>
+            <a href="/" class="font-medium">Home</a>
+        </div>
+        <div>
+            <a href="" class="font-medium">Posts</a>
+        </div>
+        <div>
+            <a href="" class="font-medium">About AMe</a>
+        </div>
+        <div>
+            <a href="" class="font-medium">Contact</a>
+        </div>
+        <div>
+            <a href="" class="font-medium">RSS</a>
+        </div>
+        <div>
+            <a href="/privacy-policy" class="font-medium">Privacy Policy</a>
+        </div>
     </div>
 </div>
 

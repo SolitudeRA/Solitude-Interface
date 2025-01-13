@@ -1,3 +1,50 @@
 ---
+import Layout from "../layouts/Layout.astro";
+import DockNav from "../components/dock/DockNav.astro";
+import Navbar from "../layouts/index/Navbar.astro";
+import NavbarBrand from "../components/index/navbar/NavbarBrand.astro";
+import NavbarUtility from "../components/index/navbar/NavbarUtility.astro";
+import Dock from "../layouts/global/Dock.astro";
+import DockTimeline from "../components/dock/DockTimeline.astro";
+import DockSocial from "../components/dock/DockSocial.astro";
 
+import '@fontsource-variable/noto-sans-sc';
+
+import {getSiteInformation} from "../apiClients/ghostSettings";
+import {ProxyWorkers} from '../apiClients/utilities';
+import PostContent from "../layouts/posts/PostContent.astro";
+import PolicyContent from "../components/privacy-policy/PolicyContent.astro";
+
+
+const siteInformation = await getSiteInformation();
+const utilities = new ProxyWorkers();
+const logoUrl = utilities.convertToWorkersUrl(siteInformation.logo).toString();
+const coverImageUrl = utilities.convertToWorkersUrl(siteInformation.cover_image);
 ---
+
+<Layout siteTitle="Protogalaxy" backgroundUrl={coverImageUrl}>
+    <Navbar>
+        <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteInformation.title} siteSubTitle={siteInformation.description}/>
+        <NavbarUtility/>
+    </Navbar>
+    <PostContent>
+        <PolicyContent/>
+    </PostContent>
+    <Dock isPinned>
+        <DockTimeline/>
+        <DockNav/>
+        <DockSocial/>
+    </Dock>
+</Layout>
+
+<script is:inline>
+    window.addEventListener("themeModeChanged", function (e) {
+        if (e.detail.newValue === "dark") {
+            document.documentElement.classList.remove('light');
+            document.documentElement.classList.add('dark')
+        } else if (e.detail.newValue === "light") {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light')
+        }
+    })
+</script>

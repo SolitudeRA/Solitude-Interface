@@ -1,8 +1,6 @@
 ---
 import IndexPostsContainer from "../../components/index/main/IndexPostsContainer.astro";
-import IndexPost from "../../components/index/main/IndexPost";
 
-import type {IndexHighlightPost, PostTag} from "../../apiClients/ghostPosts";
 import IndexWelcome from "../../components/index/main/IndexWelcome.astro";
 
 const {posts} = Astro.props;
@@ -10,21 +8,7 @@ const {posts} = Astro.props;
 
 <div class="solitude-index-main grid grid-cols-12 pb-10 content-end">
     <IndexWelcome/>
-    <IndexPostsContainer>
-        {posts.map((post: IndexHighlightPost) =>
-                           <IndexPost
-                                   class:list={'solitude-index-post'}
-                                   id={post.id}
-                                   title={post.title}
-                                   url={post.url}
-                                   primary_tag={post.primary_tag || undefined}
-                                   tags={post.tags || undefined}
-                                   feature_image={post.feature_image}
-                                   published_at={post.published_at}
-                                   client:load
-                           />
-        )}
-    </IndexPostsContainer>
+    <IndexPostsContainer posts={posts}/>
 </div>
 
 <style>

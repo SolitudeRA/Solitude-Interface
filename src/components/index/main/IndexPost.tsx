@@ -5,9 +5,9 @@ import {Card, CardHeader, CardFooter, Image, Chip} from "@nextui-org/react";
 
 import type {IndexHighlightPost, PostTag} from "../../../apiClients/ghostPosts.ts";
 
-const IndexPost: React.FC<IndexHighlightPost> = ({id, title, url, feature_image, published_at, primary_tag, tags}) => (
-    <Card key={id} css={cardStyle} className="bg-transparent hover:scale-105 hover:-translate-y-3" isFooterBlurred isPressable onPress={() => window.open(url, "_blank")}>
-        <CardHeader css={cardHeaderStyle} className="absolute flex-col items-start  bg-white/85 dark:bg-gray-800/85">
+const IndexPost: React.FC<IndexHighlightPost> = ({title, url, feature_image, published_at, primary_tag, tags}) => (
+    <Card css={cardStyle} className="bg-transparent hover:scale-105 hover:-translate-y-3" isFooterBlurred isPressable onPress={() => window.open(url, "_blank")}>
+        <CardHeader css={cardHeaderStyle} className="absolute flex-col items-start bg-neutral-200/85 dark:bg-gray-800/85">
             <span className="flex justify-between w-full">
                 {renderPrimaryTag(primary_tag)}
                 {renderTags(tags)}
@@ -51,7 +51,7 @@ function renderTags(tags?: PostTag[]): ReactElement | undefined {
     return (<>
         {tags.map((tag) => {
             if (tag.slug.includes("series-")) {
-                return (<Chip css={cardHeaderTagsStyle} variant="flat" color="secondary" radius="sm">{tag.name}</Chip>)
+                return (<Chip key={tag.slug} css={cardHeaderTagsStyle} variant="flat" color="secondary" radius="sm">{tag.name}</Chip>)
             }
         })}
     </>)

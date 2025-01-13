@@ -1,20 +1,14 @@
 ---
-import NavbarUtility from '../../components/index/navbar/NavbarUtility.astro';
-import NavbarBrand from "../../components/index/navbar/NavbarBrand.astro";
-
 interface Props {
-    logoImageUrl: string
-    siteTitle: string,
-    siteSubTitle: string
+    isPinned?: boolean;
 }
 
-const {logoImageUrl, siteTitle, siteSubTitle} = Astro.props;
+const {isPinned = false} = Astro.props;
 ---
 
-<nav class="solitude-navbar">
+<nav class:list={["solitude-navbar", isPinned ? "fixed bottom-0" : ""]}>
     <div class="flex h-full">
-        <NavbarBrand logoImageUrl={logoImageUrl} siteTitle={siteTitle} siteSubTitle={siteSubTitle}/>
-        <NavbarUtility/>
+        <slot/>
     </div>
 </nav>
 

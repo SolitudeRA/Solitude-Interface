@@ -13,7 +13,6 @@ export interface SiteInformation {
     cover_image: URL;
     twitter: string;
     timezone: string;
-    navigation: SiteNavigation[];
 }
 
 export interface SiteNavigation {

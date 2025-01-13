@@ -14,13 +14,14 @@ import '@fontsource-variable/noto-sans-sc';
 import {indexGetHighlightPosts} from "../apiClients/ghostPosts";
 import {getSiteInformation} from "../apiClients/ghostSettings";
 import {ProxyWorkers} from '../apiClients/utilities';
-
+import NavbarBrand from "../components/index/navbar/NavbarBrand.astro";
+import NavbarUtility from "../components/index/navbar/NavbarUtility.astro";
 
 const siteInformation = await getSiteInformation();
 const indexPosts = await indexGetHighlightPosts();
 
 const utilities = new ProxyWorkers();
-const logoUrl = utilities.convertToWorkersUrl(siteInformation.logo);
+const logoUrl = utilities.convertToWorkersUrl(siteInformation.logo).toString();
 const coverImageUrl = utilities.convertToWorkersUrl(siteInformation.cover_image);
 indexPosts.map((post) => {
     post.feature_image = utilities.convertToWorkersUrl(post.feature_image)
@@ -28,11 +29,14 @@ indexPosts.map((post) => {
 ---
 
 <Layout siteTitle="Protogalaxy" backgroundUrl={coverImageUrl}>
-    <Navbar logoImageUrl={logoUrl.toString()} siteTitle={siteInformation.title} siteSubTitle={siteInformation.description}/>
+    <Navbar>
+        <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteInformation.title} siteSubTitle={siteInformation.description}/>
+        <NavbarUtility/>
+    </Navbar>
     <IndexMain posts={indexPosts}/>
     <Dock>
         <DockTimeline/>
-        <DockNav navItemList={siteInformation.navigation}/>
+        <DockNav/>
         <DockSocial/>
     </Dock>
 </Layout>
