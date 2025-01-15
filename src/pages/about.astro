@@ -1,7 +1,8 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import DefaultLayout from "@layouts/global/DefaultLayout.astro";
+import AboutContent from "@layouts/about/AboutContent.astro"
 ---
 
-<BaseLayout>
-
-</BaseLayout>
+<DefaultLayout isNavbarFixed isDockFixed>
+    <AboutContent/>
+</DefaultLayout>

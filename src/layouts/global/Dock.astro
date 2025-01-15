@@ -1,11 +1,11 @@
 ---
 interface Props {
-    isPinned?: boolean;
+    isFixed: boolean;
 }
 
-const {isPinned = false} = Astro.props;
+const {isFixed} = Astro.props;
 ---
-<div class:list={["solitude-dock grid grid-cols-3 px-14", isPinned ? "fixed bottom-0" : ""]}>
+<div class:list={["solitude-dock grid grid-cols-3 px-14", isFixed ? "fixed bottom-0" : ""]}>
     <slot/>
 </div>
 

@@ -1,11 +1,11 @@
-import React from "react";
-import type {ReactElement} from "react";
-import {css} from "@emotion/react";
+import type {FC as ReactFC, ReactElement} from "react";
+import {Fragment} from "react";
 import {Card, CardHeader, CardFooter, Image, Chip} from "@nextui-org/react";
+import {css} from "@emotion/react";
 
-import type {IndexHighlightPost, PostTag} from "../../../apiClients/ghostPosts.ts";
+import type {IndexHighlightPost, PostTag} from "@apiClients/ghostPosts.ts";
 
-const IndexPost: React.FC<IndexHighlightPost> = ({title, url, feature_image, published_at, primary_tag, tags}) => (
+const IndexPost: ReactFC<IndexHighlightPost> = ({title, url, feature_image, published_at, primary_tag, tags}) => (
     <Card css={cardStyle} className="bg-transparent hover:scale-105 hover:-translate-y-3" isFooterBlurred isPressable onPress={() => window.open(url, "_blank")}>
         <CardHeader css={cardHeaderStyle} className="absolute flex-col items-start bg-neutral-200/85 dark:bg-gray-800/85">
             <span className="flex justify-between w-full">
@@ -29,32 +29,42 @@ const IndexPost: React.FC<IndexHighlightPost> = ({title, url, feature_image, pub
 )
 
 function renderTitle(title: string): string {
-    if (title.length >= 19) {
-        return title.slice(0, 19) + "..."
-    } else {
-        return title
-    }
+    return title.length > 19 ? `${title.slice(0, 19)}...` : title;
 }
 
 function renderPrimaryTag(primary_tag?: PostTag): ReactElement {
-    if (primary_tag === undefined) {
-        return (<Chip css={cardHeaderTagsStyle} variant="flat" color="primary" radius="sm">default</Chip>)
-    } else {
-        return (<Chip css={cardHeaderTagsStyle} variant="flat" color="primary" radius="sm">{primary_tag.name}</Chip>)
-    }
+    return (
+        <Chip
+            css={cardHeaderTagsStyle}
+            variant="flat"
+            color="primary"
+            radius="sm"
+        >
+            {primary_tag?.name || "default"}
+        </Chip>
+    );
 }
 
-function renderTags(tags?: PostTag[]): ReactElement | undefined {
-    if (tags === undefined) {
-        return undefined;
-    }
-    return (<>
-        {tags.map((tag) => {
-            if (tag.slug.includes("series-")) {
-                return (<Chip key={tag.slug} css={cardHeaderTagsStyle} variant="flat" color="secondary" radius="sm">{tag.name}</Chip>)
-            }
-        })}
-    </>)
+function renderTags(tags?: PostTag[]): ReactElement | null {
+    if (!tags) return null
+
+    return (
+        <Fragment>
+            {tags.map(tag =>
+                          tag.slug.includes("series-") ? (
+                              <Chip
+                                  key={tag.slug}
+                                  css={cardHeaderTagsStyle}
+                                  variant="flat"
+                                  color="secondary"
+                                  radius="sm"
+                              >
+                                  {tag.name}
+                              </Chip>
+                          ) : null
+            )}
+        </Fragment>
+    )
 }
 
 const cardStyle = css`

@@ -1,6 +1,6 @@
 import type React from "react";
 import {Switch} from "@nextui-org/switch";
-import {useThemeStore} from "../../../stores/themeStore.ts";
+import {useThemeStore} from "@stores/themeStore.ts";
 
 import {GrSun, GrMoon} from "react-icons/gr";
 

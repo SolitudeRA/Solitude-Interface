@@ -1,12 +1,12 @@
 ---
 interface Props {
-    isPinned?: boolean;
+    isFixed: boolean;
 }
 
-const {isPinned = false} = Astro.props;
+const {isFixed} = Astro.props;
 ---
 
-<nav class:list={["solitude-navbar", isPinned ? "fixed bottom-0" : ""]}>
+<nav class:list={["solitude-navbar", isFixed ? "fixed top-0" : ""]}>
     <div class="flex h-full">
         <slot/>
     </div>
@@ -15,5 +15,6 @@ const {isPinned = false} = Astro.props;
 <style>
     .solitude-navbar {
         height : 15vh;
+        width  : 100vw;
     }
 </style>

@@ -1,0 +1,88 @@
+---
+import '@styles/global.css';
+
+import {Dock, Navbar} from "@layouts/global/index"
+import {NavbarBrand, NavbarUtility} from "@components/global/navbar"
+import {DockNav, DockTimeline, DockSocial} from "@components/global/dock"
+
+import {getSiteInformation} from "@apiClients/ghostSettings";
+import {ProxyWorkers} from '@apiClients/utilities';
+
+interface Props {
+    isNavbarFixed?: boolean;
+    isDockFixed?: boolean;
+    siteTitleExtend?: string;
+}
+
+const {isNavbarFixed = false, isDockFixed = false, siteTitleExtend = null} = Astro.props;
+
+async function initializeSiteData() {
+    const siteInformation = await getSiteInformation();
+    const utilities = new ProxyWorkers();
+    return {
+        logoUrl: utilities.convertToWorkersUrl(siteInformation.logo).toString(),
+        coverImageUrl: utilities.convertToWorkersUrl(siteInformation.cover_image),
+        siteTitle: siteInformation.title,
+        siteDescription: siteInformation.description,
+    }
+}
+
+const {logoUrl, coverImageUrl, siteTitle, siteDescription} = await initializeSiteData();
+const coverImageLightUrl = `linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),url(${coverImageUrl.toString()})`;
+const coverImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url(${coverImageUrl.toString()})`;
+const pageTitle = siteTitleExtend ? `${siteTitle} - ${siteTitleExtend}` : siteTitle;
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+    <meta name="generator" content={Astro.generator}/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{pageTitle}</title>
+</head>
+<body>
+<div class="solitude-body"></div>
+<Navbar isFixed={isNavbarFixed}>
+    <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteTitle} siteSubTitle={siteDescription}/>
+    <NavbarUtility/>
+</Navbar>
+<slot/>
+<Dock isFixed={isDockFixed}>
+    <DockTimeline/>
+    <DockNav/>
+    <DockSocial/>
+</Dock>
+</body>
+</html>
+
+<style define:vars={{coverImageLightUrl, coverImageDarkUrl}}>
+    .solitude-body {
+        top              : 0;
+        left             : 0;
+        position         : fixed;
+        z-index          : -10;
+        height           : 100vh;
+        width            : 100vw;
+        background-size  : cover;
+        background-image : var(--coverImageLightUrl);
+    }
+
+    .dark .solitude-body {
+        background-image : var(--coverImageDarkUrl);
+    }
+</style>
+
+<script is:inline>
+    const storedTheme = localStorage.getItem('theme');
+    const themeMode = storedTheme ? JSON.parse(storedTheme).state.themeMode : 'dark';
+    document.documentElement.classList.add(themeMode)
+
+    window.addEventListener("themeModeChanged", function (e) {
+        const isDark = e.detail.newValue === "dark";
+        document.documentElement.classList.toggle('dark', isDark);
+        document.documentElement.classList.toggle('light', !isDark);
+    });
+</script>
