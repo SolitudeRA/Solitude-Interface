@@ -1,4 +1,3 @@
-import type React from "react";
 import {Switch} from "@nextui-org/switch";
 import {useThemeStore} from "@stores/themeStore.ts";
 

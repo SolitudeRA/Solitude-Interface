@@ -1,32 +1,45 @@
-import type {FC as ReactFC, ReactElement} from "react";
 import {Fragment} from "react";
-import {Card, CardHeader, CardFooter, Image, Chip} from "@nextui-org/react";
+import type {ReactElement} from "react";
+import {motion} from "motion/react";
 import {css} from "@emotion/react";
+import {Card, CardHeader, CardFooter, Image, Chip} from "@nextui-org/react";
+
 
 import type {IndexHighlightPost, PostTag} from "@apiClients/ghostPosts.ts";
 
-const IndexPost: ReactFC<IndexHighlightPost> = ({title, url, feature_image, published_at, primary_tag, tags}) => (
-    <Card css={cardStyle} className="bg-transparent hover:scale-105 hover:-translate-y-3" isFooterBlurred isPressable onPress={() => window.open(url, "_blank")}>
-        <CardHeader css={cardHeaderStyle} className="absolute flex-col items-start bg-neutral-200/85 dark:bg-gray-800/85">
-            <span className="flex justify-between w-full">
-                {renderPrimaryTag(primary_tag)}
-                {renderTags(tags)}
-            </span>
-            <span css={cardHeaderTitleStyle} className='text-nowrap font-medium'>{renderTitle(title)}</span>
-        </CardHeader>
-        <Image
-            removeWrapper
-            alt="Post Cover"
-            css={cardCoverStyle}
-            className="object-cover"
-            loading="eager"
-            src={feature_image.toString()}
-        />
-        <CardFooter css={cardFooterStyle} className="absolute text-white font-normal bg-black/30">
-            <p>{published_at.split("T")[0]}</p>
-        </CardFooter>
-    </Card>
-)
+export default function IndexPost(props: { post: IndexHighlightPost }) {
+    const post = props.post;
+
+    return (
+        <motion.div
+            css={cardStyle}
+            className="snap-start scroll-ml-[40px] bg-transparent"
+            initial={{opacity: 0}}
+            whileInView={{opacity: 1}}
+        >
+            <Card className="w-full h-full" isFooterBlurred isPressable onPress={() => window.open(post.url, "_blank")}>
+                <CardHeader css={cardHeaderStyle} className="absolute flex-col items-start bg-neutral-200/85 dark:bg-gray-800/85">
+                    <span className="flex justify-between w-full">
+                        {renderPrimaryTag(post.primary_tag)}
+                        {renderTags(post.tags)}
+                    </span>
+                    <span css={cardHeaderTitleStyle} className='text-nowrap font-medium'>{renderTitle(post.title)}</span>
+                </CardHeader>
+                <Image
+                    removeWrapper
+                    alt="Post Cover"
+                    css={cardCoverStyle}
+                    className="object-cover"
+                    loading="eager"
+                    src={post.feature_image.toString()}
+                />
+                <CardFooter css={cardFooterStyle} className="absolute text-white font-normal bg-black/30">
+                    <p>{post.published_at.split("T")[0]}</p>
+                </CardFooter>
+            </Card>
+        </motion.div>
+    );
+}
 
 function renderTitle(title: string): string {
     return title.length > 19 ? `${title.slice(0, 19)}...` : title;
@@ -68,9 +81,12 @@ function renderTags(tags?: PostTag[]): ReactElement | null {
 }
 
 const cardStyle = css`
+    display       : inline-block;
+    width         : 19.8rem;
     min-width     : 300px;
-    height        : 100%;
+    aspect-ratio  : 7 / 5;
     border-radius : 20px;
+    margin-left   : 50px;
 `;
 
 const cardHeaderStyle = css`
@@ -78,15 +94,16 @@ const cardHeaderStyle = css`
 `;
 
 const cardHeaderTagsStyle = css`
-    height        : 1.8em;
-    font-size     : 0.665em;
-    padding-left  : 0.3em;
-    margin-bottom : 1.15em;
+    height        : 1.35rem;
+    font-size     : 0.665rem;
+    padding-left  : 0.3rem;
+    margin-bottom : 0.82rem;
 `;
 
 const cardHeaderTitleStyle = css`
-    font-size   : 1.125em;
-    line-height : 1.1em;
+    font-size     : 1.125rem;
+    line-height   : 1.1rem;
+    margin-bottom : 0.1rem;
 `;
 
 const cardCoverStyle = css`
@@ -99,12 +116,10 @@ const cardCoverStyle = css`
 `;
 
 const cardFooterStyle = css`
-    height       : 2.5em;
-    padding-left : 1.2em;
-    font-size    : 0.9em;
+    height       : 2.5rem;
+    padding-left : 1.2rem;
+    font-size    : 0.9rem;
     color        : #B2B2B2;
     z-index      : 10;
     bottom       : 0;
 `;
-
-export default IndexPost;

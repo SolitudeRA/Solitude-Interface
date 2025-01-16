@@ -4,13 +4,15 @@ import {IndexPostsContainer, IndexWelcome} from "@components/index"
 const {posts} = Astro.props;
 ---
 
-<div class="solitude-index-main grid grid-cols-12 pb-10 content-end">
+<div class="solitude-index-main grid grid-cols-12 content-end">
     <IndexWelcome/>
-    <IndexPostsContainer posts={posts}/>
+    <IndexPostsContainer posts={posts} client:load/>
 </div>
 
 <style>
     .solitude-index-main {
-        height : 75vh;
+        width          : 100vw;
+        height         : 75vh;
+        padding-bottom : 5px;
     }
 </style>

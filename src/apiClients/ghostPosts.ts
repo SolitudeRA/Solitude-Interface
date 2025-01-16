@@ -1,6 +1,5 @@
 import {GhostAPIClient} from "./ghostApiClient";
 import type {AxiosError} from "axios";
-import type {UUID} from "node:crypto";
 
 interface IndexHighlightPostsResponse {
     posts: IndexHighlightPost[];
@@ -27,7 +26,7 @@ export interface PostTag {
 
 const ghostApiClient = new GhostAPIClient();
 
-export async function indexGetHighlightPosts(limit: number = 4, fields: string = "id,title,url,feature_image,primary_tag,published_at", include: string = "tags"): Promise<IndexHighlightPost[]> {
+export async function indexGetHighlightPosts(limit: number = 12, fields: string = "id,title,url,feature_image,primary_tag,published_at", include: string = "tags"): Promise<IndexHighlightPost[]> {
     try {
         const response = await ghostApiClient
             .get<IndexHighlightPostsResponse>({
