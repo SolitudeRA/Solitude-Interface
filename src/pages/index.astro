@@ -4,6 +4,10 @@ import DefaultLayout from "@layouts/global/DefaultLayout.astro";
 import {indexGetHighlightPosts} from "@apiClients/ghostPosts";
 import {ProxyWorkers} from "@apiClients/utilities";
 import IndexMain from "@layouts/index/IndexMain.astro"
+import {Navbar} from "@layouts/global/index"
+import {NavbarBrand, NavbarUtility} from "@components/global/navbar"
+import {Dock} from "@layouts/global"
+import {DockNav, DockTimeline, DockSocial} from "@components/global/dock"
 
 const indexPosts = await indexGetHighlightPosts();
 const utilities = new ProxyWorkers();
@@ -13,5 +17,14 @@ indexPosts.map((post) => {
 ---
 
 <DefaultLayout>
+    <Navbar isFixed={true}>
+        <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteTitle} siteSubTitle={siteDescription}/>
+        <NavbarUtility/>
+    </Navbar>
     <IndexMain posts={indexPosts}/>
+    <Dock isFixed={true}>
+        <DockTimeline/>
+        <DockNav/>
+        <DockSocial/>
+    </Dock>
 </DefaultLayout>

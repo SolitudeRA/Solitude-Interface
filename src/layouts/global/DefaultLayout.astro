@@ -1,20 +1,14 @@
 ---
 import '@styles/global.css';
 
-import {Dock, Navbar} from "@layouts/global/index"
-import {NavbarBrand, NavbarUtility} from "@components/global/navbar"
-import {DockNav, DockTimeline, DockSocial} from "@components/global/dock"
-
 import {getSiteInformation} from "@apiClients/ghostSettings";
 import {ProxyWorkers} from '@apiClients/utilities';
 
 interface Props {
-    isNavbarFixed?: boolean;
-    isDockFixed?: boolean;
     siteTitleExtend?: string;
 }
 
-const {isNavbarFixed = false, isDockFixed = false, siteTitleExtend = null} = Astro.props;
+const { siteTitleExtend = null} = Astro.props;
 
 async function initializeSiteData() {
     const siteInformation = await getSiteInformation();
@@ -27,7 +21,7 @@ async function initializeSiteData() {
     }
 }
 
-const {logoUrl, coverImageUrl, siteTitle, siteDescription} = await initializeSiteData();
+const {coverImageUrl, siteTitle} = await initializeSiteData();
 const coverImageLightUrl = `linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),url(${coverImageUrl.toString()})`;
 const coverImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url(${coverImageUrl.toString()})`;
 const pageTitle = siteTitleExtend ? `${siteTitle} - ${siteTitleExtend}` : siteTitle;
@@ -46,16 +40,7 @@ const pageTitle = siteTitleExtend ? `${siteTitle} - ${siteTitleExtend}` : siteTi
 </head>
 <body>
 <div class="solitude-body"></div>
-<Navbar isFixed={isNavbarFixed}>
-    <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteTitle} siteSubTitle={siteDescription}/>
-    <NavbarUtility/>
-</Navbar>
 <slot/>
-<Dock isFixed={isDockFixed}>
-    <DockTimeline/>
-    <DockNav/>
-    <DockSocial/>
-</Dock>
 </body>
 </html>
 

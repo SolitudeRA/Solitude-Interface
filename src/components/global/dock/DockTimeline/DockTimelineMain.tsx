@@ -1,13 +1,13 @@
 import {css} from "@emotion/react"
 
-export default function DockTimelineMain() {
+export default function DockTimelineMain(props: { date: string }) {
     return (
         <div css={dockTimelineMainContainerStyle}>
             <div className="flex justify-center">
                 <div css={dockTimelineMainScaleStyle}></div>
             </div>
             <div css={dockTimelineMainTextStyle} className="text-center">
-
+                <div>{props.date}</div>
             </div>
         </div>
     );
