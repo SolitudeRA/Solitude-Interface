@@ -1,4 +1,4 @@
-import {nextui} from "@nextui-org/react";
+import {heroui} from "@heroui/react";
 
 const defaultTheme = require('tailwindcss/defaultTheme')
 
@@ -6,7 +6,7 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 export default {
     content: [
         './src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}',
-        './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}'
+        './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}'
     ],
     theme: {
         fontFamily: {
@@ -18,5 +18,5 @@ export default {
         }
     },
     darkMode: "class",
-    plugins: [nextui()],
+    plugins: [heroui()],
 };

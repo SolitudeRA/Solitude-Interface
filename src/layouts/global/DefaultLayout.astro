@@ -1,30 +1,15 @@
 ---
 import '@styles/global.css';
 
-import {getSiteInformation} from "@apiClients/ghostSettings";
-import {ProxyWorkers} from '@apiClients/utilities';
-
 interface Props {
-    siteTitleExtend?: string;
+    siteTitle: string;
+    coverImageUrl: URL;
 }
 
-const { siteTitleExtend = null} = Astro.props;
+const {siteTitle, coverImageUrl} = Astro.props;
 
-async function initializeSiteData() {
-    const siteInformation = await getSiteInformation();
-    const utilities = new ProxyWorkers();
-    return {
-        logoUrl: utilities.convertToWorkersUrl(siteInformation.logo).toString(),
-        coverImageUrl: utilities.convertToWorkersUrl(siteInformation.cover_image),
-        siteTitle: siteInformation.title,
-        siteDescription: siteInformation.description,
-    }
-}
-
-const {coverImageUrl, siteTitle} = await initializeSiteData();
 const coverImageLightUrl = `linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),url(${coverImageUrl.toString()})`;
 const coverImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url(${coverImageUrl.toString()})`;
-const pageTitle = siteTitleExtend ? `${siteTitle} - ${siteTitleExtend}` : siteTitle;
 ---
 
 <!doctype html>
@@ -36,7 +21,7 @@ const pageTitle = siteTitleExtend ? `${siteTitle} - ${siteTitleExtend}` : siteTi
     <meta name="generator" content={Astro.generator}/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <style data-emotion-insertion-point="emotion"></style>
-    <title>{pageTitle}</title>
+    <title>{siteTitle}</title>
 </head>
 <body>
 <div class="solitude-body"></div>

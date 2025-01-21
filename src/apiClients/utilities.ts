@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 
 interface WorkersConfig {
     ghostUrl: string;
+    siteUrl: string;
     resource: string
 }
 
@@ -12,10 +13,12 @@ export class ProxyWorkers {
 
     constructor() {
         assertEnvVar('GHOST_URL', process.env.GHOST_URL);
+        assertEnvVar('SITE_URL', process.env.SITE_URL);
         assertEnvVar('WORKERS_RESOURCE', process.env.WORKERS_RESOURCE);
 
         this.config = {
             ghostUrl: process.env.GHOST_URL,
+            siteUrl: process.env.SITE_URL,
             resource: process.env.WORKERS_RESOURCE
         }
     }
@@ -25,6 +28,10 @@ export class ProxyWorkers {
         workersUrl.hostname = this.config.resource;
 
         return workersUrl;
+    }
+
+    public convertPostIdToFrontendUrl(id: string): URL {
+        return new URL(`${this.config.siteUrl}/posts/${id}`);
     }
 }
 

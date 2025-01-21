@@ -2,8 +2,7 @@ import {Fragment} from "react";
 import type {ReactElement} from "react";
 import {motion} from "motion/react";
 import {css} from "@emotion/react";
-import {Card, CardHeader, CardFooter, Image, Chip} from "@nextui-org/react";
-
+import {Card, CardHeader, CardFooter, Image, Chip} from "@heroui/react";
 
 import type {IndexHighlightPost, PostTag} from "@apiClients/ghostPosts.ts";
 

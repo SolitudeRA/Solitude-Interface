@@ -1,0 +1,84 @@
+.solitude-article-container {
+    width      : 100%;
+    margin-top : 15vh;
+}
+
+.solitude-article-meta {
+    height : 600px;
+}
+
+.solitude-article-content {
+    padding-left  : 1rem;
+    padding-right : 1rem;
+}
+
+.solitude-article-meta h1 {
+    font-size     : 2.7rem;
+    font-weight   : bold;
+    text-align    : center;
+    padding-left  : 120px;
+    padding-right : 120px;
+}
+
+.solitude-article-content h2 {
+    font-size     : 2.25rem;
+    font-weight   : bold;
+    margin-top    : 2rem;
+    margin-bottom : 1rem;
+    color         : #222222;
+}
+
+html.dark .solitude-article-content h2 {
+    color : #FAFAFA;
+}
+
+.solitude-article-content h3 {
+    font-size     : 1.75rem;
+    font-weight   : 600;
+    margin-top    : 1.5rem;
+    margin-bottom : 0.8rem;
+    color         : #333333;
+}
+
+html.dark .solitude-article-content h3 {
+    color : #CCCCCC;
+}
+
+.solitude-article-content a {
+    color : #0073E6;
+}
+
+html.dark .solitude-article-content a {
+    color : aquamarine;
+}
+
+.solitude-article-content p {
+    color         : #333333;
+    font-size     : 1.1rem;
+    line-height   : 1.75rem;
+    margin-top    : 1.2rem;
+    margin-bottom : 1.2rem;
+}
+
+html.dark .solitude-article-content p {
+    color : #E0E0E0;
+}
+
+.solitude-article-content strong {
+    color       : #000000;
+    font-weight : bold;
+}
+
+html.dark .solitude-article-content strong {
+    color : #FFFFFF;
+}
+
+.solitude-article-content ul {
+    margin-left     : 2.5rem;
+    list-style-type : disc;
+}
+
+.solitude-article-content ul p {
+    margin-top    : 0.5rem;
+    margin-bottom : 0.5rem;
+}

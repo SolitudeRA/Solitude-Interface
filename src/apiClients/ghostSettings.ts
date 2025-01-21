@@ -1,3 +1,4 @@
+import {ProxyWorkers} from "@apiClients/utilities.ts";
 import {GhostAPIClient} from "./ghostApiClient";
 import type {AxiosError} from "axios";
 
@@ -32,6 +33,17 @@ export async function getSiteInformation(fields: string = "title,description,log
         return response.settings;
     } catch (error) {
         handleError(error);
+    }
+}
+
+export async function initializeSiteData() {
+    const siteInformation = await getSiteInformation();
+    const utilities = new ProxyWorkers();
+    return {
+        siteTitle: siteInformation.title,
+        siteDescription: siteInformation.description,
+        logoUrl: utilities.convertToWorkersUrl(siteInformation.logo).toString(),
+        coverImageUrl: utilities.convertToWorkersUrl(siteInformation.cover_image),
     }
 }
 

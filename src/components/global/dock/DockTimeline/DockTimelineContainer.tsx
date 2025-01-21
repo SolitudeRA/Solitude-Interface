@@ -1,13 +1,9 @@
 import {css} from "@emotion/react"
-import {Fragment} from "react";
 
-import DockTimelineMain from "./DockTimelineMain.tsx";
-import DockTimelineSub from "./DockTimelineSub.tsx";
 import type {IndexHighlightPost} from "@apiClients/ghostPosts.ts";
 
 export default function DockTimelineContainer(props: { posts: IndexHighlightPost[] }) {
     const posts = props.posts;
-    console.log(posts);
     return (
         <div css={dockTimelineContainerStyle} className="flex items-center">
 
@@ -21,6 +17,3 @@ const dockTimelineContainerStyle = css`
     min-height : 50px;
 `;
 
-function renderSubScale() {
-
-}

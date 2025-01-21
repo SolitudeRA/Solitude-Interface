@@ -1,9 +1,9 @@
 ---
 interface Props {
-    isFixed: boolean;
+    isFixed?: boolean;
 }
 
-const {isFixed} = Astro.props;
+const {isFixed = false} = Astro.props;
 ---
 <div class:list={["solitude-dock grid grid-cols-3 px-14", isFixed ? "fixed bottom-0" : ""]}>
     <slot/>
@@ -13,6 +13,6 @@ const {isFixed} = Astro.props;
     .solitude-dock {
         height      : 10vh;
         padding-top : 2em;
-        width: 100vw;
+        width       : 100vw;
     }
 </style>

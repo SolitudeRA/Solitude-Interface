@@ -1,0 +1,65 @@
+---
+import DefaultLayout from "@layouts/global/DefaultLayout.astro";
+
+import {initializeSiteData} from "@apiClients/ghostSettings";
+import {getPosts} from "@apiClients/ghostPosts";
+import type {PostTag} from "@apiClients/ghostPosts";
+import {Navbar} from "@layouts/global/index"
+import {NavbarBrand, NavbarUtility} from "@components/global/navbar"
+import {Dock} from "@layouts/global"
+import {DockNav, DockSocial} from "@components/global/dock"
+import PostsContent from "@components/posts/PostsContent.astro";
+
+interface Props {
+    title: string;
+    feature_image: URL;
+    primary_tag?: PostTag;
+    tags?: PostTag[];
+    published_at: string;
+    html: string;
+}
+
+const {siteTitle, siteDescription, logoUrl, coverImageUrl} = await initializeSiteData();
+
+export async function getStaticPaths() {
+    const posts = await getPosts();
+
+    return Array.from(posts, (post) => {
+        return {
+            params: {
+                post: post.id,
+            },
+            props: {
+                title: post.title,
+                feature_image: post.feature_image,
+                primary_tag: post.primary_tag ?? undefined,
+                tags: post.tags ?? undefined,
+                published_at: post.published_at,
+                html: post.html
+            }
+        };
+    });
+}
+
+const {title, feature_image, primary_tag, tags, published_at, html} = Astro.props;
+---
+
+<DefaultLayout siteTitle={`${siteTitle} - ${title}`} coverImageUrl={coverImageUrl}>
+    <Navbar isFixed={true}>
+        <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteTitle} siteSubTitle={siteDescription}/>
+        <NavbarUtility/>
+    </Navbar>
+    <PostsContent
+            title={title}
+            feature_image={feature_image}
+            primary_tag={primary_tag}
+            tags={tags}
+            published_at={published_at}
+            html={html}
+    />
+    <Dock isFixed={true}>
+        <div></div>
+        <DockNav/>
+        <DockSocial/>
+    </Dock>
+</DefaultLayout>

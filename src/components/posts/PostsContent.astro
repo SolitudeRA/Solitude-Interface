@@ -1,0 +1,49 @@
+---
+import "@styles/article.css"
+import type {PostTag} from "@apiClients/ghostPosts";
+
+interface Props {
+    title: string;
+    feature_image: URL;
+    primary_tag?: PostTag | undefined;
+    tags?: PostTag[] | undefined;
+    published_at: string;
+    html: string;
+}
+
+const {title, feature_image, primary_tag, tags, published_at, html} = Astro.props;
+const featureImageLightUrl = `linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),url(${feature_image.toString()})`;
+const featureImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url(${feature_image.toString()})`;
+---
+
+<div class="grid grid-cols-12 solitude-article-container">
+    <div class="col-span-3 bg-[#f3f4f6]/85 dark:bg-[#262626]/95"></div>
+    <div class="col-span-6 bg-white dark:bg-[#1f1f1f] pb-[200px]">
+        <div class="solitude-article-meta">
+            <div class="h-[200px] w-full">
+
+            </div>
+            <div class="h-[200px] w-full flex items-center">
+                <h1 class="solitude-article-title">{title}</h1>
+            </div>
+            <div class="h-[200px] w-full grid grid-cols-4">
+
+            </div>
+        </div>
+        <div>
+            <div class="solitude-article-content" set:html={html}></div>
+        </div>
+    </div>
+    <div class="col-span-3 bg-[#f3f4f6]/85 dark:bg-[#262626]/95"></div>
+</div>
+
+<style define:vars={{featureImageLightUrl, featureImageDarkUrl}}>
+    .solitude-article-meta {
+        background-size  : cover;
+        background-image : var(--featureImageLightUrl);
+    }
+
+    html.dark .solitude-article-meta {
+        background-image : var(--featureImageDarkUrl);
+    }
+</style>

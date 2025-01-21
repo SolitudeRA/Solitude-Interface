@@ -1,9 +1,9 @@
 ---
 interface Props {
-    isFixed: boolean;
+    isFixed?: boolean;
 }
 
-const {isFixed} = Astro.props;
+const {isFixed = false} = Astro.props;
 ---
 
 <nav class:list={["solitude-navbar", isFixed ? "fixed top-0" : ""]}>

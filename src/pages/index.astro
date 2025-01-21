@@ -1,29 +1,25 @@
 ---
-import DefaultLayout from "@layouts/global/DefaultLayout.astro";
-
 import {indexGetHighlightPosts} from "@apiClients/ghostPosts";
-import {ProxyWorkers} from "@apiClients/utilities";
-import IndexMain from "@layouts/index/IndexMain.astro"
+import {initializeSiteData} from "@apiClients/ghostSettings";
 import {Navbar} from "@layouts/global/index"
 import {NavbarBrand, NavbarUtility} from "@components/global/navbar"
 import {Dock} from "@layouts/global"
 import {DockNav, DockTimeline, DockSocial} from "@components/global/dock"
+import DefaultLayout from "@layouts/global/DefaultLayout.astro";
+import IndexMain from "@layouts/index/IndexMain.astro"
 
+const {siteTitle, siteDescription, logoUrl, coverImageUrl} = await initializeSiteData();
 const indexPosts = await indexGetHighlightPosts();
-const utilities = new ProxyWorkers();
-indexPosts.map((post) => {
-    post.feature_image = utilities.convertToWorkersUrl(post.feature_image)
-})
 ---
 
-<DefaultLayout>
-    <Navbar isFixed={true}>
+<DefaultLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
+    <Navbar>
         <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteTitle} siteSubTitle={siteDescription}/>
         <NavbarUtility/>
     </Navbar>
     <IndexMain posts={indexPosts}/>
     <Dock isFixed={true}>
-        <DockTimeline/>
+        <DockTimeline posts={indexPosts}/>
         <DockNav/>
         <DockSocial/>
     </Dock>

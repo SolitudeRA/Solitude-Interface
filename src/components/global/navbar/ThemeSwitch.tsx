@@ -1,4 +1,4 @@
-import {Switch} from "@nextui-org/switch";
+import {Switch} from "@heroui/switch";
 import {useThemeStore} from "@stores/themeStore.ts";
 
 import {GrSun, GrMoon} from "react-icons/gr";

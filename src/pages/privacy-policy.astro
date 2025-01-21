@@ -1,11 +1,26 @@
 ---
+import {initializeSiteData} from "@apiClients/ghostSettings";
 import {DefaultLayout} from "@layouts/global";
-import PostContent from "../layouts/posts/PostContent.astro";
+import {Navbar} from "@layouts/global/index"
+import {NavbarBrand, NavbarUtility} from "@components/global/navbar"
+import {Dock} from "@layouts/global"
+import {DockNav, DockSocial} from "@components/global/dock"
 import PolicyContent from "../components/privacy-policy/PolicyContent.astro";
+
+const {siteTitle, siteDescription, logoUrl, coverImageUrl} = await initializeSiteData();
 ---
 
-<DefaultLayout isDockFixed={true}>
-    <PostContent>
+<DefaultLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
+    <Navbar>
+        <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteTitle} siteSubTitle={siteDescription}/>
+        <NavbarUtility/>
+    </Navbar>
+    <div class="bg-white dark:bg-[#262626] px-[20%]">
         <PolicyContent/>
-    </PostContent>
+    </div>
+    <Dock isFixed={true}>
+        <div></div>
+        <DockNav/>
+        <DockSocial/>
+    </Dock>
 </DefaultLayout>
