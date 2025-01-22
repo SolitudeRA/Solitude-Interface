@@ -1,5 +1,6 @@
 ---
 import "@styles/article.css"
+import PostMeta from "./PostMeta"
 import type {PostTag} from "@apiClients/ghostPosts";
 
 interface Props {
@@ -17,24 +18,21 @@ const featureImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 
 ---
 
 <div class="grid grid-cols-12 solitude-article-container">
-    <div class="col-span-3 bg-[#f3f4f6]/85 dark:bg-[#262626]/95"></div>
-    <div class="col-span-6 bg-white dark:bg-[#1f1f1f] pb-[200px]">
+    <div class="col-span-2 flex bg-[#f3f4f6]/85 dark:bg-[#262626]/95"></div>
+    <div class="col-span-8 bg-white dark:bg-[#1f1f1f] pb-[200px]">
         <div class="solitude-article-meta">
-            <div class="h-[200px] w-full">
-
-            </div>
-            <div class="h-[200px] w-full flex items-center">
-                <h1 class="solitude-article-title">{title}</h1>
-            </div>
-            <div class="h-[200px] w-full grid grid-cols-4">
-
-            </div>
+            <PostMeta
+                    title={title}
+                    primary_tag={primary_tag}
+                    tags={tags}
+                    published_at={published_at}
+            />
         </div>
         <div>
             <div class="solitude-article-content" set:html={html}></div>
         </div>
     </div>
-    <div class="col-span-3 bg-[#f3f4f6]/85 dark:bg-[#262626]/95"></div>
+    <div class="col-span-2 bg-[#f3f4f6]/85 dark:bg-[#262626]/95"></div>
 </div>
 
 <style define:vars={{featureImageLightUrl, featureImageDarkUrl}}>
