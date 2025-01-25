@@ -47,7 +47,6 @@ export default function PostMeta(props: {
 
 function renderSeriesTags(tags?: PostTag[]): ReactElement | null {
     if (!tags) return null;
-
     return (
         <Fragment>
             {tags.map(tag =>
@@ -69,7 +68,6 @@ function renderSeriesTags(tags?: PostTag[]): ReactElement | null {
 
 function renderOtherTags(tags?: PostTag[]): ReactElement | null {
     if (!tags) return null;
-
     return (
         <Fragment>
             {tags.filter((tag) => {
