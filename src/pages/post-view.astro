@@ -1,0 +1,25 @@
+---
+import {DockNav, DockSocial, DockTimeline} from "@components/global/dock";
+import {NavbarBrand, NavbarUtility} from "@components/global/navbar";
+import {Dock, Navbar} from "@layouts/global";
+import DefaultLayout from "@layouts/global/DefaultLayout.astro";
+import {initializeSiteData} from "@apiClients/ghostSettings";
+import {getPosts} from "@apiClients/ghostPosts";
+
+const {siteTitle, siteDescription, logoUrl, coverImageUrl} = await initializeSiteData();
+const posts = await getPosts();
+---
+
+
+<DefaultLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
+    <Navbar>
+        <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteTitle} siteSubTitle={siteDescription}/>
+        <NavbarUtility/>
+    </Navbar>
+
+    <Dock isFixed={true}>
+        <DockNav/>
+        <DockTimeline posts={posts}/>
+        <DockSocial/>
+    </Dock>
+</DefaultLayout>
