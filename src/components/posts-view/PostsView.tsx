@@ -1,3 +1,4 @@
+import PostCardDefault from "@components/posts-view/PostCardDefault.tsx";
 import {css} from "@emotion/react"
 import type {Post, PostTag} from "@apiClients/ghostPosts.ts";
 
@@ -15,5 +16,7 @@ const mainContainerStyle = css`
 `;
 
 function getPostCardByType(post: Post) {
-
+    const type = post.tags?.filter((tag: PostTag) => {
+        return tag.name.startsWith("type-");
+    });
 }
