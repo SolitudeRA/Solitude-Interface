@@ -1,0 +1,51 @@
+---
+import type {Post} from "@apiClients/ghostPosts.ts";
+import {POST_TYPE} from "@apiClients/ghostPosts.ts";
+import PostCardDefault from "@components/posts-view/PostCardDefault.astro";
+import PostCardArticle from "@components/posts-view/PostCardArticle.astro";
+import PostCardMusic from "@components/posts-view/PostCardMusic.astro";
+import PostCardVideo from "@components/posts-view/PostCardVideo.astro";
+import PostCardGallery from "@components/posts-view/PostCardGallery.astro";
+
+interface Props {
+    posts: Post[];
+}
+
+const {posts} = Astro.props;
+---
+
+<div class="grid grid-cols-12 post-view-container">
+    {
+        posts.map((post) => {
+            switch (post.post_type) {
+                case POST_TYPE.DEFAULT:
+                    return (
+                            <PostCardDefault post={post}/>
+                    );
+                case POST_TYPE.ARTICLE:
+                    return (
+                            <PostCardArticle post={post}/>
+                    );
+                case POST_TYPE.MUSIC:
+                    return (
+                            <PostCardMusic post={post}/>
+                    );
+                case POST_TYPE.VIDEO:
+                    return (
+                            <PostCardVideo post={post}/>
+                    );
+                case POST_TYPE.GALLERY:
+                    return (
+                            <PostCardGallery post={post}/>
+                    );
+            }
+        })
+    }
+</div>
+
+<style>
+    .post-view-container {
+        height : 75vh;
+        width  : 100%;
+    }
+</style>

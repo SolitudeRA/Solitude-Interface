@@ -30,6 +30,9 @@ export interface Post {
     published_at: string;
     comment_id: string;
     html: string;
+    post_type: string;
+    post_category: string;
+    post_series: string;
 }
 
 export interface PostTag {
@@ -39,6 +42,18 @@ export interface PostTag {
     description?: string;
     feature_image?: string;
     url?: URL;
+}
+
+const postTypePrefix = "type-";
+const postCategoryPrefix = "category-";
+const postSeriesPrefix = "series-";
+
+export const POST_TYPE = {
+    DEFAULT: "default",
+    ARTICLE: "article",
+    MUSIC: "music",
+    VIDEO: "video",
+    GALLERY: "gallery"
 }
 
 const ghostApiClient = new GhostAPIClient();
@@ -60,6 +75,9 @@ export async function indexGetHighlightPosts(limit: number = 12, fields: string 
                 ...post,
                 url: utilities.convertPostIdToFrontendUrl(post.id),
                 feature_image: utilities.convertToWorkersUrl(post.feature_image),
+                post_type: getFilteredTagSlug(post.tags, postTypePrefix),
+                post_category: getFilteredTagSlug(post.tags, postCategoryPrefix),
+                post_series: getFilteredTagName(post.tags, postSeriesPrefix)
             };
         });
     } catch (error) {
@@ -80,11 +98,32 @@ export async function getPosts(include: string = "tags"): Promise<Post[]> {
             return {
                 ...post,
                 feature_image: utilities.convertToWorkersUrl(post.feature_image),
+                post_type: getFilteredTagSlug(post.tags, postTypePrefix),
+                post_category: getFilteredTagSlug(post.tags, postCategoryPrefix),
+                post_series: getFilteredTagName(post.tags, postSeriesPrefix)
             };
         });
     } catch (error) {
         handleError(error);
     }
+}
+
+function getFilteredTagSlug(tags: PostTag[] | undefined, tagPrefix: string): string {
+    if (tags === undefined) {
+        return "default";
+    }
+    const filteredTags = tags.filter((tag) => tag.slug.startsWith(tagPrefix));
+
+    return filteredTags[0] === undefined || filteredTags.length === 0 ? "default" : filteredTags[0].slug.replace(tagPrefix, "");
+}
+
+function getFilteredTagName(tags: PostTag[] | undefined, tagPrefix: string): string {
+    if (tags === undefined) {
+        return "default";
+    }
+    const filteredTags = tags.filter((tag) => tag.slug.startsWith(tagPrefix));
+
+    return filteredTags[0] === undefined || filteredTags.length === 0 ? "default" : filteredTags[0].name;
 }
 
 function handleError(error: any): never {

@@ -1,0 +1,26 @@
+---
+import "@styles/post-view.css"
+
+import type {Post} from "@apiClients/ghostPosts";
+
+interface Props {
+    post: Post
+}
+
+const {post} = Astro.props;
+---
+
+<div class="post-view-card">
+    <div class="post-view-card-primary-tags">
+
+    </div>
+    <div class="post-view-card-title">
+        {post.title}
+    </div>
+    <div class="post-view-card-content">
+
+    </div>
+    <div class="post-view-card-secondary-tags">
+
+    </div>
+</div>

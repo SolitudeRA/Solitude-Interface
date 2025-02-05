@@ -1,0 +1,1 @@
+export {default as PostViewContainer} from "components/posts-view/PostViewContainer.astro"

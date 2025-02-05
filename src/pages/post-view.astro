@@ -3,6 +3,7 @@ import {DockNav, DockSocial, DockTimeline} from "@components/global/dock";
 import {NavbarBrand, NavbarUtility} from "@components/global/navbar";
 import {Dock, Navbar} from "@layouts/global";
 import DefaultLayout from "@layouts/global/DefaultLayout.astro";
+import {PostViewContainer} from "@components/posts-view";
 import {initializeSiteData} from "@apiClients/ghostSettings";
 import {getPosts} from "@apiClients/ghostPosts";
 
@@ -16,7 +17,7 @@ const posts = await getPosts();
         <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteTitle} siteSubTitle={siteDescription}/>
         <NavbarUtility/>
     </Navbar>
-
+    <PostViewContainer posts={posts}/>
     <Dock isFixed={true}>
         <DockNav/>
         <DockTimeline posts={posts}/>
