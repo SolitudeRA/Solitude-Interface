@@ -14,6 +14,9 @@ export interface IndexHighlightPost {
     primary_tag?: PostTag;
     tags?: PostTag[];
     published_at: string;
+    post_type: string;
+    post_category: string;
+    post_series: string;
 }
 
 interface PostsResponse {
@@ -29,6 +32,7 @@ export interface Post {
     tags?: PostTag[];
     published_at: string;
     comment_id: string;
+    excerpt: string;
     html: string;
     post_type: string;
     post_category: string;

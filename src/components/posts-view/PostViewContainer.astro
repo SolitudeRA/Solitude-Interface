@@ -14,29 +14,39 @@ interface Props {
 const {posts} = Astro.props;
 ---
 
-<div class="grid grid-cols-12 post-view-container">
+<div class="grid grid-cols-10 post-view-container">
     {
         posts.map((post) => {
             switch (post.post_type) {
                 case POST_TYPE.DEFAULT:
                     return (
-                            <PostCardDefault post={post}/>
+                            <div class="col-span-2 flex justify-center items-center">
+                                <PostCardDefault post={post}/>
+                            </div>
                     );
                 case POST_TYPE.ARTICLE:
                     return (
-                            <PostCardArticle post={post}/>
+                            <div class="col-span-2 flex justify-center items-center">
+                                <PostCardArticle post={post}/>
+                            </div>
                     );
                 case POST_TYPE.MUSIC:
                     return (
-                            <PostCardMusic post={post}/>
+                            <div class="col-span-2 flex justify-center items-center">
+                                <PostCardMusic post={post}/>
+                            </div>
                     );
                 case POST_TYPE.VIDEO:
                     return (
-                            <PostCardVideo post={post}/>
+                            <div class="col-span-2 flex justify-center items-center">
+                                <PostCardVideo post={post}/>
+                            </div>
                     );
                 case POST_TYPE.GALLERY:
                     return (
-                            <PostCardGallery post={post}/>
+                            <div class="col-span-2 flex justify-center items-center">
+                                <PostCardGallery post={post}/>
+                            </div>
                     );
             }
         })

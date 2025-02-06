@@ -1,14 +1,20 @@
 .post-view-card {
-    height : 90%;
-    width  : 300px;
+    height        : 90%;
+    width         : 85%;
+    padding-left  : 1rem;
+    padding-right : 1rem;
+    border-radius : 20px;
 }
 
 .post-view-card-primary-tags {
-
+    height : 4rem;
 }
 
 .post-view-card-title {
-
+    font-size     : 1.4rem;
+    font-weight   : bold;
+    padding-left  : 1.5rem;
+    padding-right : 1.5rem;
 }
 
 .post-view-card-content {

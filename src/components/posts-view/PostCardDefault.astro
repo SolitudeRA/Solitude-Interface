@@ -1,7 +1,7 @@
 ---
 import "@styles/post-view.css"
-
 import type {Post} from "@apiClients/ghostPosts";
+import {Chip} from "@heroui/react";
 
 interface Props {
     post: Post
@@ -10,11 +10,20 @@ interface Props {
 const {post} = Astro.props;
 ---
 
-<div class="post-view-card">
-    <div class="post-view-card-primary-tags">
-
+<div class="post-view-card bg-neutral-200/90 dark:bg-gray-900/90">
+    <div class="post-view-card-primary-tags flex items-center justify-between">
+        <div>
+            <Chip variant="flat" color="primary" client:visible>
+                {post.post_type}
+            </Chip>
+        </div>
+        <div>
+            <Chip variant="flat" color="secondary" client:visible>
+                {post.post_series}
+            </Chip>
+        </div>
     </div>
-    <div class="post-view-card-title">
+    <div class="post-view-card-title text-center">
         {post.title}
     </div>
     <div class="post-view-card-content">
