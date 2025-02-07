@@ -17,6 +17,7 @@ export interface IndexHighlightPost {
     post_type: string;
     post_category: string;
     post_series: string;
+    post_general_tags?: string[];
 }
 
 interface PostsResponse {
@@ -37,6 +38,7 @@ export interface Post {
     post_type: string;
     post_category: string;
     post_series: string;
+    post_general_tags?: string[];
 }
 
 export interface PostTag {
@@ -65,7 +67,7 @@ const utilities = new ProxyWorkers();
 
 export async function indexGetHighlightPosts(limit: number = 12, fields: string = "id,title,url,feature_image,primary_tag,published_at", include: string = "tags"): Promise<IndexHighlightPost[]> {
     try {
-        const response = await ghostApiClient
+        const {posts} = await ghostApiClient
             .get<IndexHighlightPostsResponse>({
                                                   endpoint: "/posts/",
                                                   params: {
@@ -74,16 +76,15 @@ export async function indexGetHighlightPosts(limit: number = 12, fields: string 
                                                       include
                                                   }
                                               });
-        return response.posts.map((post) => {
-            return {
-                ...post,
-                url: utilities.convertPostIdToFrontendUrl(post.id),
-                feature_image: utilities.convertToWorkersUrl(post.feature_image),
-                post_type: getFilteredTagSlug(post.tags, postTypePrefix),
-                post_category: getFilteredTagSlug(post.tags, postCategoryPrefix),
-                post_series: getFilteredTagName(post.tags, postSeriesPrefix)
-            };
-        });
+        return posts.map((post) => ({
+            ...post,
+            url: utilities.convertPostIdToFrontendUrl(post.id),
+            feature_image: utilities.convertToWorkersUrl(post.feature_image),
+            post_type: getTagSlugWith(post.tags, postTypePrefix),
+            post_category: getTagSlugWith(post.tags, postCategoryPrefix),
+            post_series: getTagNameWith(post.tags, postSeriesPrefix),
+            post_general_tags: getTagNameExcept(post.tags, [postTypePrefix, postCategoryPrefix, postSeriesPrefix])
+        }));
     } catch (error) {
         handleError(error);
     }
@@ -91,51 +92,46 @@ export async function indexGetHighlightPosts(limit: number = 12, fields: string 
 
 export async function getPosts(include: string = "tags"): Promise<Post[]> {
     try {
-        const response = await ghostApiClient
+        const {posts} = await ghostApiClient
             .get<PostsResponse>({
                                     endpoint: "/posts/",
                                     params: {
                                         include
                                     }
                                 });
-        return response.posts.map((post) => {
-            return {
-                ...post,
-                feature_image: utilities.convertToWorkersUrl(post.feature_image),
-                post_type: getFilteredTagSlug(post.tags, postTypePrefix),
-                post_category: getFilteredTagSlug(post.tags, postCategoryPrefix),
-                post_series: getFilteredTagName(post.tags, postSeriesPrefix)
-            };
-        });
+        return posts.map((post) => ({
+            ...post,
+            feature_image: utilities.convertToWorkersUrl(post.feature_image),
+            post_type: getTagSlugWith(post.tags, postTypePrefix),
+            post_category: getTagSlugWith(post.tags, postCategoryPrefix),
+            post_series: getTagNameWith(post.tags, postSeriesPrefix),
+            post_general_tags: getTagNameExcept(post.tags, [postTypePrefix, postCategoryPrefix, postSeriesPrefix])
+        }));
     } catch (error) {
         handleError(error);
     }
 }
 
-function getFilteredTagSlug(tags: PostTag[] | undefined, tagPrefix: string): string {
-    if (tags === undefined) {
-        return "default";
-    }
-    const filteredTags = tags.filter((tag) => tag.slug.startsWith(tagPrefix));
-
-    return filteredTags[0] === undefined || filteredTags.length === 0 ? "default" : filteredTags[0].slug.replace(tagPrefix, "");
+function getTagSlugWith(tags: PostTag[] | undefined, tagPrefix: string): string {
+    return tags?.find((tag) => tag.slug.startsWith(tagPrefix))?.slug.replace(tagPrefix, "") ?? "default";
 }
 
-function getFilteredTagName(tags: PostTag[] | undefined, tagPrefix: string): string {
-    if (tags === undefined) {
-        return "default";
-    }
-    const filteredTags = tags.filter((tag) => tag.slug.startsWith(tagPrefix));
-
-    return filteredTags[0] === undefined || filteredTags.length === 0 ? "default" : filteredTags[0].name;
+function getTagNameWith(tags: PostTag[] | undefined, tagPrefix: string): string {
+    return tags?.find((tag) => tag.slug.startsWith(tagPrefix))?.name ?? "default";
 }
 
-function handleError(error: any): never {
-    if (error.isAxiosError) {
+function getTagNameExcept(tags: PostTag[] | undefined, tagPrefixes: string[]): string[] {
+    return tags?.filter((tag) => !tagPrefixes.some((prefix) => tag.slug.startsWith(prefix)))
+               .map((tag) => tag.name) ?? [];
+}
+
+
+function handleError(error: unknown): never {
+    if ((error as AxiosError).isAxiosError) {
         const axiosError = error as AxiosError;
         console.error("API Error:", axiosError.response?.data || axiosError.message);
     } else {
-        console.error("Unexpected Error:", error.message);
+        console.error("Unexpected Error:", (error as Error).message);
     }
     throw error;
 }
