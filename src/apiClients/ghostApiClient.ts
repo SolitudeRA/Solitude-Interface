@@ -63,8 +63,6 @@ export class GhostAPIClient {
         }
     }
 
-    //test
-
     private handleError(error: any): never {
         if (axios.isAxiosError(error)) {
             console.error("API Error:", {
