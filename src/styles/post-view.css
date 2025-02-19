@@ -7,7 +7,7 @@
 }
 
 .post-view-card-primary-tags {
-    height : 4rem;
+    height : 8%;
 }
 
 .post-view-card-title {
@@ -26,6 +26,6 @@
     padding-right : 1rem;
 }
 
-.post-view-card-secondary-tags {
-
+.post-view-card-secondary-tags{
+    height : 10%;
 }

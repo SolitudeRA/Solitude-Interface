@@ -1,13 +1,13 @@
 ---
-import "@styles/post-view.css"
-import type {Post} from "@apiClients/ghostPosts";
-import {Chip} from "@heroui/react";
+import '@styles/post-view.css';
+import type { Post } from '@apiClients/ghostPosts';
+import { Chip } from '@heroui/react';
 
 interface Props {
-    post: Post
+    post: Post;
 }
 
-const {post} = Astro.props;
+const { post } = Astro.props;
 const postFeatureImageLightUrl = `linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),url(${post.feature_image.toString()})`;
 const postFeatureImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url(${post.feature_image.toString()})`;
 ---
@@ -34,24 +34,33 @@ const postFeatureImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0,
         {post.excerpt}
     </div>
     <div class="post-view-card-bottom">
-        <div class="post-view-card-secondary-tags">
-            {post.post_general_tags?.map(
-                (tagName) =>
-                        <Chip variant="flat" client:visible>
-                            {tagName}
-                        </Chip>
-            )}
+        <div class="text-center post-view-card-date">
+            {post.published_at.split('T')[0]}
+        </div>
+        <div class=" post-view-card-secondary-tags">
+            {
+                post.post_general_tags?.map((tagName) => (
+                    <Chip color="success" variant="flat" client:visible>
+                        {tagName}
+                    </Chip>
+                ))
+            }
         </div>
     </div>
 </div>
 
-<style define:vars={{postFeatureImageLightUrl: postFeatureImageLightUrl, postFeatureImageDarkUrl: postFeatureImageDarkUrl}}>
+<style
+    define:vars={{
+        postFeatureImageLightUrl: postFeatureImageLightUrl,
+        postFeatureImageDarkUrl: postFeatureImageDarkUrl,
+    }}
+>
     .post-view-card {
-        background-size  : cover;
-        background-image : var(--postFeatureImageLightUrl);
+        background-size: cover;
+        background-image: var(--postFeatureImageLightUrl);
     }
 
     html.dark .post-view-card {
-        background-image : var(--postFeatureImageDarkUrl);
+        background-image: var(--postFeatureImageDarkUrl);
     }
 </style>

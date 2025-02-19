@@ -1,26 +1,30 @@
 ---
-import {DockNav, DockSocial, DockTimeline} from "@components/global/dock";
-import {NavbarBrand, NavbarUtility} from "@components/global/navbar";
-import {Dock, Navbar} from "@layouts/global";
-import DefaultLayout from "@layouts/global/DefaultLayout.astro";
-import {PostViewContainer} from "@components/posts-view";
-import {initializeSiteData} from "@apiClients/ghostSettings";
-import {getPosts} from "@apiClients/ghostPosts";
+import { DockNav, DockSocial, DockTimeline } from '@components/global/dock';
+import { NavbarBrand, NavbarUtility } from '@components/global/navbar';
+import { Dock, Navbar } from '@layouts/global';
+import DefaultLayout from '@layouts/global/DefaultLayout.astro';
+import { PostViewContainer } from '@components/posts-view';
+import { initializeSiteData } from '@apiClients/ghostSettings';
+import { getPosts } from '@apiClients/ghostPosts';
 
-const {siteTitle, siteDescription, logoUrl, coverImageUrl} = await initializeSiteData();
+const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
+    await initializeSiteData();
 const posts = await getPosts();
 ---
 
-
 <DefaultLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
     <Navbar>
-        <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteTitle} siteSubTitle={siteDescription}/>
-        <NavbarUtility/>
+        <NavbarBrand
+            logoImageUrl={logoUrl}
+            siteTitle={siteTitle}
+            siteSubTitle={siteDescription}
+        />
+        <NavbarUtility />
     </Navbar>
-    <PostViewContainer posts={posts}/>
+    <PostViewContainer posts={posts} />
     <Dock isFixed={true}>
-        <DockNav/>
-        <DockTimeline posts={posts}/>
-        <DockSocial/>
+        <DockNav />
+        <DockTimeline posts={posts} />
+        <DockSocial />
     </Dock>
 </DefaultLayout>
