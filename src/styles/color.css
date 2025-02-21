@@ -1,0 +1,39 @@
+.text-color-site-title {
+    color : #222222;
+}
+
+html.dark .text-color-site-title {
+    color : #FFFFFF;
+}
+
+.text-color-site-subtitle {
+    color : #222222;
+}
+
+html.dark .text-color-site-subtitle {
+    color : #FFFFFF;
+}
+
+.text-color-article-title {
+
+}
+
+html.dark .text-color-article-title {
+
+}
+
+.text-color-article-title-content {
+
+}
+
+html.dark .text-color-article-title-content {
+
+}
+
+.text-color-ui {
+    color : #222222;
+}
+
+html.dark .text-color-ui {
+    color : #FFFFFF;
+}
