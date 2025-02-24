@@ -15,19 +15,19 @@ html.dark .text-color-site-subtitle {
 }
 
 .text-color-article-title {
-
+    color : #222222;
 }
 
 html.dark .text-color-article-title {
-
+    color : #FFFFFF;
 }
 
 .text-color-article-title-content {
-
+    color : #222222;
 }
 
 html.dark .text-color-article-title-content {
-
+    color : #FFFFFF;
 }
 
 .text-color-ui {
