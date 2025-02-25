@@ -1,6 +1,10 @@
 @import "@fontsource-variable/noto-sans-sc";
 
 @import "tailwindcss";
-@import "@styles/color.css";
+@import "@styles/global-color.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@theme{
+    --font-noto-sans: 'Noto Sans SC Variable';
+}

@@ -1,52 +1,64 @@
 ---
-import {Avatar} from "@heroui/react";
-import {FaGithub, FaSquareXTwitter, FaSteam, FaSpotify, FaBilibili} from "react-icons/fa6";
-import solitudeAvatar from "@assets/avatar.jpg"
+import { Avatar } from '@heroui/react';
+import {
+    FaGithub,
+    FaSquareXTwitter,
+    FaSteam,
+    FaSpotify,
+    FaBilibili,
+} from 'react-icons/fa6';
+import solitudeAvatar from '@assets/avatar.jpg';
 ---
 
 <div class="solitude-dock-social flex justify-end items-center">
     <div class="flex items-center space-x-12 mr-14 text-color-ui">
         <span class="solitude-dock-social-icon">
             <a href="https://github.com/SolitudeRA" target="_blank">
-                <FaGithub/>
+                <FaGithub />
             </a>
         </span>
         <span class="solitude-dock-social-icon">
             <a href="https://github.com/SolitudeRA" target="_blank">
-                <FaSquareXTwitter/>
+                <FaSquareXTwitter />
             </a>
         </span>
         <span class="solitude-dock-social-icon">
             <a href="https://github.com/SolitudeRA" target="_blank">
-                <FaSteam/>
+                <FaSteam />
             </a>
         </span>
         <span class="solitude-dock-social-icon">
             <a href="https://github.com/SolitudeRA" target="_blank">
-                <FaSpotify/>
+                <FaSpotify />
             </a>
-         </span>
+        </span>
         <span class="solitude-dock-social-icon">
             <a href="https://github.com/SolitudeRA" target="_blank">
-                <FaBilibili/>
+                <FaBilibili />
             </a>
         </span>
     </div>
-    <Avatar className="solitude-dock-social-avatar shadow-xl" src={solitudeAvatar.src} showFallback={true} client:visible/>
+    <Avatar
+        className="solitude-dock-social-avatar shadow-xl"
+        src={solitudeAvatar.src}
+        showFallback={true}
+        client:visible
+    />
 </div>
 
 <style>
     .solitude-dock-social {
-        height : 3.5em;
+        height: 3.5em;
+        color: var(--text-ui-primary);
     }
 
     .solitude-dock-social-icon svg {
-        height : 2em;
-        width  : 2em;
+        height: 2em;
+        width: 2em;
     }
 
     .solitude-dock-social-avatar {
-        height : 5em;
-        width  : 5em;
+        height: 5em;
+        width: 5em;
     }
 </style>

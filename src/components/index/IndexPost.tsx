@@ -1,6 +1,5 @@
-import { Fragment } from 'react';
+import { Fragment, useCallback } from 'react';
 import type { ReactElement } from 'react';
-import { motion } from 'motion/react';
 import { css } from '@emotion/react';
 import { Card, CardHeader, CardFooter, Image, Chip } from '@heroui/react';
 
@@ -8,19 +7,20 @@ import type { IndexHighlightPost, PostTag } from '@apiClients/ghostPosts.ts';
 
 export default function IndexPost(props: { post: IndexHighlightPost }) {
     const post = props.post;
+    const handleCardPress = useCallback(() => {
+        window.open(post.url, '_blank');
+    }, [post.url]);
 
     return (
-        <motion.div
+        <div
             css={cardStyle}
             className="snap-start scroll-ml-[40px] bg-transparent"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
         >
             <Card
                 className="w-full h-full"
                 isFooterBlurred
                 isPressable
-                onPress={() => window.open(post.url, '_blank')}
+                onPress={handleCardPress}
             >
                 <CardHeader
                     css={cardHeaderStyle}
@@ -52,7 +52,7 @@ export default function IndexPost(props: { post: IndexHighlightPost }) {
                     <p>{post.published_at.split('T')[0]}</p>
                 </CardFooter>
             </Card>
-        </motion.div>
+        </div>
     );
 }
 
@@ -96,16 +96,17 @@ function renderTags(tags?: PostTag[]): ReactElement | null {
 }
 
 const cardStyle = css`
-    display: inline-block;
-    width: 19.8rem;
-    min-width: 300px;
-    aspect-ratio: 7 / 5;
-    border-radius: 20px;
-    margin-left: 50px;
+    display       : inline-block;
+    width         : 19.8rem;
+    min-width     : 300px;
+    aspect-ratio  : 7 / 5;
+    border-radius : 20px;
+    margin-left   : 50px;
+    overflow      : hidden;
 `;
 
 const cardHeaderStyle = css`
-    z-index: 10;
+    z-index : 10;
 `;
 
 const cardHeaderTagsStyle = css`
@@ -119,6 +120,7 @@ const cardHeaderTitleStyle = css`
     font-size: 1.125rem;
     line-height: 1.1rem;
     margin-bottom: 0.1rem;
+    color   : var(--text-plain-primary);
 `;
 
 const cardCoverStyle = css`
@@ -131,10 +133,10 @@ const cardCoverStyle = css`
 `;
 
 const cardFooterStyle = css`
-    height: 2.5rem;
-    padding-left: 1.2rem;
-    font-size: 0.9rem;
-    color: #b2b2b2;
-    z-index: 10;
-    bottom: 0;
+    height       : 2.5rem;
+    padding-left : 1.2rem;
+    font-size    : 0.9rem;
+    z-index      : 10;
+    bottom       : 0;
+    color        : var(--text-plain-secondary);
 `;

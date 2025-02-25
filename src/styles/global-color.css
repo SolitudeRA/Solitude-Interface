@@ -1,0 +1,17 @@
+:root {
+    --text-site-title      : #111111;
+    --text-site-subtitle   : #444444;
+    --text-ui-primary      : #222222;
+    --text-ui-secondary    : #666666;
+    --text-plain-primary   : #222222;
+    --text-plain-secondary : #777777;
+}
+
+html.dark {
+    --text-site-title      : #FFFFFF;
+    --text-site-subtitle   : #DDDDDD;
+    --text-ui-primary      : #EEEEEE;
+    --text-ui-secondary    : #BBBBBB;
+    --text-plain-primary   : #DDDDDD;
+    --text-plain-secondary : #999999;
+}

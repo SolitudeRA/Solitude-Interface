@@ -1,28 +1,36 @@
 ---
-import {Image} from 'astro:assets'
+import { Image } from 'astro:assets';
 
 interface Props {
-    logoImageUrl: string,
-    siteTitle: string,
-    siteSubTitle: string
+    logoImageUrl: string;
+    siteTitle: string;
+    siteSubTitle: string;
 }
 
-const {logoImageUrl, siteTitle, siteSubTitle} = Astro.props;
+const { logoImageUrl, siteTitle, siteSubTitle } = Astro.props;
 ---
 
 <div class="solitude-navbar-brand flex items-center px-10 space-x-10 h-full">
     <Image src={logoImageUrl} height={400} width={400} alt="brand-logo" />
     <div class="grid grid-cols-1 gap-3 text-color-ui">
-        <a class="text-4xl font-bold subpixel-antialiased">{siteTitle}</a>
-        <a class="text-xl font-medium subpixel-antialiased">{siteSubTitle}</a>
+        <a class="text-4xl font-bold subpixel-antialiased solitude-navbar-brand-title">{siteTitle}</a>
+        <a class="text-xl font-medium subpixel-antialiased solitude-navbar-brand-subtitle">{siteSubTitle}</a>
     </div>
 </div>
 
 <style>
     .solitude-navbar-brand img {
-        border-radius : 18%;
-        height        : 50%;
-        min-height    : 100px;
-        width         : auto;
+        border-radius: 18%;
+        height: 50%;
+        min-height: 100px;
+        width: auto;
+    }
+
+    .solitude-navbar-brand-title {
+        color: var(--text-site-title);
+    }
+
+    .solitude-navbar-brand-subtitle {
+        color: var(--text-site-subtitle);
     }
 </style>
