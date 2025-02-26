@@ -1,17 +1,55 @@
 :root {
-    --text-site-title      : #111111;
-    --text-site-subtitle   : #444444;
-    --text-ui-primary      : #222222;
-    --text-ui-secondary    : #666666;
-    --text-plain-primary   : #222222;
-    --text-plain-secondary : #777777;
+    /* 站点标题相关文本 */
+    --text-site-title          : #0D0D0D;
+    --text-site-subtitle       : #505050;
+
+    /* UI 组件文本） */
+    --text-ui-primary          : #1A1A1A;
+    --text-ui-secondary        : #555555;
+
+    /* 正文文本） */
+    --text-content-primary     : #222222;
+    --text-content-secondary   : #555555;
+
+    /* 标签（tag）文本 */
+    --text-tag-primary         : #111111;
+    --text-tag-secondary       : #111111;
+    --text-tag-alt             : #111111;
+
+    /* Index卡片背景 */
+    --background-index-card-header   : #111111;
+    --background-index-card-footer   : #111111;
+
+    /* 标签背景 */
+    --background-tag-primary   : #111111;
+    --background-tag-secondary : #111111;
+    --background-tag-alt       : #111111;
 }
 
 html.dark {
-    --text-site-title      : #FFFFFF;
-    --text-site-subtitle   : #DDDDDD;
-    --text-ui-primary      : #EEEEEE;
-    --text-ui-secondary    : #BBBBBB;
-    --text-plain-primary   : #DDDDDD;
-    --text-plain-secondary : #999999;
+    /* 站点标题相关文本 */
+    --text-site-title          : #F0F0F0;
+    --text-site-subtitle       : #DDDDDD;
+
+    /* UI 组件文本 */
+    --text-ui-primary          : #EAEAEA;
+    --text-ui-secondary        : #AAAAAA;
+
+    /* 正文文本 */
+    --text-content-primary     : #DCDCDC;
+    --text-content-secondary   : #A0A0A0;
+
+    /* 标签（tag）文本 */
+    --text-tag-primary         : #111111;
+    --text-tag-secondary       : #111111;
+    --text-tag-alt             : #111111;
+
+    /* Index卡片背景 */
+    --background-index-card-header   : #111111;
+    --background-index-card-footer   : #111111;
+
+    /* 标签背景 */
+    --background-tag-primary   : #111111;
+    --background-tag-secondary : #111111;
+    --background-tag-alt       : #111111;
 }
