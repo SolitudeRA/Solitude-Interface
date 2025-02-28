@@ -1,8 +1,11 @@
 ---
-import DefaultLayout from "@layouts/global/DefaultLayout.astro";
-import AboutContent from "@layouts/about/AboutContent.astro"
+import DefaultLayout from '@layouts/global/DefaultLayout.astro';
+import AboutContent from '@layouts/about/AboutContent.astro';
+import { initializeSiteData } from '@apiClients/ghostSettings';
+
+const { siteTitle, coverImageUrl } = await initializeSiteData();
 ---
 
-<DefaultLayout isNavbarFixed isDockFixed>
-    <AboutContent/>
+<DefaultLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
+    <AboutContent />
 </DefaultLayout>
