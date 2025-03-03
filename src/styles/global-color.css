@@ -23,7 +23,9 @@
     /* 标签背景 */
     --background-tag-primary       : #111111;
     --background-tag-secondary     : #111111;
-    --background-tag-alt           : #111111;;
+    --background-tag-alt           : #111111;
+
+    --background-tag-test           : #111111;
 }
 
 html.dark {
