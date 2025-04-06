@@ -1,4 +1,4 @@
-import type {PostTag} from "@apiClients/ghostPosts.ts";
+import type {PostTag} from "api/ghost/posts";
 import {Chip} from "@heroui/react";
 import {Fragment, type ReactElement} from "react";
 

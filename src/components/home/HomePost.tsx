@@ -3,7 +3,7 @@ import type { ReactElement } from 'react';
 import { css } from '@emotion/react';
 import { Card, CardHeader, CardFooter, Image, Chip } from '@heroui/react';
 
-import type { IndexHighlightPost, PostTag } from '@apiClients/ghostPosts.ts';
+import type { IndexHighlightPost, PostTag } from 'api/ghost/posts';
 
 export default function IndexPost(props: { post: IndexHighlightPost }) {
     const post = props.post;

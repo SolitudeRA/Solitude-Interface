@@ -1,6 +1,6 @@
-import {ProxyWorkers} from "@apiClients/utilities";
+import {ProxyWorkers} from "api/utilities";
 import type {AxiosError} from "axios";
-import {GhostAPIClient} from "./ghostApiClient";
+import {GhostAPIClient} from "../clients/ghost";
 
 interface IndexHighlightPostsResponse {
     posts: IndexHighlightPost[];

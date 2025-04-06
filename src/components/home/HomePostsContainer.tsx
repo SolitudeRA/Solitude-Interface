@@ -1,6 +1,6 @@
 import {css} from "@emotion/react"
 import IndexPost from "@components/index/IndexPost.tsx";
-import type {IndexHighlightPost} from "@apiClients/ghostPosts.ts";
+import type {IndexHighlightPost} from "api/ghost/posts";
 import React, {useRef} from "react";
 
 export default function IndexPostsContainer(props: { posts: IndexHighlightPost[] }) {

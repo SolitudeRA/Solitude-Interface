@@ -2,8 +2,8 @@
 import DefaultLayout from "@layouts/global/DefaultLayout.astro";
 
 import {initializeSiteData} from "@apiClients/ghostSettings";
-import {getPosts} from "@apiClients/ghostPosts";
-import type {PostTag} from "@apiClients/ghostPosts";
+import {getPosts} from "api/ghost/posts";
+import type {PostTag} from "api/ghost/posts";
 import {Navbar} from "@layouts/global/index"
 import {NavbarBrand, NavbarUtility} from "@components/global/navbar"
 import {Dock} from "@layouts/global"

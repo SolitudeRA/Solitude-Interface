@@ -1,6 +1,6 @@
 import {css} from "@emotion/react"
 
-import type {IndexHighlightPost} from "@apiClients/ghostPosts.ts";
+import type {IndexHighlightPost} from "api/ghost/posts";
 
 export default function DockTimelineContainer(props: { posts: IndexHighlightPost[] }) {
     const posts = props.posts;

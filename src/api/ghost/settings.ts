@@ -1,5 +1,5 @@
-import {ProxyWorkers} from "@apiClients/utilities.ts";
-import {GhostAPIClient} from "./ghostApiClient";
+import {ProxyWorkers} from "api/utilities";
+import {GhostAPIClient} from "../clients/ghost";
 import type {AxiosError} from "axios";
 
 interface SiteInformationResponse {

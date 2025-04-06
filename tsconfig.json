@@ -8,26 +8,14 @@
     "dist"
   ],
   "compilerOptions": {
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@apiClients/*": [
-        "../src/apiClients/*"
-      ],
-      "@components/*": [
-        "../src/components/*"
-      ],
-      "@layouts/*": [
-        "../src/layouts/*"
-      ],
-      "@styles/*": [
-        "../src/styles/*"
-      ],
-      "@stores/*": [
-        "../src/stores/*"
-      ],
-      "@assets/*": [
-        "../src/assets/*"
-      ]
+      "@api/*": ["src/api/*"],
+      "@components/*": ["src/components/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@styles/*": ["src/styles/*"],
+      "@stores/*": ["src/stores/*"],
+      "@assets/*": ["src/assets/*"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",

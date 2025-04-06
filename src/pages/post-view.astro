@@ -3,9 +3,9 @@ import { DockNav, DockSocial, DockTimeline } from '@components/global/dock';
 import { NavbarBrand, NavbarUtility } from '@components/global/navbar';
 import { Dock, Navbar } from '@layouts/global';
 import DefaultLayout from '@layouts/global/DefaultLayout.astro';
-import { PostViewContainer } from '@components/posts-view';
+import { PostViewContainer } from '@components/posts/index';
 import { initializeSiteData } from '@apiClients/ghostSettings';
-import { getPosts } from '@apiClients/ghostPosts';
+import { getPosts } from 'api/ghost/posts';
 
 const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
     await initializeSiteData();
