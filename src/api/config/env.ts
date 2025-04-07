@@ -42,7 +42,7 @@ function getEnv(key: string, defaultValue?: string): string {
         if (defaultValue !== undefined) {
             return defaultValue;
         }
-        throw new Error(`环境变量 ${key} 未设置，且没有默认值`);
+        throw new Error(`Environment variable ${key} is not set and no default value is provided.`);
     }
     return value;
 }

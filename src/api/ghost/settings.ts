@@ -1,6 +1,6 @@
-import { ProxyWorkers } from 'api/utilities';
-import { GhostAPIClient } from '../clients/ghost';
-import type { AxiosError } from 'axios';
+import { GhostAPIClient } from '@api/clients/ghost';
+import { adaptToResourceWorkers } from '@api/adapters/cloudflare';
+import { handleApiError } from '@api/utils/errorHandlers';
 
 interface SiteInformationResponse {
     settings: SiteInformation;
@@ -14,6 +14,7 @@ export interface SiteInformation {
     cover_image: URL;
     twitter: string;
     timezone: string;
+    navigation?: SiteNavigation[];
 }
 
 export interface SiteNavigation {
@@ -21,44 +22,43 @@ export interface SiteNavigation {
     url: URL;
 }
 
+const DEFAULT_FIELDS =
+    'title,description,logo,icon,cover_image,twitter,timezone,navigation';
+
 const ghostApiClient = new GhostAPIClient();
 
 export async function getSiteInformation(
-    fields: string = 'title,description,logo,icon,cover_image,twitter,timezone,navigation',
+    fields: string = DEFAULT_FIELDS,
 ): Promise<SiteInformation> {
     try {
         const response = await ghostApiClient.get<SiteInformationResponse>({
             endpoint: '/settings/',
             params: { fields },
         });
+
         return response.settings;
     } catch (error) {
-        handleError(error);
+        return handleApiError(error);
     }
 }
 
 export async function initializeSiteData() {
-    const siteInformation = await getSiteInformation();
-    const utilities = new ProxyWorkers();
-    return {
-        siteTitle: siteInformation.title,
-        siteDescription: siteInformation.description,
-        logoUrl: utilities.convertToWorkersUrl(siteInformation.logo).toString(),
-        coverImageUrl: utilities.convertToWorkersUrl(
-            siteInformation.cover_image,
-        ),
-    };
-}
+    try {
+        const siteInformation = await getSiteInformation();
 
-function handleError(error: any): never {
-    if (error.isAxiosError) {
-        const axiosError = error as AxiosError;
-        console.error(
-            'API Error:',
-            axiosError.response?.data || axiosError.message,
-        );
-    } else {
-        console.error('Unexpected Error:', error.message);
+        return {
+            siteTitle: siteInformation.title,
+            siteDescription: siteInformation.description,
+            logoUrl: adaptToResourceWorkers(siteInformation.logo).toString(),
+            coverImageUrl: adaptToResourceWorkers(siteInformation.cover_image),
+        };
+    } catch (error) {
+        console.error('Failed to initialize site data:', error);
+        return {
+            siteTitle: 'Error',
+            siteDescription: 'Failed to initialize site data',
+            logoUrl: '',
+            coverImageUrl: new URL('https://example.com/default-cover.jpg'),
+        };
     }
-    throw error;
 }

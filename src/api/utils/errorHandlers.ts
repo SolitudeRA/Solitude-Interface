@@ -13,10 +13,10 @@ export function handleApiError(error: unknown): never {
 
         console.error('API Error:', errorInfo);
         throw new Error(
-            `API 请求失败: ${errorInfo.status} - ${errorInfo.message}`,
+            `API request failed: ${errorInfo.status} - ${errorInfo.message}`,
         );
     }
 
-    console.error('意外错误:', error);
-    throw new Error(`未知错误: ${(error as Error).message || '没有错误信息'}`);
+    console.error('Unknown error:', error);
+    throw new Error(`Unknown error: ${(error as Error).message || 'No information'}`);
 }
