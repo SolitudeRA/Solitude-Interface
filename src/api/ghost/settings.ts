@@ -1,6 +1,6 @@
-import {ProxyWorkers} from "api/utilities";
-import {GhostAPIClient} from "../clients/ghost";
-import type {AxiosError} from "axios";
+import { ProxyWorkers } from 'api/utilities';
+import { GhostAPIClient } from '../clients/ghost';
+import type { AxiosError } from 'axios';
 
 interface SiteInformationResponse {
     settings: SiteInformation;
@@ -23,13 +23,14 @@ export interface SiteNavigation {
 
 const ghostApiClient = new GhostAPIClient();
 
-export async function getSiteInformation(fields: string = "title,description,logo,icon,cover_image,twitter,timezone,navigation"): Promise<SiteInformation> {
+export async function getSiteInformation(
+    fields: string = 'title,description,logo,icon,cover_image,twitter,timezone,navigation',
+): Promise<SiteInformation> {
     try {
-        const response = await ghostApiClient
-            .get<SiteInformationResponse>({
-                                              endpoint: "/settings/",
-                                              params: {fields}
-                                          });
+        const response = await ghostApiClient.get<SiteInformationResponse>({
+            endpoint: '/settings/',
+            params: { fields },
+        });
         return response.settings;
     } catch (error) {
         handleError(error);
@@ -43,16 +44,21 @@ export async function initializeSiteData() {
         siteTitle: siteInformation.title,
         siteDescription: siteInformation.description,
         logoUrl: utilities.convertToWorkersUrl(siteInformation.logo).toString(),
-        coverImageUrl: utilities.convertToWorkersUrl(siteInformation.cover_image),
-    }
+        coverImageUrl: utilities.convertToWorkersUrl(
+            siteInformation.cover_image,
+        ),
+    };
 }
 
 function handleError(error: any): never {
     if (error.isAxiosError) {
         const axiosError = error as AxiosError;
-        console.error("API Error:", axiosError.response?.data || axiosError.message);
+        console.error(
+            'API Error:',
+            axiosError.response?.data || axiosError.message,
+        );
     } else {
-        console.error("Unexpected Error:", error.message);
+        console.error('Unexpected Error:', error.message);
     }
     throw error;
 }

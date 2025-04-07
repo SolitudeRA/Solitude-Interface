@@ -8,6 +8,12 @@ export default {
                 parser: 'astro',
             },
         },
+        {
+            files: ['*.json', '*.yml'],
+            options: {
+                tabWidth: 2,
+            },
+        },
     ],
     tabWidth: 4,
     endOfLine: 'lf',
