@@ -10,12 +10,12 @@ interface GhostEnvVars {
     url: string;
     key: string;
     version: string;
+    accessId: string;
+    accessSecret: string;
 }
 
 interface ResourceWorkersEnvVars {
     url: string;
-    accessClientId: string;
-    accessClientSecret: string;
 }
 
 export const env = Object.freeze({
@@ -26,12 +26,12 @@ export const env = Object.freeze({
         url: getEnv('GHOST_URL'),
         key: getEnv('GHOST_KEY'),
         version: getEnv('GHOST_VERSION', 'v5.0'),
+        accessId: getEnv('GHOST_ACCESS_ID'),
+        accessSecret: getEnv('GHOST_ACCESS_SECRET'),
     } as GhostEnvVars,
     workers: {
         resource: {
             url: getEnv('WORKERS_SOURCE_URL'),
-            accessClientId: getEnv('WORKERS_SOURCE_ACCESS_ID'),
-            accessClientSecret: getEnv('WORKERS_SOURCE_ACCESS_SECRET'),
         } as ResourceWorkersEnvVars,
     },
 });

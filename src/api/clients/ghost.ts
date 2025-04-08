@@ -1,55 +1,26 @@
-import dotenv from 'dotenv';
 import axios from 'axios';
+import { env } from '@api/config/env';
 import type { AxiosInstance } from 'axios';
-
-interface GhostClientConfig {
-    url: string | undefined;
-    key: string | undefined;
-    version: string | undefined;
-    accessClientId: string | undefined;
-    accessClientSecret: string | undefined;
-}
 
 interface GhostClientOptions {
     endpoint: string;
     params?: Record<string, any>;
 }
 
-dotenv.config();
-
-const envConfig = {
-    GHOST_URL: process.env.GHOST_URL,
-    GHOST_KEY: process.env.GHOST_KEY,
-    GHOST_VERSION: process.env.GHOST_VERSION,
-    ACCESS_CLIENT_ID: process.env.ACCESS_CLIENT_ID,
-    ACCESS_CLIENT_SECRET: process.env.ACCESS_CLIENT_SECRET,
-};
-
-Object.entries(envConfig).forEach(([key, value]) => assertEnvVar(key, value));
-
 export class GhostAPIClient {
-    private config: GhostClientConfig;
     private axiosInstance: AxiosInstance;
 
     constructor() {
-        this.config = {
-            url: envConfig.GHOST_URL,
-            key: envConfig.GHOST_KEY,
-            version: envConfig.GHOST_VERSION,
-            accessClientId: process.env.ACCESS_CLIENT_ID,
-            accessClientSecret: process.env.ACCESS_CLIENT_SECRET,
-        };
-
         this.axiosInstance = axios.create({
-            baseURL: `${this.config.url}/ghost/api/content/`,
+            baseURL: `${env.ghost.url}/ghost/api/content/`,
             timeout: 5000,
             params: {
-                key: this.config.key,
+                key: env.ghost.key,
             },
             headers: {
-                'CF-Access-Client-Id': this.config.accessClientId,
-                'CF-Access-Client-Secret': this.config.accessClientSecret,
-                'Accept-Version': this.config.version,
+                'Accept-Version': env.ghost.version,
+                'CF-Access-Client-Id': env.ghost.accessId,
+                'CF-Access-Client-Secret': env.ghost.accessSecret,
             },
             responseType: 'json',
         });
@@ -84,14 +55,5 @@ export class GhostAPIClient {
             console.error('Unexpected Error:', error);
             throw error;
         }
-    }
-}
-
-function assertEnvVar(
-    name: string,
-    value: string | undefined,
-): asserts value is string {
-    if (!value) {
-        throw new Error(`Environment variable ${name} is not set`);
     }
 }
