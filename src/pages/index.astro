@@ -1,28 +1,33 @@
 ---
-import {indexGetHighlightPosts} from "@api/ghost/posts";
-import {initializeSiteData} from "@api/ghost/settings";
-import {Navbar} from "@layouts/global/index"
-import {NavbarBrand, NavbarUtility} from "@components/layout/navbar"
-import {Dock} from "@layouts/global"
-import DockNav from "@components/layout/dock/nav/DockNav.astro"
-import DockTimeline from "@components/layout/dock/timeline/DockTimeline.astro"
-import DockSocial from "@components/layout/dock/social/DockSocial.astro"
-import {DefaultLayout} from "@layouts/global"
-import IndexMain from "@layouts/index/IndexMain.astro"
+import { getHighlightPosts } from '@api/ghost/posts';
+import { initializeSiteData } from '@api/ghost/settings';
+import { Navbar } from '@layouts/global/index';
+import { NavbarBrand, NavbarUtility } from '@components/layout/navbar';
+import { Dock } from '@layouts/global';
+import DockNav from '@components/layout/dock/nav/DockNav.astro';
+import DockTimeline from '@components/layout/dock/timeline/DockTimeline.astro';
+import DockSocial from '@components/layout/dock/social/DockSocial.astro';
+import { DefaultLayout } from '@layouts/global';
+import IndexMain from '@layouts/index/IndexMain.astro';
 
-const {siteTitle, siteDescription, logoUrl, coverImageUrl} = await initializeSiteData();
-const indexPosts = await indexGetHighlightPosts();
+const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
+    await initializeSiteData();
+const indexPosts = await getHighlightPosts();
 ---
 
 <DefaultLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
     <Navbar>
-        <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteTitle} siteSubTitle={siteDescription}/>
-        <NavbarUtility/>
+        <NavbarBrand
+            logoImageUrl={logoUrl}
+            siteTitle={siteTitle}
+            siteSubTitle={siteDescription}
+        />
+        <NavbarUtility />
     </Navbar>
-    <IndexMain posts={indexPosts}/>
+    <IndexMain posts={indexPosts} />
     <Dock isFixed={true}>
-        <DockTimeline posts={indexPosts}/>
-        <DockNav/>
-        <DockSocial/>
+        <DockTimeline posts={indexPosts} />
+        <DockNav />
+        <DockSocial />
     </Dock>
 </DefaultLayout>
