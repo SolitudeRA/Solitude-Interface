@@ -22,12 +22,17 @@
     "astro": "^5.2.5",
     "astro-emotion": "^3.0.0",
     "axios": "^1.7.9",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
+    "lucide-react": "^0.487.0",
     "motion": "^11.17.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
+    "tailwind-merge": "^3.2.0",
     "tailwindcss": "^4.0.7",
+    "tw-animate-css": "^1.2.5",
     "zustand": "^5.0.2"
   },
   "devDependencies": {
