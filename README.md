@@ -1,48 +1,45 @@
-# Astro Starter Kit: Basics
+# Solitude Interface
 
-```sh
-npm create astro@latest -- --template basics
-```
+A modern personal blog interface built with Astro and powered by Ghost CMS API. This project is currently under active development.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## 🚀 Project Features
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- High-performance static site built with Astro
+- Ghost CMS integration
+- Responsive design
+- Dark/light theme toggle
+- Multiple post type displays (articles, gallery, video, music)
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+## 📂 Project Structure
 
-## 🚀 Project Structure
+The project follows a modular structure with separate directories for API integration, components, layouts, and pages.
 
-Inside of your Astro project, you'll see the following folders and files:
+## 🔧 Tech Stack
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+- [Astro](https://astro.build/)
+- [React](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [Ghost Content API](https://ghost.org/docs/content-api/)
 
 ## 🧞 Commands
 
-All commands are run from the root of the project, from a terminal:
-
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+| `npm install`             | Install dependencies                            |
+| `npm run dev`             | Start local dev server at `localhost:4321`      |
+| `npm run build`           | Build production site to `./dist/`              |
+| `npm run preview`         | Preview build locally before deploying          |
 
-## 👀 Want to learn more?
+## ⚙️ Environment Setup
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Create a `.env` file in the root directory with:
+
+```
+GHOST_URL=your_ghost_cms_url
+GHOST_KEY=your_ghost_content_api_key
+```
+
+## 🚧 Development Status
+
+This project is currently in development. Features and documentation will be expanded as the project matures.
