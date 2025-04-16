@@ -1,12 +1,13 @@
 ---
-import {IndexPostsContainer, IndexWelcome} from "@components/home/home"
+import Welcome from "@components/home/Welcome.astro";
+import PostsShowcase from "@components/home/PostsShowcase.astro"
 
-const {posts} = Astro.props;
+const {featuredPosts} = Astro.props;
 ---
 
 <div class="solitude-index-main grid grid-cols-12 content-end">
-    <IndexWelcome/>
-    <IndexPostsContainer posts={posts} client:load/>
+    <Welcome/>
+    <PostsShowcase featuredPosts={featuredPosts}/>
 </div>
 
 <style>

@@ -1,0 +1,13 @@
+---
+import type { FeaturedPost } from '@api/ghost/types';
+
+interface Props {
+    featuredPosts: FeaturedPost[];
+}
+
+const { featuredPosts } = Astro.props;
+---
+
+<div>
+    {featuredPosts[0]?.title}
+</div>

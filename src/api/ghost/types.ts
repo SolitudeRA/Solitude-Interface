@@ -18,7 +18,7 @@ export interface Post extends BasePost {
     post_general_tags?: string[];
 }
 
-export interface HighlightPost extends BasePost {
+export interface FeaturedPost extends BasePost {
     post_type: string;
     post_category: string;
     post_series: string;
@@ -40,4 +40,20 @@ export enum PostType {
     MUSIC = 'music',
     VIDEO = 'video',
     GALLERY = 'gallery',
+}
+
+export interface SiteInformation {
+    title: string;
+    description: string;
+    logo: URL;
+    icon: URL;
+    cover_image: URL;
+    twitter: string;
+    timezone: string;
+    navigation?: SiteNavigation[];
+}
+
+export interface SiteNavigation {
+    label: string;
+    url: URL;
 }
