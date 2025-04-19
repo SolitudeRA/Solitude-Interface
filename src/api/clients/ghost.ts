@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { env } from '@api/config/env';
 import type { AxiosInstance } from 'axios';
+import { adaptClientToZeroTrust } from '@api/adapters/cloudflare';
 
 interface GhostClientOptions {
     endpoint: string;
@@ -19,11 +20,11 @@ export class GhostAPIClient {
             },
             headers: {
                 'Accept-Version': env.ghost.version,
-                'CF-Access-Client-Id': env.ghost.accessId,
-                'CF-Access-Client-Secret': env.ghost.accessSecret,
             },
             responseType: 'json',
         });
+
+        this.axiosInstance = adaptClientToZeroTrust(this.axiosInstance);
     }
 
     public async get<T = any>(options: GhostClientOptions): Promise<T> {
