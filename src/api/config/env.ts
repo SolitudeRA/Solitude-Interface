@@ -26,8 +26,8 @@ export const env = Object.freeze({
         url: getEnv('GHOST_URL'),
         key: getEnv('GHOST_KEY'),
         version: getEnv('GHOST_VERSION', 'v5.0'),
-        accessId: getEnv('GHOST_ACCESS_ID'),
-        accessSecret: getEnv('GHOST_ACCESS_SECRET'),
+        accessId: getEnv('CLOUDFLARE_ACCESS_ID'),
+        accessSecret: getEnv('CLOUDFLARE_ACCESS_SECRET'),
     } as GhostEnvVars,
     workers: {
         resource: {
