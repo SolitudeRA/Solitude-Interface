@@ -1,14 +1,15 @@
 ---
-import DefaultLayout from "@layouts/global/DefaultLayout.astro";
-
-import {initializeSiteData} from "@apiClients/ghostSettings";
-import {getPosts} from "api/ghost/posts";
-import type {PostTag} from "api/ghost/posts";
-import {Navbar} from "@layouts/global/index"
-import {NavbarBrand, NavbarUtility} from "@components/global/navbar"
-import {Dock} from "@layouts/global"
-import {DockNav, DockSocial} from "@components/global/dock"
-import PostsContent from "@components/posts/PostsContent.astro";
+import { initializeSiteData } from '@api/ghost/settings';
+import { getPosts } from '@api/ghost/posts';
+import type { PostTag } from '@api/ghost/types';
+import BaseLayout from '@layouts/base/BaseLayout.astro';
+import Navbar from '@layouts/base/Navbar.astro';
+import Dock from '@layouts/base/Dock.astro';
+import NavbarBrand from '@components/layout/navbar/NavbarBrand.astro';
+import NavbarUtility from '@components/layout/navbar/NavbarUtility.astro';
+import DockNav from '@components/layout/dock/nav/DockNav.astro';
+import DockSocial from '@components/layout/dock/social/DockSocial.astro';
+import PostsContent from '@components/posts/home/PostsContent.astro';
 
 interface Props {
     title: string;
@@ -44,7 +45,7 @@ export async function getStaticPaths() {
 const {title, feature_image, primary_tag, tags, published_at, html} = Astro.props;
 ---
 
-<DefaultLayout siteTitle={`${siteTitle} - ${title}`} coverImageUrl={coverImageUrl}>
+<BaseLayout siteTitle={`${siteTitle} - ${title}`} coverImageUrl={coverImageUrl}>
     <Navbar isFixed={true}>
         <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteTitle} siteSubTitle={siteDescription}/>
         <NavbarUtility/>
@@ -62,4 +63,4 @@ const {title, feature_image, primary_tag, tags, published_at, html} = Astro.prop
         <DockNav/>
         <DockSocial/>
     </Dock>
-</DefaultLayout>
+</BaseLayout>

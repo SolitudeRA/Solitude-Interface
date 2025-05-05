@@ -1,16 +1,18 @@
 ---
-import {initializeSiteData} from "@apiClients/ghostSettings";
-import {DefaultLayout} from "@layouts/global";
-import {Navbar} from "@layouts/global/index"
-import {NavbarBrand, NavbarUtility} from "@components/global/navbar"
-import {Dock} from "@layouts/global"
-import {DockNav, DockSocial} from "@components/global/dock"
-import PolicyContent from "../components/privacy-policy/PolicyContent.astro";
+import { initializeSiteData } from '@api/ghost/settings';
+import BaseLayout from '@layouts/base/BaseLayout.astro';
+import Navbar from '@layouts/base/Navbar.astro';
+import Dock from '@layouts/base/Dock.astro';
+import NavbarBrand from '@components/layout/navbar/NavbarBrand.astro';
+import NavbarUtility from '@components/layout/navbar/NavbarUtility.astro';
+import DockNav from '@components/layout/dock/nav/DockNav.astro';
+import DockSocial from '@components/layout/dock/social/DockSocial.astro';
+import PolicyContent from '../components/privacy-policy/PolicyContent.astro';
 
 const {siteTitle, siteDescription, logoUrl, coverImageUrl} = await initializeSiteData();
 ---
 
-<DefaultLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
+<BaseLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
     <Navbar>
         <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteTitle} siteSubTitle={siteDescription}/>
         <NavbarUtility/>
@@ -23,4 +25,4 @@ const {siteTitle, siteDescription, logoUrl, coverImageUrl} = await initializeSit
         <DockNav/>
         <DockSocial/>
     </Dock>
-</DefaultLayout>
+</BaseLayout>

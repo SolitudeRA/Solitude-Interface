@@ -1,11 +1,32 @@
 ---
-import DefaultLayout from '@layouts/global/DefaultLayout.astro';
-import AboutContent from '@layouts/about/AboutContent.astro';
-import { initializeSiteData } from '@apiClients/ghostSettings';
+import { initializeSiteData } from '@api/ghost/settings';
+import BaseLayout from '@layouts/base/BaseLayout.astro';
+import Navbar from '@layouts/base/Navbar.astro';
+import Dock from '@layouts/base/Dock.astro';
+import NavbarBrand from '@components/layout/navbar/NavbarBrand.astro';
+import NavbarUtility from '@components/layout/navbar/NavbarUtility.astro';
+import DockNav from '@components/layout/dock/nav/DockNav.astro';
+import DockSocial from '@components/layout/dock/social/DockSocial.astro';
 
-const { siteTitle, coverImageUrl } = await initializeSiteData();
+const { siteTitle, siteDescription, logoUrl, coverImageUrl } = await initializeSiteData();
 ---
 
-<DefaultLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
-    <AboutContent />
-</DefaultLayout>
+<BaseLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
+    <Navbar>
+        <NavbarBrand
+            logoImageUrl={logoUrl}
+            siteTitle={siteTitle}
+            siteSubTitle={siteDescription}
+        />
+        <NavbarUtility />
+    </Navbar>
+    <div class="bg-white dark:bg-[#262626] px-[20%] py-10">
+        <h1 class="text-4xl font-bold mb-6">关于</h1>
+        <p class="mb-4">这是关于页面的内容。</p>
+    </div>
+    <Dock isFixed={true}>
+        <DockNav />
+        <div></div>
+        <DockSocial />
+    </Dock>
+</BaseLayout>

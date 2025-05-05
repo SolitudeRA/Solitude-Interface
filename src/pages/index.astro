@@ -3,7 +3,8 @@ import { getHighlightPosts } from '@api/ghost/posts';
 import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
 import Navbar from '@layouts/base/Navbar.astro';
-import { NavbarBrand, NavbarUtility } from '@components/layout/navbar';
+import NavbarBrand from '@components/layout/navbar/NavbarBrand.astro';
+import NavbarUtility from '@components/layout/navbar/NavbarUtility.astro';
 import Dock from '@layouts/base/Dock.astro';
 import DockNav from '@components/layout/dock/nav/DockNav.astro';
 import DockTimeline from '@components/layout/dock/timeline/DockTimeline.astro';
@@ -30,4 +31,4 @@ const highlightPosts = await getHighlightPosts();
         <DockNav />
         <DockSocial />
     </Dock>
-</DefaultLayout>
+</BaseLayout>
