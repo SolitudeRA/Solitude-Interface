@@ -11,6 +11,10 @@ A modern personal blog interface built with Astro and powered by Ghost CMS API. 
 - Multiple post type displays (articles, gallery, video, music)
 - Comprehensive testing suite (unit + integration tests)
 
+## 🚧 Development Status
+
+This project is currently in active development. Features and documentation will be expanded as the project matures.
+
 ## 📂 Project Structure
 
 The project follows a modular structure with separate directories for API integration, components, layouts, and pages.
@@ -144,20 +148,20 @@ npm run test:ui
 ### What's Tested
 
 #### Unit Tests (with mocks)
-- ✅ Ghost adapter logic (URL transformations, tag extraction)
-- ✅ Cloudflare Zero Trust adapter
-- ✅ Cache utilities
-- ✅ Error handlers
-- ✅ API client structure
+- Ghost adapter logic (URL transformations, tag extraction)
+- Cloudflare Zero Trust adapter
+- Cache utilities
+- Error handlers
+- API client structure
 
 #### Integration Tests (with real API)
-- ✅ Real Ghost API connection
-- ✅ Fetching posts and site information
-- ✅ Data structure validation
-- ✅ URL adaptation and transformation
-- ✅ Tag extraction and categorization
-- ✅ Cache performance (first call = API, second call = cache)
-- ✅ Error handling with actual endpoints
+- Real Ghost API connection
+- Fetching posts and site information
+- Data structure validation
+- URL adaptation and transformation
+- Tag extraction and categorization
+- Cache performance (first call = API, second call = cache)
+- Error handling with actual endpoints
 
 ## 🗂️ Test Structure
 
@@ -214,61 +218,12 @@ src/api/__tests__/
 - Data consistency validation
 - Asset URL format verification
 
-## ❓ Troubleshooting
-
-### Integration Tests Fail
-
-**Problem**: `Error: Environment variable GHOST_URL is not set`
-
-**Solution**: Ensure you've created a `.env` file with all required environment variables.
-
----
-
-**Problem**: Tests timeout or fail to connect
-
-**Solution**:
-1. Check your network connection
-2. Verify Ghost instance URL is accessible
-3. Confirm API key is correct
-4. Check if Ghost instance is online
-
----
-
-**Problem**: `401 Unauthorized` error
-
-**Solution**:
-1. Verify `GHOST_KEY` is correct
-2. Ensure you're using the **Content API Key**, not Admin API Key
-3. Check Ghost version compatibility (v5.0+ recommended)
-
----
-
-**Problem**: Integration tests are very slow
-
-**Solution**: This is expected behavior. Integration tests make real HTTP requests. Best practices:
-- Use unit tests during daily development
-- Run integration tests before committing code
-- Consider running integration tests only in CI/CD pipelines
-
----
-
-**Problem**: Cache-related test failures
-
-**Solution**: 
-1. Clear cache between test runs if needed
-2. Ensure `cacheService.clear()` is called in test setup
-3. Verify cache keys are unique for different test scenarios
-
 ## 📚 Additional Resources
 
 - [Ghost Content API Documentation](https://ghost.org/docs/content-api/)
 - [Ghost API Endpoints](https://ghost.org/docs/content-api/#endpoints)
 - [Ghost API Authentication](https://ghost.org/docs/content-api/#authentication)
 - [Vitest Documentation](https://vitest.dev/)
-
-## 🚧 Development Status
-
-This project is currently in active development. Features and documentation will be expanded as the project matures.
 
 ## 📄 License
 
