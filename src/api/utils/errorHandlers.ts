@@ -18,5 +18,6 @@ export function handleApiError(error: unknown): never {
     }
 
     console.error('Unknown error:', error);
-    throw new Error(`Unknown error: ${(error as Error).message || 'No information'}`);
+    const errorMessage = (error as Error)?.message || 'No information';
+    throw new Error(`Unknown error: ${errorMessage}`);
 }
