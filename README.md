@@ -189,35 +189,6 @@ src/api/__tests__/
 - Unit tests: `*.test.ts`
 - Integration tests: `*.integration.test.ts`
 
-## 🔍 Integration Test Coverage
-
-### GhostAPIClient Integration Tests
-- Real Ghost API connection verification
-- Fetching posts with various parameters
-- Fetching site settings
-- Query parameter handling
-- Error handling for invalid endpoints
-- Response structure validation
-- Performance benchmarks
-
-### Posts API Integration Tests
-- `getHighlightPosts()` - Fetch featured posts
-- `getPosts()` - Fetch all posts with complete data
-- URL adaptation (Ghost URLs → site URLs)
-- Tag extraction (type, category, series)
-- General tag filtering
-- Cache behavior testing
-- HTML content preservation
-- Data validation (published dates, IDs, etc.)
-
-### Settings API Integration Tests
-- `getSiteInformation()` - Fetch site metadata
-- `initializeSiteData()` - Transform site data
-- URL transformation (logo, cover images)
-- Cache performance measurement
-- Data consistency validation
-- Asset URL format verification
-
 ## 📚 Additional Resources
 
 - [Ghost Content API Documentation](https://ghost.org/docs/content-api/)
