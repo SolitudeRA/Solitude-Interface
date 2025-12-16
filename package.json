@@ -12,7 +12,10 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run --testNamePattern='(?<!Integration)' --exclude='**/*.integration.test.ts'",
+    "test:integration": "vitest run --testNamePattern='Integration'",
+    "test:all": "vitest run"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",

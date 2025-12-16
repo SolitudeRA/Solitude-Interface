@@ -9,6 +9,7 @@ A modern personal blog interface built with Astro and powered by Ghost CMS API. 
 - Responsive design
 - Dark/light theme toggle
 - Multiple post type displays (articles, gallery, video, music)
+- Comprehensive testing suite (unit + integration tests)
 
 ## 📂 Project Structure
 
@@ -21,6 +22,7 @@ The project follows a modular structure with separate directories for API integr
 - [TypeScript](https://www.typescriptlang.org/)
 - [TailwindCSS](https://tailwindcss.com/)
 - [Ghost Content API](https://ghost.org/docs/content-api/)
+- [Vitest](https://vitest.dev/) - Testing framework
 
 ## 🧞 Commands
 
@@ -30,16 +32,244 @@ The project follows a modular structure with separate directories for API integr
 | `npm run dev`             | Start local dev server at `localhost:4321`      |
 | `npm run build`           | Build production site to `./dist/`              |
 | `npm run preview`         | Preview build locally before deploying          |
+| `npm run format`          | Format code with Prettier                       |
+| `npm test`                | Run tests in watch mode                         |
+| `npm run test:unit`       | Run unit tests only (fast, with mocks)          |
+| `npm run test:integration`| Run integration tests (real API calls)          |
+| `npm run test:coverage`   | Run tests with coverage report                  |
+| `npm run test:ui`         | Open Vitest UI for interactive testing          |
 
 ## ⚙️ Environment Setup
 
-Create a `.env` file in the root directory with:
+### 1. Create Environment File
+
+Create a `.env` file in the root directory. You can use `.env.example` as a template:
+
+```bash
+cp .env.example .env
+```
+
+### 2. Configure Environment Variables
+
+Edit the `.env` file with your Ghost instance information:
+
+```env
+# Ghost Content API Configuration
+GHOST_URL=https://your-ghost-instance.com
+GHOST_KEY=your-content-api-key-here
+GHOST_VERSION=v5.0
+
+# Cloudflare Zero Trust (if your Ghost instance is behind Cloudflare Access)
+CLOUDFLARE_ACCESS_ID=your-cloudflare-access-client-id
+CLOUDFLARE_ACCESS_SECRET=your-cloudflare-access-client-secret
+
+# Resource Workers URL (for image/asset handling)
+WORKERS_SOURCE_URL=your-resource-workers.example.com
+
+# Your Site URL
+SITE_URL=https://your-site.example.com
+```
+
+### 3. Get Your Ghost Content API Key
+
+1. Log in to your Ghost Admin panel
+2. Navigate to **Settings** → **Integrations**
+3. Click **Add custom integration**
+4. Create an integration and copy the **Content API Key**
+5. Paste the API key into your `.env` file
+
+**Alternative**: Use the Ghost Demo API for testing:
+
+```env
+GHOST_URL=https://demo.ghost.io
+GHOST_KEY=22444f78447824223cefc48062
+```
+
+> **Note**: The demo API is read-only and may have rate limits.
+
+## 📋 Testing
+
+This project includes two types of tests:
+
+- **Unit Tests**: Fast tests using mock data, no external dependencies
+- **Integration Tests**: Tests using real Ghost API to verify actual behavior
+
+### Quick Start
+
+```bash
+# Run all tests
+npm test
+
+# Run only unit tests (fast, no API needed)
+npm run test:unit
+
+# Run only integration tests (requires .env configuration)
+npm run test:integration
+```
+
+## 🧪 Running Tests
+
+### Unit Tests vs Integration Tests
+
+| Feature | Unit Tests | Integration Tests |
+|---------|-----------|------------------|
+| **Speed** | ⚡ Fast (< 1s) | 🐌 Slower (10-30s) |
+| **Dependencies** | ✅ None | ⚠️ Requires .env + Network |
+| **API Calls** | ❌ Mocked | ✅ Real Ghost API |
+| **Use Case** | Daily development | Pre-commit verification |
+| **Command** | `npm run test:unit` | `npm run test:integration` |
+
+### Available Test Commands
+
+```bash
+# Watch mode - runs tests on file changes
+npm test
+
+# Run all tests once
+npm run test:all
+
+# Run unit tests only
+npm run test:unit
+
+# Run integration tests only
+npm run test:integration
+
+# Generate coverage report
+npm run test:coverage
+
+# Open interactive UI
+npm run test:ui
+```
+
+### What's Tested
+
+#### Unit Tests (with mocks)
+- ✅ Ghost adapter logic (URL transformations, tag extraction)
+- ✅ Cloudflare Zero Trust adapter
+- ✅ Cache utilities
+- ✅ Error handlers
+- ✅ API client structure
+
+#### Integration Tests (with real API)
+- ✅ Real Ghost API connection
+- ✅ Fetching posts and site information
+- ✅ Data structure validation
+- ✅ URL adaptation and transformation
+- ✅ Tag extraction and categorization
+- ✅ Cache performance (first call = API, second call = cache)
+- ✅ Error handling with actual endpoints
+
+## 🗂️ Test Structure
 
 ```
-GHOST_URL=your_ghost_cms_url
-GHOST_KEY=your_ghost_content_api_key
+src/api/__tests__/
+├── setup.ts                          # Unit test setup (mocks env vars)
+├── setup.integration.ts              # Integration test setup (uses real env vars)
+├── adapters/
+│   ├── ghost.test.ts                 # Unit: Ghost adapter
+│   └── cloudflare.test.ts            # Unit: Cloudflare adapter
+├── clients/
+│   ├── ghost.test.ts                 # Unit: Ghost API client
+│   └── ghost.integration.test.ts     # Integration: Real API calls
+├── ghost/
+│   ├── posts.test.ts                 # Unit: Posts API
+│   ├── posts.integration.test.ts     # Integration: Real post data
+│   ├── settings.test.ts              # Unit: Settings API
+│   └── settings.integration.test.ts  # Integration: Real site info
+└── utils/
+    ├── cache.test.ts                 # Unit: Cache utilities
+    └── errorHandlers.test.ts         # Unit: Error handlers
 ```
+
+**Naming Convention:**
+- Unit tests: `*.test.ts`
+- Integration tests: `*.integration.test.ts`
+
+## 🔍 Integration Test Coverage
+
+### GhostAPIClient Integration Tests
+- Real Ghost API connection verification
+- Fetching posts with various parameters
+- Fetching site settings
+- Query parameter handling
+- Error handling for invalid endpoints
+- Response structure validation
+- Performance benchmarks
+
+### Posts API Integration Tests
+- `getHighlightPosts()` - Fetch featured posts
+- `getPosts()` - Fetch all posts with complete data
+- URL adaptation (Ghost URLs → site URLs)
+- Tag extraction (type, category, series)
+- General tag filtering
+- Cache behavior testing
+- HTML content preservation
+- Data validation (published dates, IDs, etc.)
+
+### Settings API Integration Tests
+- `getSiteInformation()` - Fetch site metadata
+- `initializeSiteData()` - Transform site data
+- URL transformation (logo, cover images)
+- Cache performance measurement
+- Data consistency validation
+- Asset URL format verification
+
+## ❓ Troubleshooting
+
+### Integration Tests Fail
+
+**Problem**: `Error: Environment variable GHOST_URL is not set`
+
+**Solution**: Ensure you've created a `.env` file with all required environment variables.
+
+---
+
+**Problem**: Tests timeout or fail to connect
+
+**Solution**:
+1. Check your network connection
+2. Verify Ghost instance URL is accessible
+3. Confirm API key is correct
+4. Check if Ghost instance is online
+
+---
+
+**Problem**: `401 Unauthorized` error
+
+**Solution**:
+1. Verify `GHOST_KEY` is correct
+2. Ensure you're using the **Content API Key**, not Admin API Key
+3. Check Ghost version compatibility (v5.0+ recommended)
+
+---
+
+**Problem**: Integration tests are very slow
+
+**Solution**: This is expected behavior. Integration tests make real HTTP requests. Best practices:
+- Use unit tests during daily development
+- Run integration tests before committing code
+- Consider running integration tests only in CI/CD pipelines
+
+---
+
+**Problem**: Cache-related test failures
+
+**Solution**: 
+1. Clear cache between test runs if needed
+2. Ensure `cacheService.clear()` is called in test setup
+3. Verify cache keys are unique for different test scenarios
+
+## 📚 Additional Resources
+
+- [Ghost Content API Documentation](https://ghost.org/docs/content-api/)
+- [Ghost API Endpoints](https://ghost.org/docs/content-api/#endpoints)
+- [Ghost API Authentication](https://ghost.org/docs/content-api/#authentication)
+- [Vitest Documentation](https://vitest.dev/)
 
 ## 🚧 Development Status
 
-This project is currently in development. Features and documentation will be expanded as the project matures.
+This project is currently in active development. Features and documentation will be expanded as the project matures.
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
