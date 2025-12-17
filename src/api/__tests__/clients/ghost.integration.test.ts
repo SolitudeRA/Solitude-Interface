@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { GhostAPIClient } from '@api/clients/ghost';
-import '../setup.integration';
 
 describe('GhostAPIClient Integration Tests', () => {
     const client = new GhostAPIClient();

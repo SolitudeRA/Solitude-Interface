@@ -1,19 +1,15 @@
-import { beforeEach, vi } from 'vitest';
+import { beforeAll, beforeEach, afterEach, vi } from 'vitest';
+import { cacheService } from '@api/utils/cache';
+import dotenv from 'dotenv';
 
-// Mock环境变量
+// 为单元测试 Mock 环境变量
+// 集成测试文件（*.integration.test.ts）会在各自文件中覆盖这些配置
 vi.mock('@api/config/env', () => ({
     env: {
         ghost: {
             url: 'https://test-ghost.example.com',
             key: 'test-ghost-api-key',
             version: 'v5.0',
-            accessId: 'test-access-id',
-            accessSecret: 'test-access-secret',
-        },
-        workers: {
-            resource: {
-                url: 'test-resource-workers.example.com',
-            },
         },
         site: {
             url: 'https://test-site.example.com',
@@ -21,7 +17,7 @@ vi.mock('@api/config/env', () => ({
     },
 }));
 
-// 每个测试前重置所有mock
+// 每个测试前重置
 beforeEach(() => {
     vi.clearAllMocks();
 });

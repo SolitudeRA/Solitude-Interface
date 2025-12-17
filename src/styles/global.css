@@ -1,7 +1,7 @@
 @import "@fontsource-variable/noto-sans-sc";
 
 @import "tailwindcss";
-@import "@styles/global-color.css";
+@import "./global-color.css";
 @import "tw-animate-css";
 
 @custom-variant dark (&:where(.dark, .dark *));

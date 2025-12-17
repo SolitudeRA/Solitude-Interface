@@ -1,8 +1,14 @@
 ---
 import Welcome from "@components/home/Welcome.astro";
 import PostsShowcase from "@components/home/PostsShowcase.astro"
+import type { FeaturedPost } from "@api/ghost/types";
 
-const {featuredPosts} = Astro.props;
+interface Props {
+    posts: FeaturedPost[];
+}
+
+const {posts} = Astro.props;
+const featuredPosts = posts || [];
 ---
 
 <div class="solitude-index-main grid grid-cols-12 content-end">

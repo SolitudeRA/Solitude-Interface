@@ -65,10 +65,8 @@ describe('Settings API', () => {
 
             expect(result.siteTitle).toBe('Test Site');
             expect(result.siteDescription).toBe('A test site description');
-            expect(result.logoUrl).toContain('test-resource-workers.example.com');
-            expect(result.coverImageUrl.hostname).toBe(
-                'test-resource-workers.example.com',
-            );
+            expect(result.logoUrl).toContain('ghost.example.com');
+            expect(result.coverImageUrl.hostname).toBe('ghost.example.com');
         });
 
         it('should convert logo URL to string', async () => {

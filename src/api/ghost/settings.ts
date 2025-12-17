@@ -17,12 +17,12 @@ export class SiteService {
         fields: string = DEFAULT_FIELDS,
     ): Promise<SiteInformation> {
         try {
-            const response = await this.ghostApiClient.get<SiteInformation>({
+            const response = await this.ghostApiClient.get<{ settings: SiteInformation }>({
                 endpoint: '/settings/',
                 params: { fields },
             });
 
-            return response;
+            return response.settings;
         } catch (error) {
             return handleApiError(error);
         }
@@ -47,19 +47,23 @@ export async function initializeSiteData() {
     try {
         const siteInformation = await siteService.getSiteInformation();
 
+        if (!siteInformation) {
+            throw new Error('Site information is undefined');
+        }
+
         return {
-            siteTitle: siteInformation.title,
-            siteDescription: siteInformation.description,
-            logoUrl: siteInformation.logo.toString(),
-            coverImageUrl: siteInformation.cover_image,
+            siteTitle: siteInformation.title || 'Solitude',
+            siteDescription: siteInformation.description || '',
+            logoUrl: siteInformation.logo?.toString() || '',
+            coverImageUrl: siteInformation.cover_image || null,
         };
     } catch (error) {
         console.error('Failed to initialize site data:', error);
         return {
-            siteTitle: 'Error',
+            siteTitle: 'Solitude',
             siteDescription: 'Failed to initialize site data',
             logoUrl: '',
-            coverImageUrl: new URL('https://example.com/default-cover.jpg'),
+            coverImageUrl: null,
         };
     }
 }

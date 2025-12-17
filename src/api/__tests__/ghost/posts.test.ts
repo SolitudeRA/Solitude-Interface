@@ -68,9 +68,7 @@ describe('Posts API', () => {
             expect(result[0]?.url.toString()).toContain(
                 'test-site.example.com',
             );
-            expect(result[0]?.feature_image.hostname).toBe(
-                'test-resource-workers.example.com',
-            );
+            expect(result[0]?.feature_image.hostname).toBe('ghost.example.com');
         });
 
         it('should use default parameters', async () => {

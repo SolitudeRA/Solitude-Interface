@@ -1,4 +1,4 @@
-import { Switch } from '@api/shadcn/components/ui/switch';
+import { Switch } from '@components/common/switch';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { themeSwitchAtom } from '../../../atoms/themeAtom';

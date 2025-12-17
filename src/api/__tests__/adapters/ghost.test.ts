@@ -55,7 +55,7 @@ describe('Ghost Adapters', () => {
             );
         });
 
-        it('should adapt feature_image to Resource Workers', () => {
+        it('should preserve feature_image URL', () => {
             const mockPost: FeaturedPost = {
                 id: 'test-post',
                 title: 'Test',
@@ -70,9 +70,8 @@ describe('Ghost Adapters', () => {
 
             const adapted = adaptGhostPost(mockPost);
 
-            expect(adapted.feature_image.hostname).toBe(
-                'test-resource-workers.example.com',
-            );
+            expect(adapted.feature_image.hostname).toBe('ghost.example.com');
+            expect(adapted.feature_image.pathname).toBe('/image.jpg');
         });
 
         it('should correctly extract post_type tag', () => {

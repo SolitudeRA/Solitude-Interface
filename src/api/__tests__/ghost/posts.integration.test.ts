@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { getHighlightPosts, getPosts } from '@api/ghost/posts';
 import { cacheService } from '@api/utils/cache';
-import '../setup.integration';
 
 describe('Posts API Integration Tests', () => {
     beforeEach(() => {

@@ -18,11 +18,12 @@ export async function getHighlightPosts(
     }
 
     try {
-        const posts = await ghostApiClient.get<FeaturedPost[]>({
+        const response = await ghostApiClient.get<{ posts: FeaturedPost[] }>({
             endpoint: '/posts/',
             params: { limit, fields, include },
         });
 
+        const posts = response.posts || [];
         const adaptedPosts = posts.map((post) => adaptGhostPost(post));
 
         cacheService.set(cacheKey, adaptedPosts);
@@ -44,11 +45,12 @@ export async function getPosts(include: string = 'tags'): Promise<Post[]> {
     }
 
     try {
-        const posts = await ghostApiClient.get<Post[]>({
+        const response = await ghostApiClient.get<{ posts: Post[] }>({
             endpoint: '/posts/',
             params: { include },
         });
 
+        const posts = response.posts || [];
         const adaptedPosts = posts.map((post) => adaptGhostPost(post));
 
         cacheService.set(cacheKey, adaptedPosts);

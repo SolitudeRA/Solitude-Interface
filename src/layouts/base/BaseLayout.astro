@@ -3,13 +3,18 @@ import '@styles/global.css';
 
 interface Props {
     siteTitle: string;
-    coverImageUrl: URL;
+    coverImageUrl: URL | string | null;
 }
 
 const {siteTitle, coverImageUrl} = Astro.props;
 
-const coverImageLightUrl = `linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),url(${coverImageUrl.toString()})`;
-const coverImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url(${coverImageUrl.toString()})`;
+const coverImageUrlStr = coverImageUrl?.toString() || '';
+const coverImageLightUrl = coverImageUrlStr 
+    ? `linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),url(${coverImageUrlStr})`
+    : 'linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55))';
+const coverImageDarkUrl = coverImageUrlStr 
+    ? `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url(${coverImageUrlStr})`
+    : 'linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55))';
 ---
 
 <!doctype html>

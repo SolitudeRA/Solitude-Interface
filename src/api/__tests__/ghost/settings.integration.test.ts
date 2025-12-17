@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { getSiteInformation, initializeSiteData } from '@api/ghost/settings';
 import { cacheService } from '@api/utils/cache';
-import '../setup.integration';
 
 describe('Settings API Integration Tests', () => {
     beforeEach(() => {
