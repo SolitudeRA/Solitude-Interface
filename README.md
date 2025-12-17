@@ -63,13 +63,6 @@ GHOST_URL=https://your-ghost-instance.com
 GHOST_KEY=your-content-api-key-here
 GHOST_VERSION=v5.0
 
-# Cloudflare Zero Trust (if your Ghost instance is behind Cloudflare Access)
-CLOUDFLARE_ACCESS_ID=your-cloudflare-access-client-id
-CLOUDFLARE_ACCESS_SECRET=your-cloudflare-access-client-secret
-
-# Resource Workers URL (for image/asset handling)
-WORKERS_SOURCE_URL=your-resource-workers.example.com
-
 # Your Site URL
 SITE_URL=https://your-site.example.com
 ```

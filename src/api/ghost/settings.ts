@@ -1,5 +1,4 @@
 import { GhostAPIClient } from '@api/clients/ghost';
-import { adaptURLToResourceWorkers } from '@api/adapters/cloudflare';
 import { handleApiError } from '@api/utils/errorHandlers';
 import { withCache } from '@api/utils/cache';
 import type {SiteInformation} from '@api/ghost/types'
@@ -51,8 +50,8 @@ export async function initializeSiteData() {
         return {
             siteTitle: siteInformation.title,
             siteDescription: siteInformation.description,
-            logoUrl: adaptURLToResourceWorkers(siteInformation.logo).toString(),
-            coverImageUrl: adaptURLToResourceWorkers(siteInformation.cover_image),
+            logoUrl: siteInformation.logo.toString(),
+            coverImageUrl: siteInformation.cover_image,
         };
     } catch (error) {
         console.error('Failed to initialize site data:', error);

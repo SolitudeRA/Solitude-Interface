@@ -10,12 +10,6 @@ interface GhostEnvVars {
     url: string;
     key: string;
     version: string;
-    accessId: string;
-    accessSecret: string;
-}
-
-interface ResourceWorkersEnvVars {
-    url: string;
 }
 
 export const env = Object.freeze({
@@ -26,14 +20,7 @@ export const env = Object.freeze({
         url: getEnv('GHOST_URL'),
         key: getEnv('GHOST_KEY'),
         version: getEnv('GHOST_VERSION', 'v5.0'),
-        accessId: getEnv('CLOUDFLARE_ACCESS_ID'),
-        accessSecret: getEnv('CLOUDFLARE_ACCESS_SECRET'),
     } as GhostEnvVars,
-    workers: {
-        resource: {
-            url: getEnv('WORKERS_SOURCE_URL'),
-        } as ResourceWorkersEnvVars,
-    },
 });
 
 function getEnv(key: string, defaultValue?: string): string {

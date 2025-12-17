@@ -1,5 +1,4 @@
 import { env } from '@api/config/env';
-import { adaptURLToResourceWorkers } from '@api/adapters/cloudflare';
 import type { FeaturedPost, Post, PostTag } from '@api/ghost/types';
 
 const TAG_PREFIXES = {
@@ -12,7 +11,7 @@ export function adaptGhostPost<T extends Post | FeaturedPost>(post: T): T {
     return {
         ...post,
         url: convertPostIdToFrontendUrl(post.id),
-        feature_image: adaptURLToResourceWorkers(post.feature_image),
+        feature_image: post.feature_image,
         post_type: getTagSlugWith(post.tags, TAG_PREFIXES.TYPE),
         post_category: getTagSlugWith(post.tags, TAG_PREFIXES.CATEGORY),
         post_series: getTagNameWith(post.tags, TAG_PREFIXES.SERIES),
