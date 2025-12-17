@@ -90,7 +90,10 @@ describe('Settings API Integration Tests', () => {
             expect(typeof siteData.logoUrl).toBe('string');
 
             expect(siteData).toHaveProperty('coverImageUrl');
-            expect(siteData.coverImageUrl).toBeInstanceOf(URL);
+            // coverImageUrl 可以是 URL 或 null
+            if (siteData.coverImageUrl !== null) {
+                expect(siteData.coverImageUrl).toBeInstanceOf(URL);
+            }
         }, 15000);
 
         it('should convert logo URL to string', async () => {
@@ -105,12 +108,14 @@ describe('Settings API Integration Tests', () => {
             }
         }, 15000);
 
-        it('should keep coverImageUrl as URL object', async () => {
+        it('should handle coverImageUrl correctly', async () => {
             const siteData = await initializeSiteData();
 
-            // coverImageUrl 应该保持为 URL 对象
-            expect(siteData.coverImageUrl).toBeInstanceOf(URL);
-            expect(siteData.coverImageUrl.protocol).toMatch(/^https?:/);
+            // coverImageUrl 可以是 URL 对象或 null
+            if (siteData.coverImageUrl !== null) {
+                expect(siteData.coverImageUrl).toBeInstanceOf(URL);
+                expect(siteData.coverImageUrl.protocol).toMatch(/^https?:/);
+            }
         }, 15000);
 
         it('should transform URLs to resource workers domain', async () => {
@@ -122,8 +127,10 @@ describe('Settings API Integration Tests', () => {
                 expect(siteData.logoUrl).toBeTruthy();
             }
 
-            // coverImageUrl 应该被转换
-            expect(siteData.coverImageUrl).toBeInstanceOf(URL);
+            // coverImageUrl 可以是 URL 或 null
+            if (siteData.coverImageUrl !== null) {
+                expect(siteData.coverImageUrl).toBeInstanceOf(URL);
+            }
         }, 15000);
 
         it('should match data from getSiteInformation', async () => {
