@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { getSiteInformation, initializeSiteData } from '@api/ghost/settings';
-import { GhostAPIClient } from '@api/clients/ghost';
+import { getGhostClient } from '@api/clients/ghost';
 import { cacheService } from '@api/utils/cache';
 import type { SiteInformation } from '@api/ghost/types';
 
@@ -28,15 +28,21 @@ describe('Settings API', () => {
         timezone: 'Asia/Tokyo',
     };
 
+    // Create mock client
+    const mockGet = vi.fn();
+    const mockClient = { get: mockGet };
+
     beforeEach(() => {
         vi.clearAllMocks();
+        // Mock getGhostClient to return mock client
+        vi.mocked(getGhostClient).mockReturnValue(mockClient as any);
         vi.mocked(cacheService.get).mockReturnValue(null);
     });
 
     describe('getSiteInformation', () => {
         it('should return site information', async () => {
             // Mock with wrapped response format
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 settings: mockSiteInfo,
             });
 
@@ -48,9 +54,7 @@ describe('Settings API', () => {
         });
 
         it('should handle API errors', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockRejectedValue(
-                new Error('API Error'),
-            );
+            mockGet.mockRejectedValue(new Error('API Error'));
 
             await expect(getSiteInformation()).rejects.toThrow();
         });
@@ -58,7 +62,7 @@ describe('Settings API', () => {
 
     describe('initializeSiteData', () => {
         it('should initialize and transform site data', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 settings: mockSiteInfo,
             });
 
@@ -71,7 +75,7 @@ describe('Settings API', () => {
         });
 
         it('should convert logo URL to string', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 settings: mockSiteInfo,
             });
 
@@ -81,20 +85,21 @@ describe('Settings API', () => {
         });
 
         it('should handle coverImageUrl', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 settings: mockSiteInfo,
             });
 
             const result = await initializeSiteData();
 
             // coverImageUrl 可以是 URL 对象或 null
-            expect(result.coverImageUrl === null || result.coverImageUrl instanceof URL).toBe(true);
+            expect(
+                result.coverImageUrl === null ||
+                    result.coverImageUrl instanceof URL,
+            ).toBe(true);
         });
 
         it('should return default values on error', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockRejectedValue(
-                new Error('API Error'),
-            );
+            mockGet.mockRejectedValue(new Error('API Error'));
 
             // Mock console.error to suppress error output in tests
             const consoleErrorSpy = vi
@@ -105,7 +110,9 @@ describe('Settings API', () => {
 
             // 检查返回了默认值
             expect(result.siteTitle).toBe('Solitude');
-            expect(result.siteDescription).toBe('Failed to initialize site data');
+            expect(result.siteDescription).toBe(
+                'Failed to initialize site data',
+            );
             expect(result.logoUrl).toBe('');
             expect(result.coverImageUrl).toBeNull();
 
@@ -114,7 +121,7 @@ describe('Settings API', () => {
 
         it('should log errors to console', async () => {
             const error = new Error('Test Error');
-            vi.mocked(GhostAPIClient.prototype.get).mockRejectedValue(error);
+            mockGet.mockRejectedValue(error);
 
             const consoleErrorSpy = vi
                 .spyOn(console, 'error')
@@ -143,7 +150,7 @@ describe('Settings API', () => {
                 ],
             };
 
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 settings: fullSiteInfo,
             });
 

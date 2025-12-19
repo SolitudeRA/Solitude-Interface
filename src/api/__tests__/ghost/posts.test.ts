@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { getHighlightPosts, getPosts } from '@api/ghost/posts';
-import { GhostAPIClient } from '@api/clients/ghost';
+import { getGhostClient } from '@api/clients/ghost';
 import { cacheService } from '@api/utils/cache';
 import type { FeaturedPost, Post, PostTag } from '@api/ghost/types';
 
@@ -47,8 +47,14 @@ describe('Posts API', () => {
         },
     ];
 
+    // Create mock client
+    const mockGet = vi.fn();
+    const mockClient = { get: mockGet };
+
     beforeEach(() => {
         vi.clearAllMocks();
+        // Mock getGhostClient to return mock client
+        vi.mocked(getGhostClient).mockReturnValue(mockClient as any);
         // Mock cache service
         vi.mocked(cacheService.get).mockReturnValue(null);
         vi.mocked(cacheService.set).mockImplementation(() => {});
@@ -56,8 +62,7 @@ describe('Posts API', () => {
 
     describe('getHighlightPosts', () => {
         it('should return adapted featured posts', async () => {
-            // Mock GhostAPIClient.get with wrapped response
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 posts: mockRawPosts,
             });
 
@@ -69,13 +74,13 @@ describe('Posts API', () => {
         });
 
         it('should use default parameters', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 posts: [],
             });
 
             await getHighlightPosts();
 
-            expect(GhostAPIClient.prototype.get).toHaveBeenCalledWith({
+            expect(mockGet).toHaveBeenCalledWith({
                 endpoint: '/posts/',
                 params: {
                     limit: 12,
@@ -86,13 +91,13 @@ describe('Posts API', () => {
         });
 
         it('should accept custom parameters', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 posts: [],
             });
 
             await getHighlightPosts(5, 'id,title', 'tags,authors');
 
-            expect(GhostAPIClient.prototype.get).toHaveBeenCalledWith({
+            expect(mockGet).toHaveBeenCalledWith({
                 endpoint: '/posts/',
                 params: {
                     limit: 5,
@@ -103,7 +108,7 @@ describe('Posts API', () => {
         });
 
         it('should correctly extract and transform tag information', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 posts: mockRawPosts,
             });
 
@@ -133,11 +138,11 @@ describe('Posts API', () => {
             const result = await getHighlightPosts();
 
             expect(result).toEqual(cachedPosts);
-            expect(GhostAPIClient.prototype.get).not.toHaveBeenCalled();
+            expect(mockGet).not.toHaveBeenCalled();
         });
 
         it('should cache API response', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 posts: mockRawPosts,
             });
             vi.mocked(cacheService.get).mockReturnValue(null);
@@ -151,15 +156,13 @@ describe('Posts API', () => {
         });
 
         it('should handle API errors', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockRejectedValue(
-                new Error('API Error'),
-            );
+            mockGet.mockRejectedValue(new Error('API Error'));
 
             await expect(getHighlightPosts()).rejects.toThrow();
         });
 
         it('should handle empty results', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 posts: [],
             });
 
@@ -189,7 +192,7 @@ describe('Posts API', () => {
         ];
 
         it('should return all adapted posts', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 posts: mockFullPosts,
             });
 
@@ -201,13 +204,13 @@ describe('Posts API', () => {
         });
 
         it('should use default include parameter', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 posts: [],
             });
 
             await getPosts();
 
-            expect(GhostAPIClient.prototype.get).toHaveBeenCalledWith({
+            expect(mockGet).toHaveBeenCalledWith({
                 endpoint: '/posts/',
                 params: {
                     include: 'tags',
@@ -216,13 +219,13 @@ describe('Posts API', () => {
         });
 
         it('should accept custom include parameter', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 posts: [],
             });
 
             await getPosts('tags,authors');
 
-            expect(GhostAPIClient.prototype.get).toHaveBeenCalledWith({
+            expect(mockGet).toHaveBeenCalledWith({
                 endpoint: '/posts/',
                 params: {
                     include: 'tags,authors',
@@ -252,11 +255,11 @@ describe('Posts API', () => {
             const result = await getPosts();
 
             expect(result).toEqual(cachedPosts);
-            expect(GhostAPIClient.prototype.get).not.toHaveBeenCalled();
+            expect(mockGet).not.toHaveBeenCalled();
         });
 
         it('should cache API response', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 posts: mockFullPosts,
             });
             vi.mocked(cacheService.get).mockReturnValue(null);
@@ -270,7 +273,7 @@ describe('Posts API', () => {
         });
 
         it('should preserve all post fields', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 posts: mockFullPosts,
             });
 
@@ -282,15 +285,13 @@ describe('Posts API', () => {
         });
 
         it('should handle API errors', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockRejectedValue(
-                new Error('API Error'),
-            );
+            mockGet.mockRejectedValue(new Error('API Error'));
 
             await expect(getPosts()).rejects.toThrow();
         });
 
         it('should handle empty results', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 posts: [],
             });
 
@@ -301,7 +302,7 @@ describe('Posts API', () => {
         });
 
         it('should use different cache keys for different include parameters', async () => {
-            vi.mocked(GhostAPIClient.prototype.get).mockResolvedValue({
+            mockGet.mockResolvedValue({
                 posts: [],
             });
 

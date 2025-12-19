@@ -1,10 +1,8 @@
-import { GhostAPIClient } from '@api/clients/ghost';
+import { getGhostClient } from '@api/clients/ghost';
 import { adaptGhostPost } from '@api/adapters/ghost';
 import type { FeaturedPost, Post } from '@api/ghost/types';
 import { handleApiError } from '@api/utils/errorHandlers';
 import { cacheService } from '@api/utils/cache';
-
-const ghostApiClient = new GhostAPIClient();
 
 export async function getHighlightPosts(
     limit: number = 12,
@@ -18,7 +16,7 @@ export async function getHighlightPosts(
     }
 
     try {
-        const response = await ghostApiClient.get<{ posts: FeaturedPost[] }>({
+        const response = await getGhostClient().get<{ posts: FeaturedPost[] }>({
             endpoint: '/posts/',
             params: { limit, fields, include },
         });
@@ -45,7 +43,7 @@ export async function getPosts(include: string = 'tags'): Promise<Post[]> {
     }
 
     try {
-        const response = await ghostApiClient.get<{ posts: Post[] }>({
+        const response = await getGhostClient().get<{ posts: Post[] }>({
             endpoint: '/posts/',
             params: { include },
         });

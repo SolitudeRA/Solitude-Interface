@@ -1,23 +1,19 @@
-import { GhostAPIClient } from '@api/clients/ghost';
+import { getGhostClient } from '@api/clients/ghost';
 import { handleApiError } from '@api/utils/errorHandlers';
 import { withCache } from '@api/utils/cache';
-import type {SiteInformation} from '@api/ghost/types'
+import type { SiteInformation } from '@api/ghost/types';
 
 const DEFAULT_FIELDS =
     'title,description,logo,icon,cover_image,twitter,timezone,navigation';
 
 export class SiteService {
-    private ghostApiClient: GhostAPIClient;
-    
-    constructor() {
-        this.ghostApiClient = new GhostAPIClient();
-    }
-    
     private async _getSiteInformation(
         fields: string = DEFAULT_FIELDS,
     ): Promise<SiteInformation> {
         try {
-            const response = await this.ghostApiClient.get<{ settings: SiteInformation }>({
+            const response = await getGhostClient().get<{
+                settings: SiteInformation;
+            }>({
                 endpoint: '/settings/',
                 params: { fields },
             });
