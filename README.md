@@ -60,7 +60,7 @@ Edit the `.env` file with your Ghost instance information:
 ```env
 # Ghost Content API Configuration
 GHOST_URL=https://your-ghost-instance.com
-GHOST_KEY=your-content-api-key-here
+GHOST_CONTENT_KEY=your-content-api-key-here
 GHOST_VERSION=v5.0
 
 # Your Site URL
@@ -79,7 +79,7 @@ SITE_URL=https://your-site.example.com
 
 ```env
 GHOST_URL=https://demo.ghost.io
-GHOST_KEY=22444f78447824223cefc48062
+GHOST_CONTENT_KEY=22444f78447824223cefc48062
 ```
 
 > **Note**: The demo API is read-only and may have rate limits.

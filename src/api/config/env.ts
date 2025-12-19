@@ -18,7 +18,7 @@ export const env = Object.freeze({
     } as SiteEnvVars,
     ghost: {
         url: getEnv('GHOST_URL'),
-        key: getEnv('GHOST_KEY'),
+        key: getEnv('GHOST_CONTENT_KEY'),
         version: getEnv('GHOST_VERSION', 'v5.0'),
     } as GhostEnvVars,
 });
