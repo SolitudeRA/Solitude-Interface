@@ -1,7 +1,7 @@
 import { Switch } from '@components/common/switch';
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
-import { themeSwitchAtom } from '../../../atoms/themeAtom';
+import { themeSwitchAtom } from '@stores/themeAtom';
 
 export default function ThemeSwitch() {
     const [theme, setTheme] = useAtom(themeSwitchAtom);

@@ -1,7 +1,9 @@
 import { defineConfig } from 'vitest/config';
-import path from 'path';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
+    // 使用 vite-tsconfig-paths 插件自动读取 tsconfig.json 的 paths 配置
+    plugins: [tsconfigPaths()],
     // 服务器配置 - 使用 IPv4 地址避免 Windows 上的权限问题
     server: {
         host: '127.0.0.1',
@@ -32,9 +34,6 @@ export default defineConfig({
             ],
         },
     },
-    resolve: {
-        alias: {
-            '@api': path.resolve(__dirname, './src/api'),
-        },
-    },
+    // 路径别名现在由 vite-tsconfig-paths 插件自动从 tsconfig.json 读取
+    // 不再需要手动配置 resolve.alias
 });
