@@ -1,0 +1,112 @@
+---
+import { listAllGroupKeys, getPostWithFallback, getVariantsByGroup } from '@api/ghost/posts';
+import { initializeSiteData } from '@api/ghost/settings';
+import BaseLayout from '@layouts/base/BaseLayout.astro';
+import Navbar from '@layouts/base/Navbar.astro';
+import Dock from '@layouts/base/Dock.astro';
+import NavbarBrand from '@components/layout/navbar/NavbarBrand.astro';
+import NavbarUtility from '@components/layout/navbar/NavbarUtility.astro';
+import DockNav from '@components/layout/dock/nav/DockNav.astro';
+import DockSocial from '@components/layout/dock/social/DockSocial.astro';
+import PostsContent from '@components/posts/home/PostsContent.astro';
+import LanguageSwitcher from '@components/i18n/LanguageSwitcher.astro';
+import FallbackNotice from '@components/i18n/FallbackNotice.astro';
+import {
+    LOCALES,
+    type Locale,
+    isLocale,
+    LOCALE_HTML_LANG,
+    generateAlternateLinks,
+    getFallbackMessage,
+} from '@lib/i18n';
+import { env } from '@api/config/env';
+
+export async function getStaticPaths() {
+    const groupKeys = await listAllGroupKeys();
+    
+    const paths = [];
+    for (const key of groupKeys) {
+        for (const lang of LOCALES) {
+            paths.push({
+                params: { lang, key },
+            });
+        }
+    }
+    
+    return paths;
+}
+
+const { lang, key } = Astro.params;
+
+if (!isLocale(lang) || !key) {
+    return Astro.redirect('/zh/');
+}
+
+const locale = lang as Locale;
+const htmlLang = LOCALE_HTML_LANG[locale];
+
+const { siteTitle, siteDescription, logoUrl, coverImageUrl } = await initializeSiteData();
+
+// 获取文章（带 fallback 逻辑）
+const { post, displayedLocale, isFallback } = await getPostWithFallback(key, locale);
+
+// 如果没有找到任何文章，显示 404
+if (!post) {
+    return Astro.redirect(`/${locale}/`);
+}
+
+// 获取所有语言版本的可用性
+const variants = await getVariantsByGroup(key);
+const availableLocales = LOCALES.filter((l) => variants[l] !== null);
+
+// 生成 SEO 链接
+const alternateLinks = generateAlternateLinks(env.site.url, `/p/${key}`, availableLocales);
+const canonicalUrl = `${env.site.url}/${displayedLocale}/p/${key}`;
+
+// Fallback 提示消息
+const fallbackMessage = isFallback ? getFallbackMessage(locale, displayedLocale) : '';
+---
+
+<BaseLayout 
+    siteTitle={`${siteTitle} - ${post.title}`} 
+    coverImageUrl={coverImageUrl}
+    lang={LOCALE_HTML_LANG[displayedLocale]}
+    canonicalUrl={canonicalUrl}
+    alternateLinks={alternateLinks}
+>
+    <Navbar isFixed={true}>
+        <NavbarBrand 
+            logoImageUrl={logoUrl} 
+            siteTitle={siteTitle} 
+            siteSubTitle={siteDescription}
+        />
+        <NavbarUtility />
+    </Navbar>
+    
+    {isFallback && fallbackMessage && (
+        <FallbackNotice message={fallbackMessage} />
+    )}
+    
+    <div class="container mx-auto px-4 mt-20">
+        <LanguageSwitcher 
+            currentLocale={locale}
+            i18nKey={key}
+            variants={variants}
+        />
+    </div>
+    
+    <PostsContent
+        title={post.title}
+        feature_image={post.feature_image}
+        primary_tag={post.primary_tag}
+        tags={post.tags}
+        published_at={post.published_at}
+        html={post.html}
+    />
+    
+    <Dock isFixed={true}>
+        <div></div>
+        <DockNav />
+        <DockSocial />
+    </Dock>
+</BaseLayout>

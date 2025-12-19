@@ -1,0 +1,48 @@
+---
+import type { PostTag } from '@api/ghost/types';
+
+interface Props {
+    title: string;
+    primary_tag?: PostTag;
+    tags?: PostTag[];
+    published_at: string;
+}
+
+const { title, primary_tag, tags, published_at } = Astro.props;
+const publishDate = new Date(published_at);
+---
+
+<div class="p-8 text-center min-h-[300px] flex flex-col justify-center items-center">
+    <h1 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white drop-shadow-lg">
+        {title}
+    </h1>
+    
+    <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-700 dark:text-gray-300">
+        {primary_tag && (
+            <span class="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full">
+                {primary_tag.name}
+            </span>
+        )}
+        
+        <time datetime={publishDate.toISOString()} class="flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            {publishDate.toLocaleDateString()}
+        </time>
+    </div>
+    
+    {tags && tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 mt-4 justify-center">
+            {tags
+                .filter(tag => !tag.slug.startsWith('hash-'))
+                .slice(0, 5)
+                .map(tag => (
+                    <span class="text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">
+                        #{tag.name}
+                    </span>
+                ))
+            }
+        </div>
+    )}
+</div>

@@ -16,7 +16,8 @@
       "@styles/*": ["src/styles/*"],
       "@stores/*": ["src/stores/*"],
       "@assets/*": ["src/assets/*"],
-      "@types/*": ["src/types/*"]
+      "@types/*": ["src/types/*"],
+      "@lib/*": ["src/lib/*"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",

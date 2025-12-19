@@ -1,0 +1,68 @@
+---
+import type { Post } from '@api/ghost/types';
+import {
+    type Locale,
+    LOCALES,
+    LOCALE_NAMES,
+    buildPostPath,
+} from '@lib/i18n';
+
+interface Props {
+    currentLocale: Locale;
+    i18nKey: string;
+    variants: Record<Locale, Post | null>;
+}
+
+const { currentLocale, i18nKey, variants } = Astro.props;
+---
+
+<nav class="flex items-center gap-2 mb-4" aria-label="Language switcher">
+    <span class="text-sm text-gray-500 dark:text-gray-400 mr-2">
+        {currentLocale === 'zh' && '语言：'}
+        {currentLocale === 'ja' && '言語：'}
+        {currentLocale === 'en' && 'Language:'}
+    </span>
+    <div class="flex gap-1">
+        {LOCALES.map((locale) => {
+            const isAvailable = variants[locale] !== null;
+            const isCurrent = locale === currentLocale;
+            const href = buildPostPath(locale, i18nKey);
+            
+            if (isCurrent) {
+                return (
+                    <span 
+                        class="px-3 py-1 text-sm font-medium bg-blue-600 text-white rounded-md"
+                        aria-current="true"
+                    >
+                        {LOCALE_NAMES[locale]}
+                    </span>
+                );
+            }
+            
+            if (isAvailable) {
+                return (
+                    <a 
+                        href={href}
+                        class="px-3 py-1 text-sm font-medium bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                        hreflang={locale}
+                    >
+                        {LOCALE_NAMES[locale]}
+                    </a>
+                );
+            }
+            
+            return (
+                <span 
+                    class="px-3 py-1 text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 rounded-md cursor-not-allowed opacity-50"
+                    title={
+                        currentLocale === 'zh' ? `${LOCALE_NAMES[locale]} 版本暂不可用` :
+                        currentLocale === 'ja' ? `${LOCALE_NAMES[locale]} 版はまだありません` :
+                        `${LOCALE_NAMES[locale]} version not available`
+                    }
+                >
+                    {LOCALE_NAMES[locale]}
+                </span>
+            );
+        })}
+    </div>
+</nav>

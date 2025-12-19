@@ -5,10 +5,12 @@ A modern personal blog interface built with Astro and powered by Ghost CMS API. 
 ## 🚀 Project Features
 
 - High-performance static site built with Astro
-- Ghost CMS integration
+- Ghost CMS integration (Headless)
+- **Multi-language support (zh/ja/en)** with automatic fallback
 - Responsive design
 - Dark/light theme toggle
 - Multiple post type displays (articles, gallery, video, music)
+- SEO optimized (hreflang, canonical, html lang)
 - Comprehensive testing suite (unit + integration tests)
 
 ## 🚧 Development Status
@@ -181,6 +183,68 @@ src/api/__tests__/
 **Naming Convention:**
 - Unit tests: `*.test.ts`
 - Integration tests: `*.integration.test.ts`
+
+## 🌐 Multi-language (i18n) Support
+
+This project supports three languages: **Chinese (zh)**, **Japanese (ja)**, and **English (en)**.
+
+### URL Structure
+
+| Route | Description |
+|-------|-------------|
+| `/` | Auto-redirects to user's preferred language |
+| `/zh/` | Chinese posts listing |
+| `/ja/` | Japanese posts listing |
+| `/en/` | English posts listing |
+| `/zh/p/{key}/` | Chinese version of article |
+| `/ja/p/{key}/` | Japanese version of article |
+| `/en/p/{key}/` | English version of article |
+
+### Ghost Content Tagging (Required)
+
+For multi-language to work, posts in Ghost must have specific internal tags:
+
+1. **Language Tag** (required, one of):
+   - `#lang-zh` - Chinese content
+   - `#lang-ja` - Japanese content
+   - `#lang-en` - English content
+
+2. **Translation Group Tag** (required):
+   - `#i18n-{key}` - Links translations together
+   - Example: `#i18n-intro-to-solitude`
+
+### Example: Creating Multi-language Posts
+
+To create the same article in 3 languages:
+
+| Post Title | Tags |
+|------------|------|
+| "Solitude 简介" (Chinese) | `#lang-zh`, `#i18n-intro-to-solitude` |
+| "Solitude 紹介" (Japanese) | `#lang-ja`, `#i18n-intro-to-solitude` |
+| "Intro to Solitude" (English) | `#lang-en`, `#i18n-intro-to-solitude` |
+
+### Fallback Behavior
+
+- If a language version doesn't exist, the default language (Chinese) is shown
+- A notice banner appears indicating the fallback
+- Language switcher shows available/unavailable versions
+
+### Configuration
+
+Default language is set in `src/lib/i18n.ts`:
+
+```typescript
+export const DEFAULT_LOCALE: Locale = 'zh';
+```
+
+To change the default, modify this value and update `astro.config.mjs`:
+
+```javascript
+i18n: {
+    locales: ['zh', 'en', 'ja'],
+    defaultLocale: 'zh',  // Change this
+}
+```
 
 ## 📚 Additional Resources
 

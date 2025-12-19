@@ -1,11 +1,11 @@
 ---
-import type {Post} from "api/ghost/posts";
-import {POST_TYPE} from "api/ghost/posts";
-import PostCardDefault from "@components/posts-view/PostCardDefault.astro";
-import PostCardArticle from "@components/posts-view/PostCardArticle.astro";
-import PostCardMusic from "@components/posts-view/PostCardMusic.astro";
-import PostCardVideo from "@components/posts-view/PostCardVideo.astro";
-import PostCardGallery from "@components/posts-view/PostCardGallery.astro";
+import type { Post } from "@api/ghost/types";
+import { PostType } from "@api/ghost/types";
+import PostCardDefault from "./Default.astro";
+import PostCardArticle from "./Article.astro";
+import PostCardMusic from "./Music.astro";
+import PostCardVideo from "./Video.astro";
+import PostCardGallery from "./Gallery.astro";
 
 interface Props {
     posts: Post[];
@@ -18,31 +18,31 @@ const {posts} = Astro.props;
     {
         posts.map((post) => {
             switch (post.post_type) {
-                case POST_TYPE.DEFAULT:
+                case PostType.DEFAULT:
                     return (
                             <div class="col-span-2 flex justify-center items-center">
                                 <PostCardDefault post={post}/>
                             </div>
                     );
-                case POST_TYPE.ARTICLE:
+                case PostType.ARTICLE:
                     return (
                             <div class="col-span-2 flex justify-center items-center">
                                 <PostCardArticle post={post}/>
                             </div>
                     );
-                case POST_TYPE.MUSIC:
+                case PostType.MUSIC:
                     return (
                             <div class="col-span-2 flex justify-center items-center">
                                 <PostCardMusic post={post}/>
                             </div>
                     );
-                case POST_TYPE.VIDEO:
+                case PostType.VIDEO:
                     return (
                             <div class="col-span-2 flex justify-center items-center">
                                 <PostCardVideo post={post}/>
                             </div>
                     );
-                case POST_TYPE.GALLERY:
+                case PostType.GALLERY:
                     return (
                             <div class="col-span-2 flex justify-center items-center">
                                 <PostCardGallery post={post}/>

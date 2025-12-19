@@ -7,6 +7,11 @@ import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 import {extractDomains} from './src/api/utils/url';
 
+// 验证必需的环境变量
+if (!process.env.SITE_URL) {
+    throw new Error('SITE_URL environment variable is required');
+}
+
 // 配置远程图片允许的域名
 const imageDomains = extractDomains(
     process.env.GHOST_URL,
@@ -15,13 +20,13 @@ const imageDomains = extractDomains(
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://www.solitudera.com',
+  site: process.env.SITE_URL,
 
   i18n: {
       locales: ['zh', 'en', 'ja'],
       defaultLocale: 'zh',
       routing: {
-          prefixDefaultLocale: false,
+          prefixDefaultLocale: true,
       },
   },
 

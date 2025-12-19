@@ -1,34 +1,46 @@
 ---
-import { getHighlightPosts } from '@api/ghost/posts';
-import { initializeSiteData } from '@api/ghost/settings';
-import BaseLayout from '@layouts/base/BaseLayout.astro';
-import Navbar from '@layouts/base/Navbar.astro';
-import NavbarBrand from '@components/layout/navbar/NavbarBrand.astro';
-import NavbarUtility from '@components/layout/navbar/NavbarUtility.astro';
-import Dock from '@layouts/base/Dock.astro';
-import DockNav from '@components/layout/dock/nav/DockNav.astro';
-import DockTimeline from '@components/layout/dock/timeline/DockTimeline.astro';
-import DockSocial from '@components/layout/dock/social/DockSocial.astro';
-import IndexLayout from '@layouts/IndexLayout.astro'
-
-const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
-    await initializeSiteData();
-const highlightPosts = await getHighlightPosts();
+/**
+ * 根路径语言检测跳转页面
+ * 检测用户浏览器语言偏好，自动跳转到对应语言版本
+ */
+import { DEFAULT_LOCALE, LOCALES } from '@lib/i18n';
 ---
 
-<BaseLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
-    <Navbar>
-        <NavbarBrand
-            logoImageUrl={logoUrl}
-            siteTitle={siteTitle}
-            siteSubTitle={siteDescription}
-        />
-        <NavbarUtility />
-    </Navbar>
-    <IndexLayout posts={highlightPosts} />
-    <Dock isFixed={true}>
-        <DockTimeline posts={highlightPosts} />
-        <DockNav />
-        <DockSocial />
-    </Dock>
-</BaseLayout>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting...</title>
+    <meta name="robots" content="noindex" />
+    <!-- Fallback for non-JavaScript browsers -->
+    <noscript>
+        <meta http-equiv="refresh" content={`0;url=/${DEFAULT_LOCALE}/`} />
+    </noscript>
+</head>
+<body>
+    <script is:inline define:vars={{ DEFAULT_LOCALE, LOCALES }}>
+        (function() {
+            // 获取浏览器语言设置
+            const browserLangs = navigator.languages || [navigator.language];
+            
+            // 查找匹配的语言
+            let targetLocale = DEFAULT_LOCALE;
+            
+            for (const lang of browserLangs) {
+                const langCode = lang.toLowerCase().split('-')[0];
+                if (LOCALES.includes(langCode)) {
+                    targetLocale = langCode;
+                    break;
+                }
+            }
+            
+            // 跳转到对应语言页面
+            window.location.replace('/' + targetLocale + '/');
+        })();
+    </script>
+    <noscript>
+        <p>Redirecting to <a href={`/${DEFAULT_LOCALE}/`}>/{DEFAULT_LOCALE}/</a>...</p>
+    </noscript>
+</body>
+</html>
