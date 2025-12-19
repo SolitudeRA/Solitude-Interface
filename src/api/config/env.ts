@@ -6,6 +6,10 @@ interface SiteEnvVars {
     url: string;
 }
 
+interface ImageEnvVars {
+    imageHostUrl: string;
+}
+
 interface GhostEnvVars {
     url: string;
     key: string;
@@ -17,6 +21,9 @@ export const env = Object.freeze({
     site: {
         url: getEnv('SITE_URL'),
     } as SiteEnvVars,
+    image: {
+        imageHostUrl: getEnv('IMAGE_HOST_URL', ''),
+    } as ImageEnvVars,
     ghost: {
         url: getEnv('GHOST_URL'),
         key: getEnv('GHOST_CONTENT_KEY'),
