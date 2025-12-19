@@ -5,20 +5,26 @@ const TAG_PREFIXES = {
     TYPE: 'type-',
     CATEGORY: 'category-',
     SERIES: 'series-',
-};
+} as const;
+
+const DEFAULT_TAG_VALUE = 'default';
+
+// 标签信息接口
+interface TagInfo {
+    post_type: string;
+    post_category: string;
+    post_series: string;
+    post_general_tags: string[];
+}
 
 export function adaptGhostPost<T extends Post | FeaturedPost>(post: T): T {
+    const tagInfo = extractTagInfo(post.tags);
+
     return {
         ...post,
         url: convertPostIdToFrontendUrl(post.id),
         feature_image: post.feature_image,
-        post_type: getTagSlugWith(post.tags, TAG_PREFIXES.TYPE),
-        post_category: getTagSlugWith(post.tags, TAG_PREFIXES.CATEGORY),
-        post_series: getTagNameWith(post.tags, TAG_PREFIXES.SERIES),
-        post_general_tags: getTagNameExcept(
-            post.tags,
-            Object.values(TAG_PREFIXES),
-        ),
+        ...tagInfo,
     };
 }
 
@@ -26,35 +32,32 @@ function convertPostIdToFrontendUrl(id: string): URL {
     return new URL(`${env.site.url}/posts/${id}`);
 }
 
-function getTagSlugWith(
-    tags: PostTag[] | undefined,
-    tagPrefix: string,
-): string {
-    return (
-        tags
-            ?.find((tag) => tag.slug.startsWith(tagPrefix))
-            ?.slug.replace(tagPrefix, '') ?? 'default'
-    );
-}
+/**
+ * 从标签数组中提取所有标签信息
+ */
+function extractTagInfo(tags: PostTag[] | undefined): TagInfo {
+    const result: TagInfo = {
+        post_type: DEFAULT_TAG_VALUE,
+        post_category: DEFAULT_TAG_VALUE,
+        post_series: DEFAULT_TAG_VALUE,
+        post_general_tags: [],
+    };
 
-function getTagNameWith(
-    tags: PostTag[] | undefined,
-    tagPrefix: string,
-): string {
-    return (
-        tags?.find((tag) => tag.slug.startsWith(tagPrefix))?.name ?? 'default'
-    );
-}
+    if (!tags?.length) return result;
 
-function getTagNameExcept(
-    tags: PostTag[] | undefined,
-    tagPrefixes: string[],
-): string[] {
-    if (!tags?.length) return [];
+    for (const tag of tags) {
+        const { slug, name } = tag;
 
-    return tags
-        .filter(
-            (tag) => !tagPrefixes.some((prefix) => tag.slug.startsWith(prefix)),
-        )
-        .map((tag) => tag.name);
+        if (slug.startsWith(TAG_PREFIXES.TYPE)) {
+            result.post_type = slug.replace(TAG_PREFIXES.TYPE, '');
+        } else if (slug.startsWith(TAG_PREFIXES.CATEGORY)) {
+            result.post_category = slug.replace(TAG_PREFIXES.CATEGORY, '');
+        } else if (slug.startsWith(TAG_PREFIXES.SERIES)) {
+            result.post_series = name;
+        } else {
+            result.post_general_tags.push(name);
+        }
+    }
+
+    return result;
 }
