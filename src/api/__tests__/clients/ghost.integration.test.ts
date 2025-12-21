@@ -1,12 +1,28 @@
 import { describe, it, expect } from 'vitest';
 import { GhostAPIClient } from '@api/clients/ghost';
 
+// 集成测试用的简化类型定义
+interface TestPost {
+    id: string;
+    title: string;
+    url: string;
+    published_at?: string;
+    tags?: unknown[];
+}
+
+interface TestSettings {
+    title: string;
+    description: string;
+    timezone?: string;
+    logo?: string;
+}
+
 describe('GhostAPIClient Integration Tests', () => {
     const client = new GhostAPIClient();
 
     describe('Real API Connection', () => {
         it('should successfully connect to Ghost API and fetch posts', async () => {
-            const result = await client.get({
+            const result = await client.get<TestPost[]>({
                 endpoint: '/posts/',
                 params: {
                     limit: 1,
@@ -25,7 +41,7 @@ describe('GhostAPIClient Integration Tests', () => {
         }, 10000); // 10秒超时
 
         it('should successfully fetch site settings', async () => {
-            const result = await client.get({
+            const result = await client.get<TestSettings>({
                 endpoint: '/settings/',
             });
 
@@ -35,7 +51,7 @@ describe('GhostAPIClient Integration Tests', () => {
         }, 10000);
 
         it('should handle query parameters correctly', async () => {
-            const result = await client.get({
+            const result = await client.get<TestPost[]>({
                 endpoint: '/posts/',
                 params: {
                     limit: 5,
@@ -48,12 +64,13 @@ describe('GhostAPIClient Integration Tests', () => {
             expect(Array.isArray(result)).toBe(true);
             expect(result.length).toBeLessThanOrEqual(5);
             
-            if (result.length > 0) {
-                expect(result[0]).toHaveProperty('id');
-                expect(result[0]).toHaveProperty('title');
+            const firstPost = result[0];
+            if (firstPost) {
+                expect(firstPost).toHaveProperty('id');
+                expect(firstPost).toHaveProperty('title');
                 // 如果文章有标签，应该包含 tags
-                if (result[0].tags) {
-                    expect(Array.isArray(result[0].tags)).toBe(true);
+                if (firstPost.tags) {
+                    expect(Array.isArray(firstPost.tags)).toBe(true);
                 }
             }
         }, 10000);
@@ -81,16 +98,15 @@ describe('GhostAPIClient Integration Tests', () => {
 
     describe('API Response Structure', () => {
         it('should return posts with correct structure', async () => {
-            const result = await client.get({
+            const result = await client.get<TestPost[]>({
                 endpoint: '/posts/',
                 params: {
                     limit: 1,
                 },
             });
 
-            if (result.length > 0) {
-                const post = result[0];
-                
+            const post = result[0];
+            if (post) {
                 // 验证必需字段
                 expect(post).toHaveProperty('id');
                 expect(typeof post.id).toBe('string');
@@ -106,7 +122,7 @@ describe('GhostAPIClient Integration Tests', () => {
         }, 10000);
 
         it('should return settings with correct structure', async () => {
-            const result = await client.get({
+            const result = await client.get<TestSettings>({
                 endpoint: '/settings/',
             });
 
@@ -132,7 +148,7 @@ describe('GhostAPIClient Integration Tests', () => {
         it('should complete request within reasonable time', async () => {
             const startTime = Date.now();
             
-            await client.get({
+            await client.get<TestPost[]>({
                 endpoint: '/posts/',
                 params: {
                     limit: 3,

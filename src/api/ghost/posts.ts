@@ -1,6 +1,6 @@
 import { getGhostClient } from '@api/clients/ghost';
 import { adaptGhostPost } from '@api/adapters/ghost';
-import type { FeaturedPost, Post, PostTag } from '@api/ghost/types';
+import type { FeaturedPost, Post } from '@api/ghost/types';
 import { handleApiError } from '@api/utils/errorHandlers';
 import { cacheService } from '@api/utils/cache';
 import {
@@ -110,12 +110,13 @@ export async function getPostByGroupAndLocale(
         });
 
         const posts = response.posts || [];
-        if (posts.length === 0) {
+        const firstPost = posts[0];
+        if (!firstPost) {
             cacheService.set(cacheKey, null);
             return null;
         }
 
-        const adaptedPost = adaptGhostPost(posts[0]);
+        const adaptedPost = adaptGhostPost<Post>(firstPost);
         cacheService.set(cacheKey, adaptedPost);
 
         return adaptedPost;
@@ -163,8 +164,8 @@ export async function getVariantsByGroup(key: string): Promise<Record<Locale, Po
 
         for (const post of posts) {
             const locale = extractLocaleFromTags(post.tags);
-            if (locale && post) {
-                variants[locale] = adaptGhostPost(post) as Post;
+            if (locale) {
+                variants[locale] = adaptGhostPost<Post>(post);
             }
         }
 

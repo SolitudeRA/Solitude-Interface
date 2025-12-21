@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { adaptGhostPost } from '@api/adapters/ghost';
 import type { Post, FeaturedPost, PostTag } from '@api/ghost/types';
 

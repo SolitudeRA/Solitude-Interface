@@ -92,33 +92,34 @@ describe('Posts API Integration Tests', () => {
 
         it('should use cached data on subsequent calls', async () => {
             // 第一次调用
-            const posts1 = await getHighlightPosts(5);
+            const firstCallPosts = await getHighlightPosts(5);
             
             // 第二次调用应该从缓存读取
             const startTime = Date.now();
-            const posts2 = await getHighlightPosts(5);
+            const secondCallPosts = await getHighlightPosts(5);
             const duration = Date.now() - startTime;
 
             // 从缓存读取应该很快（小于100ms）
             expect(duration).toBeLessThan(100);
             
             // 数据应该相同
-            expect(posts2).toEqual(posts1);
+            expect(secondCallPosts).toEqual(firstCallPosts);
         }, 15000);
 
         it('should fetch new data after cache is cleared', async () => {
             // 第一次调用
-            const posts1 = await getHighlightPosts(5);
+            const initialPosts = await getHighlightPosts(5);
+            expect(initialPosts.length).toBeGreaterThan(0);
             
             // 清除缓存
             cacheService.clear();
             
             // 第二次调用应该重新从 API 获取
-            const posts2 = await getHighlightPosts(5);
+            const newPosts = await getHighlightPosts(5);
             
             // 数据结构应该相同，但可能是新获取的
-            expect(posts2.length).toBeGreaterThan(0);
-            expect(posts2[0]).toHaveProperty('id');
+            expect(newPosts.length).toBeGreaterThan(0);
+            expect(newPosts[0]).toHaveProperty('id');
         }, 15000);
     });
 

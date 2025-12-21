@@ -268,14 +268,15 @@ describe('withCache', () => {
     });
 
     it('should handle complex argument types', async () => {
-        const mockFn = vi.fn((obj: any) =>
+        const mockFn = vi.fn((obj: { id: number; name: string }) =>
             Promise.resolve(`Result: ${obj.id}`),
         );
         const cachedFn = withCache(mockFn, 'complex');
 
         const arg = { id: 123, name: 'test' };
         const result1 = await cachedFn(arg);
-        const result2 = await cachedFn(arg);
+        // 第二次调用应该使用缓存
+        await cachedFn(arg);
 
         expect(result1).toBe('Result: 123');
         expect(mockFn).toHaveBeenCalledTimes(1);
