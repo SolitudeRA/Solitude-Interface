@@ -1,8 +1,8 @@
 ---
 import { listPostsByLocale } from '@api/ghost/posts';
 import { initializeSiteData } from '@api/ghost/settings';
-import type { Post } from '@api/ghost/types';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
+import IndexLayout from '@layouts/IndexLayout.astro';
 import Navbar from '@layouts/base/Navbar.astro';
 import Dock from '@layouts/base/Dock.astro';
 import NavbarBrand from '@components/layout/navbar/NavbarBrand.astro';
@@ -14,8 +14,6 @@ import {
     type Locale,
     isLocale,
     LOCALE_HTML_LANG,
-    extractI18nKey,
-    buildPostPath,
     generateAlternateLinks,
 } from '@lib/i18n';
 import { env } from '@api/config/env';
@@ -59,52 +57,8 @@ const canonicalUrl = `${env.site.url}/${locale}`;
         <NavbarUtility />
     </Navbar>
     
-    <main class="container mx-auto px-4 py-8 mt-20">
-        <h1 class="text-3xl font-bold mb-8">{siteTitle}</h1>
-        
-        {posts.length === 0 ? (
-            <p class="text-gray-500">
-                {locale === 'zh' && '暂无文章'}
-                {locale === 'ja' && '記事がありません'}
-                {locale === 'en' && 'No posts yet'}
-            </p>
-        ) : (
-            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {posts.map((post: Post) => {
-                    const i18nKey = extractI18nKey(post.tags);
-                    const postUrl = i18nKey ? buildPostPath(locale, i18nKey) : post.url.toString();
-                    
-                    return (
-                        <article class="bg-white/80 dark:bg-gray-800/80 backdrop-blur rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                            {post.feature_image && (
-                                <a href={postUrl}>
-                                    <img 
-                                        src={post.feature_image.toString()} 
-                                        alt={post.title}
-                                        class="w-full h-48 object-cover"
-                                    />
-                                </a>
-                            )}
-                            <div class="p-4">
-                                <h2 class="text-xl font-semibold mb-2">
-                                    <a href={postUrl} class="hover:text-blue-600 dark:hover:text-blue-400">
-                                        {post.title}
-                                    </a>
-                                </h2>
-                                {post.primary_tag && (
-                                    <span class="inline-block bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded mb-2">
-                                        {post.primary_tag.name}
-                                    </span>
-                                )}
-                                <p class="text-gray-600 dark:text-gray-300 text-sm mb-2">
-                                    {new Date(post.published_at).toLocaleDateString(htmlLang)}
-                                </p>
-                            </div>
-                        </article>
-                    );
-                })}
-            </div>
-        )}
+    <main class="mx-auto">
+        <IndexLayout posts={posts} />
     </main>
     
     <Dock isFixed={true}>
