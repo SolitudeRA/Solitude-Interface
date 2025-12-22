@@ -3,17 +3,14 @@ interface Props {
     isFixed?: boolean;
 }
 
-const {isFixed = false} = Astro.props;
+const { isFixed = false } = Astro.props;
 ---
-<div class:list={["solitude-dock grid grid-cols-3 px-14", isFixed ? "fixed bottom-0" : ""]}>
-    <slot/>
-</div>
 
-<style>
-    .solitude-dock {
-        min-height     : 8rem;
-        padding-top    : 0.5em;
-        padding-bottom : 1em;
-        width          : 100%;
-    }
-</style>
+<div
+    class:list={[
+        'grid min-h-[8rem] w-full grid-cols-3 px-14 pt-2 pb-4',
+        isFixed ? 'fixed bottom-0' : '',
+    ]}
+>
+    <slot />
+</div>

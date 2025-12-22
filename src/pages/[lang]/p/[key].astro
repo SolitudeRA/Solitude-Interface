@@ -1,5 +1,9 @@
 ---
-import { listAllGroupKeys, getPostWithFallback, getVariantsByGroup } from '@api/ghost/posts';
+import {
+    listAllGroupKeys,
+    getPostWithFallback,
+    getVariantsByGroup,
+} from '@api/ghost/posts';
 import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
 import Navbar from '@layouts/base/Navbar.astro';
@@ -23,7 +27,7 @@ import { env } from '@api/config/env';
 
 export async function getStaticPaths() {
     const groupKeys = await listAllGroupKeys();
-    
+
     const paths = [];
     for (const key of groupKeys) {
         for (const lang of LOCALES) {
@@ -32,7 +36,7 @@ export async function getStaticPaths() {
             });
         }
     }
-    
+
     return paths;
 }
 
@@ -45,10 +49,14 @@ if (!isLocale(lang) || !key) {
 const locale = lang as Locale;
 const htmlLang = LOCALE_HTML_LANG[locale];
 
-const { siteTitle, siteDescription, logoUrl, coverImageUrl } = await initializeSiteData();
+const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
+    await initializeSiteData();
 
 // 获取文章（带 fallback 逻辑）
-const { post, displayedLocale, isFallback } = await getPostWithFallback(key, locale);
+const { post, displayedLocale, isFallback } = await getPostWithFallback(
+    key,
+    locale,
+);
 
 // 如果没有找到任何文章，显示 404
 if (!post) {
@@ -60,41 +68,49 @@ const variants = await getVariantsByGroup(key);
 const availableLocales = LOCALES.filter((l) => variants[l] !== null);
 
 // 生成 SEO 链接
-const alternateLinks = generateAlternateLinks(env.site.url, `/p/${key}`, availableLocales);
+const alternateLinks = generateAlternateLinks(
+    env.site.url,
+    `/p/${key}`,
+    availableLocales,
+);
 const canonicalUrl = `${env.site.url}/${displayedLocale}/p/${key}`;
 
 // Fallback 提示消息
-const fallbackMessage = isFallback ? getFallbackMessage(locale, displayedLocale) : '';
+const fallbackMessage = isFallback
+    ? getFallbackMessage(locale, displayedLocale)
+    : '';
 ---
 
-<BaseLayout 
-    siteTitle={`${siteTitle} - ${post.title}`} 
+<BaseLayout
+    siteTitle={`${siteTitle} - ${post.title}`}
     coverImageUrl={coverImageUrl}
     lang={LOCALE_HTML_LANG[displayedLocale]}
     canonicalUrl={canonicalUrl}
     alternateLinks={alternateLinks}
 >
     <Navbar isFixed={true}>
-        <NavbarBrand 
-            logoImageUrl={logoUrl} 
-            siteTitle={siteTitle} 
+        <NavbarBrand
+            logoImageUrl={logoUrl}
+            siteTitle={siteTitle}
             siteSubTitle={siteDescription}
         />
         <NavbarUtility />
     </Navbar>
-    
-    {isFallback && fallbackMessage && (
-        <FallbackNotice message={fallbackMessage} />
-    )}
-    
-    <div class="container mx-auto px-4 mt-20">
-        <LanguageSwitcher 
+
+    {
+        isFallback && fallbackMessage && (
+            <FallbackNotice message={fallbackMessage} />
+        )
+    }
+
+    <div class="container mx-auto mt-20 px-4">
+        <LanguageSwitcher
             currentLocale={locale}
             i18nKey={key}
             variants={variants}
         />
     </div>
-    
+
     <PostsContent
         title={post.title}
         feature_image={post.feature_image}
@@ -103,7 +119,7 @@ const fallbackMessage = isFallback ? getFallbackMessage(locale, displayedLocale)
         published_at={post.published_at}
         html={post.html}
     />
-    
+
     <Dock isFixed={true}>
         <div></div>
         <DockNav />

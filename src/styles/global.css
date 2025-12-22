@@ -1,12 +1,12 @@
-@import "@fontsource-variable/noto-sans-sc";
+@import '@fontsource-variable/noto-sans-sc';
 
-@import "tailwindcss";
-@import "./global-color.css";
-@import "tw-animate-css";
+@import 'tailwindcss';
+/* tokens consolidated; global-color.css no longer needed */
+@import 'tw-animate-css';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme{
+@theme {
     --font-noto-sans: 'Noto Sans SC Variable';
 }
 
@@ -50,6 +50,24 @@
 
 :root {
     --radius: 0.625rem;
+    /* text tokens */
+    --text-site-title: #0d0d0d;
+    --text-site-subtitle: #505050;
+    --text-ui-primary: #1a1a1a;
+    --text-ui-secondary: #555555;
+    --text-content-primary: #222222;
+    --text-content-secondary: #555555;
+    --text-tag-primary: #111111;
+    --text-tag-secondary: #111111;
+    --text-tag-alt: #111111;
+    /* card/tag backgrounds */
+    --background-index-card-header: #111111;
+    --background-index-card-footer: #111111;
+    --background-tag-primary: #111111;
+    --background-tag-secondary: #111111;
+    --background-tag-alt: #111111;
+    --background-tag-test: #111111;
+    /* palette + semantic colors */
     --background: oklch(1 0 0);
     --foreground: oklch(0.13 0.028 261.692);
     --card: oklch(1 0 0);
@@ -84,6 +102,24 @@
 }
 
 .dark {
+    /* text tokens */
+    --text-site-title: #f0f0f0;
+    --text-site-subtitle: #dddddd;
+    --text-ui-primary: #eaeaea;
+    --text-ui-secondary: #aaaaaa;
+    --text-content-primary: #dcdcdc;
+    --text-content-secondary: #a0a0a0;
+    --text-tag-primary: #111111;
+    --text-tag-secondary: #111111;
+    --text-tag-alt: #111111;
+    /* card/tag backgrounds */
+    --background-index-card-header: #111111;
+    --background-index-card-footer: #111111;
+    --background-tag-primary: #111111;
+    --background-tag-secondary: #111111;
+    --background-tag-alt: #111111;
+    --background-tag-test: #111111;
+    /* palette + semantic colors */
     --background: oklch(0.13 0.028 261.692);
     --foreground: oklch(0.985 0.002 247.839);
     --card: oklch(0.21 0.034 264.665);
@@ -118,10 +154,142 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+    * {
+        @apply border-border outline-ring/50;
     }
-  body {
-    @apply bg-background text-foreground;
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+@layer utilities {
+    .text-color-ui {
+        color: var(--text-ui-primary);
+    }
+
+    .text-color-ui-secondary {
+        color: var(--text-ui-secondary);
+    }
+}
+
+@layer components {
+    .solitude-article-container {
+        width: 100%;
+        margin-top: 15vh;
+    }
+
+    .solitude-article-meta {
+        height: 900px;
+    }
+
+    .solitude-article-meta-primary-tags {
+        height: 300px;
+        width: 100%;
+        padding-top: 60px;
+        padding-left: 4.5rem;
+        padding-right: 4.5rem;
+    }
+
+    .solitude-article-meta-other-tags {
+        height: 300px;
+        width: 100%;
+        padding-bottom: 55px;
+        padding-left: 4.5rem;
+        padding-right: 4.5rem;
+    }
+
+    .solitude-article-meta h1 {
+        font-size: 2.7rem;
+        font-weight: bold;
+        text-align: center;
+        padding-left: 120px;
+        padding-right: 120px;
+    }
+
+    .solitude-article-content {
+        padding-top: 3.5rem;
+        padding-left: 7.2rem;
+        padding-right: 7.2rem;
+    }
+
+    .solitude-article-content h1 {
+        font-size: 2.7rem;
+        font-weight: bold;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        color: var(--text-content-primary);
+    }
+
+    .solitude-article-content h2 {
+        font-size: 2.25rem;
+        font-weight: bold;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        color: var(--text-content-primary);
+    }
+
+    .solitude-article-content h3 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+        margin-bottom: 0.8rem;
+        color: var(--text-content-secondary);
+    }
+
+    .solitude-article-content h4 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+        margin-bottom: 0.8rem;
+        color: var(--text-content-secondary);
+    }
+
+    .solitude-article-content a {
+        color: var(--primary);
+    }
+
+    .solitude-article-content p {
+        color: var(--text-content-primary);
+        font-size: 1.15rem;
+        line-height: 1.9rem;
+        margin-top: 1.2rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .solitude-article-content strong {
+        color: var(--text-content-primary);
+        font-weight: bold;
+    }
+
+    .solitude-article-content ul {
+        font-size: 1.15rem;
+        margin-left: 2.5rem;
+        list-style-type: disc;
+    }
+
+    .solitude-article-content ul p {
+        font-size: 1.15rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .solitude-article-content ul li {
+        font-size: 1.15rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .solitude-article-rail {
+        background-color: var(--muted);
+        opacity: 0.85;
+    }
+
+    .dark .solitude-article-rail {
+        background-color: var(--muted);
+        opacity: 0.95;
+    }
+
+    .solitude-article-body {
+        background-color: var(--card);
     }
 }

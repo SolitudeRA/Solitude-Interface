@@ -1,63 +1,54 @@
 ---
-import type { Post } from "@api/ghost/types";
-import { PostType } from "@api/ghost/types";
-import PostCardDefault from "./Default.astro";
-import PostCardArticle from "./Article.astro";
-import PostCardMusic from "./Music.astro";
-import PostCardVideo from "./Video.astro";
-import PostCardGallery from "./Gallery.astro";
+import type { Post } from '@api/ghost/types';
+import { PostType } from '@api/ghost/types';
+import PostCardDefault from './Default.astro';
+import PostCardArticle from './Article.astro';
+import PostCardMusic from './Music.astro';
+import PostCardVideo from './Video.astro';
+import PostCardGallery from './Gallery.astro';
 
 interface Props {
     posts: Post[];
 }
 
-const {posts} = Astro.props;
+const { posts } = Astro.props;
 ---
 
-<div class="grid grid-cols-10 post-view-container">
+<div class="grid h-[75vh] w-full grid-cols-10 px-[1.8%]">
     {
         posts.map((post) => {
             switch (post.post_type) {
                 case PostType.DEFAULT:
                     return (
-                            <div class="col-span-2 flex justify-center items-center">
-                                <PostCardDefault post={post}/>
-                            </div>
+                        <div class="col-span-2 flex items-center justify-center">
+                            <PostCardDefault post={post} />
+                        </div>
                     );
                 case PostType.ARTICLE:
                     return (
-                            <div class="col-span-2 flex justify-center items-center">
-                                <PostCardArticle post={post}/>
-                            </div>
+                        <div class="col-span-2 flex items-center justify-center">
+                            <PostCardArticle post={post} />
+                        </div>
                     );
                 case PostType.MUSIC:
                     return (
-                            <div class="col-span-2 flex justify-center items-center">
-                                <PostCardMusic post={post}/>
-                            </div>
+                        <div class="col-span-2 flex items-center justify-center">
+                            <PostCardMusic post={post} />
+                        </div>
                     );
                 case PostType.VIDEO:
                     return (
-                            <div class="col-span-2 flex justify-center items-center">
-                                <PostCardVideo post={post}/>
-                            </div>
+                        <div class="col-span-2 flex items-center justify-center">
+                            <PostCardVideo post={post} />
+                        </div>
                     );
                 case PostType.GALLERY:
                     return (
-                            <div class="col-span-2 flex justify-center items-center">
-                                <PostCardGallery post={post}/>
-                            </div>
+                        <div class="col-span-2 flex items-center justify-center">
+                            <PostCardGallery post={post} />
+                        </div>
                     );
             }
         })
     }
 </div>
-
-<style>
-    .post-view-container {
-        height        : 75vh;
-        width         : 100%;
-        padding-left  : 1.8%;
-        padding-right : 1.8%;
-    }
-</style>

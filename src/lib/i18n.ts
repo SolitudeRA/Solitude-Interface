@@ -89,7 +89,9 @@ export function extractI18nKeyFromTagSlug(slug: string): string | null {
 /**
  * 从文章的 tags 数组中提取语言代码
  */
-export function extractLocaleFromTags(tags: PostTag[] | undefined): Locale | null {
+export function extractLocaleFromTags(
+    tags: PostTag[] | undefined,
+): Locale | null {
     if (!tags?.length) {
         return null;
     }
@@ -173,7 +175,10 @@ export function generateAlternateLinks(
 /**
  * 获取 fallback 提示消息
  */
-export function getFallbackMessage(requestedLocale: Locale, displayedLocale: Locale): string {
+export function getFallbackMessage(
+    requestedLocale: Locale,
+    displayedLocale: Locale,
+): string {
     const messages: Record<Locale, Record<Locale, string>> = {
         zh: {
             zh: '',

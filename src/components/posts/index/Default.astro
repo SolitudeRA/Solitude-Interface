@@ -1,5 +1,4 @@
 ---
-import '@styles/post-view.css';
 import type { Post } from '@api/ghost/posts';
 import { Chip } from '@components/common/badge';
 
@@ -12,8 +11,8 @@ const postFeatureImageLightUrl = `linear-gradient(rgba(255, 255, 255, 0.55), rgb
 const postFeatureImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url(${post.feature_image.toString()})`;
 ---
 
-<div class="post-view-card">
-    <div class="post-view-card-primary-tags flex items-center justify-between">
+<div class="post-view-card h-[90%] w-[85%] rounded-[35px] px-4">
+    <div class="flex h-[8%] items-center justify-between">
         <div>
             <Chip variant="flat" color="primary" client:visible>
                 {post.post_type}
@@ -25,19 +24,21 @@ const postFeatureImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0,
             </Chip>
         </div>
     </div>
-    <div class="post-view-card-title flex justify-center items-center">
+    <div
+        class="mb-[10%] flex h-[15%] items-center justify-center px-6 text-2xl font-bold"
+    >
         <div class="text-center">
             {post.title}
         </div>
     </div>
-    <div class="post-view-card-content">
+    <div class="h-[55%] px-4 text-lg">
         {post.excerpt}
     </div>
-    <div class="post-view-card-bottom">
-        <div class="text-center post-view-card-date">
+    <div>
+        <div class="text-center">
             {post.published_at.split('T')[0]}
         </div>
-        <div class=" post-view-card-secondary-tags">
+        <div class="h-[10%]">
             {
                 post.post_general_tags?.map((tagName) => (
                     <Chip color="success" variant="flat" client:visible>
@@ -60,7 +61,7 @@ const postFeatureImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0,
         background-image: var(--postFeatureImageLightUrl);
     }
 
-    html.dark .post-view-card {
+    .dark .post-view-card {
         background-image: var(--postFeatureImageDarkUrl);
     }
 </style>

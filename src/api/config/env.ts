@@ -38,7 +38,9 @@ function getEnv(key: string, defaultValue?: string): string {
         if (defaultValue !== undefined) {
             return defaultValue;
         }
-        throw new Error(`Environment variable ${key} is not set and no default value is provided.`);
+        throw new Error(
+            `Environment variable ${key} is not set and no default value is provided.`,
+        );
     }
     return value;
 }
@@ -50,7 +52,9 @@ function getEnvAsNumber(key: string, defaultValue: number): number {
     }
     const parsed = parseInt(value, 10);
     if (isNaN(parsed)) {
-        console.warn(`Environment variable ${key} is not a valid number, using default: ${defaultValue}`);
+        console.warn(
+            `Environment variable ${key} is not a valid number, using default: ${defaultValue}`,
+        );
         return defaultValue;
     }
     return parsed;

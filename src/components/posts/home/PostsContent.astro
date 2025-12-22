@@ -1,7 +1,6 @@
 ---
-import "@styles/article.css"
-import PostMeta from "./PostMeta.astro"
-import type { PostTag } from "@api/ghost/types";
+import PostMeta from './PostMeta.astro';
+import type { PostTag } from '@api/ghost/types';
 
 interface Props {
     title: string;
@@ -12,36 +11,37 @@ interface Props {
     html: string;
 }
 
-const {title, feature_image, primary_tag, tags, published_at, html} = Astro.props;
+const { title, feature_image, primary_tag, tags, published_at, html } =
+    Astro.props;
 const featureImageLightUrl = `linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),url(${feature_image.toString()})`;
 const featureImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url(${feature_image.toString()})`;
 ---
 
-<div class="grid grid-cols-12 solitude-article-container">
-    <div class="col-span-2 flex bg-[#f3f4f6]/85 dark:bg-[#262626]/95"></div>
-    <div class="col-span-8 bg-white dark:bg-[#1f1f1f] pb-[200px]">
+<div class="solitude-article-container grid grid-cols-12">
+    <div class="solitude-article-rail col-span-2 flex"></div>
+    <div class="solitude-article-body col-span-8 pb-[200px]">
         <div class="solitude-article-meta">
             <PostMeta
-                    title={title}
-                    primary_tag={primary_tag}
-                    tags={tags}
-                    published_at={published_at}
+                title={title}
+                primary_tag={primary_tag}
+                tags={tags}
+                published_at={published_at}
             />
         </div>
         <div>
-            <div class="solitude-article-content" set:html={html}></div>
+            <div class="solitude-article-content" set:html={html} />
         </div>
     </div>
-    <div class="col-span-2 bg-[#f3f4f6]/85 dark:bg-[#262626]/95"></div>
+    <div class="solitude-article-rail col-span-2"></div>
 </div>
 
-<style define:vars={{featureImageLightUrl, featureImageDarkUrl}}>
+<style define:vars={{ featureImageLightUrl, featureImageDarkUrl }}>
     .solitude-article-meta {
-        background-size  : cover;
-        background-image : var(--featureImageLightUrl);
+        background-size: cover;
+        background-image: var(--featureImageLightUrl);
     }
 
-    html.dark .solitude-article-meta {
-        background-image : var(--featureImageDarkUrl);
+    .dark .solitude-article-meta {
+        background-image: var(--featureImageDarkUrl);
     }
 </style>

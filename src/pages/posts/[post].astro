@@ -20,7 +20,8 @@ interface Props {
     html: string;
 }
 
-const {siteTitle, siteDescription, logoUrl, coverImageUrl} = await initializeSiteData();
+const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
+    await initializeSiteData();
 
 export async function getStaticPaths() {
     const posts = await getPosts();
@@ -36,31 +37,36 @@ export async function getStaticPaths() {
                 primary_tag: post.primary_tag ?? undefined,
                 tags: post.tags ?? undefined,
                 published_at: post.published_at,
-                html: post.html
-            }
+                html: post.html,
+            },
         };
     });
 }
 
-const {title, feature_image, primary_tag, tags, published_at, html} = Astro.props;
+const { title, feature_image, primary_tag, tags, published_at, html } =
+    Astro.props;
 ---
 
 <BaseLayout siteTitle={`${siteTitle} - ${title}`} coverImageUrl={coverImageUrl}>
     <Navbar isFixed={true}>
-        <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteTitle} siteSubTitle={siteDescription}/>
-        <NavbarUtility/>
+        <NavbarBrand
+            logoImageUrl={logoUrl}
+            siteTitle={siteTitle}
+            siteSubTitle={siteDescription}
+        />
+        <NavbarUtility />
     </Navbar>
     <PostsContent
-            title={title}
-            feature_image={feature_image}
-            primary_tag={primary_tag}
-            tags={tags}
-            published_at={published_at}
-            html={html}
+        title={title}
+        feature_image={feature_image}
+        primary_tag={primary_tag}
+        tags={tags}
+        published_at={published_at}
+        html={html}
     />
     <Dock isFixed={true}>
         <div></div>
-        <DockNav/>
-        <DockSocial/>
+        <DockNav />
+        <DockSocial />
     </Dock>
 </BaseLayout>

@@ -10,55 +10,38 @@ import {
 import solitudeAvatar from '@assets/avatar.jpg';
 ---
 
-<div class="solitude-dock-social flex justify-end items-center">
-    <div class="flex items-center space-x-12 mr-14 text-color-ui">
-        <span class="solitude-dock-social-icon">
+<div class="text-color-ui flex min-h-[5em] items-center justify-end">
+    <div class="mr-14 flex items-center space-x-12">
+        <span>
             <a href="https://github.com/SolitudeRA" target="_blank">
-                <FaGithub />
+                <FaGithub className="h-8 w-8" />
             </a>
         </span>
-        <span class="solitude-dock-social-icon">
+        <span>
             <a href="https://github.com/SolitudeRA" target="_blank">
-                <FaSquareXTwitter />
+                <FaSquareXTwitter className="h-8 w-8" />
             </a>
         </span>
-        <span class="solitude-dock-social-icon">
+        <span>
             <a href="https://github.com/SolitudeRA" target="_blank">
-                <FaSteam />
+                <FaSteam className="h-8 w-8" />
             </a>
         </span>
-        <span class="solitude-dock-social-icon">
+        <span>
             <a href="https://github.com/SolitudeRA" target="_blank">
-                <FaSpotify />
+                <FaSpotify className="h-8 w-8" />
             </a>
         </span>
-        <span class="solitude-dock-social-icon">
+        <span>
             <a href="https://github.com/SolitudeRA" target="_blank">
-                <FaBilibili />
+                <FaBilibili className="h-8 w-8" />
             </a>
         </span>
     </div>
     <Avatar
-        className="solitude-dock-social-avatar shadow-xl"
+        className="h-20 w-20 shadow-xl"
         src={solitudeAvatar.src}
         showFallback={true}
         client:visible
     />
 </div>
-
-<style>
-    .solitude-dock-social {
-        min-height: 5em;
-        color: var(--text-ui-primary);
-    }
-
-    .solitude-dock-social-icon svg {
-        height: 2em;
-        width: 2em;
-    }
-
-    .solitude-dock-social-avatar {
-        height: 5em;
-        width: 5em;
-    }
-</style>

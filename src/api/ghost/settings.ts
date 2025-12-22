@@ -23,11 +23,11 @@ export class SiteService {
             return handleApiError(error);
         }
     }
-    
+
     public getSiteInformation = withCache(
         this._getSiteInformation.bind(this),
         'site_information',
-        15 * 60 * 1000 
+        15 * 60 * 1000,
     );
 }
 

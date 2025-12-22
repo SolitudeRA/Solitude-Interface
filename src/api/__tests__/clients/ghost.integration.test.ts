@@ -32,7 +32,7 @@ describe('GhostAPIClient Integration Tests', () => {
 
             expect(result).toBeDefined();
             expect(Array.isArray(result)).toBe(true);
-            
+
             if (result.length > 0) {
                 expect(result[0]).toHaveProperty('id');
                 expect(result[0]).toHaveProperty('title');
@@ -63,7 +63,7 @@ describe('GhostAPIClient Integration Tests', () => {
             expect(result).toBeDefined();
             expect(Array.isArray(result)).toBe(true);
             expect(result.length).toBeLessThanOrEqual(5);
-            
+
             const firstPost = result[0];
             if (firstPost) {
                 expect(firstPost).toHaveProperty('id');
@@ -110,13 +110,13 @@ describe('GhostAPIClient Integration Tests', () => {
                 // 验证必需字段
                 expect(post).toHaveProperty('id');
                 expect(typeof post.id).toBe('string');
-                
+
                 expect(post).toHaveProperty('title');
                 expect(typeof post.title).toBe('string');
-                
+
                 expect(post).toHaveProperty('url');
                 expect(typeof post.url).toBe('string');
-                
+
                 expect(post).toHaveProperty('published_at');
             }
         }, 10000);
@@ -129,15 +129,15 @@ describe('GhostAPIClient Integration Tests', () => {
             // 验证站点设置必需字段
             expect(result).toHaveProperty('title');
             expect(typeof result.title).toBe('string');
-            
+
             expect(result).toHaveProperty('description');
             expect(typeof result.description).toBe('string');
-            
+
             // 可选字段验证（如果存在）
             if (result.timezone) {
                 expect(typeof result.timezone).toBe('string');
             }
-            
+
             if (result.logo) {
                 expect(typeof result.logo).toBe('string');
             }
@@ -147,16 +147,16 @@ describe('GhostAPIClient Integration Tests', () => {
     describe('API Performance', () => {
         it('should complete request within reasonable time', async () => {
             const startTime = Date.now();
-            
+
             await client.get<TestPost[]>({
                 endpoint: '/posts/',
                 params: {
                     limit: 3,
                 },
             });
-            
+
             const duration = Date.now() - startTime;
-            
+
             // 请求应该在5秒内完成
             expect(duration).toBeLessThan(5000);
         }, 10000);

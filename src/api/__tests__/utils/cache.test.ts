@@ -243,9 +243,7 @@ describe('withCache', () => {
 
         await cachedFn('arg1', 'arg2');
 
-        expect(
-            cacheService.has('test-prefix:["arg1","arg2"]'),
-        ).toBe(true);
+        expect(cacheService.has('test-prefix:["arg1","arg2"]')).toBe(true);
     });
 
     it('should support custom TTL', async () => {

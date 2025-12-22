@@ -52,7 +52,9 @@ describe('Settings API Integration Tests', () => {
 
             if (siteInfo.timezone) {
                 // 时区应该是有效格式，如 "Asia/Tokyo", "UTC"
-                expect(siteInfo.timezone).toMatch(/^[A-Za-z]+\/[A-Za-z_]+$|^UTC$/);
+                expect(siteInfo.timezone).toMatch(
+                    /^[A-Za-z]+\/[A-Za-z_]+$|^UTC$/,
+                );
             }
         }, 15000);
 
@@ -101,7 +103,7 @@ describe('Settings API Integration Tests', () => {
 
             // logoUrl 应该是字符串
             expect(typeof siteData.logoUrl).toBe('string');
-            
+
             if (siteData.logoUrl.length > 0) {
                 // 如果有 logo，应该是有效的 URL 字符串
                 expect(siteData.logoUrl).toMatch(/^https?:\/\//);
@@ -139,7 +141,7 @@ describe('Settings API Integration Tests', () => {
 
             // 标题应该匹配
             expect(siteData.siteTitle).toBe(siteInfo.title);
-            
+
             // 描述应该匹配
             expect(siteData.siteDescription).toBe(siteInfo.description);
         }, 15000);
@@ -165,7 +167,7 @@ describe('Settings API Integration Tests', () => {
         it('should use cached data on subsequent calls', async () => {
             // 第一次调用
             const siteInfo1 = await getSiteInformation();
-            
+
             // 第二次调用应该从缓存读取
             const startTime = Date.now();
             const siteInfo2 = await getSiteInformation();
@@ -173,7 +175,7 @@ describe('Settings API Integration Tests', () => {
 
             // 从缓存读取应该很快（小于100ms）
             expect(duration).toBeLessThan(100);
-            
+
             // 数据应该相同
             expect(siteInfo2).toEqual(siteInfo1);
         }, 15000);
@@ -181,13 +183,13 @@ describe('Settings API Integration Tests', () => {
         it('should fetch new data after cache is cleared', async () => {
             // 第一次调用
             const siteInfo1 = await getSiteInformation();
-            
+
             // 清除缓存
             cacheService.clear();
-            
+
             // 第二次调用应该重新从 API 获取
             const siteInfo2 = await getSiteInformation();
-            
+
             // 数据应该仍然有效
             expect(siteInfo2).toBeDefined();
             expect(siteInfo2.title).toBe(siteInfo1.title);
@@ -213,11 +215,11 @@ describe('Settings API Integration Tests', () => {
     describe('Real Data Validation', () => {
         it('should return consistent data across multiple calls', async () => {
             cacheService.clear();
-            
+
             const siteInfo1 = await getSiteInformation();
-            
+
             cacheService.clear();
-            
+
             const siteInfo2 = await getSiteInformation();
 
             // 站点信息应该一致
@@ -227,7 +229,7 @@ describe('Settings API Integration Tests', () => {
 
         it('should have non-empty site title', async () => {
             const siteInfo = await getSiteInformation();
-            
+
             expect(siteInfo.title).toBeTruthy();
             expect(siteInfo.title.trim().length).toBeGreaterThan(0);
         }, 15000);
@@ -237,8 +239,10 @@ describe('Settings API Integration Tests', () => {
 
             // 确保没有返回错误的默认值
             expect(siteData.siteTitle).not.toBe('Error');
-            expect(siteData.siteDescription).not.toBe('Failed to initialize site data');
-            
+            expect(siteData.siteDescription).not.toBe(
+                'Failed to initialize site data',
+            );
+
             // 确保有实际的站点信息
             expect(siteData.siteTitle.length).toBeGreaterThan(0);
         }, 15000);
@@ -247,22 +251,22 @@ describe('Settings API Integration Tests', () => {
     describe('API Performance', () => {
         it('should complete site information request within reasonable time', async () => {
             cacheService.clear();
-            
+
             const startTime = Date.now();
             await getSiteInformation();
             const duration = Date.now() - startTime;
-            
+
             // 请求应该在5秒内完成
             expect(duration).toBeLessThan(5000);
         }, 10000);
 
         it('should complete site data initialization within reasonable time', async () => {
             cacheService.clear();
-            
+
             const startTime = Date.now();
             await initializeSiteData();
             const duration = Date.now() - startTime;
-            
+
             // 初始化应该在5秒内完成
             expect(duration).toBeLessThan(5000);
         }, 10000);

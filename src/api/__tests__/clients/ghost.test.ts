@@ -181,9 +181,7 @@ describe('GhostAPIClient', () => {
                 retryDelay: 10,
             });
 
-            await expect(
-                client.get({ endpoint: '/posts/' }),
-            ).rejects.toThrow();
+            await expect(client.get({ endpoint: '/posts/' })).rejects.toThrow();
             expect(mockRequest).toHaveBeenCalledTimes(1);
         });
 
@@ -202,9 +200,7 @@ describe('GhostAPIClient', () => {
                 retryDelay: 10,
             });
 
-            await expect(
-                client.get({ endpoint: '/posts/' }),
-            ).rejects.toThrow();
+            await expect(client.get({ endpoint: '/posts/' })).rejects.toThrow();
             expect(mockRequest).toHaveBeenCalledTimes(3);
         });
     });

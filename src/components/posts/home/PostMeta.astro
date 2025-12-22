@@ -12,37 +12,59 @@ const { title, primary_tag, tags, published_at } = Astro.props;
 const publishDate = new Date(published_at);
 ---
 
-<div class="p-8 text-center min-h-[300px] flex flex-col justify-center items-center">
-    <h1 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white drop-shadow-lg">
+<div
+    class="flex min-h-[300px] flex-col items-center justify-center p-8 text-center"
+>
+    <h1
+        class="mb-4 text-3xl font-bold text-gray-900 drop-shadow-lg md:text-4xl dark:text-white"
+    >
         {title}
     </h1>
-    
-    <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-700 dark:text-gray-300">
-        {primary_tag && (
-            <span class="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full">
-                {primary_tag.name}
-            </span>
-        )}
-        
-        <time datetime={publishDate.toISOString()} class="flex items-center gap-1">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+
+    <div
+        class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-700 dark:text-gray-300"
+    >
+        {
+            primary_tag && (
+                <span class="rounded-full bg-blue-100 px-3 py-1 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">
+                    {primary_tag.name}
+                </span>
+            )
+        }
+
+        <time
+            datetime={publishDate.toISOString()}
+            class="flex items-center gap-1"
+        >
+            <svg
+                class="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                ></path>
             </svg>
             {publishDate.toLocaleDateString()}
         </time>
     </div>
-    
-    {tags && tags.length > 0 && (
-        <div class="flex flex-wrap gap-2 mt-4 justify-center">
-            {tags
-                .filter(tag => !tag.slug.startsWith('hash-'))
-                .slice(0, 5)
-                .map(tag => (
-                    <span class="text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">
-                        #{tag.name}
-                    </span>
-                ))
-            }
-        </div>
-    )}
+
+    {
+        tags && tags.length > 0 && (
+            <div class="mt-4 flex flex-wrap justify-center gap-2">
+                {tags
+                    .filter((tag) => !tag.slug.startsWith('hash-'))
+                    .slice(0, 5)
+                    .map((tag) => (
+                        <span class="rounded bg-gray-100 px-2 py-1 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                            #{tag.name}
+                        </span>
+                    ))}
+            </div>
+        )
+    }
 </div>

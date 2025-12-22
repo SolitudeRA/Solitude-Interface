@@ -44,7 +44,12 @@ export {
 export { Switch } from './switch';
 
 // Tooltip
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './tooltip';
+export {
+    Tooltip,
+    TooltipTrigger,
+    TooltipContent,
+    TooltipProvider,
+} from './tooltip';
 
 // Utils
 export { cn } from './lib/utils';

@@ -1,6 +1,6 @@
 /**
  * 全局类型定义
- * 
+ *
  * API 相关类型请从 @api/ghost/types 导入
  * 例如: import type { Post, FeaturedPost } from '@api/ghost/types';
  */

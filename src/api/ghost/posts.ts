@@ -122,7 +122,10 @@ export async function getPostByGroupAndLocale(
         return adaptedPost;
     } catch (error) {
         // 如果是 404 或文章不存在，返回 null 而不是抛出错误
-        console.error(`Failed to get post for key=${key}, locale=${locale}:`, error);
+        console.error(
+            `Failed to get post for key=${key}, locale=${locale}:`,
+            error,
+        );
         return null;
     }
 }
@@ -132,11 +135,14 @@ export async function getPostByGroupAndLocale(
  * @param key - 翻译组 key
  * @returns 包含每个语言版本是否存在的记录
  */
-export async function getVariantsByGroup(key: string): Promise<Record<Locale, Post | null>> {
+export async function getVariantsByGroup(
+    key: string,
+): Promise<Record<Locale, Post | null>> {
     const i18nTag = i18nKeyToTag(key);
     const cacheKey = `variants_by_group:${key}`;
 
-    const cachedVariants = cacheService.get<Record<Locale, Post | null>>(cacheKey);
+    const cachedVariants =
+        cacheService.get<Record<Locale, Post | null>>(cacheKey);
     if (cachedVariants) {
         return cachedVariants;
     }
@@ -246,7 +252,11 @@ export async function listAllGroupKeys(): Promise<string[]> {
 export async function getPostWithFallback(
     key: string,
     requestedLocale: Locale,
-): Promise<{ post: Post | null; displayedLocale: Locale; isFallback: boolean }> {
+): Promise<{
+    post: Post | null;
+    displayedLocale: Locale;
+    isFallback: boolean;
+}> {
     // 首先尝试获取请求的语言版本
     const requestedPost = await getPostByGroupAndLocale(key, requestedLocale);
 

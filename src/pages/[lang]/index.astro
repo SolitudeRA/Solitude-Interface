@@ -33,7 +33,8 @@ if (!isLocale(lang)) {
 const locale = lang as Locale;
 const htmlLang = LOCALE_HTML_LANG[locale];
 
-const { siteTitle, siteDescription, logoUrl, coverImageUrl } = await initializeSiteData();
+const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
+    await initializeSiteData();
 const posts = await listPostsByLocale(locale);
 
 // 生成 hreflang 链接
@@ -41,8 +42,8 @@ const alternateLinks = generateAlternateLinks(env.site.url, '', LOCALES);
 const canonicalUrl = `${env.site.url}/${locale}`;
 ---
 
-<BaseLayout 
-    siteTitle={siteTitle} 
+<BaseLayout
+    siteTitle={siteTitle}
     coverImageUrl={coverImageUrl}
     lang={htmlLang}
     canonicalUrl={canonicalUrl}
@@ -56,11 +57,11 @@ const canonicalUrl = `${env.site.url}/${locale}`;
         />
         <NavbarUtility />
     </Navbar>
-    
+
     <main class="mx-auto">
         <IndexLayout posts={posts} />
     </main>
-    
+
     <Dock isFixed={true}>
         <div></div>
         <DockNav />

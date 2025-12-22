@@ -1,13 +1,14 @@
 ---
-import DockTimelineContainer from "@components/layout/dock/timeline/DockTimelineContainer.tsx";
-import type {IndexHighlightPost} from "@api/ghost/posts";
+import DockTimelineContainer from '@components/layout/dock/timeline/DockTimelineContainer.tsx';
+import type { IndexHighlightPost } from '@api/ghost/posts';
 
 interface Props {
-    posts: IndexHighlightPost[]
+    posts: IndexHighlightPost[];
 }
 
-const {posts} = Astro.props;
+const { posts } = Astro.props;
 ---
+
 <div class="justify-items-center">
-    <DockTimelineContainer posts={posts}/>
+    <DockTimelineContainer posts={posts} />
 </div>

@@ -9,20 +9,25 @@ import DockNav from '@components/layout/dock/nav/DockNav.astro';
 import DockSocial from '@components/layout/dock/social/DockSocial.astro';
 import PolicyContent from '../components/privacy-policy/PolicyContent.astro';
 
-const {siteTitle, siteDescription, logoUrl, coverImageUrl} = await initializeSiteData();
+const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
+    await initializeSiteData();
 ---
 
 <BaseLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
     <Navbar>
-        <NavbarBrand logoImageUrl={logoUrl} siteTitle={siteTitle} siteSubTitle={siteDescription}/>
-        <NavbarUtility/>
+        <NavbarBrand
+            logoImageUrl={logoUrl}
+            siteTitle={siteTitle}
+            siteSubTitle={siteDescription}
+        />
+        <NavbarUtility />
     </Navbar>
-    <div class="bg-white dark:bg-[#262626] px-[20%]">
-        <PolicyContent/>
+    <div class="bg-white px-[20%] dark:bg-[#262626]">
+        <PolicyContent />
     </div>
     <Dock isFixed={true}>
         <div></div>
-        <DockNav/>
-        <DockSocial/>
+        <DockNav />
+        <DockSocial />
     </Dock>
 </BaseLayout>

@@ -5,9 +5,9 @@ import { themeSwitchAtom } from '@stores/themeAtom';
 
 export default function ThemeSwitch() {
     const [theme, setTheme] = useAtom(themeSwitchAtom);
-    
+
     const isLightMode = theme === 'light';
-    
+
     useEffect(() => {
         if (theme === 'dark') {
             document.documentElement.classList.add('dark');
@@ -20,8 +20,5 @@ export default function ThemeSwitch() {
         setTheme(checked ? 'light' : 'dark');
     };
 
-    return <Switch 
-        checked={isLightMode} 
-        onCheckedChange={handleThemeChange} 
-    />;
+    return <Switch checked={isLightMode} onCheckedChange={handleThemeChange} />;
 }

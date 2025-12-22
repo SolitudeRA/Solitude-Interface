@@ -9,7 +9,8 @@ import DockNav from '@components/layout/dock/nav/DockNav.astro';
 import DockSocial from '@components/layout/dock/social/DockSocial.astro';
 import ContactContent from '../components/contact/ContactContent.astro';
 
-const { siteTitle, siteDescription, logoUrl, coverImageUrl } = await initializeSiteData();
+const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
+    await initializeSiteData();
 ---
 
 <BaseLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
@@ -21,7 +22,7 @@ const { siteTitle, siteDescription, logoUrl, coverImageUrl } = await initializeS
         />
         <NavbarUtility />
     </Navbar>
-    <div class="bg-white dark:bg-[#262626] px-[20%]">
+    <div class="bg-white px-[20%] dark:bg-[#262626]">
         <ContactContent />
     </div>
     <Dock isFixed={true}>

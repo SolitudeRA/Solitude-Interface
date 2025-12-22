@@ -3,18 +3,11 @@ interface Props {
     isFixed?: boolean;
 }
 
-const {isFixed = false} = Astro.props;
+const { isFixed = false } = Astro.props;
 ---
 
-<nav class:list={["solitude-navbar", isFixed ? "fixed top-0" : ""]}>
+<nav class:list={['h-[15vh] w-full', isFixed ? 'fixed top-0' : '']}>
     <div class="flex h-full">
-        <slot/>
+        <slot />
     </div>
 </nav>
-
-<style>
-    .solitude-navbar {
-        height : 15vh;
-        width  : 100%;
-    }
-</style>

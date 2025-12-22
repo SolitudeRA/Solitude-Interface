@@ -24,7 +24,10 @@ export function extractDomain(url: string | undefined): string {
  */
 export function parseUrlList(urlString: string | undefined): string[] {
     if (!urlString) return [];
-    return urlString.split(',').map((url) => url.trim()).filter(Boolean);
+    return urlString
+        .split(',')
+        .map((url) => url.trim())
+        .filter(Boolean);
 }
 
 /**

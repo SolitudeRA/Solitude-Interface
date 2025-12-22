@@ -11,29 +11,26 @@ const { logoImageUrl, siteTitle, siteSubTitle } = Astro.props;
 const hasLogo = logoImageUrl && logoImageUrl.length > 0;
 ---
 
-<div class="solitude-navbar-brand flex items-center px-10 space-x-10 h-full">
-    {hasLogo && <Image src={logoImageUrl} height={400} width={400} alt="brand-logo" />}
-    <div class="grid grid-cols-1 gap-3 text-color-ui">
-        <a class="text-4xl font-bold subpixel-antialiased solitude-navbar-brand-title">{siteTitle}</a>
-        <a class="text-xl font-medium subpixel-antialiased solitude-navbar-brand-subtitle">{siteSubTitle}</a>
+<div class="flex h-full items-center space-x-10 px-10">
+    {
+        hasLogo && (
+            <Image
+                src={logoImageUrl}
+                height={400}
+                width={400}
+                alt="brand-logo"
+                class="h-1/2 min-h-[100px] w-auto rounded-[18%]"
+            />
+        )
+    }
+    <div class="text-color-ui grid grid-cols-1 gap-3">
+        <a
+            class="text-4xl font-bold text-[var(--text-site-title)] subpixel-antialiased"
+            >{siteTitle}</a
+        >
+        <a
+            class="text-xl font-medium text-[var(--text-site-subtitle)] subpixel-antialiased"
+            >{siteSubTitle}</a
+        >
     </div>
 </div>
-
-<style>
-    .solitude-navbar-brand img {
-        border-radius: 18%;
-        height: 50%;
-        min-height: 100px;
-        width: auto;
-
-    }
-
-
-    .solitude-navbar-brand-title {
-        color: var(--text-site-title);
-    }
-
-    .solitude-navbar-brand-subtitle {
-        color: var(--text-site-subtitle);
-    }
-</style>

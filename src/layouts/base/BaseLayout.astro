@@ -11,67 +11,75 @@ interface Props {
 }
 
 const {
-    siteTitle, 
-    coverImageUrl, 
+    siteTitle,
+    coverImageUrl,
     lang = 'zh-CN',
     canonicalUrl,
     alternateLinks = [],
 } = Astro.props;
 
 const coverImageUrlStr = coverImageUrl?.toString() || '';
-const coverImageLightUrl = coverImageUrlStr 
+const coverImageLightUrl = coverImageUrlStr
     ? `linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),url(${coverImageUrlStr})`
     : 'linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55))';
-const coverImageDarkUrl = coverImageUrlStr 
+const coverImageDarkUrl = coverImageUrlStr
     ? `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url(${coverImageUrlStr})`
     : 'linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55))';
 ---
 
 <!doctype html>
 <html lang={lang}>
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width"/>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
-    <meta name="generator" content={Astro.generator}/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-    {alternateLinks.map((link) => (
-        <link rel="alternate" hreflang={link.hreflang} href={link.href} />
-    ))}
-    <style data-emotion-insertion-point="emotion"></style>
-    <title>{siteTitle}</title>
-</head>
-<body>
-<div class="solitude-body"></div>
-<slot/>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+        {
+            alternateLinks.map((link) => (
+                <link
+                    rel="alternate"
+                    hreflang={link.hreflang}
+                    href={link.href}
+                />
+            ))
+        }
+        <style data-emotion-insertion-point="emotion"></style>
+        <title>{siteTitle}</title>
+    </head>
+    <body>
+        <div class="solitude-body"></div>
+        <slot />
+    </body>
 </html>
 
-<style define:vars={{coverImageLightUrl, coverImageDarkUrl}}>
+<style define:vars={{ coverImageLightUrl, coverImageDarkUrl }}>
     .solitude-body {
-        top              : 0;
-        left             : 0;
-        position         : fixed;
-        z-index          : -10;
-        height           : 100vh;
-        width            : 100vw;
-        background-size  : cover;
-        background-image : var(--coverImageLightUrl);
+        top: 0;
+        left: 0;
+        position: fixed;
+        z-index: -10;
+        height: 100vh;
+        width: 100vw;
+        background-size: cover;
+        background-image: var(--coverImageLightUrl);
     }
 
     .dark .solitude-body {
-        background-image : var(--coverImageDarkUrl);
+        background-image: var(--coverImageDarkUrl);
     }
 </style>
 
 <script is:inline>
     const storedTheme = localStorage.getItem('theme');
-    const themeMode = storedTheme ? JSON.parse(storedTheme).state.themeMode : 'dark';
-    document.documentElement.classList.add(themeMode)
+    const themeMode = storedTheme
+        ? JSON.parse(storedTheme).state.themeMode
+        : 'dark';
+    document.documentElement.classList.add(themeMode);
 
-    window.addEventListener("themeModeChanged", function (e) {
-        const isDark = e.detail.newValue === "dark";
+    window.addEventListener('themeModeChanged', function (e) {
+        const isDark = e.detail.newValue === 'dark';
         document.documentElement.classList.toggle('dark', isDark);
         document.documentElement.classList.toggle('light', !isDark);
     });

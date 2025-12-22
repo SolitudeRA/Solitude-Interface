@@ -72,8 +72,12 @@ describe('i18n utilities', () => {
 
     describe('i18nKeyToTag', () => {
         it('should convert i18n key to Ghost tag format', () => {
-            expect(i18nKeyToTag('intro-to-solitude')).toBe('hash-i18n-intro-to-solitude');
-            expect(i18nKeyToTag('ghost-headless-001')).toBe('hash-i18n-ghost-headless-001');
+            expect(i18nKeyToTag('intro-to-solitude')).toBe(
+                'hash-i18n-intro-to-solitude',
+            );
+            expect(i18nKeyToTag('ghost-headless-001')).toBe(
+                'hash-i18n-ghost-headless-001',
+            );
             expect(i18nKeyToTag('test')).toBe('hash-i18n-test');
         });
     });
@@ -95,8 +99,12 @@ describe('i18n utilities', () => {
 
     describe('extractI18nKeyFromTagSlug', () => {
         it('should extract i18n key from valid tag slug', () => {
-            expect(extractI18nKeyFromTagSlug('hash-i18n-intro-to-solitude')).toBe('intro-to-solitude');
-            expect(extractI18nKeyFromTagSlug('hash-i18n-ghost-headless-001')).toBe('ghost-headless-001');
+            expect(
+                extractI18nKeyFromTagSlug('hash-i18n-intro-to-solitude'),
+            ).toBe('intro-to-solitude');
+            expect(
+                extractI18nKeyFromTagSlug('hash-i18n-ghost-headless-001'),
+            ).toBe('ghost-headless-001');
             expect(extractI18nKeyFromTagSlug('hash-i18n-test')).toBe('test');
         });
 
@@ -178,16 +186,24 @@ describe('i18n utilities', () => {
 
     describe('buildPostPath', () => {
         it('should build post path correctly', () => {
-            expect(buildPostPath('zh', 'intro-to-solitude')).toBe('/zh/p/intro-to-solitude');
-            expect(buildPostPath('ja', 'ghost-headless')).toBe('/ja/p/ghost-headless');
+            expect(buildPostPath('zh', 'intro-to-solitude')).toBe(
+                '/zh/p/intro-to-solitude',
+            );
+            expect(buildPostPath('ja', 'ghost-headless')).toBe(
+                '/ja/p/ghost-headless',
+            );
             expect(buildPostPath('en', 'test')).toBe('/en/p/test');
         });
     });
 
     describe('generateAlternateLinks', () => {
         it('should generate alternate links for available locales', () => {
-            const links = generateAlternateLinks('https://example.com', '/p/test', ['zh', 'en']);
-            
+            const links = generateAlternateLinks(
+                'https://example.com',
+                '/p/test',
+                ['zh', 'en'],
+            );
+
             expect(links).toHaveLength(3); // zh, en, x-default
             expect(links).toContainEqual({
                 hreflang: 'zh-CN',
@@ -204,10 +220,16 @@ describe('i18n utilities', () => {
         });
 
         it('should not include x-default if DEFAULT_LOCALE is not available', () => {
-            const links = generateAlternateLinks('https://example.com', '/p/test', ['ja', 'en']);
-            
+            const links = generateAlternateLinks(
+                'https://example.com',
+                '/p/test',
+                ['ja', 'en'],
+            );
+
             expect(links).toHaveLength(2); // ja, en only
-            expect(links.find(l => l.hreflang === 'x-default')).toBeUndefined();
+            expect(
+                links.find((l) => l.hreflang === 'x-default'),
+            ).toBeUndefined();
         });
     });
 

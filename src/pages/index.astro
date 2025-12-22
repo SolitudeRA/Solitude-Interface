@@ -8,39 +8,45 @@ import { DEFAULT_LOCALE, LOCALES } from '@lib/i18n';
 
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Redirecting...</title>
-    <meta name="robots" content="noindex" />
-    <!-- Fallback for non-JavaScript browsers -->
-    <noscript>
-        <meta http-equiv="refresh" content={`0;url=/${DEFAULT_LOCALE}/`} />
-    </noscript>
-</head>
-<body>
-    <script is:inline define:vars={{ DEFAULT_LOCALE, LOCALES }}>
-        (function() {
-            // 获取浏览器语言设置
-            const browserLangs = navigator.languages || [navigator.language];
-            
-            // 查找匹配的语言
-            let targetLocale = DEFAULT_LOCALE;
-            
-            for (const lang of browserLangs) {
-                const langCode = lang.toLowerCase().split('-')[0];
-                if (LOCALES.includes(langCode)) {
-                    targetLocale = langCode;
-                    break;
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Redirecting...</title>
+        <meta name="robots" content="noindex" />
+        <!-- Fallback for non-JavaScript browsers -->
+        <noscript>
+            <meta http-equiv="refresh" content={`0;url=/${DEFAULT_LOCALE}/`} />
+        </noscript>
+    </head>
+    <body>
+        <script is:inline define:vars={{ DEFAULT_LOCALE, LOCALES }}>
+            (function () {
+                // 获取浏览器语言设置
+                const browserLangs = navigator.languages || [
+                    navigator.language,
+                ];
+
+                // 查找匹配的语言
+                let targetLocale = DEFAULT_LOCALE;
+
+                for (const lang of browserLangs) {
+                    const langCode = lang.toLowerCase().split('-')[0];
+                    if (LOCALES.includes(langCode)) {
+                        targetLocale = langCode;
+                        break;
+                    }
                 }
-            }
-            
-            // 跳转到对应语言页面
-            window.location.replace('/' + targetLocale + '/');
-        })();
-    </script>
-    <noscript>
-        <p>Redirecting to <a href={`/${DEFAULT_LOCALE}/`}>/{DEFAULT_LOCALE}/</a>...</p>
-    </noscript>
-</body>
+
+                // 跳转到对应语言页面
+                window.location.replace('/' + targetLocale + '/');
+            })();
+        </script>
+        <noscript>
+            <p>
+                Redirecting to <a href={`/${DEFAULT_LOCALE}/`}
+                    >/{DEFAULT_LOCALE}/</a
+                >...
+            </p>
+        </noscript>
+    </body>
 </html>
