@@ -19,17 +19,17 @@ const hasLogo = logoImageUrl && logoImageUrl.length > 0;
                 height={400}
                 width={400}
                 alt="brand-logo"
-                class="h-1/2 min-h-[100px] w-auto rounded-[18%]"
+                class="h-1/2 min-h-25 w-auto rounded-[18%]"
             />
         )
     }
     <div class="text-color-ui grid grid-cols-1 gap-3">
         <a
-            class="text-4xl font-bold text-[var(--text-site-title)] subpixel-antialiased"
+            class="text-4xl font-bold text-(--text-site-title)subpixel-antialiased"
             >{siteTitle}</a
         >
         <a
-            class="text-xl font-medium text-[var(--text-site-subtitle)] subpixel-antialiased"
+            class="text-xl font-medium text-(--text-site-subtitle)subpixel-antialiased"
             >{siteSubTitle}</a
         >
     </div>

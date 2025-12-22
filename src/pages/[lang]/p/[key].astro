@@ -47,7 +47,6 @@ if (!isLocale(lang) || !key) {
 }
 
 const locale = lang as Locale;
-const htmlLang = LOCALE_HTML_LANG[locale];
 
 const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
     await initializeSiteData();

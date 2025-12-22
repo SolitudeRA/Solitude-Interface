@@ -1,9 +1,9 @@
 ---
-import type { Post } from 'api/ghost/posts';
+import type { Post } from '@api/ghost/types';
 
 interface Props {
     post: Post;
 }
 
-const { post } = Astro.props;
+const { post: _post } = Astro.props;
 ---

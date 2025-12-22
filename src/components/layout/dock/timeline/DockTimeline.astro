@@ -1,9 +1,9 @@
 ---
 import DockTimelineContainer from '@components/layout/dock/timeline/DockTimelineContainer.tsx';
-import type { IndexHighlightPost } from '@api/ghost/posts';
+import type { FeaturedPost } from '@api/ghost/types';
 
 interface Props {
-    posts: IndexHighlightPost[];
+    posts: FeaturedPost[];
 }
 
 const { posts } = Astro.props;

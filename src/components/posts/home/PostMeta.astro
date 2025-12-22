@@ -3,8 +3,8 @@ import type { PostTag } from '@api/ghost/types';
 
 interface Props {
     title: string;
-    primary_tag?: PostTag;
-    tags?: PostTag[];
+    primary_tag?: PostTag | undefined;
+    tags?: PostTag[] | undefined;
     published_at: string;
 }
 
@@ -13,7 +13,7 @@ const publishDate = new Date(published_at);
 ---
 
 <div
-    class="flex min-h-[300px] flex-col items-center justify-center p-8 text-center"
+    class="flex min-h-75 flex-col items-center justify-center p-8 text-center"
 >
     <h1
         class="mb-4 text-3xl font-bold text-gray-900 drop-shadow-lg md:text-4xl dark:text-white"

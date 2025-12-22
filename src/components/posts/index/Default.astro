@@ -1,5 +1,5 @@
 ---
-import type { Post } from '@api/ghost/posts';
+import type { Post } from '@api/ghost/types';
 import { Chip } from '@components/common/badge';
 
 interface Props {
@@ -14,12 +14,12 @@ const postFeatureImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0,
 <div class="post-view-card h-[90%] w-[85%] rounded-[35px] px-4">
     <div class="flex h-[8%] items-center justify-between">
         <div>
-            <Chip variant="flat" color="primary" client:visible>
+            <Chip variant="flat" colorScheme="primary" client:visible>
                 {post.post_type}
             </Chip>
         </div>
         <div>
-            <Chip variant="flat" color="secondary" client:visible>
+            <Chip variant="flat" colorScheme="secondary" client:visible>
                 {post.post_series}
             </Chip>
         </div>
@@ -40,8 +40,8 @@ const postFeatureImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0,
         </div>
         <div class="h-[10%]">
             {
-                post.post_general_tags?.map((tagName) => (
-                    <Chip color="success" variant="flat" client:visible>
+                post.post_general_tags?.map((tagName: string) => (
+                    <Chip colorScheme="success" variant="flat" client:visible>
                         {tagName}
                     </Chip>
                 ))
