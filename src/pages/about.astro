@@ -1,33 +1,22 @@
 ---
 import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
-import Navbar from '@layouts/base/Navbar.astro';
-import Dock from '@layouts/base/Dock.astro';
-import NavbarBrand from '@components/layout/navbar/NavbarBrand.astro';
-import NavbarUtility from '@components/layout/navbar/NavbarUtility.astro';
-import DockNav from '@components/layout/dock/nav/DockNav.astro';
-import DockSocial from '@components/layout/dock/social/DockSocial.astro';
+import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
+import SiteDock from '@components/layout/dock/SiteDock.astro';
 
 const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
     await initializeSiteData();
 ---
 
 <BaseLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
-    <Navbar>
-        <NavbarBrand
-            logoImageUrl={logoUrl}
-            siteTitle={siteTitle}
-            siteSubTitle={siteDescription}
-        />
-        <NavbarUtility />
-    </Navbar>
+    <SiteNavbar
+        logoUrl={logoUrl}
+        siteTitle={siteTitle}
+        siteSubTitle={siteDescription}
+    />
     <div class="bg-white px-[20%] py-10 dark:bg-[#262626]">
         <h1 class="mb-6 text-4xl font-bold">关于</h1>
         <p class="mb-4">这是关于页面的内容。</p>
     </div>
-    <Dock isFixed={true}>
-        <DockNav />
-        <div></div>
-        <DockSocial />
-    </Dock>
+    <SiteDock isFixed={true} />
 </BaseLayout>

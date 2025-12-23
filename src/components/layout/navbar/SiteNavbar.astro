@@ -1,0 +1,23 @@
+---
+import Navbar from './Navbar.astro';
+import NavbarBrand from './NavbarBrand.astro';
+import NavbarUtility from './NavbarUtility.astro';
+
+interface Props {
+    logoUrl: string;
+    siteTitle: string;
+    siteSubTitle: string;
+    isFixed?: boolean;
+}
+
+const { logoUrl, siteTitle, siteSubTitle, isFixed = false } = Astro.props;
+---
+
+<Navbar isFixed={isFixed}>
+    <NavbarBrand
+        logoImageUrl={logoUrl}
+        siteTitle={siteTitle}
+        siteSubTitle={siteSubTitle}
+    />
+    <NavbarUtility />
+</Navbar>

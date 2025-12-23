@@ -1,15 +1,13 @@
 ---
-import DockNav from '@components/layout/dock/nav/DockNav.astro';
-import DockSocial from '@components/layout/dock/social/DockSocial.astro';
+import DockNav from '@components/layout/dock/DockNav.astro';
+import DockSocial from '@components/layout/dock/DockSocial.astro';
 import DockTimeline from '@components/layout/dock/timeline/DockTimeline.astro';
-import NavbarBrand from '@components/layout/navbar/NavbarBrand.astro';
-import NavbarUtility from '@components/layout/navbar/NavbarUtility.astro';
+import Dock from '@components/layout/dock/Dock.astro';
 import PostViewContainer from '@components/posts/index/PostViewContainer.astro';
 import { getPosts } from '@api/ghost/posts';
 import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
-import Dock from '@layouts/base/Dock.astro';
-import Navbar from '@layouts/base/Navbar.astro';
+import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
 
 const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
     await initializeSiteData();
@@ -17,14 +15,11 @@ const posts = await getPosts();
 ---
 
 <BaseLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
-    <Navbar>
-        <NavbarBrand
-            logoImageUrl={logoUrl}
-            siteTitle={siteTitle}
-            siteSubTitle={siteDescription}
-        />
-        <NavbarUtility />
-    </Navbar>
+    <SiteNavbar
+        logoUrl={logoUrl}
+        siteTitle={siteTitle}
+        siteSubTitle={siteDescription}
+    />
     <PostViewContainer posts={posts} />
     <Dock isFixed={true}>
         <DockNav />

@@ -6,12 +6,8 @@ import {
 } from '@api/ghost/posts';
 import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
-import Navbar from '@layouts/base/Navbar.astro';
-import Dock from '@layouts/base/Dock.astro';
-import NavbarBrand from '@components/layout/navbar/NavbarBrand.astro';
-import NavbarUtility from '@components/layout/navbar/NavbarUtility.astro';
-import DockNav from '@components/layout/dock/nav/DockNav.astro';
-import DockSocial from '@components/layout/dock/social/DockSocial.astro';
+import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
+import SiteDock from '@components/layout/dock/SiteDock.astro';
 import PostsContent from '@components/posts/home/PostsContent.astro';
 import LanguageSwitcher from '@components/i18n/LanguageSwitcher.astro';
 import FallbackNotice from '@components/i18n/FallbackNotice.astro';
@@ -87,14 +83,12 @@ const fallbackMessage = isFallback
     canonicalUrl={canonicalUrl}
     alternateLinks={alternateLinks}
 >
-    <Navbar isFixed={true}>
-        <NavbarBrand
-            logoImageUrl={logoUrl}
-            siteTitle={siteTitle}
-            siteSubTitle={siteDescription}
-        />
-        <NavbarUtility />
-    </Navbar>
+    <SiteNavbar
+        logoUrl={logoUrl}
+        siteTitle={siteTitle}
+        siteSubTitle={siteDescription}
+        isFixed={true}
+    />
 
     {
         isFallback && fallbackMessage && (
@@ -119,9 +113,5 @@ const fallbackMessage = isFallback
         html={post.html}
     />
 
-    <Dock isFixed={true}>
-        <div></div>
-        <DockNav />
-        <DockSocial />
-    </Dock>
+    <SiteDock isFixed={true} layout="home" />
 </BaseLayout>

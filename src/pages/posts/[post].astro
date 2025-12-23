@@ -3,12 +3,8 @@ import { initializeSiteData } from '@api/ghost/settings';
 import { getPosts } from '@api/ghost/posts';
 import type { PostTag } from '@api/ghost/types';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
-import Navbar from '@layouts/base/Navbar.astro';
-import Dock from '@layouts/base/Dock.astro';
-import NavbarBrand from '@components/layout/navbar/NavbarBrand.astro';
-import NavbarUtility from '@components/layout/navbar/NavbarUtility.astro';
-import DockNav from '@components/layout/dock/nav/DockNav.astro';
-import DockSocial from '@components/layout/dock/social/DockSocial.astro';
+import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
+import SiteDock from '@components/layout/dock/SiteDock.astro';
 import PostsContent from '@components/posts/home/PostsContent.astro';
 
 interface Props {
@@ -48,14 +44,12 @@ const { title, feature_image, primary_tag, tags, published_at, html } =
 ---
 
 <BaseLayout siteTitle={`${siteTitle} - ${title}`} coverImageUrl={coverImageUrl}>
-    <Navbar isFixed={true}>
-        <NavbarBrand
-            logoImageUrl={logoUrl}
-            siteTitle={siteTitle}
-            siteSubTitle={siteDescription}
-        />
-        <NavbarUtility />
-    </Navbar>
+    <SiteNavbar
+        logoUrl={logoUrl}
+        siteTitle={siteTitle}
+        siteSubTitle={siteDescription}
+        isFixed={true}
+    />
     <PostsContent
         title={title}
         feature_image={feature_image}
@@ -64,9 +58,5 @@ const { title, feature_image, primary_tag, tags, published_at, html } =
         published_at={published_at}
         html={html}
     />
-    <Dock isFixed={true}>
-        <div></div>
-        <DockNav />
-        <DockSocial />
-    </Dock>
+    <SiteDock isFixed={true} layout="home" />
 </BaseLayout>

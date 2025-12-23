@@ -1,0 +1,30 @@
+---
+import Dock from './Dock.astro';
+import DockNav from './DockNav.astro';
+import DockSocial from './DockSocial.astro';
+
+interface Props {
+    isFixed?: boolean;
+    layout?: 'default' | 'home';
+}
+
+const { isFixed = false, layout = 'default' } = Astro.props;
+---
+
+<Dock isFixed={isFixed}>
+    {
+        layout === 'home' ? (
+            <>
+                <div />
+                <DockNav />
+                <DockSocial />
+            </>
+        ) : (
+            <>
+                <DockNav />
+                <div />
+                <DockSocial />
+            </>
+        )
+    }
+</Dock>

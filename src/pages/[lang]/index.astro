@@ -3,12 +3,8 @@ import { listPostsByLocale } from '@api/ghost/posts';
 import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
 import IndexLayout from '@layouts/IndexLayout.astro';
-import Navbar from '@layouts/base/Navbar.astro';
-import Dock from '@layouts/base/Dock.astro';
-import NavbarBrand from '@components/layout/navbar/NavbarBrand.astro';
-import NavbarUtility from '@components/layout/navbar/NavbarUtility.astro';
-import DockNav from '@components/layout/dock/nav/DockNav.astro';
-import DockSocial from '@components/layout/dock/social/DockSocial.astro';
+import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
+import SiteDock from '@components/layout/dock/SiteDock.astro';
 import {
     LOCALES,
     type Locale,
@@ -49,22 +45,15 @@ const canonicalUrl = `${env.site.url}/${locale}`;
     canonicalUrl={canonicalUrl}
     alternateLinks={alternateLinks}
 >
-    <Navbar>
-        <NavbarBrand
-            logoImageUrl={logoUrl}
-            siteTitle={siteTitle}
-            siteSubTitle={siteDescription}
-        />
-        <NavbarUtility />
-    </Navbar>
+    <SiteNavbar
+        logoUrl={logoUrl}
+        siteTitle={siteTitle}
+        siteSubTitle={siteDescription}
+    />
 
     <main class="mx-auto">
         <IndexLayout posts={posts} />
     </main>
 
-    <Dock isFixed={true}>
-        <div></div>
-        <DockNav />
-        <DockSocial />
-    </Dock>
+    <SiteDock isFixed={true} layout="home" />
 </BaseLayout>
