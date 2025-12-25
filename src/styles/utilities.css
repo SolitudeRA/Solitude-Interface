@@ -1,0 +1,9 @@
+@layer utilities {
+    .text-color-ui {
+        color: var(--text-ui-primary);
+    }
+
+    .text-color-ui-secondary {
+        color: var(--text-ui-secondary);
+    }
+}

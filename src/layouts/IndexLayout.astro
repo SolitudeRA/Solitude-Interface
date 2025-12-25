@@ -11,7 +11,7 @@ const { posts } = Astro.props;
 const featuredPosts = posts || [];
 ---
 
-<div class="grid h-[75vh] w-full grid-cols-12 content-end pb-[5px]">
+<div class="grid h-[75vh] w-full grid-cols-12 content-end pb-1.25">
     <Welcome />
     <PostsShowcase featuredPosts={featuredPosts} />
 </div>
