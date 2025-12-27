@@ -1,0 +1,8 @@
+@import '@fontsource-variable/noto-sans-sc';
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './tailwind-settings.css';
+@import './design-tokens.css';
+@import './base.css';
+@import './utilities/text-utilities.css';
+@import './components/article.css';

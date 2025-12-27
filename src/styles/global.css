@@ -1,9 +1,0 @@
-@import '@fontsource-variable/noto-sans-sc';
-@import 'tailwindcss';
-/* tokens consolidated; global-color.css no longer needed */
-@import 'tw-animate-css';
-@import './tailwind-directives.css';
-@import './theme.css';
-@import './base.css';
-@import './utilities.css';
-@import './components.css';
