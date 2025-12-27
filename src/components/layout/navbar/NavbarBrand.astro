@@ -24,13 +24,21 @@ const hasLogo = logoImageUrl && logoImageUrl.length > 0;
         )
     }
     <div class="text-color-ui grid grid-cols-1 gap-3">
-        <a
-            class="text-4xl font-bold text-(--text-site-title)subpixel-antialiased"
+        <a class="site-title text-4xl font-bold subpixel-antialiased"
             >{siteTitle}</a
         >
-        <a
-            class="text-xl font-medium text-(--text-site-subtitle)subpixel-antialiased"
+        <a class="site-subtitle text-xl font-medium subpixel-antialiased"
             >{siteSubTitle}</a
         >
     </div>
 </div>
+
+<style>
+    .site-title {
+        color: var(--text-site-title);
+    }
+
+    .site-subtitle {
+        color: var(--text-site-subtitle);
+    }
+</style>

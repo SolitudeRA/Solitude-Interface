@@ -73,14 +73,13 @@ const coverImageDarkUrl = coverImageUrlStr
 
 <script is:inline>
     const storedTheme = localStorage.getItem('theme');
-    const themeMode = storedTheme
-        ? JSON.parse(storedTheme).state.themeMode
-        : 'dark';
+    const themeMode = storedTheme ? JSON.parse(storedTheme) : 'dark';
     document.documentElement.classList.add(themeMode);
 
-    window.addEventListener('themeModeChanged', function (e) {
-        const isDark = e.detail.newValue === 'dark';
-        document.documentElement.classList.toggle('dark', isDark);
-        document.documentElement.classList.toggle('light', !isDark);
+    // 监听主题切换事件
+    window.addEventListener('themeChanged', function (e) {
+        const newTheme = e.detail.theme;
+        document.documentElement.classList.toggle('dark', newTheme === 'dark');
+        document.documentElement.classList.toggle('light', newTheme === 'light');
     });
 </script>
