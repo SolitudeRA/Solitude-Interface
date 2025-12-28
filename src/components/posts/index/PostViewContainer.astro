@@ -6,6 +6,7 @@ import PostCardArticle from './Article.astro';
 import PostCardMusic from './Music.astro';
 import PostCardVideo from './Video.astro';
 import PostCardGallery from './Gallery.astro';
+import PostViewScrollContainer from './PostViewScrollContainer';
 
 interface Props {
     posts: Post[];
@@ -14,41 +15,62 @@ interface Props {
 const { posts } = Astro.props;
 ---
 
-<div class="grid h-[75vh] w-full grid-cols-10 px-[1.8%]">
+<PostViewScrollContainer client:load>
     {
         posts.map((post) => {
-            switch (post.post_type) {
-                case PostType.DEFAULT:
-                    return (
-                        <div class="col-span-2 flex items-center justify-center">
-                            <PostCardDefault post={post} />
-                        </div>
-                    );
-                case PostType.ARTICLE:
-                    return (
-                        <div class="col-span-2 flex items-center justify-center">
-                            <PostCardArticle post={post} />
-                        </div>
-                    );
-                case PostType.MUSIC:
-                    return (
-                        <div class="col-span-2 flex items-center justify-center">
-                            <PostCardMusic post={post} />
-                        </div>
-                    );
-                case PostType.VIDEO:
-                    return (
-                        <div class="col-span-2 flex items-center justify-center">
-                            <PostCardVideo post={post} />
-                        </div>
-                    );
-                case PostType.GALLERY:
-                    return (
-                        <div class="col-span-2 flex items-center justify-center">
-                            <PostCardGallery post={post} />
-                        </div>
-                    );
-            }
+            const PostCardComponent = (() => {
+                switch (post.post_type) {
+                    case PostType.DEFAULT:
+                        return PostCardDefault;
+                    case PostType.ARTICLE:
+                        return PostCardArticle;
+                    case PostType.MUSIC:
+                        return PostCardMusic;
+                    case PostType.VIDEO:
+                        return PostCardVideo;
+                    case PostType.GALLERY:
+                        return PostCardGallery;
+                    default:
+                        return PostCardDefault;
+                }
+            })();
+
+            return (
+                <a
+                    href={`/posts/${post.id}`}
+                    class="post-card-wrapper flex-shrink-0 flex items-center justify-center transition-all duration-300 ease-out hover:z-10 hover:scale-[1.02]"
+                >
+                    <PostCardComponent post={post} />
+                </a>
+            );
         })
     }
-</div>
+</PostViewScrollContainer>
+
+<style>
+    .post-card-wrapper {
+        width: 302px;
+        height: 594px;
+    }
+
+    @media (min-width: 1440px) {
+        .post-card-wrapper {
+            width: 346px;
+            height: 673px;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        .post-card-wrapper {
+            width: 389px;
+            height: 766px;
+        }
+    }
+
+    @media (min-width: 2560px) {
+        .post-card-wrapper {
+            width: 432px;
+            height: 845px;
+        }
+    }
+</style>

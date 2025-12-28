@@ -1,13 +1,43 @@
 ---
 import type { FeaturedPost } from '@api/ghost/types';
-
+import PostsShowcaseCarousel, { PostsShowcaseSkeleton } from './PostsShowcaseCarousel';
 interface Props {
     featuredPosts: FeaturedPost[];
+    /**
+     * 是否显示加载状态
+     * @default false
+     */
+    isLoading?: boolean;
+    /**
+     * 自定义样式类名
+     */
+    className?: string;
 }
 
-const { featuredPosts } = Astro.props;
+const { featuredPosts, isLoading = false, className = '' } = Astro.props;
+// 空数据且非加载状态时不渲染
+const shouldRender = isLoading || (featuredPosts && featuredPosts.length > 0);
 ---
 
-<div class="flex h-[30vh] w-full items-center justify-center">
-    {featuredPosts[0]?.title}
-</div>
+{
+    shouldRender && (
+        <section
+            class:list={['posts-showcase w-full', className]}
+            aria-label="最近文章"
+        >
+            {isLoading ? (
+                <PostsShowcaseSkeleton count={5} client:load />
+            ) : (
+                <PostsShowcaseCarousel posts={featuredPosts} client:load />
+            )}
+        </section>
+    )
+}
+
+<style>
+    .posts-showcase {
+        /* 确保组件不会超出父容器 */
+        max-width: 100%;
+        overflow: hidden;
+    }
+</style>
