@@ -6,7 +6,7 @@ interface Props {
 const { isFixed = false } = Astro.props;
 ---
 
-<nav class:list={['h-[15vh] w-full', isFixed ? 'fixed top-0' : '']}>
+<nav class:list={['h-[14vh] w-full', isFixed ? 'fixed top-0' : '']}>
     <div class="flex h-full">
         <slot />
     </div>

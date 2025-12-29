@@ -10,5 +10,5 @@ const { posts } = Astro.props;
 ---
 
 <div class="justify-items-center">
-    <DockTimelineContainer posts={posts} />
+    <DockTimelineContainer posts={posts} client:load />
 </div>

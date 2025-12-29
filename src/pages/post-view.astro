@@ -22,8 +22,8 @@ const posts = await getPosts();
     />
     <PostViewContainer posts={posts} />
     <Dock isFixed={true}>
-        <DockNav />
         <DockTimeline posts={posts} />
+        <DockNav />
         <DockSocial />
     </Dock>
 </BaseLayout>

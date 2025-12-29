@@ -13,9 +13,12 @@ interface Props {
 }
 
 const { posts } = Astro.props;
+
+// 提取所有文章的发布日期
+const postDates = posts.map((post) => post.published_at);
 ---
 
-<PostViewScrollContainer client:load>
+<PostViewScrollContainer client:load postDates={postDates}>
     {
         posts.map((post) => {
             const PostCardComponent = (() => {
@@ -38,7 +41,7 @@ const { posts } = Astro.props;
             return (
                 <a
                     href={`/posts/${post.id}`}
-                    class="post-card-wrapper flex-shrink-0 flex items-center justify-center transition-all duration-300 ease-out hover:z-10 hover:scale-[1.02]"
+                    class="post-card-wrapper shrink-0 flex items-center justify-center transition-all duration-300 ease-out hover:z-10 hover:scale-[1.02]"
                 >
                     <PostCardComponent post={post} />
                 </a>
@@ -49,28 +52,28 @@ const { posts } = Astro.props;
 
 <style>
     .post-card-wrapper {
-        width: 302px;
+        width: 298px; /* 302 - 4 */
         height: 594px;
     }
 
     @media (min-width: 1440px) {
         .post-card-wrapper {
-            width: 346px;
+            width: 342px; /* 346 - 4 */
             height: 673px;
         }
     }
 
     @media (min-width: 1920px) {
         .post-card-wrapper {
-            width: 389px;
+            width: 385px; /* 389 - 4 */
             height: 766px;
         }
     }
 
     @media (min-width: 2560px) {
         .post-card-wrapper {
-            width: 432px;
-            height: 845px;
+            width: 428px; /* 432 - 4 */
+            height: 880px;
         }
     }
 </style>
