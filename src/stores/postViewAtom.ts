@@ -55,3 +55,10 @@ export const visibleRangeAtom = atom((get) => {
         last: Math.max(...visibleIndices),
     };
 });
+
+/**
+ * 请求滚动到指定文章的 atom
+ * 设置为目标索引后，PostViewScrollContainer 会响应并滚动
+ * 滚动完成后会重置为 null
+ */
+export const scrollToPostAtom = atom<number | null>(null);

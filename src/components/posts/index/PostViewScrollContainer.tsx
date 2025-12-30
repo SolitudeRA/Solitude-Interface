@@ -2,9 +2,9 @@ import * as React from 'react';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useSetAtom } from 'jotai';
+import { useSetAtom, useAtomValue } from 'jotai';
 import { cn } from '@components/common/lib/utils';
-import { postViewAtom } from '@stores/postViewAtom';
+import { postViewAtom, scrollToPostAtom } from '@stores/postViewAtom';
 import PostViewPagination from './PostViewPagination';
 
 interface PostViewScrollContainerProps {
@@ -36,6 +36,8 @@ export default function PostViewScrollContainer({
     const [dynamicPadding, setDynamicPadding] = useState({ left: 0, right: 0 });
 
     const setPostViewState = useSetAtom(postViewAtom);
+    const scrollToPostRequest = useAtomValue(scrollToPostAtom);
+    const setScrollToPostRequest = useSetAtom(scrollToPostAtom);
 
     // 计算动态 padding，使首尾文章展示更合理
     // 布局：[gap] [card1] [gap] [card2] [gap] [card3] [gap] [card4] [gap] [card5] [gap] [第6张15%]
@@ -242,6 +244,15 @@ export default function PostViewScrollContainer({
             });
         }
     }, []);
+
+    // 响应来自时间线组件的滚动请求
+    useEffect(() => {
+        if (scrollToPostRequest !== null) {
+            scrollToPost(scrollToPostRequest);
+            // 滚动后重置请求
+            setScrollToPostRequest(null);
+        }
+    }, [scrollToPostRequest, scrollToPost, setScrollToPostRequest]);
 
     return (
         <div
