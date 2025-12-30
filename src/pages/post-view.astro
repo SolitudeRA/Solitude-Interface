@@ -27,3 +27,58 @@ const posts = await getPosts();
         <DockSocial />
     </Dock>
 </BaseLayout>
+
+<style>
+    /* 禁止页面垂直滚动，让滚轮事件只作用于横向滚动容器 */
+    :global(html),
+    :global(body) {
+        overflow: hidden;
+        height: 100vh;
+    }
+</style>
+
+<script>
+    // 页面加载后立即开始监听滚轮事件
+    // 这样即使 React 还没水合完成，也能拦截垂直滚动
+    document.addEventListener('DOMContentLoaded', () => {
+        const scrollContainer = document.querySelector('.post-view-scroll-container');
+        
+        if (scrollContainer) {
+            // 计算滚动距离
+            const getScrollDistance = () => {
+                const card = scrollContainer.querySelector('.post-card-wrapper');
+                const cardWidth = card?.getBoundingClientRect().width || 300;
+                const gap = 60;
+                return cardWidth + gap;
+            };
+
+            // 处理滚轮事件
+            const handleWheel = (e: WheelEvent) => {
+                const container = scrollContainer as HTMLElement;
+                const { scrollWidth, clientWidth, scrollLeft } = container;
+                const canScroll = scrollWidth > clientWidth;
+
+                // 判断是否在边界
+                const atStart = scrollLeft <= 0 && e.deltaY < 0;
+                const atEnd = scrollLeft >= scrollWidth - clientWidth && e.deltaY > 0;
+
+                // 拦截滚动事件
+                if (canScroll && !atStart && !atEnd) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const scrollDistance = getScrollDistance();
+                    const direction = e.deltaY > 0 ? 1 : -1;
+                    
+                    container.scrollBy({
+                        left: direction * scrollDistance,
+                        behavior: 'smooth',
+                    });
+                }
+            };
+
+            // 使用 passive: false 以便能够 preventDefault
+            document.addEventListener('wheel', handleWheel, { passive: false });
+        }
+    });
+</script>

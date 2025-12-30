@@ -55,7 +55,7 @@ function PostCard({ post, index, isOtherHovered, onHover }: PostCardProps) {
         <motion.a
             href={`/posts/${post.id}`}
             className={cn(
-                'post-view-card group relative flex-shrink-0 overflow-hidden rounded-3xl',
+                'post-view-card group relative shrink-0 overflow-hidden rounded-3xl',
                 'w-64 sm:w-72 md:w-80 lg:w-[22rem]',
                 'aspect-[9/14] cursor-pointer',
                 'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',

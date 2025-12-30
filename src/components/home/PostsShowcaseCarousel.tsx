@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import type { FeaturedPost, PostTag } from '@api/ghost/types';
 import { Chip } from '@components/common/badge';
 import { cn } from '@components/common/lib/utils';
@@ -9,6 +9,15 @@ import { cn } from '@components/common/lib/utils';
 interface PostsShowcaseCarouselProps {
     posts: FeaturedPost[];
     className?: string;
+    /**
+     * Posts 页面的 URL
+     */
+    postsPageUrl?: string;
+    /**
+     * 是否显示"查看更多"按钮
+     * @default true
+     */
+    showMoreButton?: boolean;
 }
 
 interface ShowcaseCardProps {
@@ -179,10 +188,120 @@ function SkeletonCard({ index }: { index: number }) {
     );
 }
 
+// "查看更多"卡片组件
+interface ViewMoreCardProps {
+    href: string;
+    index: number;
+    isOtherHovered: boolean;
+    onHover: (index: number | null) => void;
+}
+
+function ViewMoreCard({
+    href,
+    index,
+    isOtherHovered,
+    onHover,
+}: ViewMoreCardProps) {
+    return (
+        <motion.a
+            href={href}
+            className={cn(
+                'showcase-card group relative flex-shrink-0 overflow-hidden rounded-xl',
+                'w-56 sm:w-64 md:w-72 lg:w-80',
+                'aspect-[16/11] cursor-pointer',
+                'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+                'shadow-lg',
+            )}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{
+                opacity: isOtherHovered ? 0.6 : 1,
+                x: 0,
+                scale: isOtherHovered ? 0.98 : 1,
+            }}
+            transition={{
+                duration: 0.15,
+                delay: index * 0.05,
+                ease: 'easeOut',
+            }}
+            whileHover={{
+                scale: 1.03,
+                y: -6,
+                opacity: 1,
+                transition: { duration: 0.1, ease: 'easeOut' },
+            }}
+            whileFocus={{
+                scale: 1.03,
+                y: -6,
+                opacity: 1,
+            }}
+            onMouseEnter={() => onHover(index)}
+            onMouseLeave={() => onHover(null)}
+            aria-label="查看全部文章"
+        >
+            {/* 渐变背景 */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="from-primary/40 via-secondary/30 to-accent/40 h-full w-full bg-gradient-to-br transition-all duration-500 group-hover:scale-105 group-hover:opacity-90" />
+            </div>
+
+            {/* 渐变遮罩 */}
+            <div
+                className={cn(
+                    'absolute inset-0',
+                    'bg-gradient-to-t from-black/60 via-black/20 to-transparent',
+                    'dark:from-black/70 dark:via-black/30',
+                )}
+            />
+
+            {/* 内容区域 */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+                {/* 图标 */}
+                <motion.div
+                    className={cn(
+                        'mb-4 flex h-16 w-16 items-center justify-center',
+                        'rounded-full',
+                        'bg-white/20 backdrop-blur-sm',
+                        'border border-white/30',
+                        'transition-all duration-300',
+                        'group-hover:bg-white/30 group-hover:scale-110',
+                    )}
+                    whileHover={{ rotate: 0 }}
+                >
+                    <ArrowRight className="h-8 w-8 text-white transition-transform duration-300 group-hover:translate-x-1" />
+                </motion.div>
+
+                {/* 文字 */}
+                <h3
+                    className={cn(
+                        'text-lg leading-tight font-bold text-white',
+                        'text-center',
+                        'transition-colors group-hover:text-white/90',
+                    )}
+                >
+                    查看全部文章
+                </h3>
+                <p className="mt-1 text-sm text-white/70">
+                    探索更多内容
+                </p>
+            </div>
+
+            {/* Hover 阴影增强 */}
+            <div
+                className={cn(
+                    'absolute inset-0 rounded-2xl',
+                    'shadow-lg transition-shadow duration-300',
+                    'group-hover:shadow-2xl group-hover:shadow-black/30',
+                )}
+            />
+        </motion.a>
+    );
+}
+
 // 主组件
 export default function PostsShowcaseCarousel({
     posts,
     className,
+    postsPageUrl = '/post-view',
+    showMoreButton = true,
 }: PostsShowcaseCarouselProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -409,6 +528,17 @@ export default function PostsShowcaseCarousel({
                         onHover={setHoveredIndex}
                     />
                 ))}
+                {/* 查看更多卡片 */}
+                {showMoreButton && (
+                    <ViewMoreCard
+                        href={postsPageUrl}
+                        index={posts.length}
+                        isOtherHovered={
+                            hoveredIndex !== null && hoveredIndex !== posts.length
+                        }
+                        onHover={setHoveredIndex}
+                    />
+                )}
             </div>
         </div>
     );

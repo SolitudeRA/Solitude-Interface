@@ -1,6 +1,10 @@
 ---
 import type { FeaturedPost } from '@api/ghost/types';
 import PostsShowcaseCarousel, { PostsShowcaseSkeleton } from './PostsShowcaseCarousel';
+
+const MAX_POSTS = 8;
+const POSTS_PAGE_URL = '/post-view';
+
 interface Props {
     featuredPosts: FeaturedPost[];
     /**
@@ -15,8 +19,13 @@ interface Props {
 }
 
 const { featuredPosts, isLoading = false, className = '' } = Astro.props;
+
+// 限制文章数量为最多8个
+const limitedPosts = featuredPosts?.slice(0, MAX_POSTS) || [];
+// 判断是否有更多文章
+const hasMorePosts = featuredPosts && featuredPosts.length > MAX_POSTS;
 // 空数据且非加载状态时不渲染
-const shouldRender = isLoading || (featuredPosts && featuredPosts.length > 0);
+const shouldRender = isLoading || (limitedPosts && limitedPosts.length > 0);
 ---
 
 {
@@ -28,7 +37,12 @@ const shouldRender = isLoading || (featuredPosts && featuredPosts.length > 0);
             {isLoading ? (
                 <PostsShowcaseSkeleton count={5} client:load />
             ) : (
-                <PostsShowcaseCarousel posts={featuredPosts} client:load />
+                <PostsShowcaseCarousel 
+                    posts={limitedPosts} 
+                    postsPageUrl={POSTS_PAGE_URL}
+                    showMoreButton={hasMorePosts}
+                    client:load 
+                />
             )}
         </section>
     )

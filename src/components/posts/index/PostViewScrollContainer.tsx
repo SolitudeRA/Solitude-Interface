@@ -181,10 +181,10 @@ export default function PostViewScrollContainer({
         };
     }, [updateScrollState, updateVisiblePosts]);
 
-    // 鼠标滚轮横向滚动
+    // 鼠标滚轮横向滚动 - 始终响应滚动，无需等待 hover
     const handleWheel = useCallback(
         (e: React.WheelEvent<HTMLDivElement>) => {
-            if (!containerRef.current || !isHovering) return;
+            if (!containerRef.current) return;
 
             const container = containerRef.current;
             const { scrollWidth, clientWidth, scrollLeft } = container;
@@ -213,7 +213,7 @@ export default function PostViewScrollContainer({
                 });
             }
         },
-        [isHovering],
+        [],
     );
 
     // 滚动一屏

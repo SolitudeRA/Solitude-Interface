@@ -18,7 +18,7 @@ const { posts } = Astro.props;
 const postDates = posts.map((post) => post.published_at);
 ---
 
-<PostViewScrollContainer client:load postDates={postDates}>
+<PostViewScrollContainer client:idle postDates={postDates}>
     {
         posts.map((post) => {
             const PostCardComponent = (() => {
