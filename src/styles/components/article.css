@@ -6,6 +6,28 @@
 
     .solitude-article-meta {
         height: 900px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .solitude-article-meta::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            180deg,
+            rgba(38, 38, 38, 0.3) 0%,
+            rgba(38, 38, 38, 0.6) 50%,
+            rgba(38, 38, 38, 0.95) 100%
+        );
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        z-index: 0;
+    }
+
+    .solitude-article-meta > * {
+        position: relative;
+        z-index: 1;
     }
 
     .solitude-article-meta-primary-tags {
@@ -32,65 +54,114 @@
         padding-right: 120px;
     }
 
+    /* 文章内容区域 */
     .solitude-article-content {
         padding-top: 3.5rem;
         padding-left: 7.2rem;
         padding-right: 7.2rem;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 
     .solitude-article-content h1 {
         font-size: 2.7rem;
-        font-weight: bold;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-        color: var(--text-content-primary);
+        font-weight: 700;
+        margin-top: 2.5rem;
+        margin-bottom: 1.2rem;
+        color: #F5F5F5;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
     }
 
     .solitude-article-content h2 {
         font-size: 2.25rem;
-        font-weight: bold;
-        margin-top: 2rem;
+        font-weight: 700;
+        margin-top: 2.5rem;
         margin-bottom: 1rem;
-        color: var(--text-content-primary);
+        color: #F5F5F5;
+        letter-spacing: -0.015em;
+        line-height: 1.25;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .solitude-article-content h3 {
         font-size: 1.75rem;
         font-weight: 600;
-        margin-top: 1.5rem;
+        margin-top: 2rem;
         margin-bottom: 0.8rem;
-        color: var(--text-content-secondary);
+        color: #E8E8E8;
+        letter-spacing: -0.01em;
+        line-height: 1.3;
     }
 
     .solitude-article-content h4 {
         font-size: 1.3rem;
         font-weight: 600;
-        margin-top: 1.5rem;
+        margin-top: 1.8rem;
         margin-bottom: 0.8rem;
-        color: var(--text-content-secondary);
+        color: #D4D4D4;
+        letter-spacing: 0;
+        line-height: 1.4;
+    }
+
+    .solitude-article-content h5 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+        margin-bottom: 0.6rem;
+        color: #BEBEBE;
+        letter-spacing: 0.01em;
+        line-height: 1.5;
+    }
+
+    .solitude-article-content h6 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+        margin-bottom: 0.6rem;
+        color: #A8A8A8;
+        letter-spacing: 0.02em;
+        line-height: 1.5;
+        text-transform: uppercase;
     }
 
     .solitude-article-content a {
-        color: var(--primary);
+        color: #60A5FA;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(96, 165, 250, 0.3);
+        transition: all 0.2s ease;
+    }
+
+    .solitude-article-content a:hover {
+        color: #93C5FD;
+        border-bottom-color: rgba(147, 197, 253, 0.6);
     }
 
     .solitude-article-content p {
-        color: var(--text-content-primary);
+        color: #D4D4D4;
         font-size: 1.15rem;
-        line-height: 1.9rem;
+        line-height: 1.9;
         margin-top: 1.2rem;
         margin-bottom: 1.2rem;
+        letter-spacing: 0.01em;
     }
 
     .solitude-article-content strong {
-        color: var(--text-content-primary);
-        font-weight: bold;
+        color: #F5F5F5;
+        font-weight: 600;
+    }
+
+    .solitude-article-content em {
+        color: #E0E0E0;
+        font-style: italic;
     }
 
     .solitude-article-content ul {
         font-size: 1.15rem;
         margin-left: 2.5rem;
         list-style-type: disc;
+        color: #D4D4D4;
     }
 
     .solitude-article-content ul p {
@@ -103,19 +174,283 @@
         font-size: 1.15rem;
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
+        color: #D4D4D4;
     }
 
+    .solitude-article-content ul li::marker {
+        color: #60A5FA;
+    }
+
+    .solitude-article-content ol {
+        font-size: 1.15rem;
+        margin-left: 2.5rem;
+        list-style-type: decimal;
+        color: #D4D4D4;
+    }
+
+    .solitude-article-content ol li {
+        font-size: 1.15rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: #D4D4D4;
+    }
+
+    .solitude-article-content ol li::marker {
+        color: #60A5FA;
+        font-weight: 600;
+    }
+
+    /* 引用块样式 */
+    .solitude-article-content blockquote {
+        margin: 1.5rem 0;
+        padding: 1rem 1.5rem;
+        border-left: 4px solid #8B5CF6;
+        background: rgba(139, 92, 246, 0.1);
+        border-radius: 0 8px 8px 0;
+    }
+
+    .solitude-article-content blockquote p {
+        color: #C4B5FD;
+        font-style: italic;
+        margin: 0;
+    }
+
+    /* 代码块样式 */
+    .solitude-article-content code {
+        font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+        font-size: 0.9em;
+        padding: 0.2em 0.4em;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        color: #F472B6;
+    }
+
+    .solitude-article-content pre {
+        margin: 1.5rem 0;
+        padding: 1.25rem;
+        background: #1E1E1E;
+        border-radius: 12px;
+        overflow-x: auto;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .solitude-article-content pre code {
+        background: transparent;
+        padding: 0;
+        color: #E5E5E5;
+        font-size: 0.95rem;
+        line-height: 1.7;
+    }
+
+    /* 图片样式 */
+    .solitude-article-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+        margin: 1.5rem auto;
+        display: block;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .solitude-article-content figure {
+        margin: 2rem 0;
+        text-align: center;
+    }
+
+    .solitude-article-content figcaption {
+        color: #9CA3AF;
+        font-size: 0.9rem;
+        margin-top: 0.75rem;
+        font-style: italic;
+    }
+
+    /* 表格样式 */
+    .solitude-article-content table {
+        width: 100%;
+        margin: 1.5rem 0;
+        border-collapse: collapse;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .solitude-article-content th {
+        background: rgba(255, 255, 255, 0.08);
+        color: #F5F5F5;
+        font-weight: 600;
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .solitude-article-content td {
+        padding: 0.75rem 1rem;
+        color: #D4D4D4;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .solitude-article-content tr:hover td {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* 水平线样式 */
+    .solitude-article-content hr {
+        border: none;
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.15) 50%,
+            transparent 100%
+        );
+        margin: 2.5rem 0;
+    }
+
+    /* 侧边栏样式 */
     .solitude-article-rail {
-        background-color: var(--muted);
-        opacity: 0.85;
+        background-color: #1A1A1A;
+        opacity: 1;
     }
 
     .dark .solitude-article-rail {
-        background-color: var(--muted);
-        opacity: 0.95;
+        background-color: #1A1A1A;
+        opacity: 1;
     }
 
+    /* 文章主体区域 */
     .solitude-article-body {
-        background-color: var(--card);
+        background-color: #262626;
+    }
+
+    .dark .solitude-article-body {
+        background-color: #262626;
+    }
+
+    /* ===== Table of Contents 样式 ===== */
+    .toc-wrapper {
+        position: sticky;
+        top: 120px;
+        max-height: calc(100vh - 160px);
+        overflow-y: auto;
+        padding: 1rem;
+    }
+
+    .toc-container {
+        background: rgba(26, 26, 26, 0.8);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 1.25rem;
+        box-shadow: 
+            0 4px 20px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .toc-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #F5F5F5;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        letter-spacing: 0.05em;
+    }
+
+    .toc-icon {
+        width: 18px;
+        height: 18px;
+        color: #60A5FA;
+    }
+
+    .toc-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .toc-item {
+        position: relative;
+        margin: 0;
+        padding: 0;
+    }
+
+    .toc-link {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        color: #9CA3AF;
+        background: transparent;
+        border: none;
+        border-left: 2px solid transparent;
+        border-radius: 0 6px 6px 0;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .toc-link:hover {
+        color: #D4D4D4;
+        background: rgba(255, 255, 255, 0.05);
+        border-left-color: rgba(96, 165, 250, 0.3);
+    }
+
+    .toc-active .toc-link {
+        color: #60A5FA;
+        background: rgba(96, 165, 250, 0.1);
+        border-left-color: #60A5FA;
+        font-weight: 500;
+    }
+
+    /* 层级缩进 */
+    .toc-level-2 .toc-link {
+        padding-left: 0.75rem;
+    }
+
+    .toc-level-3 .toc-link {
+        padding-left: 1.5rem;
+        font-size: 0.8rem;
+    }
+
+    .toc-level-4 .toc-link {
+        padding-left: 2.25rem;
+        font-size: 0.75rem;
+        color: #6B7280;
+    }
+
+    .toc-level-4:hover .toc-link {
+        color: #9CA3AF;
+    }
+
+    /* 滚动条样式 */
+    .toc-wrapper::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .toc-wrapper::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .toc-wrapper::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+    }
+
+    .toc-wrapper::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* 响应式：小屏幕隐藏 TOC */
+    @media (max-width: 768px) {
+        .toc-wrapper {
+            display: none;
+        }
     }
 }

@@ -1,5 +1,5 @@
 ---
-import Navbar from './Navbar.astro';
+import SmartNavbar from './SmartNavbar.tsx';
 import NavbarBrand from './NavbarBrand.astro';
 import NavbarUtility from './NavbarUtility.astro';
 
@@ -13,11 +13,11 @@ interface Props {
 const { logoUrl, siteTitle, siteSubTitle, isFixed = false } = Astro.props;
 ---
 
-<Navbar isFixed={isFixed}>
+<SmartNavbar isFixed={isFixed} client:load>
     <NavbarBrand
         logoImageUrl={logoUrl}
         siteTitle={siteTitle}
         siteSubTitle={siteSubTitle}
     />
     <NavbarUtility />
-</Navbar>
+</SmartNavbar>

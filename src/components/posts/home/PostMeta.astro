@@ -13,20 +13,18 @@ const publishDate = new Date(published_at);
 ---
 
 <div
-    class="flex min-h-75 flex-col items-center justify-center p-8 text-center"
+    class="article-meta-container flex min-h-75 flex-col items-center justify-center p-8 text-center"
 >
-    <h1
-        class="mb-4 text-3xl font-bold text-gray-900 drop-shadow-lg md:text-4xl dark:text-white"
-    >
+    <!-- 标题 -->
+    <h1 class="article-title mb-6 text-4xl font-bold md:text-5xl antialiased">
         {title}
     </h1>
 
-    <div
-        class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-700 dark:text-gray-300"
-    >
+    <!-- 主标签和发布时间 -->
+    <div class="flex flex-wrap items-center justify-center gap-4 text-sm">
         {
             primary_tag && (
-                <span class="rounded-full bg-blue-100 px-3 py-1 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">
+                <span class="primary-tag rounded-full px-4 py-1.5 font-medium">
                     {primary_tag.name}
                 </span>
             )
@@ -34,7 +32,7 @@ const publishDate = new Date(published_at);
 
         <time
             datetime={publishDate.toISOString()}
-            class="flex items-center gap-1"
+            class="publish-date flex items-center gap-2"
         >
             <svg
                 class="h-4 w-4"
@@ -49,18 +47,23 @@ const publishDate = new Date(published_at);
                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                 ></path>
             </svg>
-            {publishDate.toLocaleDateString()}
+            {publishDate.toLocaleDateString('zh-CN', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            })}
         </time>
     </div>
 
+    <!-- 其他标签 -->
     {
         tags && tags.length > 0 && (
-            <div class="mt-4 flex flex-wrap justify-center gap-2">
+            <div class="mt-5 flex flex-wrap justify-center gap-2">
                 {tags
                     .filter((tag) => !tag.slug.startsWith('hash-'))
                     .slice(0, 5)
                     .map((tag) => (
-                        <span class="rounded bg-gray-100 px-2 py-1 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                        <span class="tag-item rounded-md px-3 py-1 text-sm">
                             #{tag.name}
                         </span>
                     ))}
@@ -68,3 +71,59 @@ const publishDate = new Date(published_at);
         )
     }
 </div>
+
+<style>
+    .article-meta-container {
+        padding-top: 8rem;
+        padding-bottom: 4rem;
+    }
+
+    /* 标题样式 */
+    .article-title {
+        color: #F5F5F5;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        max-width: 900px;
+    }
+
+    /* 主标签样式 */
+    .primary-tag {
+        background: rgba(96, 165, 250, 0.2);
+        color: #93C5FD;
+        border: 1px solid rgba(96, 165, 250, 0.3);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        transition: all 0.2s ease;
+    }
+
+    .primary-tag:hover {
+        background: rgba(96, 165, 250, 0.3);
+        border-color: rgba(96, 165, 250, 0.5);
+    }
+
+    /* 发布日期样式 */
+    .publish-date {
+        color: #D4D4D4;
+    }
+
+    .publish-date svg {
+        color: #9CA3AF;
+    }
+
+    /* 标签样式 */
+    .tag-item {
+        background: rgba(255, 255, 255, 0.08);
+        color: #A8A8A8;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        transition: all 0.2s ease;
+    }
+
+    .tag-item:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: #D4D4D4;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+</style>

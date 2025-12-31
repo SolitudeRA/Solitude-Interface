@@ -3,4 +3,5 @@
 @import './theme.css';
 @import './tailwind-settings.css';
 @import './components/article.css';
+@import './components/navbar.css';
 @import './utilities/text-utilities.css';

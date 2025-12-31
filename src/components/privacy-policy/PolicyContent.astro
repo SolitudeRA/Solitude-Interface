@@ -3,22 +3,9 @@
 ---
 
 <article class="policy-content">
-    <!-- 页面头部 -->
-    <header class="mb-12 border-b border-[var(--border)] pb-8">
-        <h1 class="mb-4 text-4xl font-bold tracking-tight text-[var(--foreground)] sm:text-5xl">
-            Privacy Policy
-        </h1>
-        <div class="flex flex-wrap items-center gap-3 text-[var(--muted-foreground)]">
-            <span class="inline-flex items-center rounded-full bg-[var(--primary)] px-3 py-1 text-sm font-medium text-[var(--primary-foreground)]">
-                Effective Date
-            </span>
-            <time datetime="2025-02-05" class="text-lg">February 5, 2025</time>
-        </div>
-    </header>
-
     <!-- 简介 -->
-    <section class="mb-10">
-        <p class="text-lg leading-relaxed text-[var(--foreground)]">
+    <section class="policy-intro">
+        <p>
             Your privacy is important to us. This Privacy Policy explains
             how Protogalaxy ("we," "us," "our") collects, uses, and protects
             your information when you use our website (www.solitudera.com).
@@ -28,12 +15,12 @@
     </section>
 
     <!-- 主要内容区域 -->
-    <div class="space-y-10">
+    <div class="policy-sections">
         <!-- Information We Collect -->
         <section class="policy-section">
             <h2 class="policy-heading">Information We Collect</h2>
 
-            <div class="space-y-8">
+            <div class="policy-subsections">
                 <div class="policy-subsection">
                     <h3 class="policy-subheading">
                         <span class="policy-number">1</span>
@@ -107,7 +94,7 @@
         <!-- Your Choices -->
         <section class="policy-section">
             <h2 class="policy-heading">Your Choices</h2>
-            <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-3">
+            <div class="policy-cards">
                 <div class="policy-card">
                     <div class="policy-card-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
@@ -197,11 +184,11 @@
                 If you have any questions or concerns about this Privacy Policy or
                 our practices, please contact us:
             </p>
-            <div class="mt-6 inline-flex items-center gap-3 rounded-xl bg-[var(--accent)] px-6 py-4 transition-all hover:shadow-md">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 text-[var(--primary)]">
+            <div class="policy-contact">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="contact-icon">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
                 </svg>
-                <a href="mailto:personal@solitudera.com" class="text-lg font-medium text-[var(--foreground)] transition-colors hover:text-[var(--primary)]">
+                <a href="mailto:personal@solitudera.com" class="contact-link">
                     personal@solitudera.com
                 </a>
             </div>
@@ -209,8 +196,8 @@
     </div>
 
     <!-- 页面底部 -->
-    <footer class="mt-16 border-t border-[var(--border)] pt-8">
-        <p class="text-center text-sm text-[var(--muted-foreground)]">
+    <footer class="policy-footer">
+        <p>
             Last updated: February 5, 2025
         </p>
     </footer>
@@ -219,6 +206,69 @@
 <style>
     .policy-content {
         padding-bottom: 100px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* 页面头部 */
+    .policy-header {
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .policy-title {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #F5F5F5;
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+    }
+
+    .policy-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .policy-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.375rem 0.875rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        background: rgba(96, 165, 250, 0.15);
+        color: #60A5FA;
+        border-radius: 9999px;
+        border: 1px solid rgba(96, 165, 250, 0.3);
+    }
+
+    .policy-date {
+        font-size: 1.125rem;
+        color: #9CA3AF;
+    }
+
+    /* 简介 */
+    .policy-intro {
+        margin-bottom: 2.5rem;
+    }
+
+    .policy-intro p {
+        font-size: 1.125rem;
+        line-height: 1.8;
+        color: #D4D4D4;
+    }
+
+    /* 章节 */
+    .policy-sections {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    .policy-section {
+        scroll-margin-top: 2rem;
     }
 
     /* 主要标题样式 */
@@ -226,11 +276,23 @@
         font-size: 1.75rem;
         font-weight: 700;
         line-height: 1.3;
-        margin-bottom: 1rem;
-        color: var(--foreground);
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid var(--primary);
+        margin-bottom: 1.25rem;
+        color: #F5F5F5;
+        padding-bottom: 0.625rem;
+        border-bottom: 2px solid #60A5FA;
         display: inline-block;
+    }
+
+    /* 子章节 */
+    .policy-subsections {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .policy-subsection {
+        border-left: 3px solid rgba(255, 255, 255, 0.1);
+        padding-left: 1.5rem;
     }
 
     /* 子标题样式 */
@@ -239,7 +301,7 @@
         font-weight: 600;
         line-height: 1.4;
         margin-bottom: 0.75rem;
-        color: var(--foreground);
+        color: #E8E8E8;
         display: flex;
         align-items: center;
         gap: 0.75rem;
@@ -254,8 +316,8 @@
         height: 1.75rem;
         font-size: 0.875rem;
         font-weight: 600;
-        background: var(--primary);
-        color: var(--primary-foreground);
+        background: #60A5FA;
+        color: #1A1A1A;
         border-radius: 50%;
         flex-shrink: 0;
     }
@@ -263,9 +325,8 @@
     /* 正文样式 */
     .policy-text {
         font-size: 1.0625rem;
-        line-height: 1.75;
-        color: var(--foreground);
-        opacity: 0.9;
+        line-height: 1.8;
+        color: #D4D4D4;
     }
 
     /* 列表样式 */
@@ -281,9 +342,8 @@
         padding-left: 1.75rem;
         margin-bottom: 0.625rem;
         font-size: 1.0625rem;
-        line-height: 1.6;
-        color: var(--foreground);
-        opacity: 0.9;
+        line-height: 1.7;
+        color: #D4D4D4;
     }
 
     .policy-list li::before {
@@ -293,44 +353,47 @@
         top: 0.625rem;
         width: 0.5rem;
         height: 0.5rem;
-        background: var(--primary);
+        background: #60A5FA;
         border-radius: 50%;
     }
 
     /* 链接样式 */
     .policy-link {
-        color: var(--primary);
-        text-decoration: underline;
-        text-underline-offset: 3px;
-        transition: opacity 0.2s ease;
+        color: #60A5FA;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(96, 165, 250, 0.3);
+        transition: all 0.2s ease;
     }
 
     .policy-link:hover {
-        opacity: 0.7;
+        color: #93C5FD;
+        border-bottom-color: rgba(147, 197, 253, 0.6);
     }
 
-    /* 子章节样式 */
-    .policy-subsection {
-        border-left: 3px solid var(--border);
-        padding-left: 1.5rem;
+    /* 卡片 */
+    .policy-cards {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(1, 1fr);
     }
 
-    /* 卡片样式 */
+    @media (min-width: 640px) {
+        .policy-cards {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
     .policy-card {
         padding: 1.5rem;
-        background: var(--card);
-        border-radius: var(--radius);
-        border: 1px solid var(--border);
-        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        background: rgba(26, 26, 26, 0.6);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.2s ease;
     }
 
     .policy-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-        border-color: var(--primary);
-    }
-
-    :global(.dark) .policy-card:hover {
+        border-color: rgba(96, 165, 250, 0.3);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     }
 
@@ -340,8 +403,8 @@
         justify-content: center;
         width: 2.5rem;
         height: 2.5rem;
-        background: var(--primary);
-        color: var(--primary-foreground);
+        background: rgba(96, 165, 250, 0.15);
+        color: #60A5FA;
         border-radius: 0.5rem;
         margin-bottom: 0.75rem;
     }
@@ -350,17 +413,61 @@
         font-size: 1rem;
         font-weight: 600;
         margin-bottom: 0.5rem;
-        color: var(--foreground);
+        color: #F5F5F5;
     }
 
     .policy-card-text {
         font-size: 0.875rem;
-        line-height: 1.5;
-        color: var(--muted-foreground);
+        line-height: 1.6;
+        color: #9CA3AF;
     }
 
-    /* 章节间距 */
-    .policy-section {
-        scroll-margin-top: 2rem;
+    /* 联系方式 */
+    .policy-contact {
+        margin-top: 1.5rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem 1.5rem;
+        background: rgba(96, 165, 250, 0.1);
+        border-radius: 12px;
+        border: 1px solid rgba(96, 165, 250, 0.2);
+        transition: all 0.2s ease;
+    }
+
+    .policy-contact:hover {
+        border-color: rgba(96, 165, 250, 0.4);
+        box-shadow: 0 4px 12px rgba(96, 165, 250, 0.1);
+    }
+
+    .contact-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        color: #60A5FA;
+    }
+
+    .contact-link {
+        font-size: 1.125rem;
+        font-weight: 500;
+        color: #F5F5F5;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .contact-link:hover {
+        color: #60A5FA;
+    }
+
+    /* 页脚 */
+    .policy-footer {
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .policy-footer p {
+        text-align: center;
+        font-size: 0.875rem;
+        color: #6B7280;
     }
 </style>

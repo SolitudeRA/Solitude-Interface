@@ -1,5 +1,6 @@
 ---
 import PostMeta from './PostMeta.astro';
+import TableOfContents from './TableOfContents.tsx';
 import type { PostTag } from '@api/ghost/types';
 
 interface Props {
@@ -13,12 +14,18 @@ interface Props {
 
 const { title, feature_image, primary_tag, tags, published_at, html } =
     Astro.props;
-const featureImageLightUrl = `linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),url(${feature_image.toString()})`;
-const featureImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url(${feature_image.toString()})`;
+const featureImageUrl = feature_image?.toString() || '';
 ---
 
 <div class="solitude-article-container grid grid-cols-12">
-    <div class="solitude-article-rail col-span-2 flex"></div>
+    <!-- 左侧 TOC 区域 -->
+    <div class="solitude-article-rail col-span-2 flex">
+        <div class="toc-wrapper w-full">
+            <TableOfContents client:idle />
+        </div>
+    </div>
+    
+    <!-- 中间文章主体 -->
     <div class="solitude-article-body col-span-8 pb-[200px]">
         <div class="solitude-article-meta">
             <PostMeta
@@ -32,16 +39,17 @@ const featureImageDarkUrl = `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 
             <div class="solitude-article-content" set:html={html} />
         </div>
     </div>
+    
+    <!-- 右侧空白区域 -->
     <div class="solitude-article-rail col-span-2"></div>
 </div>
 
-<style define:vars={{ featureImageLightUrl, featureImageDarkUrl }}>
+<style define:vars={{ featureImageUrl: featureImageUrl ? `url(${featureImageUrl})` : 'none' }}>
     .solitude-article-meta {
         background-size: cover;
-        background-image: var(--featureImageLightUrl);
-    }
-
-    .dark .solitude-article-meta {
-        background-image: var(--featureImageDarkUrl);
+        background-position: center;
+        background-image: var(--featureImageUrl);
+        border-radius: 0 0 24px 24px;
+        margin-bottom: 2rem;
     }
 </style>
