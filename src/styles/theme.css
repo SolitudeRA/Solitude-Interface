@@ -212,48 +212,48 @@
     --home-card-overlay-mid: oklch(0.18 0.035 264.665 / 0.40);
     --home-card-overlay-end: oklch(0.22 0.04 264.665 / 0.35);
 
-    /* ===== 文章详情页配色 ===== */
+    /* ===== 文章详情页配色（冷蓝紫色调） ===== */
     --article-header-title: oklch(0.96 0.005 264.665);
-    --article-header-date: oklch(0.83 0.01 264.665);
-    --article-header-tag-bg: oklch(0.6 0.2 264.376 / 0.2);
-    --article-header-tag-text: oklch(0.75 0.15 264.376);
-    --article-header-tag-border: oklch(0.6 0.2 264.376 / 0.3);
-    --article-header-secondary-tag-bg: oklch(0.98 0.005 264.665 / 0.08);
-    --article-header-secondary-tag-text: oklch(0.7 0.01 264.665);
-    --article-header-secondary-tag-border: oklch(0.98 0.005 264.665 / 0.1);
+    --article-header-date: oklch(0.8 0.04 270);
+    --article-header-tag-bg: oklch(0.6 0.15 280 / 0.2);
+    --article-header-tag-text: oklch(0.75 0.12 280);
+    --article-header-tag-border: oklch(0.6 0.15 280 / 0.3);
+    --article-header-secondary-tag-bg: oklch(0.65 0.12 260 / 0.15);
+    --article-header-secondary-tag-text: oklch(0.75 0.1 260);
+    --article-header-secondary-tag-border: oklch(0.65 0.12 260 / 0.2);
 
-    /* ===== 文章内容配色 ===== */
+    /* ===== 文章内容配色（冷蓝紫装饰 + 白色文字） ===== */
     --article-content-h1: oklch(0.96 0.005 264.665);
     --article-content-h2: oklch(0.96 0.005 264.665);
-    --article-content-h3: oklch(0.91 0.008 264.665);
-    --article-content-h4: oklch(0.83 0.01 264.665);
-    --article-content-h5: oklch(0.75 0.012 264.665);
-    --article-content-h6: oklch(0.66 0.015 264.665);
-    --article-content-text: oklch(0.83 0.01 264.665);
+    --article-content-h3: oklch(0.92 0.005 264.665);
+    --article-content-h4: oklch(0.88 0.005 264.665);
+    --article-content-h5: oklch(0.82 0.005 264.665);
+    --article-content-h6: oklch(0.75 0.005 264.665);
+    --article-content-text: oklch(0.88 0.005 264.665);
     --article-content-strong: oklch(0.96 0.005 264.665);
-    --article-content-em: oklch(0.88 0.008 264.665);
-    --article-content-link: oklch(0.7 0.18 264.376);
-    --article-content-link-hover: oklch(0.78 0.15 264.376);
-    --article-content-code: oklch(0.8 0.15 330);
-    --article-content-code-bg: oklch(0.98 0.005 264.665 / 0.1);
-    --article-content-pre-bg: oklch(0.12 0.02 264.665);
-    --article-content-pre-border: oklch(0.98 0.005 264.665 / 0.08);
-    --article-content-blockquote-bg: oklch(0.55 0.2 300 / 0.1);
-    --article-content-blockquote-text: oklch(0.78 0.12 300);
-    --article-content-blockquote-border: oklch(0.55 0.2 300);
-    --article-content-table-header-bg: oklch(0.98 0.005 264.665 / 0.08);
-    --article-content-table-border: oklch(0.98 0.005 264.665 / 0.05);
-    --article-body-bg: oklch(0.15 0.025 264.665);
-    --article-rail-bg: oklch(0.1 0.02 264.665);
+    --article-content-em: oklch(0.9 0.005 264.665);
+    --article-content-link: oklch(0.72 0.14 280);
+    --article-content-link-hover: oklch(0.8 0.12 280);
+    --article-content-code: oklch(0.78 0.12 300);
+    --article-content-code-bg: oklch(0.6 0.15 280 / 0.12);
+    --article-content-pre-bg: oklch(0.15 0.005 271);
+    --article-content-pre-border: oklch(0.6 0.15 280 / 0.15);
+    --article-content-blockquote-bg: oklch(0.65 0.18 300 / 0.1);
+    --article-content-blockquote-text: oklch(0.8 0.1 290);
+    --article-content-blockquote-border: oklch(0.65 0.18 300);
+    --article-content-table-header-bg: oklch(0.6 0.15 280 / 0.1);
+    --article-content-table-border: oklch(0.6 0.15 280 / 0.08);
+    --article-body-bg: oklch(23.503% 0.00003 271.152);
+    --article-rail-bg: oklch(0.18 0.0001 271);
 
-    /* ===== TOC 配色 ===== */
-    --toc-container-bg: oklch(0.1 0.02 264.665 / 0.8);
-    --toc-border: oklch(0.98 0.005 264.665 / 0.08);
+    /* ===== TOC 配色（冷蓝紫色调） ===== */
+    --toc-container-bg: oklch(0.18 0.0001 271 / 0.9);
+    --toc-border: oklch(0.6 0.15 280 / 0.1);
     --toc-header: oklch(0.96 0.005 264.665);
-    --toc-link: oklch(0.62 0.015 264.665);
-    --toc-link-hover: oklch(0.83 0.01 264.665);
-    --toc-link-active: oklch(0.7 0.18 264.376);
-    --toc-link-active-bg: oklch(0.7 0.18 264.376 / 0.1);
+    --toc-link: oklch(0.65 0.04 270);
+    --toc-link-hover: oklch(0.9 0.005 264.665);
+    --toc-link-active: oklch(0.72 0.14 280);
+    --toc-link-active-bg: oklch(0.72 0.14 280 / 0.1);
 
     /* ===== Navbar 配色 ===== */
     --navbar-scrolled-bg: oklch(0.1 0.02 264.665 / 0.85);
@@ -277,4 +277,23 @@
     --post-view-card-title: oklch(0.98 0.005 264.665);
     --post-view-card-excerpt: oklch(0.92 0.008 264.665);
     --post-view-card-meta: oklch(0.85 0.012 264.665);
+
+    /* ===== 静态页面配色（冷蓝紫色调 - 与 Post View 一致） ===== */
+    /* 主强调色 - 淡蓝紫 */
+    --page-accent: oklch(0.7 0.12 270);
+    --page-accent-hover: oklch(0.78 0.1 270);
+    /* 链接 - 柔和蓝紫 */
+    --page-link: oklch(0.72 0.14 280);
+    --page-link-hover: oklch(0.8 0.12 280);
+    /* Badge - 淡蓝紫 */
+    --page-badge-text: oklch(0.75 0.1 270);
+    /* 装饰元素 - 蓝紫渐变 */
+    --page-decorator-start: oklch(0.65 0.18 300);
+    --page-decorator-end: oklch(0.7 0.15 250);
+    /* 图标 - 淡蓝 */
+    --page-icon: oklch(0.75 0.12 260);
+    /* 编号/圆点 - 彩虹蓝紫 */
+    --page-bullet-1: oklch(0.7 0.16 320);
+    --page-bullet-2: oklch(0.72 0.14 280);
+    --page-bullet-3: oklch(0.75 0.12 240);
 }

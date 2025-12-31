@@ -470,4 +470,111 @@
         font-size: 0.875rem;
         color: var(--muted-foreground);
     }
+
+    /* ===== 深色模式样式（白色文字 + 暖色装饰） ===== */
+    :global(.dark) .policy-intro p,
+    :global(.dark) .policy-text {
+        color: var(--text-content-primary);
+    }
+
+    :global(.dark) .policy-heading {
+        color: var(--foreground);
+        border-bottom-color: var(--page-decorator-start);
+    }
+
+    :global(.dark) .policy-subheading {
+        color: var(--foreground);
+    }
+
+    :global(.dark) .policy-number {
+        background: linear-gradient(135deg, var(--page-bullet-1) 0%, var(--page-bullet-2) 100%);
+        color: oklch(0.15 0.02 264.665);
+    }
+
+    :global(.dark) .policy-link {
+        color: var(--page-link);
+        border-bottom-color: var(--page-link);
+    }
+
+    :global(.dark) .policy-link:hover {
+        color: var(--page-link-hover);
+        border-bottom-color: var(--page-link-hover);
+    }
+
+    :global(.dark) .policy-list li {
+        color: var(--text-content-primary);
+    }
+
+    :global(.dark) .policy-list li::before {
+        background: var(--page-bullet-2);
+    }
+
+    :global(.dark) .policy-list li:nth-child(3n+1)::before {
+        background: var(--page-bullet-1);
+    }
+
+    :global(.dark) .policy-list li:nth-child(3n+2)::before {
+        background: var(--page-bullet-2);
+    }
+
+    :global(.dark) .policy-list li:nth-child(3n)::before {
+        background: var(--page-bullet-3);
+    }
+
+    :global(.dark) .policy-subsection {
+        border-left-color: var(--page-decorator-start);
+    }
+
+    :global(.dark) .policy-card {
+        background: var(--article-rail-bg);
+        border-color: var(--article-content-table-border);
+    }
+
+    :global(.dark) .policy-card-icon {
+        background: var(--article-content-code-bg);
+        color: var(--page-icon);
+    }
+
+    :global(.dark) .policy-card-title {
+        color: var(--foreground);
+    }
+
+    :global(.dark) .policy-card-text {
+        color: var(--text-content-secondary);
+    }
+
+    :global(.dark) .policy-card:hover {
+        border-color: var(--article-header-tag-border);
+        box-shadow: 0 8px 24px oklch(0.75 0.15 45 / 0.15);
+    }
+
+    :global(.dark) .policy-contact {
+        background: var(--article-rail-bg);
+        border-color: var(--article-content-table-border);
+    }
+
+    :global(.dark) .contact-icon {
+        color: var(--page-icon);
+    }
+
+    :global(.dark) .contact-link {
+        color: var(--foreground);
+    }
+
+    :global(.dark) .contact-link:hover {
+        color: var(--page-link);
+    }
+
+    :global(.dark) .policy-contact:hover {
+        border-color: var(--article-header-tag-border);
+        box-shadow: 0 4px 12px oklch(0.75 0.15 45 / 0.15);
+    }
+
+    :global(.dark) .policy-footer {
+        border-top-color: var(--article-content-table-border);
+    }
+
+    :global(.dark) .policy-footer p {
+        color: var(--text-content-secondary);
+    }
 </style>

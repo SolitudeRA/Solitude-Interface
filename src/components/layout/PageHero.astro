@@ -92,11 +92,11 @@ const {
         --hero-overlay-end: var(--background);
     }
 
-    /* 暗色模式 Hero 覆盖层 */
+    /* 暗色模式 Hero 覆盖层 - 与 article-body-bg 匹配 */
     :global(.dark) {
-        --hero-overlay-start: oklch(0.16 0.025 264.665 / 0.4);
-        --hero-overlay-mid: oklch(0.16 0.025 264.665 / 0.7);
-        --hero-overlay-end: var(--background);
+        --hero-overlay-start: oklch(23.503% 0.00003 271.152 / 0.3);
+        --hero-overlay-mid: oklch(23.503% 0.00003 271.152 / 0.65);
+        --hero-overlay-end: oklch(23.503% 0.00003 271.152);
     }
 
     .page-hero-content {
@@ -167,5 +167,28 @@ const {
         .page-hero-subtitle {
             font-size: 1rem;
         }
+    }
+
+    /* ===== 深色模式样式（白色文字 + 暖色装饰） ===== */
+    :global(.dark) .page-hero-title {
+        color: var(--foreground);
+    }
+
+    :global(.dark) .page-hero-subtitle {
+        color: var(--text-content-primary);
+    }
+
+    :global(.dark) .page-badge {
+        background: var(--article-content-code-bg);
+        color: var(--page-badge-text);
+        border-color: var(--article-content-pre-border);
+    }
+
+    :global(.dark) .page-badge :global(svg) {
+        color: var(--page-icon);
+    }
+
+    :global(.dark) .page-date {
+        color: var(--text-content-primary);
     }
 </style>

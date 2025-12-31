@@ -108,4 +108,49 @@
             font-size: 1rem;
         }
     }
+
+    /* ===== 深色模式样式（白色文字 + 暖色装饰） ===== */
+    :global(.dark) .about-section {
+        border-bottom-color: var(--article-content-table-border);
+    }
+
+    :global(.dark) .about-section-title {
+        color: var(--foreground);
+    }
+
+    :global(.dark) .about-section-title::before {
+        background: linear-gradient(180deg, var(--page-decorator-start) 0%, var(--page-decorator-end) 100%);
+    }
+
+    :global(.dark) .about-text {
+        color: var(--text-content-primary);
+    }
+
+    :global(.dark) .about-tag {
+        background: var(--article-content-code-bg);
+        border-color: var(--article-content-pre-border);
+        color: var(--text-content-primary);
+    }
+
+    :global(.dark) .about-tag:hover {
+        background: var(--article-header-tag-bg);
+        border-color: var(--article-header-tag-border);
+    }
+
+    /* 彩虹色标签效果 */
+    :global(.dark) .about-tag:nth-child(4n+1) {
+        border-left: 3px solid var(--page-bullet-1);
+    }
+
+    :global(.dark) .about-tag:nth-child(4n+2) {
+        border-left: 3px solid var(--page-bullet-2);
+    }
+
+    :global(.dark) .about-tag:nth-child(4n+3) {
+        border-left: 3px solid var(--page-bullet-3);
+    }
+
+    :global(.dark) .about-tag:nth-child(4n) {
+        border-left: 3px solid var(--page-icon);
+    }
 </style>
