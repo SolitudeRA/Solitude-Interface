@@ -1,0 +1,157 @@
+---
+/**
+ * PageHero - 可复用的页面 Hero 区域组件
+ * 用于 about、contact、privacy-policy 等静态页面
+ */
+
+interface Props {
+    /** 页面标题 */
+    title: string;
+    /** 背景图片 URL */
+    backgroundImage?: string | undefined;
+    /** 副标题/描述（可选） */
+    subtitle?: string;
+    /** 徽章文本（可选） */
+    badgeText?: string;
+    /** 徽章图标（可选，传入 slot） */
+    badgeIcon?: boolean;
+    /** 日期（可选） */
+    date?: string;
+}
+
+const { 
+    title, 
+    backgroundImage, 
+    subtitle,
+    badgeText,
+    badgeIcon = false,
+    date,
+} = Astro.props;
+---
+
+<div class="page-hero" style={backgroundImage ? `--bg-image: url(${backgroundImage})` : ''}>
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+        <h1 class="page-hero-title">{title}</h1>
+        
+        {(badgeText || date) && (
+            <div class="page-hero-meta">
+                {badgeText && (
+                    <span class="page-badge">
+                        {badgeIcon && <slot name="badge-icon" />}
+                        {badgeText}
+                    </span>
+                )}
+                {date && (
+                    <time datetime={date} class="page-date">{date}</time>
+                )}
+            </div>
+        )}
+        
+        {subtitle && (
+            <p class="page-hero-subtitle">{subtitle}</p>
+        )}
+    </div>
+</div>
+
+<style>
+    .page-hero {
+        position: relative;
+        height: 50vh;
+        min-height: 350px;
+        width: 100%;
+        background-image: var(--bg-image, linear-gradient(135deg, #1a1a2e 0%, #16213e 100%));
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 14vh;
+        margin-bottom: -1px;
+    }
+
+    .page-hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            180deg,
+            rgba(38, 38, 38, 0.4) 0%,
+            rgba(38, 38, 38, 0.7) 50%,
+            #262626 95%,
+            #262626 100%
+        );
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+    }
+
+    .page-hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        padding: 0 2rem;
+        max-width: 800px;
+    }
+
+    .page-hero-title {
+        font-size: 4rem;
+        font-weight: 700;
+        color: #F5F5F5;
+        margin-bottom: 1.5rem;
+        letter-spacing: -0.02em;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .page-hero-subtitle {
+        font-size: 1.25rem;
+        color: #D4D4D4;
+        margin-top: 1rem;
+        line-height: 1.6;
+    }
+
+    .page-hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .page-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.375rem 0.875rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        background: rgba(96, 165, 250, 0.15);
+        color: #60A5FA;
+        border-radius: 9999px;
+        border: 1px solid rgba(96, 165, 250, 0.3);
+    }
+
+    .page-badge :global(svg) {
+        width: 1rem;
+        height: 1rem;
+    }
+
+    .page-date {
+        font-size: 1.125rem;
+        color: #D4D4D4;
+    }
+
+    @media (max-width: 768px) {
+        .page-hero {
+            height: 40vh;
+            min-height: 280px;
+        }
+
+        .page-hero-title {
+            font-size: 2.5rem;
+        }
+
+        .page-hero-subtitle {
+            font-size: 1rem;
+        }
+    }
+</style>

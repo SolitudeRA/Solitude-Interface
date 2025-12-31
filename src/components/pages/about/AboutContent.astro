@@ -1,0 +1,110 @@
+---
+/**
+ * AboutContent - 关于页面的内容组件
+ */
+---
+
+<div class="about-content">
+    <section class="about-section">
+        <h2 class="about-section-title">Welcome</h2>
+        <p class="about-text">
+            这是关于页面的内容。在这里你可以了解更多关于我和这个网站的信息。
+        </p>
+    </section>
+
+    <section class="about-section">
+        <h2 class="about-section-title">The Site</h2>
+        <p class="about-text">
+            这个网站是使用 Astro 框架构建的，采用了现代化的设计风格，提供流畅的用户体验。
+        </p>
+    </section>
+
+    <section class="about-section">
+        <h2 class="about-section-title">Interests</h2>
+        <div class="about-tags">
+            <span class="about-tag">Web Development</span>
+            <span class="about-tag">Design</span>
+            <span class="about-tag">Technology</span>
+            <span class="about-tag">Open Source</span>
+        </div>
+    </section>
+</div>
+
+<style>
+    .about-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+        padding-top: 1rem;
+    }
+
+    .about-section {
+        padding-bottom: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .about-section:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .about-section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #F5F5F5;
+        margin-bottom: 1rem;
+        position: relative;
+        padding-left: 1rem;
+    }
+
+    .about-section-title::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.25rem;
+        bottom: 0.25rem;
+        width: 3px;
+        background: linear-gradient(180deg, #60A5FA 0%, #3B82F6 100%);
+        border-radius: 2px;
+    }
+
+    .about-text {
+        color: #D4D4D4;
+        font-size: 1.125rem;
+        line-height: 1.75;
+    }
+
+    .about-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .about-tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        background: rgba(96, 165, 250, 0.1);
+        color: #60A5FA;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(96, 165, 250, 0.2);
+        transition: all 0.2s ease;
+    }
+
+    .about-tag:hover {
+        background: rgba(96, 165, 250, 0.2);
+        border-color: rgba(96, 165, 250, 0.4);
+    }
+
+    @media (max-width: 768px) {
+        .about-section-title {
+            font-size: 1.25rem;
+        }
+
+        .about-text {
+            font-size: 1rem;
+        }
+    }
+</style>

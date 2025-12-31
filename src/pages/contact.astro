@@ -3,7 +3,8 @@ import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
 import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
 import SiteDock from '@components/layout/dock/SiteDock.astro';
-import ContactContent from '../components/contact/ContactContent.astro';
+import PageHero from '@components/layout/PageHero.astro';
+import ContactContent from '@components/pages/contact/ContactContent.astro';
 
 const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
     await initializeSiteData();
@@ -17,22 +18,17 @@ const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
         isFixed={true}
     />
     
-    <!-- 背景图片区域 -->
-    <div class="contact-hero" style={`--bg-image: url(${coverImageUrl})`}>
-        <div class="contact-hero-overlay"></div>
-        <div class="contact-hero-content">
-            <h1 class="contact-hero-title">Contact</h1>
-            <div class="contact-hero-meta">
-                <span class="contact-badge">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                        <polyline points="22,6 12,13 2,6"></polyline>
-                    </svg>
-                    Get in Touch
-                </span>
-            </div>
-        </div>
-    </div>
+    <PageHero 
+        title="Contact" 
+        backgroundImage={coverImageUrl?.toString()}
+        badgeText="Get in Touch"
+        badgeIcon={true}
+    >
+        <svg slot="badge-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+    </PageHero>
     
     <main class="contact-page min-h-screen">
         <div class="contact-content-wrapper mx-auto max-w-4xl px-6 sm:px-8 lg:px-12">
@@ -43,78 +39,6 @@ const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
 </BaseLayout>
 
 <style>
-    .contact-hero {
-        position: relative;
-        height: 50vh;
-        min-height: 350px;
-        width: 100%;
-        background-image: var(--bg-image);
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 14vh;
-        margin-bottom: -1px;
-    }
-
-    .contact-hero-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-            180deg,
-            rgba(38, 38, 38, 0.4) 0%,
-            rgba(38, 38, 38, 0.7) 50%,
-            #262626 95%,
-            #262626 100%
-        );
-        backdrop-filter: blur(2px);
-        -webkit-backdrop-filter: blur(2px);
-    }
-
-    .contact-hero-content {
-        position: relative;
-        z-index: 1;
-        text-align: center;
-        padding: 0 2rem;
-    }
-
-    .contact-hero-title {
-        font-size: 4rem;
-        font-weight: 700;
-        color: #F5F5F5;
-        margin-bottom: 1.5rem;
-        letter-spacing: -0.02em;
-        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .contact-hero-meta {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-    }
-
-    .contact-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.375rem 0.875rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        background: rgba(96, 165, 250, 0.15);
-        color: #60A5FA;
-        border-radius: 9999px;
-        border: 1px solid rgba(96, 165, 250, 0.3);
-    }
-
-    .contact-icon {
-        width: 1rem;
-        height: 1rem;
-    }
-
     .contact-page {
         background-color: #262626;
         position: relative;
@@ -123,16 +47,5 @@ const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
     .contact-content-wrapper {
         padding-top: 3rem;
         padding-bottom: 3rem;
-    }
-
-    @media (max-width: 768px) {
-        .contact-hero {
-            height: 40vh;
-            min-height: 280px;
-        }
-
-        .contact-hero-title {
-            font-size: 2.5rem;
-        }
     }
 </style>
