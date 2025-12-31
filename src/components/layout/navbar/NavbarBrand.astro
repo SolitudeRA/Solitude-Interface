@@ -11,7 +11,11 @@ const { logoImageUrl, siteTitle, siteSubTitle } = Astro.props;
 const hasLogo = logoImageUrl && logoImageUrl.length > 0;
 ---
 
-<div class="flex h-full items-center space-x-10 px-10">
+<div class:list={[
+    'flex h-full items-center',
+    'space-x-4 sm:space-x-6 md:space-x-8 lg:space-x-10',
+    'px-4 sm:px-6 md:px-8 lg:px-10',
+]}>
     {
         hasLogo && (
             <Image
@@ -19,17 +23,24 @@ const hasLogo = logoImageUrl && logoImageUrl.length > 0;
                 height={400}
                 width={400}
                 alt="brand-logo"
-                class="h-1/2 min-h-25 w-auto rounded-[18%]"
+                class:list={[
+                    'h-2/5 sm:h-[45%] md:h-1/2',
+                    'min-h-10 sm:min-h-16 md:min-h-20 lg:min-h-25',
+                    'w-auto rounded-[18%]',
+                ]}
             />
         )
     }
-    <div class="text-color-ui grid grid-cols-1 gap-3">
-        <a class="site-title text-4xl font-bold subpixel-antialiased"
-            >{siteTitle}</a
-        >
-        <a class="site-subtitle text-xl font-medium subpixel-antialiased"
-            >{siteSubTitle}</a
-        >
+    <div class="text-color-ui grid grid-cols-1 gap-1 sm:gap-2 md:gap-3">
+        <a class:list={[
+            'site-title font-bold subpixel-antialiased',
+            'text-xl sm:text-2xl md:text-3xl lg:text-4xl',
+        ]}>{siteTitle}</a>
+        <a class:list={[
+            'site-subtitle font-medium subpixel-antialiased',
+            'text-xs sm:text-sm md:text-base lg:text-xl',
+            'hidden sm:block',
+        ]}>{siteSubTitle}</a>
     </div>
 </div>
 

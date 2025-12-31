@@ -1,0 +1,130 @@
+/* 文章头部元信息样式 */
+@layer components {
+    .solitude-article-meta {
+        height: 400px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+        .solitude-article-meta {
+            height: 550px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .solitude-article-meta {
+            height: 700px;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .solitude-article-meta {
+            height: 900px;
+        }
+    }
+
+    .solitude-article-meta::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            180deg,
+            var(--post-view-card-overlay-start) 0%,
+            var(--post-view-card-overlay-mid) 50%,
+            var(--post-view-card-overlay-end) 100%
+        );
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        z-index: 0;
+    }
+
+    .solitude-article-meta > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .solitude-article-meta-primary-tags {
+        height: 200px;
+        width: 100%;
+        padding-top: 40px;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+        .solitude-article-meta-primary-tags {
+            height: 250px;
+            padding-top: 50px;
+            padding-left: 3rem;
+            padding-right: 3rem;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .solitude-article-meta-primary-tags {
+            height: 300px;
+            padding-top: 60px;
+            padding-left: 4.5rem;
+            padding-right: 4.5rem;
+        }
+    }
+
+    .solitude-article-meta-other-tags {
+        height: 200px;
+        width: 100%;
+        padding-bottom: 35px;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+        .solitude-article-meta-other-tags {
+            height: 250px;
+            padding-bottom: 45px;
+            padding-left: 3rem;
+            padding-right: 3rem;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .solitude-article-meta-other-tags {
+            height: 300px;
+            padding-bottom: 55px;
+            padding-left: 4.5rem;
+            padding-right: 4.5rem;
+        }
+    }
+
+    .solitude-article-meta h1 {
+        font-size: 1.75rem;
+        font-weight: bold;
+        text-align: center;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    @media (min-width: 640px) {
+        .solitude-article-meta h1 {
+            font-size: 2rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .solitude-article-meta h1 {
+            font-size: 2.3rem;
+            padding-left: 4rem;
+            padding-right: 4rem;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .solitude-article-meta h1 {
+            font-size: 2.7rem;
+            padding-left: 120px;
+            padding-right: 120px;
+        }
+    }
+}

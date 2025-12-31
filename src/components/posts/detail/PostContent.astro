@@ -17,16 +17,16 @@ const { title, feature_image, primary_tag, tags, published_at, html } =
 const featureImageUrl = feature_image?.toString() || '';
 ---
 
-<div class="solitude-article-container grid grid-cols-12">
-    <!-- 左侧 TOC 区域 -->
-    <div class="solitude-article-rail col-span-2 flex">
+<div class="solitude-article-container grid grid-cols-1 lg:grid-cols-12">
+    <!-- 左侧 TOC 区域 - 在移动端和平板隐藏 -->
+    <div class="solitude-article-rail hidden lg:col-span-2 lg:flex">
         <div class="toc-wrapper w-full">
             <TableOfContents client:idle />
         </div>
     </div>
     
-    <!-- 中间文章主体 -->
-    <div class="solitude-article-body col-span-8 pb-[200px]">
+    <!-- 中间文章主体 - 移动端全宽，桌面端占8列 -->
+    <div class="solitude-article-body col-span-1 lg:col-span-8 pb-[100px] md:pb-[150px] lg:pb-[200px]">
         <div class="solitude-article-meta">
             <PostHeader
                 title={title}
@@ -40,8 +40,8 @@ const featureImageUrl = feature_image?.toString() || '';
         </div>
     </div>
     
-    <!-- 右侧空白区域 -->
-    <div class="solitude-article-rail col-span-2"></div>
+    <!-- 右侧空白区域 - 在移动端和平板隐藏 -->
+    <div class="solitude-article-rail hidden lg:col-span-2 lg:block"></div>
 </div>
 
 <style define:vars={{ featureImageUrl: featureImageUrl ? `url(${featureImageUrl})` : 'none' }}>

@@ -22,7 +22,10 @@ const posts = await getPosts();
     />
     <PostViewContainer posts={posts} />
     <Dock isFixed={true}>
-        <DockTimeline posts={posts} />
+        <!-- Timeline 在移动端隐藏 -->
+        <div class="hidden lg:block">
+            <DockTimeline posts={posts} />
+        </div>
         <DockNav />
         <DockSocial />
     </Dock>

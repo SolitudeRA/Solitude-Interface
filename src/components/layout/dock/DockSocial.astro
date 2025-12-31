@@ -1,5 +1,6 @@
 ---
 import { Avatar } from '@components/common/avatar';
+import DockSocialMobile from './DockSocialMobile.tsx';
 import {
     FaGithub,
     FaSquareXTwitter,
@@ -10,36 +11,58 @@ import {
 import solitudeAvatar from '@assets/avatar.jpg';
 ---
 
-<div class="text-color-ui flex min-h-[5em] items-center justify-end">
-    <div class="mr-14 flex items-center space-x-12">
-        <span>
-            <a href="https://github.com/SolitudeRA" target="_blank">
-                <FaGithub className="h-8 w-8" />
-            </a>
-        </span>
-        <span>
-            <a href="https://x.com/SolitudeRA" target="_blank">
-                <FaSquareXTwitter className="h-8 w-8" />
-            </a>
-        </span>
-        <span>
-            <a href="https://steamcommunity.com/id/SolitudeRA/" target="_blank">
-                <FaSteam className="h-8 w-8" />
-            </a>
-        </span>
-        <span>
-            <a href="https://open.spotify.com/user/29a85ixn15w4zcbmb0lkix9h3?si=1c70dc8fa5dc418c" target="_blank">
-                <FaSpotify className="h-8 w-8" />
-            </a>
-        </span>
-        <span>
-            <a href="https://space.bilibili.com/1724972" target="_blank">
-                <FaBilibili className="h-8 w-8" />
-            </a>
-        </span>
+<div class:list={[
+    'text-color-ui flex items-center',
+    'min-h-[4em] 2xl:min-h-[5em]',
+    'justify-center 2xl:justify-end',
+]}>
+    <!-- 移动端、平板、小桌面：社交链接汉堡菜单（<1536px） -->
+    <div class="flex 2xl:hidden items-center gap-3 sm:gap-4">
+        <DockSocialMobile client:load />
+        <a href="/about" class="block transition-transform hover:scale-105">
+            <Avatar
+                className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 shadow-xl"
+                src={solitudeAvatar.src}
+                showFallback={true}
+                client:visible
+            />
+        </a>
     </div>
-    <div>
-        <a href="/about">
+
+    <!-- 大屏桌面端：完整社交图标展示（≥1536px） -->
+    <div class="hidden 2xl:flex items-center">
+        <div class:list={[
+            'flex items-center',
+            'mr-12 3xl:mr-14',
+            'space-x-10 3xl:space-x-12',
+        ]}>
+            <span>
+                <a href="https://github.com/SolitudeRA" target="_blank" class="block transition-transform hover:scale-110">
+                    <FaGithub className="h-8 w-8" />
+                </a>
+            </span>
+            <span>
+                <a href="https://x.com/SolitudeRA" target="_blank" class="block transition-transform hover:scale-110">
+                    <FaSquareXTwitter className="h-8 w-8" />
+                </a>
+            </span>
+            <span>
+                <a href="https://steamcommunity.com/id/SolitudeRA/" target="_blank" class="block transition-transform hover:scale-110">
+                    <FaSteam className="h-8 w-8" />
+                </a>
+            </span>
+            <span>
+                <a href="https://open.spotify.com/user/29a85ixn15w4zcbmb0lkix9h3?si=1c70dc8fa5dc418c" target="_blank" class="block transition-transform hover:scale-110">
+                    <FaSpotify className="h-8 w-8" />
+                </a>
+            </span>
+            <span>
+                <a href="https://space.bilibili.com/1724972" target="_blank" class="block transition-transform hover:scale-110">
+                    <FaBilibili className="h-8 w-8" />
+                </a>
+            </span>
+        </div>
+        <a href="/about" class="block transition-transform hover:scale-105">
             <Avatar
                 className="h-20 w-20 shadow-xl"
                 src={solitudeAvatar.src}
@@ -47,5 +70,5 @@ import solitudeAvatar from '@assets/avatar.jpg';
                 client:visible
             />
         </a>
-    </div> 
+    </div>
 </div>

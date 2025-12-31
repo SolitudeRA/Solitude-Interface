@@ -15,16 +15,21 @@ const { isFixed = false, layout = 'default' } = Astro.props;
     {
         layout === 'home' ? (
             <>
-                <div />
+                {/* 桌面端三栏布局 */}
+                <div class="hidden md:block" />
                 <DockNav />
                 <DockSocial />
             </>
         ) : (
             <>
+                {/* 桌面端三栏布局 */}
                 <DockNav />
-                <div />
+                <div class="hidden md:block" />
                 <DockSocial />
             </>
         )
     }
 </Dock>
+
+{/* 移动端底部安全区域占位 */}
+<div class="h-safe-area-inset-bottom md:hidden" />

@@ -1,0 +1,30 @@
+/* 文章布局样式 - 容器、侧边栏、主体 */
+@layer components {
+    .solitude-article-container {
+        width: 100%;
+        margin-top: 10vh;
+    }
+
+    @media (min-width: 768px) {
+        .solitude-article-container {
+            margin-top: 12vh;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .solitude-article-container {
+            margin-top: 15vh;
+        }
+    }
+
+    /* 侧边栏样式 */
+    .solitude-article-rail {
+        background-color: var(--article-rail-bg);
+        opacity: 1;
+    }
+
+    /* 文章主体区域 */
+    .solitude-article-body {
+        background-color: var(--article-body-bg);
+    }
+}

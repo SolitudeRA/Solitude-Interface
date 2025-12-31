@@ -2,6 +2,8 @@
 
 @theme {
     --font-noto-sans: 'Noto Sans SC Variable';
+    /* 自定义断点 - 4K显示器支持 */
+    --breakpoint-3xl: 2048px;
 }
 
 @theme inline {

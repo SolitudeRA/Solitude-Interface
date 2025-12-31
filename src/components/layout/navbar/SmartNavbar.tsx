@@ -57,7 +57,9 @@ export default function SmartNavbar({ children, isFixed = false }: SmartNavbarPr
 
     const navClasses = [
         'smart-navbar',
-        'h-[14vh]',
+        // 响应式高度：移动端较小，桌面端较大
+        'h-[12vh] sm:h-[13vh] md:h-[14vh]',
+        'min-h-[60px] sm:min-h-[70px] md:min-h-[80px]',
         'w-full',
         'transition-all',
         'duration-300',
@@ -70,7 +72,7 @@ export default function SmartNavbar({ children, isFixed = false }: SmartNavbarPr
 
     return (
         <nav className={navClasses}>
-            <div className="flex h-full">
+            <div className="flex h-full w-full items-center justify-between">
                 {children}
             </div>
         </nav>

@@ -1,28 +1,44 @@
 ---
-
+import DockNavMobile from './DockNavMobile.tsx';
 ---
 
-<div class="grid justify-items-center">
+<!-- 移动端汉堡菜单 - 小于768px -->
+<div class="flex justify-center md:hidden">
+    <DockNavMobile client:load />
+</div>
+
+<!-- 桌面端导航栏 - 768px及以上 -->
+<div class="hidden md:grid md:justify-items-center">
     <div
-        class="text-color-ui flex h-14 min-h-12.5 w-180 items-center justify-center space-x-14 rounded-[2em] bg-gray-100 opacity-[0.85] shadow-xl dark:bg-zinc-800"
+        class:list={[
+            'text-color-ui flex items-center justify-center rounded-[2em]',
+            'bg-gray-100 opacity-[0.85] shadow-xl dark:bg-zinc-800',
+            'h-10 md:h-11 lg:h-12 xl:h-14',
+            'min-h-[2.5rem] md:min-h-[2.75rem] lg:min-h-[3rem]',
+            'w-auto max-w-full',
+            'px-3 md:px-4 lg:px-5 xl:px-6 2xl:px-8',
+            'space-x-2 md:space-x-3 lg:space-x-5 xl:space-x-8 2xl:space-x-10 3xl:space-x-12',
+        ]}
     >
         <div>
-            <a href="/" class="font-medium">Home</a>
+            <a href="/" class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Home</a>
         </div>
         <div>
-            <a href="/post-view" class="font-medium">Posts</a>
+            <a href="/post-view" class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Posts</a>
         </div>
         <div>
-            <a href="/about" class="font-medium">About Me</a>
+            <a href="/about" class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">About</a>
         </div>
         <div>
-            <a href="/contact" class="font-medium">Contact</a>
+            <a href="/contact" class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Contact</a>
         </div>
-        <div>
-            <a href="" class="font-medium">RSS</a>
+        <!-- RSS 在平板竖屏隐藏，横屏及以上显示 -->
+        <div class="hidden lg:block">
+            <a href="" class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">RSS</a>
         </div>
-        <div>
-            <a href="/privacy-policy" class="font-medium">Privacy Policy</a>
+        <!-- Privacy Policy 仅在大屏显示 -->
+        <div class="hidden xl:block">
+            <a href="/privacy-policy" class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Privacy</a>
         </div>
     </div>
 </div>
