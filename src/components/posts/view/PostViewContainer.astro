@@ -1,11 +1,11 @@
 ---
 import type { Post } from '@api/ghost/types';
 import { PostType } from '@api/ghost/types';
-import PostCardDefault from './Default.astro';
-import PostCardArticle from './Article.astro';
-import PostCardMusic from './Music.astro';
-import PostCardVideo from './Video.astro';
-import PostCardGallery from './Gallery.astro';
+import DefaultCard from './cards/DefaultCard.astro';
+import ArticleCard from './cards/ArticleCard.astro';
+import MusicCard from './cards/MusicCard.astro';
+import VideoCard from './cards/VideoCard.astro';
+import GalleryCard from './cards/GalleryCard.astro';
 import PostViewScrollContainer from './PostViewScrollContainer';
 
 interface Props {
@@ -24,17 +24,17 @@ const postDates = posts.map((post) => post.published_at);
             const PostCardComponent = (() => {
                 switch (post.post_type) {
                     case PostType.DEFAULT:
-                        return PostCardDefault;
+                        return DefaultCard;
                     case PostType.ARTICLE:
-                        return PostCardArticle;
+                        return ArticleCard;
                     case PostType.MUSIC:
-                        return PostCardMusic;
+                        return MusicCard;
                     case PostType.VIDEO:
-                        return PostCardVideo;
+                        return VideoCard;
                     case PostType.GALLERY:
-                        return PostCardGallery;
+                        return GalleryCard;
                     default:
-                        return PostCardDefault;
+                        return DefaultCard;
                 }
             })();
 

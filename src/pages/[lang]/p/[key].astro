@@ -8,8 +8,8 @@ import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
 import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
 import SiteDock from '@components/layout/dock/SiteDock.astro';
-import PostsContent from '@components/posts/home/PostsContent.astro';
-import LanguageSwitcher from '@components/i18n/LanguageSwitcher.astro';
+import PostContent from '@components/posts/detail/PostContent.astro';
+import PostLanguageSwitcher from '@components/i18n/PostLanguageSwitcher.astro';
 import FallbackNotice from '@components/i18n/FallbackNotice.astro';
 import {
     LOCALES,
@@ -97,14 +97,14 @@ const fallbackMessage = isFallback
     }
 
     <div class="container mx-auto mt-20 px-4">
-        <LanguageSwitcher
+        <PostLanguageSwitcher
             currentLocale={locale}
             i18nKey={key}
             variants={variants}
         />
     </div>
 
-    <PostsContent
+    <PostContent
         title={post.title}
         feature_image={post.feature_image}
         primary_tag={post.primary_tag}

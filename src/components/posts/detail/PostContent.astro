@@ -1,5 +1,5 @@
 ---
-import PostMeta from './PostMeta.astro';
+import PostHeader from './PostHeader.astro';
 import TableOfContents from './TableOfContents.tsx';
 import type { PostTag } from '@api/ghost/types';
 
@@ -28,7 +28,7 @@ const featureImageUrl = feature_image?.toString() || '';
     <!-- 中间文章主体 -->
     <div class="solitude-article-body col-span-8 pb-[200px]">
         <div class="solitude-article-meta">
-            <PostMeta
+            <PostHeader
                 title={title}
                 primary_tag={primary_tag}
                 tags={tags}
