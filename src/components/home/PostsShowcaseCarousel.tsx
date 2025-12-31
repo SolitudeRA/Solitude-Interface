@@ -98,24 +98,28 @@ function ShowcaseCard({
                 )}
             </div>
 
-            {/* 渐变遮罩 - 底部信息区 */}
+            {/* 渐变遮罩 - 使用首页卡片专用的 CSS 变量 */}
             <div
-                className={cn(
-                    'absolute inset-0',
-                    'bg-gradient-to-t from-black/80 via-black/30 to-transparent',
-                    'dark:from-black/90 dark:via-black/40',
-                )}
+                className="absolute inset-0 rounded-xl"
+                style={{
+                    background: `linear-gradient(
+                        to top,
+                        var(--home-card-overlay-end) 0%,
+                        var(--home-card-overlay-mid) 40%,
+                        var(--home-card-overlay-start) 100%
+                    )`,
+                }}
             />
-
-            {/* 顶部阴影渐变（增强可读性） */}
-            <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/30 to-transparent" />
 
             {/* 内容区域 */}
             <div className="absolute inset-0 flex flex-col justify-end p-4">
                 {/* 分类标签 */}
                 {category && (
                     <div className="mb-2">
-                        <span className="text-xs font-medium tracking-wider text-white/70 uppercase">
+                        <span 
+                            className="text-xs font-medium tracking-wider uppercase"
+                            style={{ color: 'var(--post-view-card-meta)' }}
+                        >
                             {category}
                         </span>
                     </div>
@@ -129,7 +133,7 @@ function ShowcaseCard({
                                 key={tag.id}
                                 variant="flat"
                                 colorScheme="primary"
-                                className="bg-white/20 px-2 py-0.5 text-[10px] text-white backdrop-blur-sm"
+                                className="px-2 py-0.5 text-[10px] backdrop-blur-sm"
                             >
                                 {tag.name}
                             </Chip>
@@ -140,10 +144,11 @@ function ShowcaseCard({
                 {/* 标题 */}
                 <h3
                     className={cn(
-                        'text-lg leading-tight font-bold text-white',
+                        'text-lg leading-tight font-bold',
                         'line-clamp-2',
-                        'transition-colors group-hover:text-white/90',
+                        'transition-colors',
                     )}
+                    style={{ color: 'var(--post-view-card-title)' }}
                 >
                     {post.title}
                 </h3>

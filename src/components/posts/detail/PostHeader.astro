@@ -79,52 +79,54 @@ const publishDate = new Date(published_at);
         padding-bottom: 2rem;
     }
 
-    /* 标题样式 */
+    /* 标题样式 - 使用 CSS 变量 */
     .article-title {
-        color: #F5F5F5;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        color: var(--article-header-title);
+        text-shadow: 0 1px 3px rgba(255, 255, 255, 0.2);
         letter-spacing: -0.02em;
         line-height: 1.2;
         max-width: 900px;
     }
 
-    /* 主标签样式 */
+    :global(.dark) .article-title {
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    /* 主标签样式 - 使用 CSS 变量 */
     .primary-tag {
-        background: rgba(96, 165, 250, 0.2);
-        color: #93C5FD;
-        border: 1px solid rgba(96, 165, 250, 0.3);
+        background: var(--article-header-tag-bg);
+        color: var(--article-header-tag-text);
+        border: 1px solid var(--article-header-tag-border);
         backdrop-filter: blur(4px);
         -webkit-backdrop-filter: blur(4px);
         transition: all 0.2s ease;
     }
 
     .primary-tag:hover {
-        background: rgba(96, 165, 250, 0.3);
-        border-color: rgba(96, 165, 250, 0.5);
+        filter: brightness(1.1);
     }
 
-    /* 发布日期样式 */
+    /* 发布日期样式 - 使用 CSS 变量 */
     .publish-date {
-        color: #D4D4D4;
+        color: var(--article-header-date);
     }
 
     .publish-date svg {
-        color: #9CA3AF;
+        color: var(--article-header-date);
+        opacity: 0.7;
     }
 
-    /* 标签样式 */
+    /* 标签样式 - 使用 CSS 变量 */
     .tag-item {
-        background: rgba(255, 255, 255, 0.08);
-        color: #A8A8A8;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: var(--article-header-secondary-tag-bg);
+        color: var(--article-header-secondary-tag-text);
+        border: 1px solid var(--article-header-secondary-tag-border);
         backdrop-filter: blur(4px);
         -webkit-backdrop-filter: blur(4px);
         transition: all 0.2s ease;
     }
 
     .tag-item:hover {
-        background: rgba(255, 255, 255, 0.12);
-        color: #D4D4D4;
-        border-color: rgba(255, 255, 255, 0.2);
+        filter: brightness(1.1);
     }
 </style>

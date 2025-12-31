@@ -18,13 +18,7 @@ const {
     alternateLinks = [],
 } = Astro.props;
 
-const coverImageUrlStr = coverImageUrl?.toString() || '';
-const coverImageLightUrl = coverImageUrlStr
-    ? `linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),url(${coverImageUrlStr})`
-    : 'linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55))';
-const coverImageDarkUrl = coverImageUrlStr
-    ? `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url(${coverImageUrlStr})`
-    : 'linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55))';
+const coverImageUrlStr = coverImageUrl ? `url(${coverImageUrl.toString()})` : 'none';
 ---
 
 <!doctype html>
@@ -54,7 +48,7 @@ const coverImageDarkUrl = coverImageUrlStr
     </body>
 </html>
 
-<style define:vars={{ coverImageLightUrl, coverImageDarkUrl }}>
+<style define:vars={{ coverImageUrlStr }}>
     .solitude-body {
         top: 0;
         left: 0;
@@ -63,11 +57,16 @@ const coverImageDarkUrl = coverImageUrlStr
         height: 100vh;
         width: 100vw;
         background-size: cover;
-        background-image: var(--coverImageLightUrl);
+        background-image: var(--coverImageUrlStr);
     }
 
-    :global(.dark) .solitude-body {
-        background-image: var(--coverImageDarkUrl);
+    /* 遮罩层使用伪元素，颜色从 theme.css 动态加载 */
+    .solitude-body::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: var(--site-bg-overlay);
+        pointer-events: none;
     }
 </style>
 

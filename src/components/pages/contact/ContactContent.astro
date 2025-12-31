@@ -84,7 +84,7 @@
 
     .contact-section {
         padding-bottom: 2rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid var(--border);
     }
 
     .contact-section:last-child {
@@ -98,36 +98,36 @@
         gap: 0.75rem;
         font-size: 1.5rem;
         font-weight: 600;
-        color: #F5F5F5;
+        color: var(--foreground);
         margin-bottom: 1.25rem;
     }
 
     .section-icon {
         width: 1.5rem;
         height: 1.5rem;
-        color: #60A5FA;
+        color: var(--chart-1);
     }
 
     .contact-text {
-        color: #D4D4D4;
+        color: var(--text-content-primary);
         font-size: 1.125rem;
         line-height: 1.75;
     }
 
     .contact-link {
-        color: #60A5FA;
+        color: var(--chart-1);
         text-decoration: none;
         transition: all 0.2s ease;
         padding: 0.5rem 1rem;
-        background: rgba(96, 165, 250, 0.1);
+        background: var(--accent);
         border-radius: 0.5rem;
-        border: 1px solid rgba(96, 165, 250, 0.2);
+        border: 1px solid var(--border);
         display: inline-block;
     }
 
     .contact-link:hover {
-        background: rgba(96, 165, 250, 0.2);
-        border-color: rgba(96, 165, 250, 0.4);
+        background: var(--secondary);
+        border-color: var(--ring);
     }
 
     .social-links {
@@ -141,16 +141,16 @@
         align-items: center;
         gap: 1rem;
         padding: 1rem 1.25rem;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: var(--card);
+        border: 1px solid var(--border);
         border-radius: 0.75rem;
         text-decoration: none;
         transition: all 0.2s ease;
     }
 
     .social-card:hover {
-        background: rgba(255, 255, 255, 0.06);
-        border-color: rgba(255, 255, 255, 0.15);
+        background: var(--accent);
+        border-color: var(--ring);
         transform: translateX(4px);
     }
 
@@ -165,8 +165,8 @@
     }
 
     .social-icon-wrapper.github {
-        background: rgba(255, 255, 255, 0.1);
-        color: #F5F5F5;
+        background: var(--muted);
+        color: var(--foreground);
     }
 
     .social-icon-wrapper.twitter {
@@ -188,23 +188,23 @@
     .social-name {
         font-size: 1rem;
         font-weight: 600;
-        color: #F5F5F5;
+        color: var(--foreground);
     }
 
     .social-handle {
         font-size: 0.875rem;
-        color: #A3A3A3;
+        color: var(--text-content-secondary);
     }
 
     .arrow-icon {
         width: 1.25rem;
         height: 1.25rem;
-        color: #737373;
+        color: var(--muted-foreground);
         transition: all 0.2s ease;
     }
 
     .social-card:hover .arrow-icon {
-        color: #60A5FA;
+        color: var(--chart-1);
         transform: translateX(4px);
     }
 

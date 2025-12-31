@@ -265,47 +265,47 @@ export default function PostViewScrollContainer({
         >
             {/* 滚动区域容器 */}
             <div className="relative h-[75vh]">
-                {/* 左侧渐隐遮罩 */}
+                {/* 左侧渐隐遮罩 - 使用主题配色 */}
                 <AnimatePresence>
                     {canScrollLeft && (
                         <motion.div
                             initial={{ opacity: 0 }}
-                            animate={{ opacity: 0.9 }}
+                            animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
+                            transition={{ duration: 0.25 }}
                             className={cn(
                                 'pointer-events-none absolute top-0 left-0 z-10',
-                                'h-full w-24',
-                                'from-background via-background/40 bg-gradient-to-r to-transparent',
+                                'h-full w-32',
                             )}
                             style={{
+                                background: 'linear-gradient(to right, var(--post-view-scroll-mask-start) 0%, var(--post-view-scroll-mask-end) 100%)',
                                 maskImage:
-                                    'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+                                    'linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)',
                                 WebkitMaskImage:
-                                    'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+                                    'linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)',
                             }}
                         />
                     )}
                 </AnimatePresence>
 
-                {/* 右侧渐隐遮罩 */}
+                {/* 右侧渐隐遮罩 - 使用主题配色 */}
                 <AnimatePresence>
                     {canScrollRight && (
                         <motion.div
                             initial={{ opacity: 0 }}
-                            animate={{ opacity: 0.9 }}
+                            animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
+                            transition={{ duration: 0.25 }}
                             className={cn(
                                 'pointer-events-none absolute top-0 right-0 z-10',
-                                'h-full w-24',
-                                'from-background via-background/40 bg-gradient-to-l to-transparent',
+                                'h-full w-32',
                             )}
                             style={{
+                                background: 'linear-gradient(to left, var(--post-view-scroll-mask-start) 0%, var(--post-view-scroll-mask-end) 100%)',
                                 maskImage:
-                                    'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+                                    'linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)',
                                 WebkitMaskImage:
-                                    'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
+                                    'linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)',
                             }}
                         />
                     )}

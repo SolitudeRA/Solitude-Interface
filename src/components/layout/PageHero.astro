@@ -60,7 +60,7 @@ const {
         height: 50vh;
         min-height: 350px;
         width: 100%;
-        background-image: var(--bg-image, linear-gradient(135deg, #1a1a2e 0%, #16213e 100%));
+        background-image: var(--bg-image, linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%));
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
@@ -76,13 +76,27 @@ const {
         inset: 0;
         background: linear-gradient(
             180deg,
-            rgba(38, 38, 38, 0.4) 0%,
-            rgba(38, 38, 38, 0.7) 50%,
-            #262626 95%,
-            #262626 100%
+            var(--hero-overlay-start) 0%,
+            var(--hero-overlay-mid) 50%,
+            var(--hero-overlay-end) 95%,
+            var(--hero-overlay-end) 100%
         );
         backdrop-filter: blur(2px);
         -webkit-backdrop-filter: blur(2px);
+    }
+
+    /* 浅色模式 Hero 覆盖层 */
+    :root {
+        --hero-overlay-start: oklch(0.95 0.005 264.665 / 0.5);
+        --hero-overlay-mid: oklch(0.92 0.008 264.665 / 0.7);
+        --hero-overlay-end: var(--background);
+    }
+
+    /* 暗色模式 Hero 覆盖层 */
+    :global(.dark) {
+        --hero-overlay-start: oklch(0.16 0.025 264.665 / 0.4);
+        --hero-overlay-mid: oklch(0.16 0.025 264.665 / 0.7);
+        --hero-overlay-end: var(--background);
     }
 
     .page-hero-content {
@@ -96,15 +110,15 @@ const {
     .page-hero-title {
         font-size: 4rem;
         font-weight: 700;
-        color: #F5F5F5;
+        color: var(--foreground);
         margin-bottom: 1.5rem;
         letter-spacing: -0.02em;
-        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        text-shadow: 0 4px 20px var(--post-view-card-shadow);
     }
 
     .page-hero-subtitle {
         font-size: 1.25rem;
-        color: #D4D4D4;
+        color: var(--text-content-primary);
         margin-top: 1rem;
         line-height: 1.6;
     }
@@ -124,10 +138,10 @@ const {
         padding: 0.375rem 0.875rem;
         font-size: 0.875rem;
         font-weight: 500;
-        background: rgba(96, 165, 250, 0.15);
-        color: #60A5FA;
+        background: var(--accent);
+        color: var(--chart-1);
         border-radius: 9999px;
-        border: 1px solid rgba(96, 165, 250, 0.3);
+        border: 1px solid var(--border);
     }
 
     .page-badge :global(svg) {
@@ -137,7 +151,7 @@ const {
 
     .page-date {
         font-size: 1.125rem;
-        color: #D4D4D4;
+        color: var(--text-content-primary);
     }
 
     @media (max-width: 768px) {

@@ -11,56 +11,40 @@
     /* 网站标题和副标题 */
     --text-site-title: oklch(0.13 0.028 261.692);
     --text-site-subtitle: oklch(0.4 0.02 261.692);
-    
+
     /* UI 文本（导航、按钮等） */
     --text-ui-primary: oklch(0.15 0.028 261.692);
     --text-ui-secondary: oklch(0.45 0.02 261.692);
-    
+
     /* 内容文本（正文、描述等） */
     --text-content-primary: oklch(0.2 0.028 261.692);
     --text-content-secondary: oklch(0.45 0.02 261.692);
-    
-    /* 标签文本 */
-    --text-tag-primary: oklch(0.985 0.002 247.839);
-    --text-tag-secondary: oklch(0.985 0.002 247.839);
-    --text-tag-alt: oklch(0.13 0.028 261.692);
-
-    /* ===== 背景颜色 ===== */
-    /* 卡片背景 */
-    --background-index-card-header: oklch(0.21 0.034 264.665);
-    --background-index-card-footer: oklch(0.25 0.034 264.665);
-    
-    /* 标签背景 */
-    --background-tag-primary: oklch(0.488 0.243 264.376);
-    --background-tag-secondary: oklch(0.398 0.07 227.392);
-    --background-tag-alt: oklch(0.928 0.006 264.531);
-    --background-tag-test: oklch(0.21 0.034 264.665);
 
     /* ===== 语义颜色（shadcn/ui 兼容） ===== */
-    --background: oklch(99.405% 0.00011 271.152);
+    --background: oklch(0.88 0.005 264.665);
     --foreground: oklch(0.13 0.028 261.692);
-    
+
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.13 0.028 261.692);
-    
+
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.13 0.028 261.692);
-    
+
     --primary: oklch(0.21 0.034 264.665);
     --primary-foreground: oklch(0.985 0.002 247.839);
-    
+
     --secondary: oklch(0.967 0.003 264.542);
     --secondary-foreground: oklch(0.21 0.034 264.665);
-    
+
     --muted: oklch(0.967 0.003 264.542);
     --muted-foreground: oklch(89.745% 0.00724 268.586);
-    
+
     --accent: oklch(0.967 0.003 264.542);
     --accent-foreground: oklch(0.21 0.034 264.665);
-    
+
     --destructive: oklch(0.577 0.245 27.325);
     --destructive-foreground: oklch(0.985 0.002 247.839);
-    
+
     --border: oklch(0.928 0.006 264.531);
     --input: oklch(0.928 0.006 264.531);
     --ring: oklch(0.707 0.022 261.325);
@@ -81,6 +65,80 @@
     --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
     --sidebar-border: oklch(0.928 0.006 264.531);
     --sidebar-ring: oklch(0.707 0.022 261.325);
+
+    /* ===== 网站背景遮罩 ===== */
+    --site-bg-overlay: rgba(180, 180, 185, 0.65);
+
+    /* ===== 首页文章卡片配色 ===== */
+    --home-card-overlay-start: oklch(0.98 0 0 / 0.55);
+    --home-card-overlay-mid: oklch(0.96 0 0 / 0.50);
+    --home-card-overlay-end: oklch(0.94 0 0 / 0.45);
+
+    /* ===== 文章详情页配色 ===== */
+    --article-header-title: oklch(0.18 0.025 264.665);
+    --article-header-date: oklch(0.35 0.02 264.665);
+    --article-header-tag-bg: oklch(0.5 0.2 264.376 / 0.2);
+    --article-header-tag-text: oklch(0.45 0.15 264.376);
+    --article-header-tag-border: oklch(0.5 0.2 264.376 / 0.35);
+    --article-header-secondary-tag-bg: oklch(0.5 0.02 264.665 / 0.15);
+    --article-header-secondary-tag-text: oklch(0.4 0.015 264.665);
+    --article-header-secondary-tag-border: oklch(0.5 0.02 264.665 / 0.2);
+
+    /* ===== 文章内容配色 ===== */
+    --article-content-h1: oklch(0.15 0.025 264.665);
+    --article-content-h2: oklch(0.18 0.025 264.665);
+    --article-content-h3: oklch(0.22 0.02 264.665);
+    --article-content-h4: oklch(0.28 0.02 264.665);
+    --article-content-h5: oklch(0.35 0.015 264.665);
+    --article-content-h6: oklch(0.42 0.015 264.665);
+    --article-content-text: oklch(0.28 0.02 264.665);
+    --article-content-strong: oklch(0.15 0.025 264.665);
+    --article-content-em: oklch(0.22 0.02 264.665);
+    --article-content-link: oklch(0.45 0.2 264.376);
+    --article-content-link-hover: oklch(0.55 0.22 264.376);
+    --article-content-code: oklch(0.5 0.2 330);
+    --article-content-code-bg: oklch(0.92 0.01 264.665);
+    --article-content-pre-bg: oklch(0.95 0.005 264.665);
+    --article-content-pre-border: oklch(0.88 0.01 264.665);
+    --article-content-blockquote-bg: oklch(0.55 0.2 300 / 0.1);
+    --article-content-blockquote-text: oklch(0.4 0.15 300);
+    --article-content-blockquote-border: oklch(0.55 0.2 300);
+    --article-content-table-header-bg: oklch(0.92 0.01 264.665);
+    --article-content-table-border: oklch(0.88 0.01 264.665);
+    --article-body-bg: oklch(0.96 0.005 264.665);
+    --article-rail-bg: oklch(0.92 0.008 264.665);
+
+    /* ===== TOC 配色 ===== */
+    --toc-container-bg: oklch(0.96 0.005 264.665 / 0.9);
+    --toc-border: oklch(0.85 0.01 264.665);
+    --toc-header: oklch(0.15 0.025 264.665);
+    --toc-link: oklch(0.45 0.015 264.665);
+    --toc-link-hover: oklch(0.28 0.02 264.665);
+    --toc-link-active: oklch(0.45 0.2 264.376);
+    --toc-link-active-bg: oklch(0.45 0.2 264.376 / 0.1);
+
+    /* ===== Navbar 配色 ===== */
+    --navbar-scrolled-bg: oklch(0.96 0.005 264.665 / 0.85);
+    --navbar-scrolled-border: oklch(0.5 0.01 264.665 / 0.1);
+    --navbar-scrolled-shadow: oklch(0.3 0.02 264.665 / 0.15);
+
+    /* ===== Post View 页面配色 ===== */
+    /* 卡片覆盖层渐变 - 更亮的白色调 */
+    --post-view-card-overlay-start: oklch(0.98 0 0 / 0.78);
+    --post-view-card-overlay-mid: oklch(0.96 0 0 / 0.72);
+    --post-view-card-overlay-end: oklch(0.94 0 0 / 0.68);
+    /* 滚动遮罩颜色 */
+    --post-view-scroll-mask-start: oklch(0.99 0.003 264.665);
+    --post-view-scroll-mask-end: oklch(0.99 0.003 264.665 / 0);
+    /* 卡片悬停阴影 - 增强阴影 */
+    --post-view-card-shadow: oklch(0.35 0.05 264.376 / 0.22);
+    --post-view-card-shadow-hover: oklch(0.3 0.08 264.376 / 0.35);
+    /* 卡片边框 */
+    --post-view-card-border: oklch(0.75 0.015 264.665 / 0.35);
+    /* 卡片文字颜色 - 高对比度深色文字 */
+    --post-view-card-title: oklch(0.18 0.025 264.665);
+    --post-view-card-excerpt: oklch(0.28 0.02 264.665);
+    --post-view-card-meta: oklch(0.4 0.015 264.665);
 }
 
 /**
@@ -91,56 +149,40 @@
     /* 网站标题和副标题 */
     --text-site-title: oklch(0.98 0.001 247.839);
     --text-site-subtitle: oklch(0.92 0.005 247.839);
-    
+
     /* UI 文本（导航、按钮等） */
     --text-ui-primary: oklch(0.96 0.003 247.839);
     --text-ui-secondary: oklch(0.85 0.01 247.839);
-    
+
     /* 内容文本（正文、描述等） */
     --text-content-primary: oklch(0.9 0.01 247.839);
     --text-content-secondary: oklch(0.65 0.02 261.325);
-    
-    /* 标签文本 */
-    --text-tag-primary: oklch(0.985 0.002 247.839);
-    --text-tag-secondary: oklch(0.985 0.002 247.839);
-    --text-tag-alt: oklch(0.13 0.028 261.692);
-
-    /* ===== 背景颜色 ===== */
-    /* 卡片背景 */
-    --background-index-card-header: oklch(0.21 0.034 264.665);
-    --background-index-card-footer: oklch(0.18 0.034 264.665);
-    
-    /* 标签背景 */
-    --background-tag-primary: oklch(0.488 0.243 264.376);
-    --background-tag-secondary: oklch(0.696 0.17 162.48);
-    --background-tag-alt: oklch(0.278 0.033 256.848);
-    --background-tag-test: oklch(0.21 0.034 264.665);
 
     /* ===== 语义颜色（shadcn/ui 兼容） ===== */
     --background: oklch(0.13 0.028 261.692);
     --foreground: oklch(0.985 0.002 247.839);
-    
+
     --card: oklch(0.21 0.034 264.665);
     --card-foreground: oklch(0.985 0.002 247.839);
-    
+
     --popover: oklch(0.21 0.034 264.665);
     --popover-foreground: oklch(0.985 0.002 247.839);
-    
+
     --primary: oklch(0.928 0.006 264.531);
     --primary-foreground: oklch(0.21 0.034 264.665);
-    
+
     --secondary: oklch(0.278 0.033 256.848);
     --secondary-foreground: oklch(0.985 0.002 247.839);
-    
+
     --muted: oklch(0.278 0.033 256.848);
     --muted-foreground: oklch(0.707 0.022 261.325);
-    
+
     --accent: oklch(0.278 0.033 256.848);
     --accent-foreground: oklch(0.985 0.002 247.839);
-    
+
     --destructive: oklch(0.704 0.191 22.216);
     --destructive-foreground: oklch(0.985 0.002 247.839);
-    
+
     --border: oklch(1 0 0 / 10%);
     --input: oklch(1 0 0 / 15%);
     --ring: oklch(0.551 0.027 264.364);
@@ -161,4 +203,78 @@
     --sidebar-accent-foreground: oklch(0.985 0.002 247.839);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.551 0.027 264.364);
+
+    /* ===== 网站背景遮罩 ===== */
+    --site-bg-overlay: rgba(0, 0, 0, 0.55);
+
+    /* ===== 首页文章卡片配色 ===== */
+    --home-card-overlay-start: oklch(0.12 0.025 264.665 / 0.45);
+    --home-card-overlay-mid: oklch(0.18 0.035 264.665 / 0.40);
+    --home-card-overlay-end: oklch(0.22 0.04 264.665 / 0.35);
+
+    /* ===== 文章详情页配色 ===== */
+    --article-header-title: oklch(0.96 0.005 264.665);
+    --article-header-date: oklch(0.83 0.01 264.665);
+    --article-header-tag-bg: oklch(0.6 0.2 264.376 / 0.2);
+    --article-header-tag-text: oklch(0.75 0.15 264.376);
+    --article-header-tag-border: oklch(0.6 0.2 264.376 / 0.3);
+    --article-header-secondary-tag-bg: oklch(0.98 0.005 264.665 / 0.08);
+    --article-header-secondary-tag-text: oklch(0.7 0.01 264.665);
+    --article-header-secondary-tag-border: oklch(0.98 0.005 264.665 / 0.1);
+
+    /* ===== 文章内容配色 ===== */
+    --article-content-h1: oklch(0.96 0.005 264.665);
+    --article-content-h2: oklch(0.96 0.005 264.665);
+    --article-content-h3: oklch(0.91 0.008 264.665);
+    --article-content-h4: oklch(0.83 0.01 264.665);
+    --article-content-h5: oklch(0.75 0.012 264.665);
+    --article-content-h6: oklch(0.66 0.015 264.665);
+    --article-content-text: oklch(0.83 0.01 264.665);
+    --article-content-strong: oklch(0.96 0.005 264.665);
+    --article-content-em: oklch(0.88 0.008 264.665);
+    --article-content-link: oklch(0.7 0.18 264.376);
+    --article-content-link-hover: oklch(0.78 0.15 264.376);
+    --article-content-code: oklch(0.8 0.15 330);
+    --article-content-code-bg: oklch(0.98 0.005 264.665 / 0.1);
+    --article-content-pre-bg: oklch(0.12 0.02 264.665);
+    --article-content-pre-border: oklch(0.98 0.005 264.665 / 0.08);
+    --article-content-blockquote-bg: oklch(0.55 0.2 300 / 0.1);
+    --article-content-blockquote-text: oklch(0.78 0.12 300);
+    --article-content-blockquote-border: oklch(0.55 0.2 300);
+    --article-content-table-header-bg: oklch(0.98 0.005 264.665 / 0.08);
+    --article-content-table-border: oklch(0.98 0.005 264.665 / 0.05);
+    --article-body-bg: oklch(0.15 0.025 264.665);
+    --article-rail-bg: oklch(0.1 0.02 264.665);
+
+    /* ===== TOC 配色 ===== */
+    --toc-container-bg: oklch(0.1 0.02 264.665 / 0.8);
+    --toc-border: oklch(0.98 0.005 264.665 / 0.08);
+    --toc-header: oklch(0.96 0.005 264.665);
+    --toc-link: oklch(0.62 0.015 264.665);
+    --toc-link-hover: oklch(0.83 0.01 264.665);
+    --toc-link-active: oklch(0.7 0.18 264.376);
+    --toc-link-active-bg: oklch(0.7 0.18 264.376 / 0.1);
+
+    /* ===== Navbar 配色 ===== */
+    --navbar-scrolled-bg: oklch(0.1 0.02 264.665 / 0.85);
+    --navbar-scrolled-border: oklch(0.98 0.005 264.665 / 0.05);
+    --navbar-scrolled-shadow: oklch(0 0 0 / 0.2);
+
+    /* ===== Post View 页面配色 ===== */
+    /* 卡片覆盖层渐变 */
+    --post-view-card-overlay-start: oklch(0.12 0.025 264.665 / 0.65);
+    --post-view-card-overlay-mid: oklch(0.18 0.035 264.665 / 0.55);
+    --post-view-card-overlay-end: oklch(0.22 0.04 264.665 / 0.5);
+    /* 滚动遮罩颜色 */
+    --post-view-scroll-mask-start: oklch(0.13 0.028 261.692);
+    --post-view-scroll-mask-end: oklch(0.13 0.028 261.692 / 0);
+    /* 卡片悬停阴影 */
+    --post-view-card-shadow: oklch(0.488 0.243 264.376 / 0.2);
+    --post-view-card-shadow-hover: oklch(0.55 0.2 264.376 / 0.35);
+    /* 卡片边框 */
+    --post-view-card-border: oklch(0.5 0.15 264.665 / 0.25);
+    /* 卡片文字颜色 - 暗色主题使用亮色文字以提高可读性 */
+    --post-view-card-title: oklch(0.98 0.005 264.665);
+    --post-view-card-excerpt: oklch(0.92 0.008 264.665);
+    --post-view-card-meta: oklch(0.85 0.012 264.665);
 }

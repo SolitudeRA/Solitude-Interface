@@ -15,7 +15,8 @@
     <section class="about-section">
         <h2 class="about-section-title">The Site</h2>
         <p class="about-text">
-            这个网站是使用 Astro 框架构建的，采用了现代化的设计风格，提供流畅的用户体验。
+            这个网站是使用 Astro
+            框架构建的，采用了现代化的设计风格，提供流畅的用户体验。
         </p>
     </section>
 
@@ -40,7 +41,7 @@
 
     .about-section {
         padding-bottom: 2rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid var(--border);
     }
 
     .about-section:last-child {
@@ -51,7 +52,7 @@
     .about-section-title {
         font-size: 1.5rem;
         font-weight: 600;
-        color: #F5F5F5;
+        color: var(--foreground);
         margin-bottom: 1rem;
         position: relative;
         padding-left: 1rem;
@@ -64,12 +65,12 @@
         top: 0.25rem;
         bottom: 0.25rem;
         width: 3px;
-        background: linear-gradient(180deg, #60A5FA 0%, #3B82F6 100%);
+        background: linear-gradient(180deg, var(--chart-1) 0%, var(--primary) 100%);
         border-radius: 2px;
     }
 
     .about-text {
-        color: #D4D4D4;
+        color: var(--text-content-primary);
         font-size: 1.125rem;
         line-height: 1.75;
     }
@@ -86,16 +87,16 @@
         padding: 0.5rem 1rem;
         font-size: 0.875rem;
         font-weight: 500;
-        background: rgba(96, 165, 250, 0.1);
-        color: #60A5FA;
+        background: var(--accent);
+        color: var(--accent-foreground);
         border-radius: 0.5rem;
-        border: 1px solid rgba(96, 165, 250, 0.2);
+        border: 1px solid var(--border);
         transition: all 0.2s ease;
     }
 
     .about-tag:hover {
-        background: rgba(96, 165, 250, 0.2);
-        border-color: rgba(96, 165, 250, 0.4);
+        background: var(--secondary);
+        border-color: var(--ring);
     }
 
     @media (max-width: 768px) {

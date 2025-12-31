@@ -46,10 +46,26 @@ const featureImageUrl = feature_image?.toString() || '';
 
 <style define:vars={{ featureImageUrl: featureImageUrl ? `url(${featureImageUrl})` : 'none' }}>
     .solitude-article-meta {
+        position: relative;
         background-size: cover;
         background-position: center;
         background-image: var(--featureImageUrl);
         border-radius: 0 0 24px 24px;
         margin-bottom: 2rem;
+    }
+
+    /* 遮罩层 - 使用 theme.css 的变量实现动态主题切换 */
+    .solitude-article-meta::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(
+            to bottom,
+            var(--post-view-card-overlay-start) 0%,
+            var(--post-view-card-overlay-mid) 50%,
+            var(--post-view-card-overlay-end) 100%
+        );
+        pointer-events: none;
     }
 </style>

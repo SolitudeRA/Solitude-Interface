@@ -16,9 +16,9 @@
         inset: 0;
         background: linear-gradient(
             180deg,
-            rgba(38, 38, 38, 0.3) 0%,
-            rgba(38, 38, 38, 0.6) 50%,
-            rgba(38, 38, 38, 0.95) 100%
+            var(--post-view-card-overlay-start) 0%,
+            var(--post-view-card-overlay-mid) 50%,
+            var(--post-view-card-overlay-end) 100%
         );
         backdrop-filter: blur(2px);
         -webkit-backdrop-filter: blur(2px);
@@ -68,7 +68,7 @@
         font-weight: 700;
         margin-top: 2.5rem;
         margin-bottom: 1.2rem;
-        color: #F5F5F5;
+        color: var(--article-content-h1);
         letter-spacing: -0.02em;
         line-height: 1.2;
     }
@@ -78,11 +78,11 @@
         font-weight: 700;
         margin-top: 2.5rem;
         margin-bottom: 1rem;
-        color: #F5F5F5;
+        color: var(--article-content-h2);
         letter-spacing: -0.015em;
         line-height: 1.25;
         padding-bottom: 0.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid var(--article-content-table-border);
     }
 
     .solitude-article-content h3 {
@@ -90,7 +90,7 @@
         font-weight: 600;
         margin-top: 2rem;
         margin-bottom: 0.8rem;
-        color: #E8E8E8;
+        color: var(--article-content-h3);
         letter-spacing: -0.01em;
         line-height: 1.3;
     }
@@ -100,7 +100,7 @@
         font-weight: 600;
         margin-top: 1.8rem;
         margin-bottom: 0.8rem;
-        color: #D4D4D4;
+        color: var(--article-content-h4);
         letter-spacing: 0;
         line-height: 1.4;
     }
@@ -110,7 +110,7 @@
         font-weight: 600;
         margin-top: 1.5rem;
         margin-bottom: 0.6rem;
-        color: #BEBEBE;
+        color: var(--article-content-h5);
         letter-spacing: 0.01em;
         line-height: 1.5;
     }
@@ -120,26 +120,26 @@
         font-weight: 600;
         margin-top: 1.5rem;
         margin-bottom: 0.6rem;
-        color: #A8A8A8;
+        color: var(--article-content-h6);
         letter-spacing: 0.02em;
         line-height: 1.5;
         text-transform: uppercase;
     }
 
     .solitude-article-content a {
-        color: #60A5FA;
+        color: var(--article-content-link);
         text-decoration: none;
-        border-bottom: 1px solid rgba(96, 165, 250, 0.3);
+        border-bottom: 1px solid var(--article-content-link);
         transition: all 0.2s ease;
     }
 
     .solitude-article-content a:hover {
-        color: #93C5FD;
-        border-bottom-color: rgba(147, 197, 253, 0.6);
+        color: var(--article-content-link-hover);
+        border-bottom-color: var(--article-content-link-hover);
     }
 
     .solitude-article-content p {
-        color: #D4D4D4;
+        color: var(--article-content-text);
         font-size: 1.15rem;
         line-height: 1.9;
         margin-top: 1.2rem;
@@ -148,12 +148,12 @@
     }
 
     .solitude-article-content strong {
-        color: #F5F5F5;
+        color: var(--article-content-strong);
         font-weight: 600;
     }
 
     .solitude-article-content em {
-        color: #E0E0E0;
+        color: var(--article-content-em);
         font-style: italic;
     }
 
@@ -161,7 +161,7 @@
         font-size: 1.15rem;
         margin-left: 2.5rem;
         list-style-type: disc;
-        color: #D4D4D4;
+        color: var(--article-content-text);
     }
 
     .solitude-article-content ul p {
@@ -174,29 +174,29 @@
         font-size: 1.15rem;
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
-        color: #D4D4D4;
+        color: var(--article-content-text);
     }
 
     .solitude-article-content ul li::marker {
-        color: #60A5FA;
+        color: var(--article-content-link);
     }
 
     .solitude-article-content ol {
         font-size: 1.15rem;
         margin-left: 2.5rem;
         list-style-type: decimal;
-        color: #D4D4D4;
+        color: var(--article-content-text);
     }
 
     .solitude-article-content ol li {
         font-size: 1.15rem;
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
-        color: #D4D4D4;
+        color: var(--article-content-text);
     }
 
     .solitude-article-content ol li::marker {
-        color: #60A5FA;
+        color: var(--article-content-link);
         font-weight: 600;
     }
 
@@ -204,13 +204,13 @@
     .solitude-article-content blockquote {
         margin: 1.5rem 0;
         padding: 1rem 1.5rem;
-        border-left: 4px solid #8B5CF6;
-        background: rgba(139, 92, 246, 0.1);
+        border-left: 4px solid var(--article-content-blockquote-border);
+        background: var(--article-content-blockquote-bg);
         border-radius: 0 8px 8px 0;
     }
 
     .solitude-article-content blockquote p {
-        color: #C4B5FD;
+        color: var(--article-content-blockquote-text);
         font-style: italic;
         margin: 0;
     }
@@ -220,24 +220,24 @@
         font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
         font-size: 0.9em;
         padding: 0.2em 0.4em;
-        background: rgba(255, 255, 255, 0.1);
+        background: var(--article-content-code-bg);
         border-radius: 4px;
-        color: #F472B6;
+        color: var(--article-content-code);
     }
 
     .solitude-article-content pre {
         margin: 1.5rem 0;
         padding: 1.25rem;
-        background: #1E1E1E;
+        background: var(--article-content-pre-bg);
         border-radius: 12px;
         overflow-x: auto;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--article-content-pre-border);
     }
 
     .solitude-article-content pre code {
         background: transparent;
         padding: 0;
-        color: #E5E5E5;
+        color: var(--article-content-text);
         font-size: 0.95rem;
         line-height: 1.7;
     }
@@ -249,7 +249,7 @@
         border-radius: 12px;
         margin: 1.5rem auto;
         display: block;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     }
 
     .solitude-article-content figure {
@@ -258,7 +258,7 @@
     }
 
     .solitude-article-content figcaption {
-        color: #9CA3AF;
+        color: var(--article-content-h6);
         font-size: 0.9rem;
         margin-top: 0.75rem;
         font-style: italic;
@@ -274,22 +274,22 @@
     }
 
     .solitude-article-content th {
-        background: rgba(255, 255, 255, 0.08);
-        color: #F5F5F5;
+        background: var(--article-content-table-header-bg);
+        color: var(--article-content-h2);
         font-weight: 600;
         padding: 0.75rem 1rem;
         text-align: left;
-        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 2px solid var(--article-content-table-border);
     }
 
     .solitude-article-content td {
         padding: 0.75rem 1rem;
-        color: #D4D4D4;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: var(--article-content-text);
+        border-bottom: 1px solid var(--article-content-table-border);
     }
 
     .solitude-article-content tr:hover td {
-        background: rgba(255, 255, 255, 0.03);
+        background: var(--article-content-table-header-bg);
     }
 
     /* 水平线样式 */
@@ -299,7 +299,7 @@
         background: linear-gradient(
             90deg,
             transparent 0%,
-            rgba(255, 255, 255, 0.15) 50%,
+            var(--article-content-table-border) 50%,
             transparent 100%
         );
         margin: 2.5rem 0;
@@ -307,22 +307,13 @@
 
     /* 侧边栏样式 */
     .solitude-article-rail {
-        background-color: #1A1A1A;
-        opacity: 1;
-    }
-
-    .dark .solitude-article-rail {
-        background-color: #1A1A1A;
+        background-color: var(--article-rail-bg);
         opacity: 1;
     }
 
     /* 文章主体区域 */
     .solitude-article-body {
-        background-color: #262626;
-    }
-
-    .dark .solitude-article-body {
-        background-color: #262626;
+        background-color: var(--article-body-bg);
     }
 
     /* ===== Table of Contents 样式 ===== */
@@ -335,34 +326,32 @@
     }
 
     .toc-container {
-        background: rgba(26, 26, 26, 0.8);
+        background: var(--toc-container-bg);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--toc-border);
         border-radius: 16px;
         padding: 1.25rem;
-        box-shadow: 
-            0 4px 20px rgba(0, 0, 0, 0.3),
-            inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
     .toc-header {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        color: #F5F5F5;
+        color: var(--toc-header);
         font-size: 0.9rem;
         font-weight: 600;
         margin-bottom: 1rem;
         padding-bottom: 0.75rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid var(--toc-border);
         letter-spacing: 0.05em;
     }
 
     .toc-icon {
         width: 18px;
         height: 18px;
-        color: #60A5FA;
+        color: var(--toc-link-active);
     }
 
     .toc-list {
@@ -384,7 +373,7 @@
         padding: 0.5rem 0.75rem;
         font-size: 0.85rem;
         line-height: 1.4;
-        color: #9CA3AF;
+        color: var(--toc-link);
         background: transparent;
         border: none;
         border-left: 2px solid transparent;
@@ -397,15 +386,15 @@
     }
 
     .toc-link:hover {
-        color: #D4D4D4;
-        background: rgba(255, 255, 255, 0.05);
-        border-left-color: rgba(96, 165, 250, 0.3);
+        color: var(--toc-link-hover);
+        background: var(--toc-link-active-bg);
+        border-left-color: var(--toc-link-active);
     }
 
     .toc-active .toc-link {
-        color: #60A5FA;
-        background: rgba(96, 165, 250, 0.1);
-        border-left-color: #60A5FA;
+        color: var(--toc-link-active);
+        background: var(--toc-link-active-bg);
+        border-left-color: var(--toc-link-active);
         font-weight: 500;
     }
 
@@ -422,11 +411,12 @@
     .toc-level-4 .toc-link {
         padding-left: 2.25rem;
         font-size: 0.75rem;
-        color: #6B7280;
+        color: var(--toc-link);
+        opacity: 0.8;
     }
 
     .toc-level-4:hover .toc-link {
-        color: #9CA3AF;
+        opacity: 1;
     }
 
     /* 滚动条样式 */
@@ -439,12 +429,12 @@
     }
 
     .toc-wrapper::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.1);
+        background: var(--toc-border);
         border-radius: 2px;
     }
 
     .toc-wrapper::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.2);
+        background: var(--toc-link);
     }
 
     /* 响应式：小屏幕隐藏 TOC */
