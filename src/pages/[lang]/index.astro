@@ -53,7 +53,7 @@ const canonicalUrl = `${env.site.url}/${locale}`;
     />
 
     <main class="mx-auto">
-        <IndexLayout posts={posts} />
+        <IndexLayout posts={posts} locale={locale} />
     </main>
 
     <SiteDock isFixed={true} layout="home" lang={locale} />

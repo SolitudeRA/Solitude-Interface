@@ -325,3 +325,39 @@ export async function getPosts(include: string = 'tags'): Promise<Post[]> {
         return handleApiError(error);
     }
 }
+
+/**
+ * 获取所有文章用于视图展示（不按语言过滤，支持分页）
+ * @param options - 分页选项
+ */
+export async function listAllPosts(
+    options: { page?: number; limit?: number } = {},
+): Promise<Post[]> {
+    const { page = 1, limit = 100 } = options;
+    const cacheKey = `all_posts_view:${page}:${limit}`;
+
+    const cachedPosts = cacheService.get<Post[]>(cacheKey);
+    if (cachedPosts) {
+        return cachedPosts;
+    }
+
+    try {
+        const response = await getGhostClient().get<{ posts: Post[] }>({
+            endpoint: '/posts/',
+            params: {
+                include: 'tags',
+                page,
+                limit,
+            },
+        });
+
+        const posts = response.posts || [];
+        const adaptedPosts = posts.map((post) => adaptGhostPost(post));
+
+        cacheService.set(cacheKey, adaptedPosts);
+
+        return adaptedPosts;
+    } catch (error) {
+        return handleApiError(error);
+    }
+}

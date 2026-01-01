@@ -4,7 +4,7 @@ import DockSocial from '@components/layout/dock/DockSocial.astro';
 import DockTimeline from '@components/layout/dock/timeline/DockTimeline.astro';
 import Dock from '@components/layout/dock/Dock.astro';
 import PostViewContainer from '@components/posts/view/PostViewContainer.astro';
-import { listPostsByLocale } from '@api/ghost/posts';
+import { listAllPosts } from '@api/ghost/posts';
 import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
 import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
@@ -14,6 +14,7 @@ import {
     isLocale,
     LOCALE_HTML_LANG,
     generateAlternateLinks,
+    filterPostsByLocale,
 } from '@lib/i18n';
 import { env } from '@api/config/env';
 
@@ -35,8 +36,12 @@ const htmlLang = LOCALE_HTML_LANG[locale];
 const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
     await initializeSiteData();
 
-// 获取对应语言的文章
-const posts = await listPostsByLocale(locale, { limit: 100 });
+// 获取所有文章
+const allPosts = await listAllPosts({ limit: 100 });
+// 按语言过滤：优先显示当前语言，如果没有则显示其他语言版本
+const localizedPosts = filterPostsByLocale(allPosts, locale);
+// 提取文章对象（已按发布日期排序）
+const posts = localizedPosts.map(item => item.post);
 
 // 生成 hreflang 链接
 const alternateLinks = generateAlternateLinks(env.site.url, '/post-view', LOCALES);

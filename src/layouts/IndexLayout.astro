@@ -2,12 +2,14 @@
 import Welcome from '@components/home/Welcome.astro';
 import PostsShowcase from '@components/home/PostsShowcase.astro';
 import type { FeaturedPost } from '@api/ghost/types';
+import type { Locale } from '@lib/i18n';
 
 interface Props {
     posts: FeaturedPost[];
+    locale: Locale;
 }
 
-const { posts } = Astro.props;
+const { posts, locale } = Astro.props;
 const featuredPosts = posts || [];
 ---
 
@@ -15,7 +17,7 @@ const featuredPosts = posts || [];
     <Welcome />
     <div class="flex-1 flex items-end justify-start pl-7 pb-7">
         <div class="w-full max-w-[56%]">
-            <PostsShowcase featuredPosts={featuredPosts} />
+            <PostsShowcase featuredPosts={featuredPosts} locale={locale} />
         </div>
     </div>
 </div>

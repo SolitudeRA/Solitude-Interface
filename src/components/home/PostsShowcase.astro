@@ -1,12 +1,17 @@
 ---
 import type { FeaturedPost } from '@api/ghost/types';
 import PostsShowcaseCarousel, { PostsShowcaseSkeleton } from './PostsShowcaseCarousel';
+import { filterPostsByLocale, type Locale, DEFAULT_LOCALE } from '@lib/i18n';
 
 const MAX_POSTS = 8;
 const POSTS_PAGE_URL = '/post-view';
 
 interface Props {
     featuredPosts: FeaturedPost[];
+    /**
+     * 当前语言
+     */
+    locale?: Locale;
     /**
      * 是否显示加载状态
      * @default false
@@ -18,12 +23,16 @@ interface Props {
     className?: string;
 }
 
-const { featuredPosts, isLoading = false, className = '' } = Astro.props;
+const { featuredPosts, locale = DEFAULT_LOCALE, isLoading = false, className = '' } = Astro.props;
 
+// 按语言过滤文章：优先显示当前语言，如果没有则显示其他语言版本
+const localizedPosts = filterPostsByLocale(featuredPosts || [], locale);
+// 提取文章对象（已按发布日期排序）
+const filteredPosts = localizedPosts.map(item => item.post);
 // 限制文章数量为最多8个
-const limitedPosts = featuredPosts?.slice(0, MAX_POSTS) || [];
+const limitedPosts = filteredPosts.slice(0, MAX_POSTS);
 // 判断是否有更多文章
-const hasMorePosts = featuredPosts && featuredPosts.length > MAX_POSTS;
+const hasMorePosts = filteredPosts.length > MAX_POSTS;
 // 空数据且非加载状态时不渲染
 const shouldRender = isLoading || (limitedPosts && limitedPosts.length > 0);
 ---
