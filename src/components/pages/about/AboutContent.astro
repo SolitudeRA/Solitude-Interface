@@ -15,51 +15,104 @@ const { locale = 'zh' } = Astro.props;
 const i18n = {
     zh: {
         atAGlance: 'At a Glance',
-        intro: '非典型二次元理科男，自闭死宅，爱打游戏，兴趣较多，喜欢折腾，东京在住',
+        intro: '非典型二次元理工科男，自闭死宅，爱吃，爱听歌，爱打游戏，东京在住',
         spokenLanguages: 'Spoken Languages',
         languages: '中文（母语） / 日语（JLPT N1） / 英语（CEFR B2）',
         techStack: 'Tech Stack',
         hobbies: 'Hobbies',
         gaming: '游戏',
-        gamingDesc: '什么品类都玩，擅长 FPS',
+        gamingDesc:
+            'FPS/TPS、ARPG、CRPG、MOBA、音游、卡牌... 什么品类都玩，擅长FPS，最爱Counter-Strike',
+        hardwareSpec: '主力机配置',
+        hardwareDesc:
+            'AMD 5900X | 32GB RAM | ASUS Strix RTX 4080 | ASUS B550-A Gaming',
+        peripheral: '外设',
+        mouse: '鼠标',
+        mouseDetail:
+            'Razer DeathAdder V3 Pro & Razer DeadAdder V2 Pro (backup)',
+        keyboard: '键盘',
+        keyboardDetail:
+            'Razer Huntsman V3 Pro Mini (gaming) & WASD CODE Keyboard (coding)',
+        headset: '耳机',
+        headsetDetail:
+            'SteelSeries Arctis 7 (for wireless gaming) & Audio-Technica ATH W1000z (music & gaming) & Audio-Technica ATH IM04 (music)',
         music: '音乐',
         musicDesc: '什么都听',
         equipment: '装备',
+        equipmentDetail:
+            'TEAC Al-301DA (DAC) · Audio-Technica ATH W1000z · Audio-Technica ATH IM04',
         instruments: '乐器',
-        experience: '经验',
-        bandExp: '三年乐队',
+        instrumentsDetail: '民谣吉他/古典吉他/电吉他（都会一点）',
+        bandExp: '玩过三年乐队（小打小闹）',
+        band: '乐队',
     },
     ja: {
-        atAGlance: 'At a Glance',
-        intro: '非典型的なオタク理系男、引きこもり、ゲーム好き、多趣味、いじり好き、東京在住',
-        spokenLanguages: 'Spoken Languages',
+        atAGlance: 'ひと目でわかる',
+        intro: '非典型のオタク理系男子で、コミュ障気味の引きこもり。食べるのが好きで、音楽を聴くのもゲームをするのも好き。東京在住',
+        spokenLanguages: '言語',
         languages: '中国語（母語） / 日本語（JLPT N1） / 英語（CEFR B2）',
-        techStack: 'Tech Stack',
-        hobbies: 'Hobbies',
+        techStack: '技術スタック',
+        hobbies: '趣味',
         gaming: 'ゲーム',
-        gamingDesc: '何でもプレイ、FPSが得意',
+        gamingDesc:
+            'FPS/TPS、ARPG、CRPG、MOBA、音ゲー、カード系…ジャンルは何でも遊びます。得意なのはFPSで、いちばん好きなのはCounter-Strike',
+        hardwareSpec: 'メインPCスペック',
+        hardwareDesc:
+            'AMD 5900X | 32GB RAM | ASUS Strix RTX 4080 | ASUS B550-A Gaming',
+        peripheral: '周辺機器',
+        mouse: 'マウス',
+        mouseDetail:
+            'Razer DeathAdder V3 Pro & Razer DeathAdder V2 Pro（予備）',
+        keyboard: 'キーボード',
+        keyboardDetail:
+            'Razer Huntsman V3 Pro Mini（ゲーム用） & WASD CODE Keyboard（コーディング用）',
+        headset: 'ヘッドホン/イヤホン',
+        headsetDetail:
+            'SteelSeries Arctis 7（ワイヤレスでゲーム用） & Audio-Technica ATH W1000z（音楽・ゲーム） & Audio-Technica ATH IM04（音楽）',
         music: '音楽',
-        musicDesc: '何でも聴く',
+        musicDesc: 'ジャンル限らず、何でも聴きます',
         equipment: '機材',
+        equipmentDetail:
+            'TEAC Al-301DA（DAC）· Audio-Technica ATH W1000z · Audio-Technica ATH IM04',
         instruments: '楽器',
-        experience: '経験',
-        bandExp: 'バンド経験3年',
+        instrumentsDetail:
+            'アコースティックギター／クラシックギター／エレキギター（どれも少し弾けます）',
+        bandExp: '3年間バンド経験あり（遊びだけ）',
+        band: 'バンド',
     },
     en: {
         atAGlance: 'At a Glance',
-        intro: 'Atypical otaku science guy, introverted homebody, love gaming, many hobbies, like tinkering, based in Tokyo',
+        intro: 'A not-so-typical nerdy otaku (STEM guy). Socially awkward, homebody, loves food, music, and gaming. Based in Tokyo.',
         spokenLanguages: 'Spoken Languages',
         languages: 'Chinese (Native) / Japanese (JLPT N1) / English (CEFR B2)',
         techStack: 'Tech Stack',
         hobbies: 'Hobbies',
         gaming: 'Gaming',
-        gamingDesc: 'Play everything, good at FPS',
+        gamingDesc:
+            "I play pretty much every genre—FPS/TPS, ARPG, CRPG, MOBA, rhythm games, card games, etc. I'm best at FPS, and my all-time favorite is Counter-Strike.",
+        hardwareSpec: 'Main PC Specs',
+        hardwareDesc:
+            'AMD 5900X | 32GB RAM | ASUS Strix RTX 4080 | ASUS B550-A Gaming',
+        peripheral: 'Peripherals',
+        mouse: 'Mouse',
+        mouseDetail:
+            'Razer DeathAdder V3 Pro & Razer DeathAdder V2 Pro (backup)',
+        keyboard: 'Keyboard',
+        keyboardDetail:
+            'Razer Huntsman V3 Pro Mini (gaming) & WASD CODE Keyboard (coding)',
+        headset: 'Headphones / IEMs',
+        headsetDetail:
+            'SteelSeries Arctis 7 (wireless gaming) & Audio-Technica ATH W1000z (music & gaming) & Audio-Technica ATH IM04 (music)',
         music: 'Music',
-        musicDesc: 'Listen to everything',
+        musicDesc: 'I listen to pretty much everything.',
         equipment: 'Gear',
+        equipmentDetail:
+            'TEAC AI-301DA (DAC) · Audio-Technica ATH W1000z · Audio-Technica ATH IM04',
         instruments: 'Instruments',
-        experience: 'Experience',
-        bandExp: '3 years in a band',
+        instrumentsDetail:
+            'Acoustic / classical / electric guitar (a bit of each)',
+        bandExp: 'Played in a band for three years (just for fun)',
+        band: 'Band',
     },
 };
 
@@ -88,52 +141,204 @@ const t = i18n[locale];
     <!-- 技术栈 -->
     <section class="about-section animate-fade-in" style="--delay: 2">
         <div class="section-header">
-            <span class="section-badge">💻</span>
+            <span class="section-badge">⚒️</span>
             <h2 class="section-title">{t.techStack}</h2>
         </div>
-        
+
         <!-- 后端语言 -->
         <div class="tech-group">
-            <h3 class="tech-group-title">Backend</h3>
+            <h3 class="tech-group-title">Programming Languages</h3>
             <div class="tech-badges">
-                <img alt="Java" src="https://img.shields.io/badge/Java-black?style=flat&logo=openjdk&logoColor=ED8B00" />
-                <img alt="Go" src="https://img.shields.io/badge/Go-black?style=flat&logo=go&logoColor=00ADD8" />
-                <img alt="Rust" src="https://img.shields.io/badge/Rust-black?style=flat&logo=rust&logoColor=dea584" />
+                <img
+                    alt="Java"
+                    src="https://img.shields.io/badge/Java-black?style=flat&logo=openjdk&logoColor=ED8B00"
+                />
+                <img
+                    alt="Kotlin"
+                    src="https://img.shields.io/badge/-Kotlin-000000?style=flat&logo=kotlin"
+                />
+                <img
+                    alt="JavaScript"
+                    src="https://img.shields.io/badge/-JavaScript-000000?style=flat&logo=javascript"
+                />
+                <img
+                    alt="TypeScript"
+                    src="https://img.shields.io/badge/-TypeScript-000000?style=flat&logo=typescript"
+                />
+                <img
+                    alt="Python"
+                    src="https://img.shields.io/badge/-Python-000000?style=flat&logo=python"
+                />
+                <img
+                    alt="PHP"
+                    src="https://img.shields.io/badge/-PHP-000000?style=flat&logo=php"
+                />
+                <img
+                    alt="Go"
+                    src="https://img.shields.io/badge/-Go-000000?style=flat&logo=go"
+                />
+                <img
+                    alt="Rust"
+                    src="https://img.shields.io/badge/-Rust-000000?style=flat&logo=rust"
+                />
+                <img
+                    alt="C++"
+                    src="https://img.shields.io/badge/-C++-000000?style=flat&logo=c%2B%2B"
+                />
+                <img
+                    alt="HTML5"
+                    src="https://img.shields.io/badge/-HTML5-000000?style=flat&logo=html5"
+                />
+                <img
+                    alt="CSS3"
+                    src="https://img.shields.io/badge/-CSS3-000000?style=flat&logo=css3"
+                />
+                <img
+                    alt="Sass"
+                    src="https://img.shields.io/badge/-Sass-000000?style=flat&logo=sass"
+                />
+                <img
+                    alt="Less"
+                    src="https://img.shields.io/badge/-Less-000000?style=flat&logo=less"
+                />
             </div>
         </div>
 
         <!-- 前端 -->
         <div class="tech-group">
-            <h3 class="tech-group-title">Frontend</h3>
+            <h3 class="tech-group-title">Framework & Techs</h3>
             <div class="tech-badges">
-                <img alt="React" src="https://img.shields.io/badge/React-black?style=flat&logo=react&logoColor=61DAFB" />
-                <img alt="Vue" src="https://img.shields.io/badge/Vue.js-black?style=flat&logo=vue.js&logoColor=4FC08D" />
-                <img alt="Astro" src="https://img.shields.io/badge/Astro-black?style=flat&logo=astro&logoColor=FF5D01" />
-                <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-black?style=flat&logo=typescript&logoColor=3178C6" />
-                <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-black?style=flat&logo=tailwind-css&logoColor=38B2AC" />
+                <img
+                    alt="Spring Framework"
+                    src="https://img.shields.io/badge/-Spring_Framework-000000?style=flat&logo=spring"
+                />
+                <img
+                    alt="React"
+                    src="https://img.shields.io/badge/-React-000000?style=flat&logo=react"
+                />
+                <img
+                    alt="Astro"
+                    src="https://img.shields.io/badge/-Astro-000000?style=flat&logo=astro"
+                />
+                <img
+                    alt="Bootstrap"
+                    src="https://img.shields.io/badge/-Bootstrap-000000?style=flat&logo=bootstrap"
+                />
+                <img
+                    alt="Tailwind CSS"
+                    src="https://img.shields.io/badge/-Tailwind_CSS-000000?style=flat&logo=tailwindcss"
+                />
+                <img
+                    alt="Chrome Extension"
+                    src="https://img.shields.io/badge/-Chrome_Extension-000000?style=flat&logo=googlechrome"
+                />
+                <img
+                    alt="Nginx"
+                    src="https://img.shields.io/badge/-Nginx-000000?style=flat&logo=nginx"
+                />
+                <img
+                    alt="Node.js"
+                    src="https://img.shields.io/badge/-Node.js-000000?style=flat&logo=nodedotjs"
+                />
+                <img
+                    alt="MySQL"
+                    src="https://img.shields.io/badge/-MySQL-000000?style=flat&logo=mysql"
+                />
+                <img
+                    alt="MongoDB"
+                    src="https://img.shields.io/badge/-MongoDB-000000?style=flat&logo=mongodb"
+                />
+                <img
+                    alt="Neo4j"
+                    src="https://img.shields.io/badge/-Neo4j-000000?style=flat&logo=neo4j"
+                />
+                <img
+                    alt="Redis"
+                    src="https://img.shields.io/badge/-Redis-000000?style=flat&logo=redis"
+                />
+                <img
+                    alt="Docker"
+                    src="https://img.shields.io/badge/-Docker-000000?style=flat&logo=docker"
+                />
+                <img
+                    alt="PyTorch"
+                    src="https://img.shields.io/badge/-PyTorch-000000?style=flat&logo=pytorch"
+                />
+                <img
+                    alt="TensorFlow"
+                    src="https://img.shields.io/badge/-TensorFlow-000000?style=flat&logo=tensorflow"
+                />
+                <img
+                    alt="Anaconda"
+                    src="https://img.shields.io/badge/-Anaconda-000000?style=flat&logo=anaconda"
+                />
+                <img
+                    alt="Linux"
+                    src="https://img.shields.io/badge/-Linux-000000?style=flat&logo=linux"
+                />
+                <img
+                    alt="CloudFlare"
+                    src="https://img.shields.io/badge/-CloudFlare-000000?style=flat&logo=CloudFlare"
+                />
+                <img
+                    alt="AWS"
+                    src="https://img.shields.io/badge/-AWS-000000?style=flat&logo=amazonwebservices"
+                />
+                <img
+                    alt="GCP"
+                    src="https://img.shields.io/badge/-GCP-000000?style=flat&logo=googlecloud"
+                />
             </div>
         </div>
 
-        <!-- 工具 & AI -->
+        <!-- 工具 -->
         <div class="tech-group">
-            <h3 class="tech-group-title">Tools & AI</h3>
+            <h3 class="tech-group-title">Tools</h3>
             <div class="tech-badges">
-                <img alt="Python" src="https://img.shields.io/badge/Python-black?style=flat&logo=python&logoColor=3776AB" />
-                <img alt="Chrome Extension" src="https://img.shields.io/badge/Chrome_Extension-black?style=flat&logo=google-chrome&logoColor=4285F4" />
-                <img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-black?style=flat&logo=pytorch&logoColor=EE4C2C" />
-                <img alt="TensorFlow" src="https://img.shields.io/badge/TensorFlow-black?style=flat&logo=tensorflow&logoColor=FF6F00" />
-            </div>
-        </div>
-
-        <!-- 基础设施 -->
-        <div class="tech-group">
-            <h3 class="tech-group-title">Infrastructure</h3>
-            <div class="tech-badges">
-                <img alt="Linux" src="https://img.shields.io/badge/Linux-black?style=flat&logo=linux&logoColor=FCC624" />
-                <img alt="Docker" src="https://img.shields.io/badge/Docker-black?style=flat&logo=docker&logoColor=2496ED" />
-                <img alt="Git" src="https://img.shields.io/badge/Git-black?style=flat&logo=git&logoColor=F05032" />
-                <img alt="AWS" src="https://img.shields.io/badge/AWS-black?style=flat&logo=amazon-aws&logoColor=FF9900" />
-                <img alt="GCP" src="https://img.shields.io/badge/GCP-black?style=flat&logo=google-cloud&logoColor=4285F4" />
+                <img
+                    alt="npm"
+                    src="https://img.shields.io/badge/-npm-000000?style=flat&logo=npm"
+                />
+                <img
+                    alt="Grafana"
+                    src="https://img.shields.io/badge/-Grafana-000000?style=flat&logo=grafana"
+                />
+                <img
+                    alt="Git"
+                    src="https://img.shields.io/badge/-Git-000000?style=flat&logo=git"
+                />
+                <img
+                    alt="Jira"
+                    src="https://img.shields.io/badge/-Jira-000000?style=flat&logo=jira"
+                />
+                <img
+                    alt="Jenkins"
+                    src="https://img.shields.io/badge/-Jenkins-000000?style=flat&logo=jenkins"
+                />
+                <img
+                    alt="GitHub Actions"
+                    src="https://img.shields.io/badge/-GitHub_Actions-000000?style=flat&logo=githubactions"
+                />
+                <img
+                    alt="Jetbrains"
+                    src="https://img.shields.io/badge/-Jetbrains-000000?style=flat&logo=jetbrains"
+                />
+                <img
+                    alt="Figma"
+                    src="https://img.shields.io/badge/-Figma-000000?style=flat&logo=figma"
+                />
+                <img
+                    alt="Notion"
+                    src="https://img.shields.io/badge/-Notion-000000?style=flat&logo=notion"
+                />
+                <img
+                    alt="Mendeley"
+                    src="https://img.shields.io/badge/-Mendeley-000000?style=flat&logo=mendeley"
+                />
+                <img
+                    alt="Slack"
+                    src="https://img.shields.io/badge/-Slack-000000?style=flat&logo=slack"
+                />
             </div>
         </div>
     </section>
@@ -145,38 +350,91 @@ const t = i18n[locale];
             <h2 class="section-title">{t.hobbies}</h2>
         </div>
 
-        <div class="hobby-list">
-            <div class="hobby-item">
-                <span class="hobby-emoji">🎮</span>
-                <div class="hobby-content">
-                    <span class="hobby-name">{t.gaming}</span>
-                    <span class="hobby-desc">{t.gamingDesc}</span>
+        <div class="hobbies-grid">
+            <!-- 游戏卡片 -->
+            <div class="hobby-card hobby-card-gaming">
+                <div class="hobby-card-header">
+                    <span class="hobby-icon">🎮</span>
+                    <h3 class="hobby-title">{t.gaming}</h3>
+                </div>
+                <p class="hobby-description">{t.gamingDesc}</p>
+
+                <div class="hobby-details">
+                    <!-- 主机配置 -->
+                    <div class="detail-block">
+                        <div class="detail-header">
+                            <span class="detail-icon">🖥️</span>
+                            <span class="detail-label">{t.hardwareSpec}</span>
+                        </div>
+                        <p class="detail-value mono">{t.hardwareDesc}</p>
+                    </div>
+
+                    <!-- 外设 -->
+                    <div class="detail-block">
+                        <div class="detail-header">
+                            <span class="detail-icon">⌨️</span>
+                            <span class="detail-label">{t.peripheral}</span>
+                        </div>
+                        <div class="peripheral-list">
+                            <div class="peripheral-item">
+                                <span class="peripheral-type">{t.mouse}</span>
+                                <span class="peripheral-value"
+                                    >{t.mouseDetail}</span
+                                >
+                            </div>
+                            <div class="peripheral-item">
+                                <span class="peripheral-type">{t.keyboard}</span
+                                >
+                                <span class="peripheral-value"
+                                    >{t.keyboardDetail}</span
+                                >
+                            </div>
+                            <div class="peripheral-item">
+                                <span class="peripheral-type">{t.headset}</span>
+                                <span class="peripheral-value"
+                                    >{t.headsetDetail}</span
+                                >
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <div class="hobby-item">
-                <span class="hobby-emoji">🎵</span>
-                <div class="hobby-content">
-                    <span class="hobby-name">{t.music}</span>
-                    <span class="hobby-desc">{t.musicDesc}</span>
+
+            <!-- 音乐卡片 -->
+            <div class="hobby-card hobby-card-music">
+                <div class="hobby-card-header">
+                    <span class="hobby-icon">🎵</span>
+                    <h3 class="hobby-title">{t.music}</h3>
                 </div>
-            </div>
-            
-            <div class="hobby-sub">
-                <div class="sub-item">
-                    <span class="sub-emoji">🎧</span>
-                    <span class="sub-label">{t.equipment}</span>
-                    <span class="sub-value">ATH W1000z · ATH IM04</span>
-                </div>
-                <div class="sub-item">
-                    <span class="sub-emoji">🎸</span>
-                    <span class="sub-label">{t.instruments}</span>
-                    <span class="sub-value">{locale === 'ja' ? 'アコギ · クラギ · エレキ' : locale === 'en' ? 'Acoustic · Classical · Electric' : '民谣吉他 · 古典吉他 · 电吉他'}</span>
-                </div>
-                <div class="sub-item highlight">
-                    <span class="sub-emoji">🎤</span>
-                    <span class="sub-label">{t.experience}</span>
-                    <span class="sub-value">{t.bandExp}</span>
+                <p class="hobby-description">{t.musicDesc}</p>
+
+                <div class="hobby-details">
+                    <!-- 设备 -->
+                    <div class="detail-block">
+                        <div class="detail-header">
+                            <span class="detail-icon">🎧</span>
+                            <span class="detail-label">{t.equipment}</span>
+                        </div>
+                        <p class="detail-value">{t.equipmentDetail}</p>
+                    </div>
+
+                    <!-- 乐器 -->
+                    <div class="detail-block">
+                        <div class="detail-header">
+                            <span class="detail-icon">🎸</span>
+                            <span class="detail-label">{t.instruments}</span>
+                        </div>
+                        <p class="detail-value">{t.instrumentsDetail}</p>
+                    </div>
+
+                    <!-- 乐队经历 -->
+                    <div class="detail-block highlight">
+                        <div class="detail-header">
+                            <span class="detail-icon">🎤</span>
+                            <span class="detail-label">{t.band}</span>
+                        </div>
+                        <p class="detail-value">{t.bandExp}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -281,79 +539,182 @@ const t = i18n[locale];
         border-radius: 0.25rem;
     }
 
-    /* ===== 兴趣爱好 ===== */
-    .hobby-list {
+    /* ===== 兴趣爱好 - 新设计 ===== */
+    .hobbies-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+        .hobbies-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    /* 爱好卡片 */
+    .hobby-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hobby-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        border-radius: 1rem 1rem 0 0;
+    }
+
+    .hobby-card-gaming::before {
+        background: linear-gradient(90deg, #10b981, #3b82f6);
+    }
+
+    .hobby-card-music::before {
+        background: linear-gradient(90deg, #f472b6, #a855f7);
+    }
+
+    /* 卡片头部 */
+    .hobby-card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .hobby-icon {
+        font-size: 1.5rem;
+    }
+
+    .hobby-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--foreground);
+        margin: 0;
+    }
+
+    .hobby-description {
+        font-size: 0.9375rem;
+        color: var(--text-content-primary);
+        line-height: 1.75;
+        margin: 0 0 1.25rem 0;
+    }
+
+    /* 详情区块 */
+    .hobby-details {
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 1rem;
     }
 
-    .hobby-item {
+    .detail-block {
+        background: var(--background);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        border: 1px solid var(--border);
+    }
+
+    .detail-block.highlight {
+        background: linear-gradient(
+            135deg,
+            rgba(244, 114, 182, 0.1),
+            rgba(168, 85, 247, 0.1)
+        );
+        border-color: rgba(244, 114, 182, 0.3);
+    }
+
+    :global(.dark) .detail-block.highlight {
+        background: linear-gradient(
+            135deg,
+            rgba(244, 114, 182, 0.08),
+            rgba(168, 85, 247, 0.08)
+        );
+    }
+
+    .detail-header {
         display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
     }
 
-    .hobby-emoji {
-        font-size: 1.25rem;
-        line-height: 1.4;
+    .detail-icon {
+        font-size: 1rem;
     }
 
-    .hobby-content {
+    .detail-label {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--text-content-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .detail-value {
+        font-size: 0.875rem;
+        color: var(--text-content-primary);
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .detail-value.mono {
+        font-family:
+            ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.8125rem;
+        line-height: 1.6;
+        word-spacing: 0.1em;
+    }
+
+    /* 外设列表 */
+    .peripheral-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.625rem;
+    }
+
+    .peripheral-item {
         display: flex;
         flex-direction: column;
         gap: 0.125rem;
     }
 
-    .hobby-name {
-        font-size: 1rem;
+    .peripheral-type {
+        font-size: 0.75rem;
         font-weight: 600;
-        color: var(--foreground);
-    }
-
-    .hobby-desc {
-        font-size: 0.875rem;
         color: var(--text-content-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
     }
 
-    .hobby-sub {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        margin-left: 2rem;
-        padding-left: 1rem;
-        border-left: 2px solid var(--border);
-    }
-
-    .sub-item {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.875rem;
-    }
-
-    .sub-emoji {
-        font-size: 0.875rem;
-    }
-
-    .sub-label {
-        min-width: 2.5rem;
-        color: var(--text-content-secondary);
-    }
-
-    .sub-value {
+    .peripheral-value {
+        font-size: 0.8125rem;
         color: var(--text-content-primary);
-    }
-
-    .sub-item.highlight .sub-value {
-        color: #f472b6;
-        font-weight: 500;
+        line-height: 1.6;
     }
 
     /* ===== 响应式 ===== */
     @media (max-width: 640px) {
         .tech-badges img {
             height: 1.25rem;
+        }
+
+        .hobby-card {
+            padding: 1.25rem;
+        }
+
+        .hobby-icon {
+            font-size: 1.25rem;
+        }
+
+        .hobby-title {
+            font-size: 1rem;
         }
     }
 
@@ -362,11 +723,12 @@ const t = i18n[locale];
         border-bottom-color: var(--article-content-table-border);
     }
 
-    :global(.dark) .hobby-sub {
-        border-left-color: var(--article-content-table-border);
+    :global(.dark) .hobby-card {
+        background: rgba(255, 255, 255, 0.02);
     }
 
-    :global(.dark) .sub-item.highlight .sub-value {
-        color: #f9a8d4;
+    :global(.dark) .detail-block {
+        background: rgba(0, 0, 0, 0.2);
+        border-color: var(--article-content-table-border);
     }
 </style>
