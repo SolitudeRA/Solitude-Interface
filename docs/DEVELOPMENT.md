@@ -1,0 +1,200 @@
+# Development Guide
+
+This document covers development setup, architecture, and testing for the Solitude Interface project.
+
+## 🔧 Tech Stack
+
+- [Astro](https://astro.build/) - Static site generator
+- [React](https://reactjs.org/) - UI components
+- [TypeScript](https://www.typescriptlang.org/) - Type safety
+- [TailwindCSS](https://tailwindcss.com/) - Styling
+- [Ghost Content API](https://ghost.org/docs/content-api/) - Headless CMS
+- [Vitest](https://vitest.dev/) - Testing framework
+
+## 📂 Project Structure
+
+```
+src/
+├── api/                    # Ghost API integration
+│   ├── adapters/           # Data transformers
+│   ├── clients/            # API clients
+│   ├── config/             # Environment configuration
+│   ├── ghost/              # Ghost-specific APIs
+│   ├── utils/              # Utilities (cache, error handlers)
+│   └── __tests__/          # API tests
+├── components/             # UI components
+│   ├── common/             # Shared components
+│   ├── home/               # Homepage components
+│   ├── i18n/               # Internationalization components
+│   ├── layout/             # Layout components (navbar, dock)
+│   ├── pages/              # Page-specific components
+│   └── posts/              # Post display components
+├── layouts/                # Astro layouts
+├── lib/                    # Core libraries (i18n)
+├── pages/                  # Astro pages
+├── stores/                 # State management (Jotai)
+├── styles/                 # Global styles
+└── types/                  # TypeScript types
+```
+
+## 🧞 Commands
+
+| Command                    | Action                                     |
+| :------------------------- | :----------------------------------------- |
+| `npm install`              | Install dependencies                       |
+| `npm run dev`              | Start local dev server at `localhost:4321` |
+| `npm run build`            | Build production site to `./dist/`         |
+| `npm run preview`          | Preview build locally before deploying     |
+| `npm run format`           | Format code with Prettier                  |
+| `npm test`                 | Run tests in watch mode                    |
+| `npm run test:unit`        | Run unit tests only (fast, with mocks)     |
+| `npm run test:integration` | Run integration tests (real API calls)     |
+| `npm run test:coverage`    | Run tests with coverage report             |
+| `npm run test:ui`          | Open Vitest UI for interactive testing     |
+
+## 📋 Testing
+
+This project includes two types of tests:
+
+- **Unit Tests**: Fast tests using mock data, no external dependencies
+- **Integration Tests**: Tests using real Ghost API to verify actual behavior
+
+### Quick Start
+
+```bash
+# Run all tests
+npm test
+
+# Run only unit tests (fast, no API needed)
+npm run test:unit
+
+# Run only integration tests (requires .env configuration)
+npm run test:integration
+```
+
+### Unit Tests vs Integration Tests
+
+| Feature          | Unit Tests          | Integration Tests          |
+| ---------------- | ------------------- | -------------------------- |
+| **Speed**        | ⚡ Fast (< 1s)      | 🐌 Slower (10-30s)         |
+| **Dependencies** | ✅ None             | ⚠️ Requires .env + Network |
+| **API Calls**    | ❌ Mocked           | ✅ Real Ghost API          |
+| **Use Case**     | Daily development   | Pre-commit verification    |
+| **Command**      | `npm run test:unit` | `npm run test:integration` |
+
+### Available Test Commands
+
+```bash
+# Watch mode - runs tests on file changes
+npm test
+
+# Run all tests once
+npm run test:all
+
+# Run unit tests only
+npm run test:unit
+
+# Run integration tests only
+npm run test:integration
+
+# Generate coverage report
+npm run test:coverage
+
+# Open interactive UI
+npm run test:ui
+```
+
+### What's Tested
+
+#### Unit Tests (with mocks)
+
+- Ghost adapter logic (URL transformations, tag extraction)
+- Cloudflare Zero Trust adapter
+- Cache utilities
+- Error handlers
+- API client structure
+
+#### Integration Tests (with real API)
+
+- Real Ghost API connection
+- Fetching posts and site information
+- Data structure validation
+- URL adaptation and transformation
+- Tag extraction and categorization
+- Cache performance (first call = API, second call = cache)
+- Error handling with actual endpoints
+
+### Test Structure
+
+```
+src/api/__tests__/
+├── setup.ts                          # Unit test setup (mocks env vars)
+├── setup.integration.ts              # Integration test setup (uses real env vars)
+├── adapters/
+│   ├── ghost.test.ts                 # Unit: Ghost adapter
+│   └── cloudflare.test.ts            # Unit: Cloudflare adapter
+├── clients/
+│   ├── ghost.test.ts                 # Unit: Ghost API client
+│   └── ghost.integration.test.ts     # Integration: Real API calls
+├── ghost/
+│   ├── posts.test.ts                 # Unit: Posts API
+│   ├── posts.integration.test.ts     # Integration: Real post data
+│   ├── settings.test.ts              # Unit: Settings API
+│   └── settings.integration.test.ts  # Integration: Real site info
+└── utils/
+    ├── cache.test.ts                 # Unit: Cache utilities
+    └── errorHandlers.test.ts         # Unit: Error handlers
+```
+
+**Naming Convention:**
+
+- Unit tests: `*.test.ts`
+- Integration tests: `*.integration.test.ts`
+
+## 🏗️ Architecture
+
+### Tag Processing System
+
+The following code in `src/api/adapters/ghost.ts` handles tag extraction:
+
+```typescript
+const TAG_PREFIXES = {
+    TYPE: 'type-',
+    CATEGORY: 'category-',
+    SERIES: 'series-',
+} as const;
+```
+
+### i18n System
+
+The i18n system in `src/lib/i18n.ts` handles language tags:
+
+```typescript
+const LANG_TAG_PREFIX = 'hash-lang-';  // Ghost converts #lang-xx to hash-lang-xx
+const I18N_TAG_PREFIX = 'hash-i18n-';  // Ghost converts #i18n-xx to hash-i18n-xx
+```
+
+### Multi-language Configuration
+
+Default language is set in `src/lib/i18n.ts`:
+
+```typescript
+export const DEFAULT_LOCALE: Locale = 'zh';
+```
+
+To change the default, modify this value and update `astro.config.mjs`:
+
+```javascript
+i18n: {
+    locales: ['zh', 'en', 'ja'],
+    defaultLocale: 'zh',  // Change this
+}
+```
+
+## 📚 Additional Resources
+
+- [Ghost Content API Documentation](https://ghost.org/docs/content-api/)
+- [Ghost API Endpoints](https://ghost.org/docs/content-api/#endpoints)
+- [Ghost API Authentication](https://ghost.org/docs/content-api/#authentication)
+- [Vitest Documentation](https://vitest.dev/)
+- [Astro Documentation](https://docs.astro.build/)
