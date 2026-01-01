@@ -1,23 +1,70 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { cn } from '@components/common/lib/utils';
 import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
 
+// 支持的语言列表
+const LOCALES = ['zh', 'ja', 'en'] as const;
+type Locale = (typeof LOCALES)[number];
+const DEFAULT_LOCALE: Locale = 'zh';
+
+/**
+ * 从当前 URL 中提取语言代码
+ */
+function getCurrentLocale(): Locale {
+    if (typeof window === 'undefined') return DEFAULT_LOCALE;
+    
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    const firstPart = pathParts[0];
+    
+    if (firstPart && LOCALES.includes(firstPart as Locale)) {
+        return firstPart as Locale;
+    }
+    
+    return DEFAULT_LOCALE;
+}
+
+/**
+ * 构建多语言路径
+ */
+function buildLocalePath(locale: Locale, path: string = ''): string {
+    const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
+    return `/${locale}/${normalizedPath}`.replace(/\/+$/, '') || `/${locale}`;
+}
+
 interface NavItem {
-    href: string;
+    path: string; // 相对路径，不含语言前缀
     label: string;
 }
 
-const navItems: NavItem[] = [
-    { href: '/', label: 'Home' },
-    { href: '/post-view', label: 'Posts' },
-    { href: '/about', label: 'About Me' },
-    { href: '/contact', label: 'Contact' },
-    { href: '', label: 'RSS' },
-    { href: '/privacy-policy', label: 'Privacy Policy' },
+const navItemsConfig: NavItem[] = [
+    { path: '', label: 'Home' },
+    { path: 'post-view', label: 'Posts' },
+    { path: 'about', label: 'About Me' },
+    { path: 'contact', label: 'Contact' },
+    { path: '', label: 'RSS' }, // RSS 暂时为空
+    { path: 'privacy-policy', label: 'Privacy Policy' },
 ];
 
 export default function DockNavMobile() {
     const [isOpen, setIsOpen] = useState(false);
+    const [currentLocale, setCurrentLocale] = useState<Locale>(DEFAULT_LOCALE);
+
+    // 客户端初始化当前语言
+    useEffect(() => {
+        setCurrentLocale(getCurrentLocale());
+    }, []);
+
+    // 根据当前语言构建导航链接
+    const navItems = useMemo(() => {
+        return navItemsConfig.map((item) => ({
+            href: item.path === '' && item.label === 'RSS' 
+                ? '' // RSS 暂时为空
+                : item.path === '' 
+                    ? `/${currentLocale}` 
+                    : buildLocalePath(currentLocale, item.path),
+            label: item.label,
+        }));
+    }, [currentLocale]);
 
     const toggleMenu = useCallback(() => {
         setIsOpen((prev) => !prev);

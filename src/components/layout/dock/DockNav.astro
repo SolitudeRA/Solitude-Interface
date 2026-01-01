@@ -1,5 +1,19 @@
 ---
 import DockNavMobile from './DockNavMobile.tsx';
+import { type Locale, DEFAULT_LOCALE, buildLocalePath } from '@lib/i18n';
+
+interface Props {
+    lang?: Locale;
+}
+
+const { lang = DEFAULT_LOCALE } = Astro.props;
+
+// 构建多语言链接
+const homeLink = `/${lang}`;
+const postsLink = buildLocalePath(lang, 'post-view');
+const aboutLink = buildLocalePath(lang, 'about');
+const contactLink = buildLocalePath(lang, 'contact');
+const privacyLink = buildLocalePath(lang, 'privacy-policy');
 ---
 
 <!-- 移动端汉堡菜单 - 小于768px -->
@@ -21,16 +35,16 @@ import DockNavMobile from './DockNavMobile.tsx';
         ]}
     >
         <div>
-            <a href="/" class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Home</a>
+            <a href={homeLink} class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Home</a>
         </div>
         <div>
-            <a href="/post-view" class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Posts</a>
+            <a href={postsLink} class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Posts</a>
         </div>
         <div>
-            <a href="/about" class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">About</a>
+            <a href={aboutLink} class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">About</a>
         </div>
         <div>
-            <a href="/contact" class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Contact</a>
+            <a href={contactLink} class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Contact</a>
         </div>
         <!-- RSS 在平板竖屏隐藏，横屏及以上显示 -->
         <div class="hidden lg:block">
@@ -38,7 +52,7 @@ import DockNavMobile from './DockNavMobile.tsx';
         </div>
         <!-- Privacy Policy 仅在大屏显示 -->
         <div class="hidden xl:block">
-            <a href="/privacy-policy" class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Privacy</a>
+            <a href={privacyLink} class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Privacy</a>
         </div>
     </div>
 </div>

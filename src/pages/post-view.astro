@@ -8,6 +8,7 @@ import { getPosts } from '@api/ghost/posts';
 import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
 import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
+import { DEFAULT_LOCALE } from '@lib/i18n';
 
 const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
     await initializeSiteData();
@@ -26,7 +27,7 @@ const posts = await getPosts();
         <div class="hidden lg:block">
             <DockTimeline posts={posts} />
         </div>
-        <DockNav />
+        <DockNav lang={DEFAULT_LOCALE} />
         <DockSocial />
     </Dock>
 </BaseLayout>

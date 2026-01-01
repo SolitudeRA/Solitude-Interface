@@ -2,13 +2,15 @@
 import Dock from './Dock.astro';
 import DockNav from './DockNav.astro';
 import DockSocial from './DockSocial.astro';
+import { type Locale, DEFAULT_LOCALE } from '@lib/i18n';
 
 interface Props {
     isFixed?: boolean;
     layout?: 'default' | 'home';
+    lang?: Locale;
 }
 
-const { isFixed = false, layout = 'default' } = Astro.props;
+const { isFixed = false, layout = 'default', lang = DEFAULT_LOCALE } = Astro.props;
 ---
 
 <Dock isFixed={isFixed}>
@@ -17,13 +19,13 @@ const { isFixed = false, layout = 'default' } = Astro.props;
             <>
                 {/* 桌面端三栏布局 */}
                 <div class="hidden md:block" />
-                <DockNav />
+                <DockNav lang={lang} />
                 <DockSocial />
             </>
         ) : (
             <>
                 {/* 桌面端三栏布局 */}
-                <DockNav />
+                <DockNav lang={lang} />
                 <div class="hidden md:block" />
                 <DockSocial />
             </>
