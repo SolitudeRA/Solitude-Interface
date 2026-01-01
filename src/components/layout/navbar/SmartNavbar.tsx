@@ -65,14 +65,15 @@ export default function SmartNavbar({ children, isFixed = false }: SmartNavbarPr
         'duration-300',
         'ease-in-out',
         'z-50',
-        isFixed ? 'fixed top-0 left-0 right-0' : '',
+        'overflow-visible', // 允许下拉菜单溢出显示
+        isFixed ? 'fixed top-0 left-0 right-0' : 'relative',
         isVisible ? 'translate-y-0' : '-translate-y-full',
         isScrolled ? 'smart-navbar-scrolled' : '',
     ].filter(Boolean).join(' ');
 
     return (
         <nav className={navClasses}>
-            <div className="flex h-full w-full items-center justify-between">
+            <div className="flex h-full w-full items-center justify-between overflow-visible">
                 {children}
             </div>
         </nav>

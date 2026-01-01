@@ -34,13 +34,14 @@ function buildLocalePath(locale: Locale, path: string = ''): string {
 interface NavItem {
     path: string; // 相对路径，不含语言前缀
     label: string;
+    noLocale?: boolean; // 不需要多语言前缀
 }
 
 const navItemsConfig: NavItem[] = [
     { path: '', label: 'Home' },
     { path: 'post-view', label: 'Posts' },
     { path: 'about', label: 'About Me' },
-    { path: 'contact', label: 'Contact' },
+    { path: 'contact', label: 'Contact', noLocale: true }, // Contact页面不需要多语言支持
     { path: '', label: 'RSS' }, // RSS 暂时为空
     { path: 'privacy-policy', label: 'Privacy Policy' },
 ];
@@ -59,9 +60,11 @@ export default function DockNavMobile() {
         return navItemsConfig.map((item) => ({
             href: item.path === '' && item.label === 'RSS' 
                 ? '' // RSS 暂时为空
-                : item.path === '' 
-                    ? `/${currentLocale}` 
-                    : buildLocalePath(currentLocale, item.path),
+                : item.noLocale
+                    ? `/${item.path}` // 不需要多语言前缀
+                    : item.path === '' 
+                        ? `/${currentLocale}` 
+                        : buildLocalePath(currentLocale, item.path),
             label: item.label,
         }));
     }, [currentLocale]);

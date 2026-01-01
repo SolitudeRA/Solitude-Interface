@@ -4,18 +4,52 @@ import DockSocial from '@components/layout/dock/DockSocial.astro';
 import DockTimeline from '@components/layout/dock/timeline/DockTimeline.astro';
 import Dock from '@components/layout/dock/Dock.astro';
 import PostViewContainer from '@components/posts/view/PostViewContainer.astro';
-import { getPosts } from '@api/ghost/posts';
+import { listPostsByLocale } from '@api/ghost/posts';
 import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
 import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
-import { DEFAULT_LOCALE } from '@lib/i18n';
+import {
+    LOCALES,
+    type Locale,
+    isLocale,
+    LOCALE_HTML_LANG,
+    generateAlternateLinks,
+} from '@lib/i18n';
+import { env } from '@api/config/env';
+
+export async function getStaticPaths() {
+    return LOCALES.map((lang) => ({
+        params: { lang },
+    }));
+}
+
+const { lang } = Astro.params;
+
+if (!isLocale(lang)) {
+    return Astro.redirect('/zh/post-view');
+}
+
+const locale = lang as Locale;
+const htmlLang = LOCALE_HTML_LANG[locale];
 
 const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
     await initializeSiteData();
-const posts = await getPosts();
+
+// 获取对应语言的文章
+const posts = await listPostsByLocale(locale, { limit: 100 });
+
+// 生成 hreflang 链接
+const alternateLinks = generateAlternateLinks(env.site.url, '/post-view', LOCALES);
+const canonicalUrl = `${env.site.url}/${locale}/post-view`;
 ---
 
-<BaseLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
+<BaseLayout 
+    siteTitle={siteTitle} 
+    coverImageUrl={coverImageUrl}
+    lang={htmlLang}
+    canonicalUrl={canonicalUrl}
+    alternateLinks={alternateLinks}
+>
     <SiteNavbar
         logoUrl={logoUrl}
         siteTitle={siteTitle}
@@ -27,7 +61,7 @@ const posts = await getPosts();
         <div class="hidden lg:block">
             <DockTimeline posts={posts} />
         </div>
-        <DockNav lang={DEFAULT_LOCALE} />
+        <DockNav lang={locale} />
         <DockSocial />
     </Dock>
 </BaseLayout>
