@@ -9,6 +9,14 @@ import {
     FaBilibili,
 } from 'react-icons/fa6';
 import solitudeAvatar from '@assets/avatar.jpg';
+import { type Locale, DEFAULT_LOCALE, buildLocalePath } from '@lib/i18n';
+
+interface Props {
+    lang?: Locale;
+}
+
+const { lang = DEFAULT_LOCALE } = Astro.props;
+const aboutUrl = buildLocalePath(lang, '/about');
 ---
 
 <div class:list={[
@@ -19,7 +27,7 @@ import solitudeAvatar from '@assets/avatar.jpg';
     <!-- 移动端、平板、小桌面：社交链接汉堡菜单（<1536px） -->
     <div class="flex 2xl:hidden items-center gap-3 sm:gap-4">
         <DockSocialMobile client:load />
-        <a href="/about" class="block transition-transform hover:scale-105">
+        <a href={aboutUrl} class="block transition-transform hover:scale-105">
             <Avatar
                 className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 shadow-xl"
                 src={solitudeAvatar.src}
@@ -62,7 +70,7 @@ import solitudeAvatar from '@assets/avatar.jpg';
                 </a>
             </span>
         </div>
-        <a href="/about" class="block transition-transform hover:scale-105">
+        <a href={aboutUrl} class="block transition-transform hover:scale-105">
             <Avatar
                 className="h-20 w-20 shadow-xl"
                 src={solitudeAvatar.src}

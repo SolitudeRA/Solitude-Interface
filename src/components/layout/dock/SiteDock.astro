@@ -20,14 +20,14 @@ const { isFixed = false, layout = 'default', lang = DEFAULT_LOCALE } = Astro.pro
                 {/* 桌面端三栏布局 */}
                 <div class="hidden md:block" />
                 <DockNav lang={lang} />
-                <DockSocial />
+                <DockSocial lang={lang} />
             </>
         ) : (
             <>
                 {/* 桌面端三栏布局 */}
                 <DockNav lang={lang} />
                 <div class="hidden md:block" />
-                <DockSocial />
+                <DockSocial lang={lang} />
             </>
         )
     }
