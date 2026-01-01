@@ -34,6 +34,4 @@ export default defineConfig({
             ],
         },
     },
-    // 路径别名现在由 vite-tsconfig-paths 插件自动从 tsconfig.json 读取
-    // 不再需要手动配置 resolve.alias
 });
