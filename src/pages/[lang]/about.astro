@@ -5,12 +5,63 @@ import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
 import SiteDock from '@components/layout/dock/SiteDock.astro';
 import PageHero from '@components/layout/PageHero.astro';
 import AboutContent from '@components/pages/about/AboutContent.astro';
+import {
+    LOCALES,
+    type Locale,
+    isLocale,
+    LOCALE_HTML_LANG,
+    generateAlternateLinks,
+} from '@lib/i18n';
+import { env } from '@api/config/env';
+
+export async function getStaticPaths() {
+    return LOCALES.map((lang) => ({
+        params: { lang },
+    }));
+}
+
+const { lang } = Astro.params;
+
+if (!isLocale(lang)) {
+    return Astro.redirect('/zh/about');
+}
+
+const locale = lang as Locale;
+const htmlLang = LOCALE_HTML_LANG[locale];
 
 const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
     await initializeSiteData();
+
+// 多语言文本
+const i18n = {
+    zh: {
+        title: 'About Me',
+        subtitle: '开发者 · 玩家 · 内容创作者',
+    },
+    ja: {
+        title: 'プロフィール',
+        subtitle: '開発者 · ゲーマー · コンテンツクリエイター',
+    },
+    en: {
+        title: 'About Me',
+        subtitle: 'Developer · Gamer · Content Creator',
+    },
+};
+
+const t = i18n[locale];
+
+// 生成 hreflang 链接
+const alternateLinks = generateAlternateLinks(env.site.url, '/about', LOCALES);
+const canonicalUrl = `${env.site.url}/${locale}/about`;
 ---
 
-<BaseLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl}>
+<BaseLayout
+    siteTitle={siteTitle}
+    coverImageUrl={coverImageUrl}
+    lang={htmlLang}
+    canonicalUrl={canonicalUrl}
+    alternateLinks={alternateLinks}
+>
     <SiteNavbar
         logoUrl={logoUrl}
         siteTitle={siteTitle}
@@ -19,11 +70,11 @@ const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
     />
     
     <PageHero 
-        title="About Me" 
+        title={t.title}
         backgroundImage={coverImageUrl?.toString()}
         badgeText="SolitudeRA"
         badgeIcon={true}
-        subtitle="Developer ·  Gamer · Content Creator"
+        subtitle={t.subtitle}
     >
         <svg slot="badge-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -33,7 +84,7 @@ const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
     
     <main class="about-page min-h-screen">
         <div class="about-content-wrapper mx-auto max-w-5xl px-6 sm:px-8 lg:px-12">
-            <AboutContent />
+            <AboutContent locale={locale} />
         </div>
     </main>
     <SiteDock isFixed={true} layout="home" />

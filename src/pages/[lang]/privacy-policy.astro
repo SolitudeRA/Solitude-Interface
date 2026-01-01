@@ -1,0 +1,104 @@
+---
+import { initializeSiteData } from '@api/ghost/settings';
+import BaseLayout from '@layouts/base/BaseLayout.astro';
+import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
+import SiteDock from '@components/layout/dock/SiteDock.astro';
+import PageHero from '@components/layout/PageHero.astro';
+import PolicyContent from '@components/pages/privacy-policy/PolicyContent.astro';
+import {
+    LOCALES,
+    type Locale,
+    isLocale,
+    LOCALE_HTML_LANG,
+    generateAlternateLinks,
+} from '@lib/i18n';
+import { env } from '@api/config/env';
+
+export async function getStaticPaths() {
+    return LOCALES.map((lang) => ({
+        params: { lang },
+    }));
+}
+
+const { lang } = Astro.params;
+
+if (!isLocale(lang)) {
+    return Astro.redirect('/zh/privacy-policy');
+}
+
+const locale = lang as Locale;
+const htmlLang = LOCALE_HTML_LANG[locale];
+
+const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
+    await initializeSiteData();
+
+// 多语言文本
+const i18n = {
+    zh: {
+        title: '隐私政策',
+        badge: '生效日期',
+        date: '2025年2月5日',
+    },
+    ja: {
+        title: 'プライバシーポリシー',
+        badge: '発効日',
+        date: '2025年2月5日',
+    },
+    en: {
+        title: 'Privacy Policy',
+        badge: 'Effective Date',
+        date: 'February 5, 2025',
+    },
+};
+
+const t = i18n[locale];
+
+// 生成 hreflang 链接
+const alternateLinks = generateAlternateLinks(env.site.url, '/privacy-policy', LOCALES);
+const canonicalUrl = `${env.site.url}/${locale}/privacy-policy`;
+---
+
+<BaseLayout
+    siteTitle={siteTitle}
+    coverImageUrl={coverImageUrl}
+    lang={htmlLang}
+    canonicalUrl={canonicalUrl}
+    alternateLinks={alternateLinks}
+>
+    <SiteNavbar
+        logoUrl={logoUrl}
+        siteTitle={siteTitle}
+        siteSubTitle={siteDescription}
+        isFixed={true}
+    />
+    
+    <PageHero 
+        title={t.title}
+        backgroundImage={coverImageUrl?.toString()}
+        badgeText={t.badge}
+        date={t.date}
+    />
+    
+    <main class="privacy-policy-page min-h-screen">
+        <div class="policy-content-wrapper mx-auto max-w-4xl px-6 sm:px-8 lg:px-12">
+            <PolicyContent locale={locale} />
+        </div>
+    </main>
+    <SiteDock isFixed={true} layout="home" />
+</BaseLayout>
+
+<style>
+    .privacy-policy-page {
+        background-color: var(--background);
+        position: relative;
+    }
+
+    :global(.dark) .privacy-policy-page {
+        background-color: var(--article-body-bg);
+    }
+
+    .policy-content-wrapper {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+</style>
