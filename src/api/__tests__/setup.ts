@@ -8,9 +8,13 @@ vi.mock('@api/config/env', () => ({
             url: 'https://test-ghost.example.com',
             key: 'test-ghost-api-key',
             version: 'v5.0',
+            timeout: 5000,
         },
         site: {
             url: 'https://test-site.example.com',
+        },
+        image: {
+            imageHostUrl: '',
         },
     },
 }));
