@@ -1,6 +1,6 @@
 # Solitude Interface
 
-![thumbnail](docs/assets/thumbnail.png)
+![thumbnail](/docs/assets/thumbnail.png)
 
 使用 Astro 构建、由 Ghost CMS API 驱动的现代个人博客界面。
 
@@ -17,13 +17,13 @@
 
 ## 截图
 ### Home
-![Home](docs/assets/home.png)
+![Home](/docs/assets/home.png)
 ### Post
-![Post](docs/assets/post.png)
+![Post](/docs/assets/post.png)
 ### About Me
-![About-Me](docs/assets/about-me.png)
+![About-Me](/docs/assets/about-me.png)
 ### Post Detail
-![Post-Detail](docs/assets/post-detail.png)
+![Post-Detail](/docs/assets/post-detail.png)
 
 ## 文档
 

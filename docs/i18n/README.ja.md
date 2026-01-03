@@ -1,6 +1,6 @@
 # Solitude Interface
 
-![thumbnail](docs/assets/thumbnail.png)
+![thumbnail](/docs/assets/thumbnail.png)
 
 Astro で構築し、Ghost CMS API で動作するモダンな個人ブログ UI。
 
@@ -17,13 +17,13 @@ Astro で構築し、Ghost CMS API で動作するモダンな個人ブログ UI
 
 ## スクリーンショット
 ### Home
-![Home](docs/assets/home.png)
+![Home](/docs/assets/home.png)
 ### Post
-![Post](docs/assets/post.png)
+![Post](/docs/assets/post.png)
 ### About Me
-![About-Me](docs/assets/about-me.png)
+![About-Me](/docs/assets/about-me.png)
 ### Post Detail
-![Post-Detail](docs/assets/post-detail.png)
+![Post-Detail](/docs/assets/post-detail.png)
 
 ## ドキュメント
 
