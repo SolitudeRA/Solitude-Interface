@@ -1,5 +1,7 @@
 # Solitude Interface
 
+![thumbnail](docs/assets/thumbnail.png)
+
 使用 Astro 构建、由 Ghost CMS API 驱动的现代个人博客界面。
 
 阅读语言: [English](../../README.md) | 简体中文 | [日本語](README.ja.md)
@@ -14,15 +16,14 @@
 - SEO 优化（hreflang、canonical、html lang）
 
 ## 截图
-
-> 请将 `../assets/` 中的占位图替换为你的截图。
-
-| 页面 | 预览 |
-|------|------|
-| 首页 | ![Home](../assets/screenshot-home.png) |
-| 文章 | ![Post](../assets/screenshot-post.png) |
-| 画廊 | ![Gallery](../assets/screenshot-gallery.png) |
-| 移动端 | ![Mobile](../assets/screenshot-mobile.png) |
+### Home
+![Home](docs/assets/home.png)
+### Post
+![Post](docs/assets/post.png)
+### About Me
+![About-Me](docs/assets/about-me.png)
+### Post Detail
+![Post-Detail](docs/assets/post-detail.png)
 
 ## 文档
 

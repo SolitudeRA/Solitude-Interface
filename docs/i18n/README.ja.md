@@ -1,5 +1,7 @@
 # Solitude Interface
 
+![thumbnail](docs/assets/thumbnail.png)
+
 Astro で構築し、Ghost CMS API で動作するモダンな個人ブログ UI。
 
 言語: [English](../../README.md) | [简体中文](README.zh.md) | 日本語
@@ -14,15 +16,14 @@ Astro で構築し、Ghost CMS API で動作するモダンな個人ブログ UI
 - SEO 最適化（hreflang、canonical、html lang）
 
 ## スクリーンショット
-
-> `../assets/` のプレースホルダー画像をスクリーンショットに置き換えてください。
-
-| ページ | プレビュー |
-|------|---------|
-| ホーム | ![Home](../assets/screenshot-home.png) |
-| 投稿 | ![Post](../assets/screenshot-post.png) |
-| ギャラリー | ![Gallery](../assets/screenshot-gallery.png) |
-| モバイル | ![Mobile](../assets/screenshot-mobile.png) |
+### Home
+![Home](docs/assets/home.png)
+### Post
+![Post](docs/assets/post.png)
+### About Me
+![About-Me](docs/assets/about-me.png)
+### Post Detail
+![Post-Detail](docs/assets/post-detail.png)
 
 ## ドキュメント
 

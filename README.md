@@ -1,5 +1,7 @@
 # Solitude Interface
 
+![thumbnail](docs/assets/thumbnail.png)
+
 A modern personal blog interface built with Astro and powered by Ghost CMS API.
 
 Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](docs/i18n/README.ja.md)
@@ -14,26 +16,21 @@ Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](doc
 - SEO optimized (hreflang, canonical, html lang)
 
 ## Screenshots
-
-> Replace the placeholder images in `docs/assets/` with your own screenshots.
-
-| Page | Preview |
-|------|---------|
-| Home | ![Home](docs/assets/screenshot-home.png) |
-| Post | ![Post](docs/assets/screenshot-post.png) |
-| Gallery | ![Gallery](docs/assets/screenshot-gallery.png) |
-| Mobile | ![Mobile](docs/assets/screenshot-mobile.png) |
+### Home
+![Home](docs/assets/home.png)
+### Post
+![Post](docs/assets/post.png)
+### About Me
+![About-Me](docs/assets/about-me.png)
+### Post Detail
+![Post-Detail](docs/assets/post-detail.png)
 
 ## 📖 Documentation
 
 | Document | Description |
 |----------|-------------|
 | **README.md** (this file) | User guide - setup and content publishing |
-| [**docs/DEVELOPMENT.md**](docs/DEVELOPMENT.md) | Developer guide - architecture, testing, commands |
-| [**docs/ai/ai-context.md**](docs/ai/ai-context.md) | Stable AI context (prompt cache prefix) |
-| [**docs/guides/dev-workflow.md**](docs/guides/dev-workflow.md) | Token-saving dev workflow and commands |
-| [**docs/ai/plan.md**](docs/ai/plan.md) | Change checkpoints and update triggers |
-
+| [**docs/DEVELOPMENT.md**](docs/DEVELOPMENT.md) | Developer guide - architecture, testing, 
 ---
 
 ## 🚀 Quick Start
