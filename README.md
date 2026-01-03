@@ -2,6 +2,8 @@
 
 A modern personal blog interface built with Astro and powered by Ghost CMS API.
 
+Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](docs/i18n/README.ja.md)
+
 ## 🚀 Features
 
 - High-performance static site built with Astro
@@ -11,12 +13,26 @@ A modern personal blog interface built with Astro and powered by Ghost CMS API.
 - Multiple post type displays (articles, gallery, video, music)
 - SEO optimized (hreflang, canonical, html lang)
 
+## Screenshots
+
+> Replace the placeholder images in `docs/assets/` with your own screenshots.
+
+| Page | Preview |
+|------|---------|
+| Home | ![Home](docs/assets/screenshot-home.png) |
+| Post | ![Post](docs/assets/screenshot-post.png) |
+| Gallery | ![Gallery](docs/assets/screenshot-gallery.png) |
+| Mobile | ![Mobile](docs/assets/screenshot-mobile.png) |
+
 ## 📖 Documentation
 
 | Document | Description |
 |----------|-------------|
 | **README.md** (this file) | User guide - setup and content publishing |
 | [**docs/DEVELOPMENT.md**](docs/DEVELOPMENT.md) | Developer guide - architecture, testing, commands |
+| [**docs/ai/ai-context.md**](docs/ai/ai-context.md) | Stable AI context (prompt cache prefix) |
+| [**docs/guides/dev-workflow.md**](docs/guides/dev-workflow.md) | Token-saving dev workflow and commands |
+| [**docs/ai/plan.md**](docs/ai/plan.md) | Change checkpoints and update triggers |
 
 ---
 
@@ -45,6 +61,15 @@ GHOST_VERSION=v5.0
 SITE_URL=https://your-site.example.com
 ```
 
+#### Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `GHOST_URL` | Yes | Base URL of your Ghost instance |
+| `GHOST_CONTENT_KEY` | Yes | Ghost Content API key |
+| `GHOST_VERSION` | Yes | Ghost Content API version (e.g., `v5.0`) |
+| `SITE_URL` | Yes | Public site URL for canonical and hreflang |
+
 ### 3. Get Your Ghost Content API Key
 
 1. Log in to your Ghost Admin panel
@@ -65,6 +90,16 @@ npm run dev
 ```
 
 Visit `http://localhost:4321` to see your site.
+
+## Common Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start the development server |
+| `npm run build` | Build the production site |
+| `npm run preview` | Preview the production build |
+| `npm run test` | Run the test suite |
+| `npm run format` | Format the codebase |
 
 ---
 
