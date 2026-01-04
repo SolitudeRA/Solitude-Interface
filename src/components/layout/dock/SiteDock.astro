@@ -10,7 +10,11 @@ interface Props {
     lang?: Locale;
 }
 
-const { isFixed = false, layout = 'default', lang = DEFAULT_LOCALE } = Astro.props;
+const {
+    isFixed = false,
+    layout = 'default',
+    lang = DEFAULT_LOCALE,
+} = Astro.props;
 ---
 
 <Dock isFixed={isFixed}>
@@ -34,4 +38,4 @@ const { isFixed = false, layout = 'default', lang = DEFAULT_LOCALE } = Astro.pro
 </Dock>
 
 {/* 移动端底部安全区域占位 */}
-<div class="h-safe-area-inset-bottom md:hidden" />
+<div class="h-safe-area-inset-bottom md:hidden"></div>

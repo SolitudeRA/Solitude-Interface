@@ -54,7 +54,11 @@ const i18n = {
 const t = i18n[locale];
 
 // 生成 hreflang 链接
-const alternateLinks = generateAlternateLinks(env.site.url, '/privacy-policy', LOCALES);
+const alternateLinks = generateAlternateLinks(
+    env.site.url,
+    '/privacy-policy',
+    LOCALES,
+);
 const canonicalUrl = `${env.site.url}/${locale}/privacy-policy`;
 ---
 
@@ -71,16 +75,18 @@ const canonicalUrl = `${env.site.url}/${locale}/privacy-policy`;
         siteSubTitle={siteDescription}
         isFixed={true}
     />
-    
-    <PageHero 
+
+    <PageHero
         title={t.title}
         backgroundImage={coverImageUrl?.toString()}
         badgeText={t.badge}
         date={t.date}
     />
-    
+
     <main class="privacy-policy-page min-h-screen">
-        <div class="policy-content-wrapper mx-auto max-w-4xl px-6 sm:px-8 lg:px-12">
+        <div
+            class="policy-content-wrapper mx-auto max-w-4xl px-6 sm:px-8 lg:px-12"
+        >
             <PolicyContent locale={locale} />
         </div>
     </main>

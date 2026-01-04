@@ -1,17 +1,21 @@
 ---
-import { GOOGLE_ANALYTICS_TAG_ID } from "astro:env/client";
-const id = (GOOGLE_ANALYTICS_TAG_ID ?? "").trim();
+import { GOOGLE_ANALYTICS_TAG_ID } from 'astro:env/client';
+const id = (GOOGLE_ANALYTICS_TAG_ID ?? '').trim();
 const enabled = import.meta.env.PROD && id.length > 0;
 ---
 
-{enabled && (
-    <>
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${id}`}></script>
-        <script define:vars={{ id }}>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', id);
-        </script>
-    </>
-)}
+{
+    enabled && (
+        <>
+            <script
+                async
+                src={`https://www.googletagmanager.com/gtag/js?id=${id}`}
+            />
+            <script define:vars={{ id }}>
+                window.dataLayer = window.dataLayer || []; function gtag()
+                {dataLayer.push(arguments)}
+                gtag('js', new Date()); gtag('config', id);
+            </script>
+        </>
+    )
+}

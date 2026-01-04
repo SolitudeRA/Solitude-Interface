@@ -28,14 +28,14 @@ const DEFAULT_LOCALE: Locale = 'zh';
  */
 function getCurrentLocale(): Locale {
     if (typeof window === 'undefined') return DEFAULT_LOCALE;
-    
+
     const pathParts = window.location.pathname.split('/').filter(Boolean);
     const firstPart = pathParts[0];
-    
+
     if (firstPart && LOCALES.includes(firstPart as Locale)) {
         return firstPart as Locale;
     }
-    
+
     return DEFAULT_LOCALE;
 }
 
@@ -44,17 +44,17 @@ function getCurrentLocale(): Locale {
  */
 function buildLanguageUrl(targetLocale: Locale): string {
     if (typeof window === 'undefined') return `/${targetLocale}`;
-    
+
     const currentPath = window.location.pathname;
     const pathParts = currentPath.split('/').filter(Boolean);
-    
+
     // 检查第一个路径部分是否是语言代码
     if (pathParts.length > 0 && LOCALES.includes(pathParts[0] as Locale)) {
         // 替换语言代码
         pathParts[0] = targetLocale;
         return '/' + pathParts.join('/');
     }
-    
+
     // 如果没有语言代码，添加到路径前面
     return `/${targetLocale}${currentPath}`;
 }
@@ -72,13 +72,17 @@ export default function LanguageSwitcher() {
     // 点击外部关闭下拉菜单
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target as Node)
+            ) {
                 setIsOpen(false);
             }
         }
 
         document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        return () =>
+            document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     // 键盘导航支持
@@ -110,14 +114,14 @@ export default function LanguageSwitcher() {
                     'text-foreground/80 hover:text-foreground',
                     'hover:bg-muted/50',
                     'transition-all duration-200',
-                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                    'focus-visible:ring-ring focus:outline-none focus-visible:ring-2',
                 )}
                 aria-label="切换语言"
                 aria-expanded={isOpen}
                 aria-haspopup="listbox"
             >
                 <Globe className="h-4 w-4" />
-                <span className="text-sm font-medium hidden sm:inline">
+                <span className="hidden text-sm font-medium sm:inline">
                     {LOCALE_NAMES[currentLocale]}
                 </span>
                 <ChevronDown
@@ -132,11 +136,11 @@ export default function LanguageSwitcher() {
             {isOpen && (
                 <div
                     className={cn(
-                        'absolute right-0 top-full mt-2 z-50',
+                        'absolute top-full right-0 z-50 mt-2',
                         'min-w-[140px]',
                         'rounded-xl',
                         'bg-background/95 backdrop-blur-md',
-                        'border border-border',
+                        'border-border border',
                         'shadow-lg shadow-black/10',
                         'py-1.5',
                         'animate-in fade-in-0 zoom-in-95 duration-150',
@@ -168,7 +172,7 @@ export default function LanguageSwitcher() {
                                     {LOCALE_NAMES[locale]}
                                 </span>
                                 {isSelected && (
-                                    <Check className="h-4 w-4 text-primary" />
+                                    <Check className="text-primary h-4 w-4" />
                                 )}
                             </button>
                         );

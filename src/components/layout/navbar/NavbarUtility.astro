@@ -3,11 +3,13 @@ import ThemeSwitch from './ThemeSwitch';
 import LanguageSwitcher from './LanguageSwitcher';
 ---
 
-<div class:list={[
-    'flex h-full grow flex-row-reverse items-center',
-    'gap-1 sm:gap-2',
-    'pr-4 sm:pr-6 md:pr-8 lg:pr-10 xl:pr-12 2xl:pr-14',
-]}>
+<div
+    class:list={[
+        'flex h-full grow flex-row-reverse items-center',
+        'gap-1 sm:gap-2',
+        'pr-4 sm:pr-6 md:pr-8 lg:pr-10 xl:pr-12 2xl:pr-14',
+    ]}
+>
     <ThemeSwitch client:visible />
     <LanguageSwitcher client:visible />
 </div>

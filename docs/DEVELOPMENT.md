@@ -170,8 +170,8 @@ const TAG_PREFIXES = {
 The i18n system in `src/lib/i18n.ts` handles language tags:
 
 ```typescript
-const LANG_TAG_PREFIX = 'hash-lang-';  // Ghost converts #lang-xx to hash-lang-xx
-const I18N_TAG_PREFIX = 'hash-i18n-';  // Ghost converts #i18n-xx to hash-i18n-xx
+const LANG_TAG_PREFIX = 'hash-lang-'; // Ghost converts #lang-xx to hash-lang-xx
+const I18N_TAG_PREFIX = 'hash-i18n-'; // Ghost converts #i18n-xx to hash-i18n-xx
 ```
 
 ### Multi-language Configuration

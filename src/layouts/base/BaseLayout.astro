@@ -19,7 +19,9 @@ const {
     alternateLinks = [],
 } = Astro.props;
 
-const coverImageUrlStr = coverImageUrl ? `url(${coverImageUrl.toString()})` : 'none';
+const coverImageUrlStr = coverImageUrl
+    ? `url(${coverImageUrl.toString()})`
+    : 'none';
 ---
 
 <!doctype html>
@@ -81,6 +83,9 @@ const coverImageUrlStr = coverImageUrl ? `url(${coverImageUrl.toString()})` : 'n
     window.addEventListener('themeChanged', function (e) {
         const newTheme = e.detail.theme;
         document.documentElement.classList.toggle('dark', newTheme === 'dark');
-        document.documentElement.classList.toggle('light', newTheme === 'light');
+        document.documentElement.classList.toggle(
+            'light',
+            newTheme === 'light',
+        );
     });
 </script>

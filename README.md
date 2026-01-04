@@ -16,21 +16,30 @@ Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](doc
 - SEO optimized (hreflang, canonical, html lang)
 
 ## Screenshots
+
 ### Home
+
 ![Home](docs/assets/home.png)
+
 ### Post
+
 ![Post](docs/assets/post.png)
+
 ### About Me
+
 ![About-Me](docs/assets/about-me.png)
+
 ### Post Detail
+
 ![Post-Detail](docs/assets/post-detail.png)
 
 ## 📖 Documentation
 
-| Document | Description |
-|----------|-------------|
-| **README.md** (this file) | User guide - setup and content publishing |
+| Document                                  | Description                                                          |
+| ----------------------------------------- | -------------------------------------------------------------------- |
+| **README.md** (this file)                 | User guide - setup and content publishing                            |
 | [**DEVELOPMENT.md**](docs/DEVELOPMENT.md) | Developer guide - architecture, testing, workflows, and contributing |
+
 ---
 
 ## 🚀 Quick Start
@@ -47,7 +56,6 @@ pnpm install
 ```
 
 > If `corepack` is not available on your system, you can install pnpm globally with `npm i -g pnpm`.
-
 
 ### 2. Configure Environment
 
@@ -71,15 +79,15 @@ GOOGLE_ANALYTICS_TAG_ID=
 
 #### Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `GHOST_URL` | Yes | Base URL of your Ghost instance |
-| `GHOST_CONTENT_KEY` | Yes | Ghost Content API key |
-| `GHOST_VERSION` | No | Ghost Content API version (default: `v5.0`) |
-| `GHOST_TIMEOUT` | No | Ghost request timeout in milliseconds (default: `5000`) |
-| `SITE_URL` | Yes | Public site URL for canonical and hreflang |
-| `IMAGE_HOST_URL` | No | Optional image host/CDN used for remote image domain allowlist (default: empty) |
-| `GOOGLE_ANALYTICS_TAG_ID` | No | Optional Google tag / GA4 Measurement ID (e.g., `G-XXXX`). Leave empty to disable analytics |
+| Variable                  | Required | Description                                                                                 |
+| ------------------------- | -------- | ------------------------------------------------------------------------------------------- |
+| `GHOST_URL`               | Yes      | Base URL of your Ghost instance                                                             |
+| `GHOST_CONTENT_KEY`       | Yes      | Ghost Content API key                                                                       |
+| `GHOST_VERSION`           | No       | Ghost Content API version (default: `v5.0`)                                                 |
+| `GHOST_TIMEOUT`           | No       | Ghost request timeout in milliseconds (default: `5000`)                                     |
+| `SITE_URL`                | Yes      | Public site URL for canonical and hreflang                                                  |
+| `IMAGE_HOST_URL`          | No       | Optional image host/CDN used for remote image domain allowlist (default: empty)             |
+| `GOOGLE_ANALYTICS_TAG_ID` | No       | Optional Google tag / GA4 Measurement ID (e.g., `G-XXXX`). Leave empty to disable analytics |
 
 ### 3. Get Your Ghost Content API Key
 
@@ -89,6 +97,7 @@ GOOGLE_ANALYTICS_TAG_ID=
 4. Copy the **Content API Key** into your `.env` file
 
 > **Tip**: Use the Ghost Demo API for testing:
+>
 > ```env
 > GHOST_URL=https://demo.ghost.io
 > GHOST_CONTENT_KEY=22444f78447824223cefc48062
@@ -104,15 +113,15 @@ Visit `http://localhost:4321` to see your site.
 
 ## Common Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start the development server |
-| `pnpm build` | Build the production site |
-| `pnpm preview` | Preview the production build |
-| `pnpm astro sync` | Generate type definitions (useful after env/schema changes) |
-| `pnpm astro check` | Typecheck and validate Astro project |
-| `pnpm test` | Run the test suite |
-| `pnpm format` | Format the codebase |
+| Command            | Description                                                 |
+| ------------------ | ----------------------------------------------------------- |
+| `pnpm dev`         | Start the development server                                |
+| `pnpm build`       | Build the production site                                   |
+| `pnpm preview`     | Preview the production build                                |
+| `pnpm astro sync`  | Generate type definitions (useful after env/schema changes) |
+| `pnpm astro check` | Typecheck and validate Astro project                        |
+| `pnpm test`        | Run the test suite                                          |
+| `pnpm format`      | Format the codebase                                         |
 
 ---
 
@@ -122,22 +131,22 @@ Visit `http://localhost:4321` to see your site.
 
 Use **regular tags** to classify your posts. The system recognizes special prefixes:
 
-| Tag Prefix | Purpose | Example |
-|------------|---------|---------|
-| `type-` | Post display type | `type-article`, `type-gallery`, `type-video`, `type-music` |
-| `category-` | Content category | `category-tech`, `category-life`, `category-design` |
-| `series-` | Article series | `series-astro-tutorial`, `series-web-dev-basics` |
-| *(no prefix)* | General tags | `JavaScript`, `React`, `Photography` |
+| Tag Prefix    | Purpose           | Example                                                    |
+| ------------- | ----------------- | ---------------------------------------------------------- |
+| `type-`       | Post display type | `type-article`, `type-gallery`, `type-video`, `type-music` |
+| `category-`   | Content category  | `category-tech`, `category-life`, `category-design`        |
+| `series-`     | Article series    | `series-astro-tutorial`, `series-web-dev-basics`           |
+| _(no prefix)_ | General tags      | `JavaScript`, `React`, `Photography`                       |
 
 #### Supported Post Types
 
-| Type Tag | Display Style |
-|----------|---------------|
-| `type-article` | Standard article layout |
+| Type Tag       | Display Style               |
+| -------------- | --------------------------- |
+| `type-article` | Standard article layout     |
 | `type-gallery` | Image gallery with carousel |
-| `type-video` | Video player embed |
-| `type-music` | Audio player embed |
-| *(default)* | Default card layout |
+| `type-video`   | Video player embed          |
+| `type-music`   | Audio player embed          |
+| _(default)_    | Default card layout         |
 
 ---
 
@@ -159,10 +168,10 @@ Use **regular tags** to classify your posts. The system recognizes special prefi
 
 Use **internal tags** (starting with `#`) in Ghost:
 
-| Internal Tag | Purpose | Example |
-|--------------|---------|---------|
-| `#lang-{locale}` | Specify post language | `#lang-zh`, `#lang-ja`, `#lang-en` |
-| `#i18n-{key}` | Translation group identifier | `#i18n-intro-to-solitude` |
+| Internal Tag     | Purpose                      | Example                            |
+| ---------------- | ---------------------------- | ---------------------------------- |
+| `#lang-{locale}` | Specify post language        | `#lang-zh`, `#lang-ja`, `#lang-en` |
+| `#i18n-{key}`    | Translation group identifier | `#i18n-intro-to-solitude`          |
 
 > **Note**: In Ghost Content API, internal tags `#xxx` are converted to slug format `hash-xxx`.
 
@@ -173,57 +182,62 @@ Use **internal tags** (starting with `#`) in Ghost:
 #### Step 1: Plan your translation group key
 
 Choose a unique key for your article, e.g., `astro-guide`. This key will be used in:
+
 - The `#i18n-astro-guide` tag (to link all versions)
 - The URL: `/zh/p/astro-guide`, `/ja/p/astro-guide`, `/en/p/astro-guide`
 
 #### Step 2: Create the Chinese version
 
 In Ghost Admin, create a new post:
+
 1. Write your article content in Chinese
 2. Open the **Post settings** panel (gear icon)
 3. Scroll down to **Tags** section
 4. Add these tags:
-   - `#lang-zh` (language tag - note the `#` prefix!)
-   - `#i18n-astro-guide` (translation group tag)
-   - `type-article` (optional: post type)
-   - `category-tech` (optional: category)
+    - `#lang-zh` (language tag - note the `#` prefix!)
+    - `#i18n-astro-guide` (translation group tag)
+    - `type-article` (optional: post type)
+    - `category-tech` (optional: category)
 5. Publish the post
 
 #### Step 3: Create the Japanese version
 
 Create a **new, separate post** in Ghost:
+
 1. Write your article content in Japanese
 2. Add these tags:
-   - `#lang-ja` ← Different language
-   - `#i18n-astro-guide` ← **Same** translation key!
-   - `type-article`, `category-tech` (same as Chinese version)
+    - `#lang-ja` ← Different language
+    - `#i18n-astro-guide` ← **Same** translation key!
+    - `type-article`, `category-tech` (same as Chinese version)
 3. Publish the post
 
 #### Step 4: Create the English version
 
 Create another **new, separate post** in Ghost:
+
 1. Write your article content in English
 2. Add these tags:
-   - `#lang-en` ← Different language
-   - `#i18n-astro-guide` ← **Same** translation key!
-   - `type-article`, `category-tech` (same as other versions)
+    - `#lang-en` ← Different language
+    - `#i18n-astro-guide` ← **Same** translation key!
+    - `type-article`, `category-tech` (same as other versions)
 3. Publish the post
 
 #### Result
 
 Now you have 3 separate posts in Ghost, all linked by `#i18n-astro-guide`:
+
 - Chinese post → accessible at `/zh/p/astro-guide`
-- Japanese post → accessible at `/ja/p/astro-guide`  
+- Japanese post → accessible at `/ja/p/astro-guide`
 - English post → accessible at `/en/p/astro-guide`
 
 Users can switch between versions using the language switcher on the article page.
 
 ### Complete Example
 
-| Post Title | Tags |
-|------------|------|
-| "Astro 入门指南" (Chinese) | `#lang-zh`, `#i18n-astro-guide`, `type-article`, `category-tech` |
-| "Astro入門ガイド" (Japanese) | `#lang-ja`, `#i18n-astro-guide`, `type-article`, `category-tech` |
+| Post Title                             | Tags                                                             |
+| -------------------------------------- | ---------------------------------------------------------------- |
+| "Astro 入门指南" (Chinese)             | `#lang-zh`, `#i18n-astro-guide`, `type-article`, `category-tech` |
+| "Astro入門ガイド" (Japanese)           | `#lang-ja`, `#i18n-astro-guide`, `type-article`, `category-tech` |
 | "Getting Started with Astro" (English) | `#lang-en`, `#i18n-astro-guide`, `type-article`, `category-tech` |
 
 ### Fallback Behavior

@@ -116,7 +116,7 @@ function ShowcaseCard({
                 {/* 分类标签 */}
                 {category && (
                     <div className="mb-2">
-                        <span 
+                        <span
                             className="text-xs font-medium tracking-wider uppercase"
                             style={{ color: 'var(--post-view-card-meta)' }}
                         >
@@ -267,7 +267,7 @@ function ViewMoreCard({
                         'bg-white/20 backdrop-blur-sm',
                         'border border-white/30',
                         'transition-all duration-300',
-                        'group-hover:bg-white/30 group-hover:scale-110',
+                        'group-hover:scale-110 group-hover:bg-white/30',
                     )}
                     whileHover={{ rotate: 0 }}
                 >
@@ -284,9 +284,7 @@ function ViewMoreCard({
                 >
                     查看全部文章
                 </h3>
-                <p className="mt-1 text-sm text-white/70">
-                    探索更多内容
-                </p>
+                <p className="mt-1 text-sm text-white/70">探索更多内容</p>
             </div>
 
             {/* Hover 阴影增强 */}
@@ -539,7 +537,8 @@ export default function PostsShowcaseCarousel({
                         href={postsPageUrl}
                         index={posts.length}
                         isOtherHovered={
-                            hoveredIndex !== null && hoveredIndex !== posts.length
+                            hoveredIndex !== null &&
+                            hoveredIndex !== posts.length
                         }
                         onHover={setHoveredIndex}
                     />

@@ -12,14 +12,14 @@ const DEFAULT_LOCALE: Locale = 'zh';
  */
 function getCurrentLocale(): Locale {
     if (typeof window === 'undefined') return DEFAULT_LOCALE;
-    
+
     const pathParts = window.location.pathname.split('/').filter(Boolean);
     const firstPart = pathParts[0];
-    
+
     if (firstPart && LOCALES.includes(firstPart as Locale)) {
         return firstPart as Locale;
     }
-    
+
     return DEFAULT_LOCALE;
 }
 
@@ -58,12 +58,13 @@ export default function DockNavMobile() {
     // 根据当前语言构建导航链接
     const navItems = useMemo(() => {
         return navItemsConfig.map((item) => ({
-            href: item.path === '' && item.label === 'RSS' 
-                ? '' // RSS 暂时为空
-                : item.noLocale
-                    ? `/${item.path}` // 不需要多语言前缀
-                    : item.path === '' 
-                        ? `/${currentLocale}` 
+            href:
+                item.path === '' && item.label === 'RSS'
+                    ? '' // RSS 暂时为空
+                    : item.noLocale
+                      ? `/${item.path}` // 不需要多语言前缀
+                      : item.path === ''
+                        ? `/${currentLocale}`
                         : buildLocalePath(currentLocale, item.path),
             label: item.label,
         }));
@@ -110,7 +111,7 @@ export default function DockNavMobile() {
                     'bg-gray-100 opacity-85 shadow-lg transition-all duration-300',
                     'dark:bg-zinc-800',
                     'hover:opacity-100 active:scale-95',
-                    'focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground/50',
+                    'focus-visible:ring-foreground/50 focus:outline-none focus-visible:ring-2',
                 )}
                 aria-label={isOpen ? '关闭菜单' : '打开菜单'}
                 aria-expanded={isOpen}
@@ -137,7 +138,7 @@ export default function DockNavMobile() {
             {/* 菜单面板 */}
             <div
                 className={cn(
-                    'fixed bottom-20 left-4 right-4 z-50',
+                    'fixed right-4 bottom-20 left-4 z-50',
                     'rounded-2xl bg-gray-100 p-4 shadow-2xl dark:bg-zinc-800',
                     'transform transition-all duration-300 ease-out',
                     isOpen

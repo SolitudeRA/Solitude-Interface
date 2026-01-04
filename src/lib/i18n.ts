@@ -204,7 +204,9 @@ export function getFallbackMessage(
 /**
  * 多语言文章过滤结果
  */
-export interface LocalizedPost<T extends { tags?: PostTag[]; published_at: string }> {
+export interface LocalizedPost<
+    T extends { tags?: PostTag[]; published_at: string },
+> {
     post: T;
     locale: Locale | null;
     i18nKey: string | null;
@@ -213,21 +215,20 @@ export interface LocalizedPost<T extends { tags?: PostTag[]; published_at: strin
 
 /**
  * 过滤多语言文章列表
- * 
+ *
  * 规则：
  * 1. 优先显示当前语言版本的文章
  * 2. 如果同一组文章（相同 i18n key）没有当前语言版本，显示其他语言版本
  * 3. 没有 i18n key 的文章，如果是当前语言或无语言标记，则显示
  * 4. 按发布日期从最新开始排序
- * 
+ *
  * @param posts 原始文章列表
  * @param currentLocale 当前语言
  * @returns 过滤后的文章列表（带有 fallback 标记）
  */
-export function filterPostsByLocale<T extends { tags?: PostTag[]; published_at: string }>(
-    posts: T[],
-    currentLocale: Locale,
-): LocalizedPost<T>[] {
+export function filterPostsByLocale<
+    T extends { tags?: PostTag[]; published_at: string },
+>(posts: T[], currentLocale: Locale): LocalizedPost<T>[] {
     // 按 i18n key 分组文章
     const i18nGroups = new Map<string, T[]>();
     const standalonePostsCurrentLocale: T[] = [];
@@ -260,7 +261,7 @@ export function filterPostsByLocale<T extends { tags?: PostTag[]; published_at: 
     for (const [i18nKey, groupPosts] of i18nGroups) {
         // 先找当前语言版本
         const currentLocalePost = groupPosts.find(
-            (p) => extractLocaleFromTags(p.tags) === currentLocale
+            (p) => extractLocaleFromTags(p.tags) === currentLocale,
         );
 
         if (currentLocalePost) {
@@ -273,7 +274,9 @@ export function filterPostsByLocale<T extends { tags?: PostTag[]; published_at: 
         } else {
             // 没有当前语言版本，选择第一个可用的版本（按发布日期最新的）
             const sortedGroupPosts = [...groupPosts].sort(
-                (a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+                (a, b) =>
+                    new Date(b.published_at).getTime() -
+                    new Date(a.published_at).getTime(),
             );
             const fallbackPost = sortedGroupPosts[0];
             if (fallbackPost) {
@@ -309,7 +312,9 @@ export function filterPostsByLocale<T extends { tags?: PostTag[]; published_at: 
 
     // 按发布日期排序（最新的在前）
     result.sort(
-        (a, b) => new Date(b.post.published_at).getTime() - new Date(a.post.published_at).getTime()
+        (a, b) =>
+            new Date(b.post.published_at).getTime() -
+            new Date(a.post.published_at).getTime(),
     );
 
     return result;

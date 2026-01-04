@@ -31,8 +31,8 @@ export const atomWithLocalStorage = <T>(key: string, initialValue: T) => {
         (get) => get(baseAtom),
         (get, set, update: T | ((prev: T) => T)) => {
             const nextValue =
-                typeof update === 'function' 
-                    ? (update as (prev: T) => T)(get(baseAtom)) 
+                typeof update === 'function'
+                    ? (update as (prev: T) => T)(get(baseAtom))
                     : update;
             set(baseAtom, nextValue);
 

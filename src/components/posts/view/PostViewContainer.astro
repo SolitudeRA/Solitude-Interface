@@ -41,7 +41,7 @@ const postDates = posts.map((post) => post.published_at);
             return (
                 <a
                     href={`/posts/${post.id}`}
-                    class="post-card-wrapper shrink-0 flex items-center justify-center transition-all duration-300 ease-out hover:z-10 hover:scale-[1.02]"
+                    class="post-card-wrapper flex shrink-0 items-center justify-center transition-all duration-300 ease-out hover:z-10 hover:scale-[1.02]"
                 >
                     <PostCardComponent post={post} />
                 </a>
