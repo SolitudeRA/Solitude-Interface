@@ -10,6 +10,38 @@ This document covers development setup, architecture, and testing for the Solitu
 - [TailwindCSS](https://tailwindcss.com/) - Styling
 - [Ghost Content API](https://ghost.org/docs/content-api/) - Headless CMS
 - [Vitest](https://vitest.dev/) - Testing framework
+- **pnpm** - Package manager
+
+## 📦 Package Manager (pnpm)
+
+This project uses **pnpm**.
+
+### Install pnpm (recommended via Corepack)
+
+```bash
+corepack enable pnpm
+pnpm -v
+```
+
+> If `corepack` is not available, install pnpm globally:
+>
+> ```bash
+> npm i -g pnpm
+> ```
+
+### Install dependencies
+
+```bash
+pnpm install
+```
+
+> If you ever see a warning like “Ignored build scripts …”, run:
+>
+> ```bash
+> pnpm approve-builds
+> ```
+>
+> and allow trusted dependencies (e.g. `esbuild`, `sharp`).
 
 ## 📂 Project Structure
 
@@ -39,18 +71,22 @@ src/
 
 ## 🧞 Commands
 
-| Command                    | Action                                     |
-| :------------------------- | :----------------------------------------- |
-| `npm install`              | Install dependencies                       |
-| `npm run dev`              | Start local dev server at `localhost:4321` |
-| `npm run build`            | Build production site to `./dist/`         |
-| `npm run preview`          | Preview build locally before deploying     |
-| `npm run format`           | Format code with Prettier                  |
-| `npm test`                 | Run tests in watch mode                    |
-| `npm run test:unit`        | Run unit tests only (fast, with mocks)     |
-| `npm run test:integration` | Run integration tests (real API calls)     |
-| `npm run test:coverage`    | Run tests with coverage report             |
-| `npm run test:ui`          | Open Vitest UI for interactive testing     |
+| Command                 | Action                                      |
+| :---------------------- | :------------------------------------------ |
+| `pnpm install`          | Install dependencies                        |
+| `pnpm dev`              | Start local dev server at `localhost:4321`  |
+| `pnpm build`            | Build production site to `./dist/`          |
+| `pnpm preview`          | Preview build locally before deploying      |
+| `pnpm astro sync`       | Generate Astro type definitions             |
+| `pnpm astro check`      | Typecheck and validate Astro project        |
+| `pnpm format`           | Format code with Prettier (writes changes)  |
+| `pnpm format:check`     | Check formatting with Prettier (no changes) |
+| `pnpm test`             | Run tests in watch mode                     |
+| `pnpm test:run`         | Run all tests once (CI-friendly)            |
+| `pnpm test:unit`        | Run unit tests only (fast, with mocks)      |
+| `pnpm test:integration` | Run integration tests (real API calls)      |
+| `pnpm test:coverage`    | Run tests with coverage report              |
+| `pnpm test:ui`          | Open Vitest UI for interactive testing      |
 
 ## 📋 Testing
 
@@ -62,46 +98,52 @@ This project includes two types of tests:
 ### Quick Start
 
 ```bash
-# Run all tests
-npm test
+# Watch mode - runs tests on file changes
+pnpm test
 
 # Run only unit tests (fast, no API needed)
-npm run test:unit
+pnpm test:unit
 
 # Run only integration tests (requires .env configuration)
-npm run test:integration
+pnpm test:integration
+
+# Run all tests once (CI-friendly)
+pnpm test:run
 ```
 
 ### Unit Tests vs Integration Tests
 
-| Feature          | Unit Tests          | Integration Tests          |
-| ---------------- | ------------------- | -------------------------- |
-| **Speed**        | ⚡ Fast (< 1s)      | 🐌 Slower (10-30s)         |
-| **Dependencies** | ✅ None             | ⚠️ Requires .env + Network |
-| **API Calls**    | ❌ Mocked           | ✅ Real Ghost API          |
-| **Use Case**     | Daily development   | Pre-commit verification    |
-| **Command**      | `npm run test:unit` | `npm run test:integration` |
+| Feature          | Unit Tests        | Integration Tests            |
+| ---------------- | ----------------- | ---------------------------- |
+| **Speed**        | ⚡ Fast (< 1s)    | 🐌 Slower (10-30s)           |
+| **Dependencies** | ✅ None           | ⚠️ Requires .env + Network   |
+| **API Calls**    | ❌ Mocked         | ✅ Real Ghost API            |
+| **Use Case**     | Daily development | Pre-commit / CI verification |
+| **Command**      | `pnpm test:unit`  | `pnpm test:integration`      |
 
 ### Available Test Commands
 
 ```bash
 # Watch mode - runs tests on file changes
-npm test
+pnpm test
 
 # Run all tests once
-npm run test:all
+pnpm test:run
+
+# Alias: run all tests once
+pnpm test:all
 
 # Run unit tests only
-npm run test:unit
+pnpm test:unit
 
 # Run integration tests only
-npm run test:integration
+pnpm test:integration
 
 # Generate coverage report
-npm run test:coverage
+pnpm test:coverage
 
 # Open interactive UI
-npm run test:ui
+pnpm test:ui
 ```
 
 ### What's Tested
@@ -157,7 +199,7 @@ src/api/__tests__/
 
 The following code in `src/api/adapters/ghost.ts` handles tag extraction:
 
-```typescript
+```ts
 const TAG_PREFIXES = {
     TYPE: 'type-',
     CATEGORY: 'category-',
@@ -169,7 +211,7 @@ const TAG_PREFIXES = {
 
 The i18n system in `src/lib/i18n.ts` handles language tags:
 
-```typescript
+```ts
 const LANG_TAG_PREFIX = 'hash-lang-'; // Ghost converts #lang-xx to hash-lang-xx
 const I18N_TAG_PREFIX = 'hash-i18n-'; // Ghost converts #i18n-xx to hash-i18n-xx
 ```
@@ -178,13 +220,13 @@ const I18N_TAG_PREFIX = 'hash-i18n-'; // Ghost converts #i18n-xx to hash-i18n-xx
 
 Default language is set in `src/lib/i18n.ts`:
 
-```typescript
+```ts
 export const DEFAULT_LOCALE: Locale = 'zh';
 ```
 
 To change the default, modify this value and update `astro.config.mjs`:
 
-```javascript
+```js
 i18n: {
     locales: ['zh', 'en', 'ja'],
     defaultLocale: 'zh',  // Change this
