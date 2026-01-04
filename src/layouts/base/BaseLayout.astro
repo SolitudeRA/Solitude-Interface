@@ -1,5 +1,6 @@
 ---
 import '@styles/index.css';
+import GoogleAnalytics from '@components/utils/GoogleAnalytics.astro';
 import type { AlternateLink } from '@lib/i18n';
 
 interface Props {
@@ -39,6 +40,7 @@ const coverImageUrlStr = coverImageUrl ? `url(${coverImageUrl.toString()})` : 'n
                 />
             ))
         }
+        <GoogleAnalytics />
         <style data-emotion-insertion-point="emotion"></style>
         <title>{siteTitle}</title>
     </head>
