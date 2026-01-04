@@ -30,16 +30,24 @@ Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](doc
 | Document | Description |
 |----------|-------------|
 | **README.md** (this file) | User guide - setup and content publishing |
-| [**docs/DEVELOPMENT.md**](docs/DEVELOPMENT.md) | Developer guide - architecture, testing, 
+| [**DEVELOPMENT.md**](docs/DEVELOPMENT.md) | Developer guide - architecture, testing, workflows, and contributing |
 ---
 
 ## 🚀 Quick Start
 
 ### 1. Install Dependencies
 
+This project uses **pnpm**.
+
 ```bash
-npm install
+# (Recommended) Enable pnpm via Corepack
+corepack enable pnpm
+
+pnpm install
 ```
+
+> If `corepack` is not available on your system, you can install pnpm globally with `npm i -g pnpm`.
+
 
 ### 2. Configure Environment
 
@@ -55,7 +63,10 @@ Edit `.env` with your Ghost instance information:
 GHOST_URL=https://your-ghost-instance.com
 GHOST_CONTENT_KEY=your-content-api-key-here
 GHOST_VERSION=v5.0
+GHOST_TIMEOUT=5000
 SITE_URL=https://your-site.example.com
+IMAGE_HOST_URL=
+GOOGLE_ANALYTICS_TAG_ID=
 ```
 
 #### Environment Variables
@@ -64,8 +75,11 @@ SITE_URL=https://your-site.example.com
 |----------|----------|-------------|
 | `GHOST_URL` | Yes | Base URL of your Ghost instance |
 | `GHOST_CONTENT_KEY` | Yes | Ghost Content API key |
-| `GHOST_VERSION` | Yes | Ghost Content API version (e.g., `v5.0`) |
+| `GHOST_VERSION` | No | Ghost Content API version (default: `v5.0`) |
+| `GHOST_TIMEOUT` | No | Ghost request timeout in milliseconds (default: `5000`) |
 | `SITE_URL` | Yes | Public site URL for canonical and hreflang |
+| `IMAGE_HOST_URL` | No | Optional image host/CDN used for remote image domain allowlist (default: empty) |
+| `GOOGLE_ANALYTICS_TAG_ID` | No | Optional Google tag / GA4 Measurement ID (e.g., `G-XXXX`). Leave empty to disable analytics |
 
 ### 3. Get Your Ghost Content API Key
 
@@ -83,7 +97,7 @@ SITE_URL=https://your-site.example.com
 ### 4. Start Development Server
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Visit `http://localhost:4321` to see your site.
@@ -92,11 +106,13 @@ Visit `http://localhost:4321` to see your site.
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start the development server |
-| `npm run build` | Build the production site |
-| `npm run preview` | Preview the production build |
-| `npm run test` | Run the test suite |
-| `npm run format` | Format the codebase |
+| `pnpm dev` | Start the development server |
+| `pnpm build` | Build the production site |
+| `pnpm preview` | Preview the production build |
+| `pnpm astro sync` | Generate type definitions (useful after env/schema changes) |
+| `pnpm astro check` | Typecheck and validate Astro project |
+| `pnpm test` | Run the test suite |
+| `pnpm format` | Format the codebase |
 
 ---
 
