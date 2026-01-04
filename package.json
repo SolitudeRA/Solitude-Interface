@@ -7,8 +7,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "prepare": "husky",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "format:staged": "lint-staged",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
@@ -16,6 +18,11 @@
     "test:unit": "vitest run --testNamePattern='(?<!Integration)' --exclude='**/*.integration.test.ts'",
     "test:integration": "vitest run --testNamePattern='Integration'",
     "test:all": "vitest run"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,astro,json,md,yml,yaml,css,scss}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
@@ -56,6 +63,8 @@
     "autoprefixer": "^10.4.22",
     "axios-mock-adapter": "^2.1.0",
     "cssnano": "^7.1.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.7.4",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
