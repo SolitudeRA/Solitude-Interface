@@ -31,28 +31,52 @@ const privacyLink = buildLocalePath(lang, 'privacy-policy');
             'min-h-[2.5rem] md:min-h-[2.75rem] lg:min-h-[3rem]',
             'w-auto max-w-full',
             'px-3 md:px-4 lg:px-5 xl:px-6 2xl:px-8',
-            'space-x-2 md:space-x-3 lg:space-x-5 xl:space-x-8 2xl:space-x-10 3xl:space-x-12',
+            '3xl:space-x-12 space-x-2 md:space-x-3 lg:space-x-5 xl:space-x-8 2xl:space-x-10',
         ]}
     >
         <div>
-            <a href={homeLink} class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Home</a>
+            <a
+                href={homeLink}
+                class="text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
+                >Home</a
+            >
         </div>
         <div>
-            <a href={postsLink} class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Posts</a>
+            <a
+                href={postsLink}
+                class="text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
+                >Posts</a
+            >
         </div>
         <div>
-            <a href={aboutLink} class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">About</a>
+            <a
+                href={aboutLink}
+                class="text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
+                >About</a
+            >
         </div>
         <div>
-            <a href={contactLink} class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Contact</a>
+            <a
+                href={contactLink}
+                class="text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
+                >Contact</a
+            >
         </div>
         <!-- RSS 在平板竖屏隐藏，横屏及以上显示 -->
         <div class="hidden lg:block">
-            <a href="" class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">RSS</a>
+            <a
+                href=""
+                class="text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
+                >RSS</a
+            >
         </div>
         <!-- Privacy Policy 仅在大屏显示 -->
         <div class="hidden xl:block">
-            <a href={privacyLink} class="font-medium text-xs md:text-sm lg:text-base whitespace-nowrap">Privacy</a>
+            <a
+                href={privacyLink}
+                class="text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
+                >Privacy</a
+            >
         </div>
     </div>
 </div>

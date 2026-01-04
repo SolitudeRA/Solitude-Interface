@@ -17,21 +17,34 @@ const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
         siteSubTitle={siteDescription}
         isFixed={true}
     />
-    
-    <PageHero 
-        title="Contact" 
+
+    <PageHero
+        title="Contact"
         backgroundImage={coverImageUrl?.toString()}
         badgeText="Get in Touch"
         badgeIcon={true}
     >
-        <svg slot="badge-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+        <svg
+            slot="badge-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path
+                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+            ></path>
             <polyline points="22,6 12,13 2,6"></polyline>
         </svg>
     </PageHero>
-    
+
     <main class="contact-page min-h-screen">
-        <div class="contact-content-wrapper mx-auto max-w-4xl px-6 sm:px-8 lg:px-12">
+        <div
+            class="contact-content-wrapper mx-auto max-w-4xl px-6 sm:px-8 lg:px-12"
+        >
             <ContactContent />
         </div>
     </main>

@@ -184,39 +184,35 @@ export default function PostViewScrollContainer({
     }, [updateScrollState, updateVisiblePosts]);
 
     // 鼠标滚轮横向滚动 - 始终响应滚动，无需等待 hover
-    const handleWheel = useCallback(
-        (e: React.WheelEvent<HTMLDivElement>) => {
-            if (!containerRef.current) return;
+    const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
+        if (!containerRef.current) return;
 
-            const container = containerRef.current;
-            const { scrollWidth, clientWidth, scrollLeft } = container;
-            const canScroll = scrollWidth > clientWidth;
+        const container = containerRef.current;
+        const { scrollWidth, clientWidth, scrollLeft } = container;
+        const canScroll = scrollWidth > clientWidth;
 
-            // 判断是否在边界
-            const atStart = scrollLeft <= 0 && e.deltaY < 0;
-            const atEnd =
-                scrollLeft >= scrollWidth - clientWidth && e.deltaY > 0;
+        // 判断是否在边界
+        const atStart = scrollLeft <= 0 && e.deltaY < 0;
+        const atEnd = scrollLeft >= scrollWidth - clientWidth && e.deltaY > 0;
 
-            // 仅在可横向滚动且不在边界时拦截
-            if (canScroll && !atStart && !atEnd) {
-                e.preventDefault();
-                e.stopPropagation();
+        // 仅在可横向滚动且不在边界时拦截
+        if (canScroll && !atStart && !atEnd) {
+            e.preventDefault();
+            e.stopPropagation();
 
-                // 计算单个卡片的滚动距离
-                const card = container.querySelector('.post-card-wrapper');
-                const cardWidth = card?.getBoundingClientRect().width || 300;
-                const gap = 60; // gap-[60px]
-                const scrollDistance = cardWidth + gap;
+            // 计算单个卡片的滚动距离
+            const card = container.querySelector('.post-card-wrapper');
+            const cardWidth = card?.getBoundingClientRect().width || 300;
+            const gap = 60; // gap-[60px]
+            const scrollDistance = cardWidth + gap;
 
-                const direction = e.deltaY > 0 ? 1 : -1;
-                container.scrollBy({
-                    left: direction * scrollDistance,
-                    behavior: 'smooth',
-                });
-            }
-        },
-        [],
-    );
+            const direction = e.deltaY > 0 ? 1 : -1;
+            container.scrollBy({
+                left: direction * scrollDistance,
+                behavior: 'smooth',
+            });
+        }
+    }, []);
 
     // 滚动一屏
     const scrollByPage = useCallback((direction: 'left' | 'right') => {
@@ -278,7 +274,8 @@ export default function PostViewScrollContainer({
                                 'h-full w-32',
                             )}
                             style={{
-                                background: 'linear-gradient(to right, var(--post-view-scroll-mask-start) 0%, var(--post-view-scroll-mask-end) 100%)',
+                                background:
+                                    'linear-gradient(to right, var(--post-view-scroll-mask-start) 0%, var(--post-view-scroll-mask-end) 100%)',
                                 maskImage:
                                     'linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)',
                                 WebkitMaskImage:
@@ -301,7 +298,8 @@ export default function PostViewScrollContainer({
                                 'h-full w-32',
                             )}
                             style={{
-                                background: 'linear-gradient(to left, var(--post-view-scroll-mask-start) 0%, var(--post-view-scroll-mask-end) 100%)',
+                                background:
+                                    'linear-gradient(to left, var(--post-view-scroll-mask-start) 0%, var(--post-view-scroll-mask-end) 100%)',
                                 maskImage:
                                     'linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%)',
                                 WebkitMaskImage:

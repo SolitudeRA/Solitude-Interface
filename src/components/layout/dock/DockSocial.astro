@@ -19,17 +19,19 @@ const { lang = DEFAULT_LOCALE } = Astro.props;
 const aboutUrl = buildLocalePath(lang, '/about');
 ---
 
-<div class:list={[
-    'text-color-ui flex items-center',
-    'min-h-[4em] 2xl:min-h-[5em]',
-    'justify-end',
-]}>
+<div
+    class:list={[
+        'text-color-ui flex items-center',
+        'min-h-[4em] 2xl:min-h-[5em]',
+        'justify-end',
+    ]}
+>
     <!-- 移动端、平板、小桌面：社交链接汉堡菜单（<1536px） -->
-    <div class="flex 2xl:hidden items-center gap-3 sm:gap-4">
+    <div class="flex items-center gap-3 sm:gap-4 2xl:hidden">
         <DockSocialMobile client:load />
         <a href={aboutUrl} class="block transition-transform hover:scale-105">
             <Avatar
-                className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 shadow-xl"
+                className="h-10 w-10 shadow-xl sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16"
                 src={solitudeAvatar.src}
                 showFallback={true}
                 client:visible
@@ -38,34 +40,56 @@ const aboutUrl = buildLocalePath(lang, '/about');
     </div>
 
     <!-- 大屏桌面端：完整社交图标展示（≥1536px） -->
-    <div class="hidden 2xl:flex items-center">
-        <div class:list={[
-            'flex items-center',
-            'mr-12 3xl:mr-14',
-            'space-x-10 3xl:space-x-12',
-        ]}>
+    <div class="hidden items-center 2xl:flex">
+        <div
+            class:list={[
+                'flex items-center',
+                '3xl:mr-14 mr-12',
+                '3xl:space-x-12 space-x-10',
+            ]}
+        >
             <span>
-                <a href="https://github.com/SolitudeRA" target="_blank" class="block transition-transform hover:scale-110">
+                <a
+                    href="https://github.com/SolitudeRA"
+                    target="_blank"
+                    class="block transition-transform hover:scale-110"
+                >
                     <FaGithub className="h-8 w-8" />
                 </a>
             </span>
             <span>
-                <a href="https://x.com/SolitudeRA" target="_blank" class="block transition-transform hover:scale-110">
+                <a
+                    href="https://x.com/SolitudeRA"
+                    target="_blank"
+                    class="block transition-transform hover:scale-110"
+                >
                     <FaSquareXTwitter className="h-8 w-8" />
                 </a>
             </span>
             <span>
-                <a href="https://steamcommunity.com/id/SolitudeRA/" target="_blank" class="block transition-transform hover:scale-110">
+                <a
+                    href="https://steamcommunity.com/id/SolitudeRA/"
+                    target="_blank"
+                    class="block transition-transform hover:scale-110"
+                >
                     <FaSteam className="h-8 w-8" />
                 </a>
             </span>
             <span>
-                <a href="https://open.spotify.com/user/29a85ixn15w4zcbmb0lkix9h3?si=1c70dc8fa5dc418c" target="_blank" class="block transition-transform hover:scale-110">
+                <a
+                    href="https://open.spotify.com/user/29a85ixn15w4zcbmb0lkix9h3?si=1c70dc8fa5dc418c"
+                    target="_blank"
+                    class="block transition-transform hover:scale-110"
+                >
                     <FaSpotify className="h-8 w-8" />
                 </a>
             </span>
             <span>
-                <a href="https://space.bilibili.com/1724972" target="_blank" class="block transition-transform hover:scale-110">
+                <a
+                    href="https://space.bilibili.com/1724972"
+                    target="_blank"
+                    class="block transition-transform hover:scale-110"
+                >
                     <FaBilibili className="h-8 w-8" />
                 </a>
             </span>

@@ -19,9 +19,9 @@ interface Props {
     date?: string;
 }
 
-const { 
-    title, 
-    backgroundImage, 
+const {
+    title,
+    backgroundImage,
     subtitle,
     badgeText,
     badgeIcon = false,
@@ -29,28 +29,33 @@ const {
 } = Astro.props;
 ---
 
-<div class="page-hero" style={backgroundImage ? `--bg-image: url(${backgroundImage})` : ''}>
+<div
+    class="page-hero"
+    style={backgroundImage ? `--bg-image: url(${backgroundImage})` : ''}
+>
     <div class="page-hero-overlay"></div>
     <div class="page-hero-content">
         <h1 class="page-hero-title">{title}</h1>
-        
-        {(badgeText || date) && (
-            <div class="page-hero-meta">
-                {badgeText && (
-                    <span class="page-badge">
-                        {badgeIcon && <slot name="badge-icon" />}
-                        {badgeText}
-                    </span>
-                )}
-                {date && (
-                    <time datetime={date} class="page-date">{date}</time>
-                )}
-            </div>
-        )}
-        
-        {subtitle && (
-            <p class="page-hero-subtitle">{subtitle}</p>
-        )}
+
+        {
+            (badgeText || date) && (
+                <div class="page-hero-meta">
+                    {badgeText && (
+                        <span class="page-badge">
+                            {badgeIcon && <slot name="badge-icon" />}
+                            {badgeText}
+                        </span>
+                    )}
+                    {date && (
+                        <time datetime={date} class="page-date">
+                            {date}
+                        </time>
+                    )}
+                </div>
+            )
+        }
+
+        {subtitle && <p class="page-hero-subtitle">{subtitle}</p>}
     </div>
 </div>
 
@@ -60,7 +65,10 @@ const {
         height: 50vh;
         min-height: 350px;
         width: 100%;
-        background-image: var(--bg-image, linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%));
+        background-image: var(
+            --bg-image,
+            linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)
+        );
         background-size: cover;
         background-position: center;
         background-attachment: fixed;

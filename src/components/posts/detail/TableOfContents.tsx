@@ -10,8 +10,8 @@ interface TableOfContentsProps {
     contentSelector?: string;
 }
 
-export default function TableOfContents({ 
-    contentSelector = '.solitude-article-content' 
+export default function TableOfContents({
+    contentSelector = '.solitude-article-content',
 }: TableOfContentsProps) {
     const [headings, setHeadings] = useState<TocItem[]>([]);
     const [activeId, setActiveId] = useState<string>('');
@@ -45,7 +45,7 @@ export default function TableOfContents({
     useEffect(() => {
         const items = extractHeadings();
         setHeadings(items);
-        
+
         // 设置初始激活项
         if (items.length > 0 && items[0]) {
             setActiveId(items[0].id);
@@ -56,8 +56,10 @@ export default function TableOfContents({
     // 滚动监听
     useEffect(() => {
         const handleScroll = () => {
-            const headingElements = document.querySelectorAll(`${contentSelector} h2, ${contentSelector} h3, ${contentSelector} h4`);
-            
+            const headingElements = document.querySelectorAll(
+                `${contentSelector} h2, ${contentSelector} h3, ${contentSelector} h4`,
+            );
+
             let currentActiveId = '';
             const scrollPosition = window.scrollY + 150; // 偏移量
 
@@ -76,7 +78,7 @@ export default function TableOfContents({
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
-        
+
         // 延迟执行初始检查，确保 DOM 已渲染
         const timeoutId = setTimeout(handleScroll, 100);
 
@@ -107,11 +109,11 @@ export default function TableOfContents({
     return (
         <nav className="toc-container">
             <div className="toc-header">
-                <svg 
-                    className="toc-icon" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
+                <svg
+                    className="toc-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
                     strokeWidth="2"
                 >
                     <path d="M4 6h16M4 12h16M4 18h12" />

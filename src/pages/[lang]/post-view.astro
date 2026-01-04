@@ -41,15 +41,19 @@ const allPosts = await listAllPosts({ limit: 100 });
 // 按语言过滤：优先显示当前语言，如果没有则显示其他语言版本
 const localizedPosts = filterPostsByLocale(allPosts, locale);
 // 提取文章对象（已按发布日期排序）
-const posts = localizedPosts.map(item => item.post);
+const posts = localizedPosts.map((item) => item.post);
 
 // 生成 hreflang 链接
-const alternateLinks = generateAlternateLinks(env.site.url, '/post-view', LOCALES);
+const alternateLinks = generateAlternateLinks(
+    env.site.url,
+    '/post-view',
+    LOCALES,
+);
 const canonicalUrl = `${env.site.url}/${locale}/post-view`;
 ---
 
-<BaseLayout 
-    siteTitle={siteTitle} 
+<BaseLayout
+    siteTitle={siteTitle}
     coverImageUrl={coverImageUrl}
     lang={htmlLang}
     canonicalUrl={canonicalUrl}
@@ -84,12 +88,15 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
     // 页面加载后立即开始监听滚轮事件
     // 这样即使 React 还没水合完成，也能拦截垂直滚动
     document.addEventListener('DOMContentLoaded', () => {
-        const scrollContainer = document.querySelector('.post-view-scroll-container');
-        
+        const scrollContainer = document.querySelector(
+            '.post-view-scroll-container',
+        );
+
         if (scrollContainer) {
             // 计算滚动距离
             const getScrollDistance = () => {
-                const card = scrollContainer.querySelector('.post-card-wrapper');
+                const card =
+                    scrollContainer.querySelector('.post-card-wrapper');
                 const cardWidth = card?.getBoundingClientRect().width || 300;
                 const gap = 60;
                 return cardWidth + gap;
@@ -103,7 +110,8 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
 
                 // 判断是否在边界
                 const atStart = scrollLeft <= 0 && e.deltaY < 0;
-                const atEnd = scrollLeft >= scrollWidth - clientWidth && e.deltaY > 0;
+                const atEnd =
+                    scrollLeft >= scrollWidth - clientWidth && e.deltaY > 0;
 
                 // 拦截滚动事件
                 if (canScroll && !atStart && !atEnd) {
@@ -112,7 +120,7 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
 
                     const scrollDistance = getScrollDistance();
                     const direction = e.deltaY > 0 ? 1 : -1;
-                    
+
                     container.scrollBy({
                         left: direction * scrollDistance,
                         behavior: 'smooth',

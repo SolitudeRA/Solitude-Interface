@@ -147,7 +147,7 @@ function PostCard({ post, index, isOtherHovered, onHover }: PostCardProps) {
                     <h3
                         className={cn(
                             'text-xl leading-tight font-bold text-white',
-                            'line-clamp-2 mb-3',
+                            'mb-3 line-clamp-2',
                             'transition-colors group-hover:text-white/90',
                         )}
                     >
@@ -155,7 +155,7 @@ function PostCard({ post, index, isOtherHovered, onHover }: PostCardProps) {
                     </h3>
 
                     {/* 摘要 */}
-                    <p className="text-sm text-white/80 line-clamp-3 mb-4">
+                    <p className="mb-4 line-clamp-3 text-sm text-white/80">
                         {post.excerpt}
                     </p>
 
@@ -323,7 +323,7 @@ export default function PostViewCarousel({
 
     return (
         <div
-            className={cn('relative w-full h-[75vh]', className)}
+            className={cn('relative h-[75vh] w-full', className)}
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
         >
@@ -460,7 +460,7 @@ export default function PostViewCarousel({
 // 导出 Skeleton 版本用于加载状态
 export function PostViewCarouselSkeleton({ count = 5 }: { count?: number }) {
     return (
-        <div className="relative w-full h-[75vh]">
+        <div className="relative h-[75vh] w-full">
             <div
                 className={cn(
                     'flex h-full items-center gap-6 overflow-hidden',

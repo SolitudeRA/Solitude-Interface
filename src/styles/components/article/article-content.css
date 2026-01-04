@@ -112,18 +112,56 @@
 
     /* 标题响应式 */
     @media (min-width: 768px) {
-        .solitude-article-content h1 { font-size: 2rem; margin-top: 1.75rem; margin-bottom: 0.625rem; }
-        .solitude-article-content h2 { font-size: 1.75rem; margin-top: 1.75rem; margin-bottom: 0.5rem; padding-bottom: 0.35rem; }
-        .solitude-article-content h3 { font-size: 1.375rem; margin-top: 1.5rem; margin-bottom: 0.45rem; }
+        .solitude-article-content h1 {
+            font-size: 2rem;
+            margin-top: 1.75rem;
+            margin-bottom: 0.625rem;
+        }
+        .solitude-article-content h2 {
+            font-size: 1.75rem;
+            margin-top: 1.75rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.35rem;
+        }
+        .solitude-article-content h3 {
+            font-size: 1.375rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.45rem;
+        }
     }
 
     @media (min-width: 1024px) {
-        .solitude-article-content h1 { font-size: 2.5rem; margin-top: 2rem; margin-bottom: 0.75rem; }
-        .solitude-article-content h2 { font-size: 2rem; margin-top: 2rem; margin-bottom: 0.6rem; padding-bottom: 0.4rem; }
-        .solitude-article-content h3 { font-size: 1.5rem; margin-top: 1.75rem; margin-bottom: 0.5rem; }
-        .solitude-article-content h4 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
-        .solitude-article-content h5 { font-size: 1.1rem; margin-top: 1.25rem; margin-bottom: 0.4rem; }
-        .solitude-article-content h6 { font-size: 1rem; margin-top: 1.25rem; margin-bottom: 0.4rem; }
+        .solitude-article-content h1 {
+            font-size: 2.5rem;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        .solitude-article-content h2 {
+            font-size: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 0.6rem;
+            padding-bottom: 0.4rem;
+        }
+        .solitude-article-content h3 {
+            font-size: 1.5rem;
+            margin-top: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+        .solitude-article-content h4 {
+            font-size: 1.25rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .solitude-article-content h5 {
+            font-size: 1.1rem;
+            margin-top: 1.25rem;
+            margin-bottom: 0.4rem;
+        }
+        .solitude-article-content h6 {
+            font-size: 1rem;
+            margin-top: 1.25rem;
+            margin-bottom: 0.4rem;
+        }
     }
 
     /* ===== 链接和文本样式 ===== */
@@ -150,11 +188,21 @@
     }
 
     @media (min-width: 768px) {
-        .solitude-article-content p { font-size: 1.0625rem; line-height: 1.725; margin-top: 0.875rem; margin-bottom: 0.875rem; }
+        .solitude-article-content p {
+            font-size: 1.0625rem;
+            line-height: 1.725;
+            margin-top: 0.875rem;
+            margin-bottom: 0.875rem;
+        }
     }
 
     @media (min-width: 1024px) {
-        .solitude-article-content p { font-size: 1.125rem; line-height: 1.75; margin-top: 1rem; margin-bottom: 1rem; }
+        .solitude-article-content p {
+            font-size: 1.125rem;
+            line-height: 1.75;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
     }
 
     .solitude-article-content strong {
@@ -178,8 +226,12 @@
         line-height: 1.65;
     }
 
-    .solitude-article-content ul { list-style-type: disc; }
-    .solitude-article-content ol { list-style-type: decimal; }
+    .solitude-article-content ul {
+        list-style-type: disc;
+    }
+    .solitude-article-content ol {
+        list-style-type: decimal;
+    }
 
     @media (min-width: 768px) {
         .solitude-article-content ul,
@@ -221,13 +273,25 @@
 
     @media (min-width: 1024px) {
         .solitude-article-content ul p,
-        .solitude-article-content ol p { margin-top: 0.4rem; margin-bottom: 0.4rem; }
+        .solitude-article-content ol p {
+            margin-top: 0.4rem;
+            margin-bottom: 0.4rem;
+        }
         .solitude-article-content ul li,
-        .solitude-article-content ol li { margin-top: 0.35rem; margin-bottom: 0.35rem; padding-left: 0.25rem; }
+        .solitude-article-content ol li {
+            margin-top: 0.35rem;
+            margin-bottom: 0.35rem;
+            padding-left: 0.25rem;
+        }
     }
 
-    .solitude-article-content ul li::marker { color: var(--article-content-link); }
-    .solitude-article-content ol li::marker { color: var(--article-content-link); font-weight: 600; }
+    .solitude-article-content ul li::marker {
+        color: var(--article-content-link);
+    }
+    .solitude-article-content ol li::marker {
+        color: var(--article-content-link);
+        font-weight: 600;
+    }
 
     /* ===== 引用块样式 ===== */
     .solitude-article-content blockquote {
@@ -239,11 +303,19 @@
     }
 
     @media (min-width: 768px) {
-        .solitude-article-content blockquote { margin: 1.25rem 0; padding: 0.875rem 1.25rem; border-left-width: 4px; border-radius: 0 8px 8px 0; }
+        .solitude-article-content blockquote {
+            margin: 1.25rem 0;
+            padding: 0.875rem 1.25rem;
+            border-left-width: 4px;
+            border-radius: 0 8px 8px 0;
+        }
     }
 
     @media (min-width: 1024px) {
-        .solitude-article-content blockquote { margin: 1.5rem 0; padding: 1rem 1.5rem; }
+        .solitude-article-content blockquote {
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+        }
     }
 
     .solitude-article-content blockquote p {
@@ -254,7 +326,8 @@
 
     /* ===== 代码样式 ===== */
     .solitude-article-content code {
-        font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+        font-family:
+            'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
         font-size: 0.85em;
         padding: 0.15em 0.35em;
         background: var(--article-content-code-bg);
@@ -263,11 +336,17 @@
     }
 
     @media (min-width: 768px) {
-        .solitude-article-content code { font-size: 0.875em; padding: 0.175em 0.375em; }
+        .solitude-article-content code {
+            font-size: 0.875em;
+            padding: 0.175em 0.375em;
+        }
     }
 
     @media (min-width: 1024px) {
-        .solitude-article-content code { font-size: 0.9em; padding: 0.2em 0.4em; }
+        .solitude-article-content code {
+            font-size: 0.9em;
+            padding: 0.2em 0.4em;
+        }
     }
 
     .solitude-article-content pre {
@@ -280,11 +359,19 @@
     }
 
     @media (min-width: 768px) {
-        .solitude-article-content pre { margin: 1.25rem 0; padding: 1.125rem; border-radius: 10px; }
+        .solitude-article-content pre {
+            margin: 1.25rem 0;
+            padding: 1.125rem;
+            border-radius: 10px;
+        }
     }
 
     @media (min-width: 1024px) {
-        .solitude-article-content pre { margin: 1.5rem 0; padding: 1.25rem; border-radius: 12px; }
+        .solitude-article-content pre {
+            margin: 1.5rem 0;
+            padding: 1.25rem;
+            border-radius: 12px;
+        }
     }
 
     .solitude-article-content pre code {
@@ -296,11 +383,17 @@
     }
 
     @media (min-width: 768px) {
-        .solitude-article-content pre code { font-size: 0.9rem; line-height: 1.65; }
+        .solitude-article-content pre code {
+            font-size: 0.9rem;
+            line-height: 1.65;
+        }
     }
 
     @media (min-width: 1024px) {
-        .solitude-article-content pre code { font-size: 0.95rem; line-height: 1.7; }
+        .solitude-article-content pre code {
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
     }
 
     /* ===== 图片样式 ===== */
@@ -314,11 +407,17 @@
     }
 
     @media (min-width: 768px) {
-        .solitude-article-content img { border-radius: 10px; margin: 1.25rem auto; }
+        .solitude-article-content img {
+            border-radius: 10px;
+            margin: 1.25rem auto;
+        }
     }
 
     @media (min-width: 1024px) {
-        .solitude-article-content img { border-radius: 12px; margin: 1.5rem auto; }
+        .solitude-article-content img {
+            border-radius: 12px;
+            margin: 1.5rem auto;
+        }
     }
 
     .solitude-article-content figure {
@@ -327,11 +426,15 @@
     }
 
     @media (min-width: 768px) {
-        .solitude-article-content figure { margin: 1.5rem 0; }
+        .solitude-article-content figure {
+            margin: 1.5rem 0;
+        }
     }
 
     @media (min-width: 1024px) {
-        .solitude-article-content figure { margin: 2rem 0; }
+        .solitude-article-content figure {
+            margin: 2rem 0;
+        }
     }
 
     .solitude-article-content figcaption {
@@ -342,11 +445,17 @@
     }
 
     @media (min-width: 768px) {
-        .solitude-article-content figcaption { font-size: 0.85rem; margin-top: 0.625rem; }
+        .solitude-article-content figcaption {
+            font-size: 0.85rem;
+            margin-top: 0.625rem;
+        }
     }
 
     @media (min-width: 1024px) {
-        .solitude-article-content figcaption { font-size: 0.9rem; margin-top: 0.75rem; }
+        .solitude-article-content figcaption {
+            font-size: 0.9rem;
+            margin-top: 0.75rem;
+        }
     }
 
     /* ===== 表格样式 ===== */
@@ -360,11 +469,19 @@
     }
 
     @media (min-width: 768px) {
-        .solitude-article-content table { margin: 1.25rem 0; border-radius: 7px; font-size: 0.9375rem; }
+        .solitude-article-content table {
+            margin: 1.25rem 0;
+            border-radius: 7px;
+            font-size: 0.9375rem;
+        }
     }
 
     @media (min-width: 1024px) {
-        .solitude-article-content table { margin: 1.5rem 0; border-radius: 8px; font-size: 1rem; }
+        .solitude-article-content table {
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
     }
 
     .solitude-article-content th {
@@ -384,12 +501,16 @@
 
     @media (min-width: 768px) {
         .solitude-article-content th,
-        .solitude-article-content td { padding: 0.625rem 0.875rem; }
+        .solitude-article-content td {
+            padding: 0.625rem 0.875rem;
+        }
     }
 
     @media (min-width: 1024px) {
         .solitude-article-content th,
-        .solitude-article-content td { padding: 0.75rem 1rem; }
+        .solitude-article-content td {
+            padding: 0.75rem 1rem;
+        }
     }
 
     .solitude-article-content tr:hover td {
@@ -400,15 +521,24 @@
     .solitude-article-content hr {
         border: none;
         height: 1px;
-        background: linear-gradient(90deg, transparent 0%, var(--article-content-table-border) 50%, transparent 100%);
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            var(--article-content-table-border) 50%,
+            transparent 100%
+        );
         margin: 1.5rem 0;
     }
 
     @media (min-width: 768px) {
-        .solitude-article-content hr { margin: 2rem 0; }
+        .solitude-article-content hr {
+            margin: 2rem 0;
+        }
     }
 
     @media (min-width: 1024px) {
-        .solitude-article-content hr { margin: 2.5rem 0; }
+        .solitude-article-content hr {
+            margin: 2.5rem 0;
+        }
     }
 }

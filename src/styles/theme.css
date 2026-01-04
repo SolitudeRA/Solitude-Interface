@@ -71,7 +71,7 @@
 
     /* ===== 首页文章卡片配色 ===== */
     --home-card-overlay-start: oklch(0.98 0 0 / 0.55);
-    --home-card-overlay-mid: oklch(0.96 0 0 / 0.50);
+    --home-card-overlay-mid: oklch(0.96 0 0 / 0.5);
     --home-card-overlay-end: oklch(0.94 0 0 / 0.45);
 
     /* ===== 文章详情页配色 ===== */
@@ -209,7 +209,7 @@
 
     /* ===== 首页文章卡片配色 ===== */
     --home-card-overlay-start: oklch(0.12 0.025 264.665 / 0.45);
-    --home-card-overlay-mid: oklch(0.18 0.035 264.665 / 0.40);
+    --home-card-overlay-mid: oklch(0.18 0.035 264.665 / 0.4);
     --home-card-overlay-end: oklch(0.22 0.04 264.665 / 0.35);
 
     /* ===== 文章详情页配色（冷蓝紫色调） ===== */

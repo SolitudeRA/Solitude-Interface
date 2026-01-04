@@ -1,0 +1,23 @@
+# deps
+node_modules
+
+# build outputs
+dist
+.astro
+.vercel
+.netlify
+output
+build
+
+# caches
+.cache
+.turbo
+.tmp
+temp
+coverage
+
+# lockfiles
+pnpm-lock.yaml
+
+# misc
+.DS_Store

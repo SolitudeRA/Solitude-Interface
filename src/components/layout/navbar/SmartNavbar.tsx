@@ -5,7 +5,10 @@ interface SmartNavbarProps {
     isFixed?: boolean;
 }
 
-export default function SmartNavbar({ children, isFixed = false }: SmartNavbarProps) {
+export default function SmartNavbar({
+    children,
+    isFixed = false,
+}: SmartNavbarProps) {
     const [isVisible, setIsVisible] = useState(true);
     const [isScrolled, setIsScrolled] = useState(false);
     const lastScrollY = useRef(0);
@@ -30,7 +33,10 @@ export default function SmartNavbar({ children, isFixed = false }: SmartNavbarPr
                         if (currentScrollY > scrollThreshold) {
                             setIsVisible(false);
                         }
-                    } else if (currentScrollY < lastScrollY.current - scrollDelta) {
+                    } else if (
+                        currentScrollY <
+                        lastScrollY.current - scrollDelta
+                    ) {
                         // 向上滚动时显示
                         setIsVisible(true);
                     }
@@ -49,7 +55,7 @@ export default function SmartNavbar({ children, isFixed = false }: SmartNavbarPr
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
-        
+
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
@@ -69,7 +75,9 @@ export default function SmartNavbar({ children, isFixed = false }: SmartNavbarPr
         isFixed ? 'fixed top-0 left-0 right-0' : 'relative',
         isVisible ? 'translate-y-0' : '-translate-y-full',
         isScrolled ? 'smart-navbar-scrolled' : '',
-    ].filter(Boolean).join(' ');
+    ]
+        .filter(Boolean)
+        .join(' ');
 
     return (
         <nav className={navClasses}>

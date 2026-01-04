@@ -8,12 +8,12 @@ const { isFixed = false } = Astro.props;
 
 <div
     class:list={[
-        'min-h-[8vh] md:min-h-[9vh] lg:min-h-[10vh] w-full items-center',
+        'min-h-[8vh] w-full items-center md:min-h-[9vh] lg:min-h-[10vh]',
         'pb-3 md:pb-4',
         'flex justify-between md:grid md:grid-cols-3',
-        'px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12 3xl:px-16',
+        '3xl:px-16 px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12',
         'gap-2 md:gap-3 lg:gap-4',
-        isFixed ? 'fixed bottom-0 left-0 right-0 z-50' : '',
+        isFixed ? 'fixed right-0 bottom-0 left-0 z-50' : '',
     ]}
 >
     <slot />
