@@ -1,81 +1,94 @@
 # Solitude Interface
 
-![thumbnail](/docs/assets/thumbnail.png)
+![thumbnail](../assets/thumbnail.png)
 
-使用 Astro 构建、由 Ghost CMS API 驱动的现代个人博客界面。
+一个使用 Astro 构建、并由 Ghost CMS Content API 驱动的现代个人博客界面。
 
-阅读语言: [English](../../README.md) | 简体中文 | [日本語](README.ja.md)
+阅读语言： [English](../../README.md) | 简体中文 | [日本語](README.ja.md)
 
-## 功能
+## 🚀 功能特性
 
-- 基于 Astro 的高性能静态站点
-- Ghost CMS 无头集成
-- **多语言支持（zh/ja/en）**，自动回退
-- 响应式设计，暗色/亮色主题切换
+- 使用 Astro 构建的高性能静态站点
+- Ghost CMS 集成（Headless）
+- 支持 **多语言（zh/ja/en）**，并提供自动回退（fallback）
+- 响应式设计，支持深色/浅色主题切换
 - 多种文章展示类型（文章、画廊、视频、音乐）
 - SEO 优化（hreflang、canonical、html lang）
 
-## 截图
+## Screenshots
 ### Home
-![Home](/docs/assets/home.png)
+![Home](../assets/home.png)
 ### Post
-![Post](/docs/assets/post.png)
+![Post](../assets/post.png)
 ### About Me
-![About-Me](/docs/assets/about-me.png)
+![About-Me](../assets/about-me.png)
 ### Post Detail
-![Post-Detail](/docs/assets/post-detail.png)
+![Post-Detail](../assets/post-detail.png)
 
-## 文档
+## 📖 文档
 
 | 文档 | 说明 |
 |------|------|
-| **README.zh.md**（本文件） | 使用指南 - 配置与内容发布 |
-| [**DEVELOPMENT.md**](../DEVELOPMENT.md) | 开发指南 - 架构、测试、命令 |
+| **README.md**（英文） | 使用指南 - 安装配置与内容发布： [../../README.md](../../README.md) |
+| [**DEVELOPMENT.md**](../DEVELOPMENT.md) | 开发者指南 - 架构、测试、工作流与贡献说明 |
 
 ---
 
-## 快速开始
+## 🚀 快速开始
 
 ### 1. 安装依赖
 
+本项目使用 **pnpm**。
+
 ```bash
-npm install
+#（推荐）通过 Corepack 启用 pnpm
+corepack enable pnpm
+
+pnpm install
 ```
 
-### 2. 配置环境
+> 如果你的系统中没有 `corepack`，也可以通过 `npm i -g pnpm` 全局安装 pnpm。
 
-从模板创建 `.env` 文件:
+### 2. 配置环境变量
+
+从模板创建 `.env` 文件：
 
 ```bash
 cp .env.example .env
 ```
 
-编辑 `.env` 填写 Ghost 实例信息:
+编辑 `.env`，填写你的 Ghost 实例信息：
 
 ```env
 GHOST_URL=https://your-ghost-instance.com
 GHOST_CONTENT_KEY=your-content-api-key-here
 GHOST_VERSION=v5.0
+GHOST_TIMEOUT=5000
 SITE_URL=https://your-site.example.com
+IMAGE_HOST_URL=
+GOOGLE_ANALYTICS_TAG_ID=
 ```
 
-#### 环境变量
+#### 环境变量说明
 
 | 变量 | 必填 | 说明 |
 |------|------|------|
-| `GHOST_URL` | 是 | Ghost 实例基础 URL |
+| `GHOST_URL` | 是 | Ghost 实例的基础 URL |
 | `GHOST_CONTENT_KEY` | 是 | Ghost Content API Key |
-| `GHOST_VERSION` | 是 | Ghost Content API 版本（如 `v5.0`） |
-| `SITE_URL` | 是 | 站点公开地址，用于 canonical 与 hreflang |
+| `GHOST_VERSION` | 否 | Ghost Content API 版本（默认：`v5.0`） |
+| `GHOST_TIMEOUT` | 否 | Ghost 请求超时时间（毫秒，默认：`5000`） |
+| `SITE_URL` | 是 | 站点公开 URL（用于 canonical / hreflang） |
+| `IMAGE_HOST_URL` | 否 | 可选：图片域名/CDN，用于远程图片域名白名单（默认：空） |
+| `GOOGLE_ANALYTICS_TAG_ID` | 否 | 可选：Google tag / GA4 Measurement ID（如 `G-XXXX`）。留空即可关闭统计 |
 
 ### 3. 获取 Ghost Content API Key
 
-1. 登录 Ghost 管理后台
-2. 进入 **Settings** -> **Integrations**
+1. 登录 Ghost Admin 后台
+2. 进入 **Settings** → **Integrations**
 3. 点击 **Add custom integration**
-4. 将 **Content API Key** 复制到 `.env`
+4. 将 **Content API Key** 填写到 `.env` 中
 
-> **提示**：可使用 Ghost Demo API 测试:
+> **Tip**：你也可以用 Ghost 的 Demo API 做测试：
 > ```env
 > GHOST_URL=https://demo.ghost.io
 > GHOST_CONTENT_KEY=22444f78447824223cefc48062
@@ -84,7 +97,7 @@ SITE_URL=https://your-site.example.com
 ### 4. 启动开发服务器
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 访问 `http://localhost:4321` 查看站点。
@@ -92,144 +105,146 @@ npm run dev
 ## 常用命令
 
 | 命令 | 说明 |
-|---------|-------------|
-| `npm run dev` | 启动开发服务器 |
-| `npm run build` | 构建生产站点 |
-| `npm run preview` | 预览生产构建 |
-| `npm run test` | 运行测试 |
-| `npm run format` | 格式化代码 |
+|------|------|
+| `pnpm dev` | 启动开发服务器 |
+| `pnpm build` | 构建生产环境产物 |
+| `pnpm preview` | 预览生产构建结果 |
+| `pnpm astro sync` | 生成类型定义（env/schema 修改后很有用） |
+| `pnpm astro check` | 类型检查并验证 Astro 项目 |
+| `pnpm test` | 运行测试 |
+| `pnpm format` | 格式化代码 |
 
 ---
 
-## 内容发布指南
+## 📝 内容发布指南
 
-### 分类标签
+### 分类标签（Tags）
 
-使用 **普通标签** 对文章进行分类。系统识别以下前缀:
+使用 **普通标签（regular tags）** 对文章进行分类。系统会识别带特殊前缀的标签：
 
 | 标签前缀 | 用途 | 示例 |
-|------------|---------|---------|
+|----------|------|------|
 | `type-` | 文章展示类型 | `type-article`, `type-gallery`, `type-video`, `type-music` |
 | `category-` | 内容分类 | `category-tech`, `category-life`, `category-design` |
 | `series-` | 系列文章 | `series-astro-tutorial`, `series-web-dev-basics` |
-| *(无前缀)* | 通用标签 | `JavaScript`, `React`, `Photography` |
+| *(无前缀)* | 普通标签 | `JavaScript`, `React`, `Photography` |
 
 #### 支持的文章类型
 
-| 类型标签 | 展示样式 |
-|----------|---------------|
+| Type 标签 | 展示样式 |
+|----------|----------|
 | `type-article` | 标准文章布局 |
-| `type-gallery` | 含轮播的图片画廊 |
+| `type-gallery` | 带轮播的图片画廊 |
 | `type-video` | 视频播放器嵌入 |
 | `type-music` | 音频播放器嵌入 |
 | *(默认)* | 默认卡片布局 |
 
 ---
 
-## 多语言内容
+## 🌐 多语言内容
 
 ### URL 结构
 
 | 路由 | 说明 |
-| -------------- | ------------------------------------------- |
-| `/` | 自动跳转到用户首选语言 |
-| `/zh/` | 中文列表 |
-| `/ja/` | 日文列表 |
-| `/en/` | 英文列表 |
-| `/zh/p/{key}/` | 中文文章 |
-| `/ja/p/{key}/` | 日文文章 |
-| `/en/p/{key}/` | 英文文章 |
+|------|------|
+| `/` | 自动跳转到用户偏好语言 |
+| `/zh/` | 中文文章列表 |
+| `/ja/` | 日文文章列表 |
+| `/en/` | 英文文章列表 |
+| `/zh/p/{key}/` | 中文文章详情 |
+| `/ja/p/{key}/` | 日文文章详情 |
+| `/en/p/{key}/` | 英文文章详情 |
 
-### 多语言所需标签
+### 多语言必需标签
 
-在 Ghost 中使用 **内部标签**（以 `#` 开头）:
+在 Ghost 中使用 **内部标签（internal tags，以 `#` 开头）**：
 
 | 内部标签 | 用途 | 示例 |
-|--------------|---------|---------|
-| `#lang-{locale}` | 指定语言 | `#lang-zh`, `#lang-ja`, `#lang-en` |
-| `#i18n-{key}` | 翻译分组标识 | `#i18n-intro-to-solitude` |
+|----------|------|------|
+| `#lang-{locale}` | 指定文章语言 | `#lang-zh`, `#lang-ja`, `#lang-en` |
+| `#i18n-{key}` | 翻译分组标识（同一文章的不同语言版本） | `#i18n-intro-to-solitude` |
 
-> **注意**: 在 Ghost Content API 中，内部标签 `#xxx` 会被转换为 slug 格式 `hash-xxx`。
+> **注意**：在 Ghost Content API 中，内部标签 `#xxx` 会被转换为 slug 形式 `hash-xxx`。
 
 ### 步骤：创建多语言文章
 
-**重要**：每种语言版本都是 Ghost 中的 **独立文章**，通过相同的 `#i18n-{key}` 关联。
+**重要**：每种语言版本在 Ghost 中都是一篇**独立的 Post**。它们通过相同的 `#i18n-{key}` 标签关联在一起。
 
-#### 步骤 1：规划翻译分组 key
+#### Step 1：规划翻译分组 key
 
-选择一个唯一 key，例如 `astro-guide`。此 key 将用于:
-- `#i18n-astro-guide` 标签
-- URL: `/zh/p/astro-guide`, `/ja/p/astro-guide`, `/en/p/astro-guide`
+为文章选择一个唯一 key，例如 `astro-guide`。这个 key 会用于：
+- `#i18n-astro-guide` 标签（将各语言版本关联起来）
+- URL：`/zh/p/astro-guide`、`/ja/p/astro-guide`、`/en/p/astro-guide`
 
-#### 步骤 2：创建中文版本
+#### Step 2：创建中文版本
 
-在 Ghost 后台新建文章:
-1. 使用中文撰写内容
-2. 打开文章设置（齿轮图标）
-3. 滚动到 **Tags** 区域
-4. 添加标签:
-   - `#lang-zh`（语言标签）
-   - `#i18n-astro-guide`（翻译分组）
-   - `type-article`（可选：展示类型）
+在 Ghost Admin 中创建新文章：
+1. 用中文撰写内容
+2. 打开 **Post settings**（齿轮图标）
+3. 滚动到 **Tags**
+4. 添加标签：
+   - `#lang-zh`（语言标签，注意 `#` 前缀）
+   - `#i18n-astro-guide`（翻译分组标签）
+   - `type-article`（可选：文章类型）
    - `category-tech`（可选：分类）
 5. 发布文章
 
-#### 步骤 3：创建日文版本
+#### Step 3：创建日文版本
 
-创建 **新的独立文章**:
-1. 使用日文撰写内容
-2. 添加标签:
-   - `#lang-ja`（不同语言）
-   - `#i18n-astro-guide`（相同 key）
+在 Ghost 中创建 **另一篇新的、独立的文章**：
+1. 用日文撰写内容
+2. 添加标签：
+   - `#lang-ja` ← 不同语言
+   - `#i18n-astro-guide` ← **相同** i18n key！
    - `type-article`, `category-tech`（与中文一致）
 3. 发布文章
 
-#### 步骤 4：创建英文版本
+#### Step 4：创建英文版本
 
-创建另一篇 **新的独立文章**:
-1. 使用英文撰写内容
-2. 添加标签:
-   - `#lang-en`（不同语言）
-   - `#i18n-astro-guide`（相同 key）
+再创建一篇 **新的、独立的文章**：
+1. 用英文撰写内容
+2. 添加标签：
+   - `#lang-en` ← 不同语言
+   - `#i18n-astro-guide` ← **相同** i18n key！
    - `type-article`, `category-tech`（与其他版本一致）
 3. 发布文章
 
 #### 结果
 
-现在你将拥有 3 篇独立文章，使用 `#i18n-astro-guide` 关联:
-- 中文文章 -> `/zh/p/astro-guide`
-- 日文文章 -> `/ja/p/astro-guide`
-- 英文文章 -> `/en/p/astro-guide`
+现在你在 Ghost 里有 3 篇独立文章，通过 `#i18n-astro-guide` 关联：
+- 中文：`/zh/p/astro-guide`
+- 日文：`/ja/p/astro-guide`
+- 英文：`/en/p/astro-guide`
 
-用户可在文章页的语言切换器中切换版本。
+用户可以通过文章页面的语言切换器在不同语言版本之间切换。
 
 ### 完整示例
 
-| 文章标题 | 标签 |
-|------------|------|
-| "Astro 入门指南"（中文） | `#lang-zh`, `#i18n-astro-guide`, `type-article`, `category-tech` |
-| "Astro入門ガイド"（日文） | `#lang-ja`, `#i18n-astro-guide`, `type-article`, `category-tech` |
-| "Getting Started with Astro"（英文） | `#lang-en`, `#i18n-astro-guide`, `type-article`, `category-tech` |
+| 文章标题 | Tags |
+|----------|------|
+| “Astro 入门指南”（中文） | `#lang-zh`, `#i18n-astro-guide`, `type-article`, `category-tech` |
+| “Astro入門ガイド”（日文） | `#lang-ja`, `#i18n-astro-guide`, `type-article`, `category-tech` |
+| “Getting Started with Astro”（英文） | `#lang-en`, `#i18n-astro-guide`, `type-article`, `category-tech` |
 
-### 回退行为
+### 回退（Fallback）行为
 
-- 如果目标语言不存在，将显示默认语言（中文）
-- 会显示回退提示条
-- 语言切换器显示可用/不可用版本
-
----
-
-## 面向开发者
-
-查看 [**DEVELOPMENT.md**](../DEVELOPMENT.md) 了解:
-
-- 技术栈与项目结构
-- 可用命令
-- 测试指南（单元与集成）
-- 架构与代码参考
+- 若某语言版本不存在，则展示默认语言（中文）
+- 页面会显示提示横幅，说明发生了回退
+- 语言切换器会标识哪些语言版本可用/不可用
 
 ---
 
-## 许可证
+## 🛠️ 给开发者
 
-本项目采用 [MIT License](LICENSE) 开源许可。
+请查看 [**docs/DEVELOPMENT.md**](../DEVELOPMENT.md)，包含：
+
+- 🔧 技术栈与项目结构
+- 🧞 可用命令说明
+- 📋 测试指南（单元测试 & 集成测试）
+- 🏗️ 架构说明与代码参考
+
+---
+
+## 📄 许可证
+
+本项目为开源项目，使用 [MIT License](../../LICENSE)。
