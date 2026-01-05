@@ -41,6 +41,40 @@ export const LOCALE_HTML_LANG: Record<Locale, string> = {
 };
 
 /**
+ * UI 文本翻译字典
+ */
+export const UI_TEXTS = {
+    home: {
+        viewAllPosts: {
+            zh: '查看全部文章',
+            ja: 'すべての記事を見る',
+            en: 'View All Posts',
+        },
+        exploreMore: {
+            zh: '探索更多内容',
+            ja: 'もっと探索する',
+            en: 'Explore more content',
+        },
+    },
+} as const;
+
+/**
+ * 获取 UI 翻译文本
+ * @param section 文本分组 (如 'home')
+ * @param key 文本键名
+ * @param locale 目标语言
+ * @returns 翻译后的文本
+ */
+export function getUIText<S extends keyof typeof UI_TEXTS>(
+    section: S,
+    key: keyof (typeof UI_TEXTS)[S],
+    locale: Locale,
+): string {
+    const texts = UI_TEXTS[section][key] as Record<Locale, string>;
+    return texts[locale] ?? texts[DEFAULT_LOCALE];
+}
+
+/**
  * 检查是否为有效的语言代码
  */
 export function isLocale(x: unknown): x is Locale {

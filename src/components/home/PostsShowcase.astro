@@ -3,10 +3,14 @@ import type { FeaturedPost } from '@api/ghost/types';
 import PostsShowcaseCarousel, {
     PostsShowcaseSkeleton,
 } from './PostsShowcaseCarousel';
-import { filterPostsByLocale, type Locale, DEFAULT_LOCALE } from '@lib/i18n';
+import {
+    filterPostsByLocale,
+    type Locale,
+    DEFAULT_LOCALE,
+    buildLocalePath,
+} from '@lib/i18n';
 
 const MAX_POSTS = 8;
-const POSTS_PAGE_URL = '/post-view';
 
 interface Props {
     featuredPosts: FeaturedPost[];
@@ -42,6 +46,8 @@ const limitedPosts = filteredPosts.slice(0, MAX_POSTS);
 const hasMorePosts = filteredPosts.length > MAX_POSTS;
 // 空数据且非加载状态时不渲染
 const shouldRender = isLoading || (limitedPosts && limitedPosts.length > 0);
+// 构建多语言文章列表页 URL
+const postsPageUrl = buildLocalePath(locale, 'post-view');
 ---
 
 {
@@ -55,8 +61,9 @@ const shouldRender = isLoading || (limitedPosts && limitedPosts.length > 0);
             ) : (
                 <PostsShowcaseCarousel
                     posts={limitedPosts}
-                    postsPageUrl={POSTS_PAGE_URL}
+                    postsPageUrl={postsPageUrl}
                     showMoreButton={hasMorePosts}
+                    locale={locale}
                     client:load
                 />
             )}

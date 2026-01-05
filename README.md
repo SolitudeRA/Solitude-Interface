@@ -2,6 +2,11 @@
 
 ![thumbnail](docs/assets/thumbnail.png)
 
+![Node.js](https://img.shields.io/badge/Node.js-≥18-339933?logo=node.js&logoColor=white)
+![pnpm](https://img.shields.io/badge/pnpm-≥9-F69220?logo=pnpm&logoColor=white)
+![Astro](https://img.shields.io/badge/Astro-5.x-BC52EE?logo=astro&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-blue)
+
 A modern personal blog interface built with Astro and powered by Ghost CMS API.
 
 Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](docs/i18n/README.ja.md)

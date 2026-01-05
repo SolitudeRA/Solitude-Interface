@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import type { FeaturedPost } from '@api/ghost/types';
 import { Chip } from '@components/common/badge';
 import { cn } from '@components/common/lib/utils';
+import { getUIText, DEFAULT_LOCALE, type Locale } from '@lib/i18n';
 
 // 颜色方案类型（与 badge.tsx 保持一致）
 type ChipColorScheme =
@@ -53,6 +54,11 @@ interface PostsShowcaseCarouselProps {
      * @default true
      */
     showMoreButton?: boolean;
+    /**
+     * 当前语言
+     * @default 'zh'
+     */
+    locale?: Locale;
 }
 
 interface ShowcaseCardProps {
@@ -229,6 +235,7 @@ interface ViewMoreCardProps {
     index: number;
     isOtherHovered: boolean;
     onHover: (index: number | null) => void;
+    locale: Locale;
 }
 
 function ViewMoreCard({
@@ -236,7 +243,11 @@ function ViewMoreCard({
     index,
     isOtherHovered,
     onHover,
+    locale,
 }: ViewMoreCardProps) {
+    const viewAllText = getUIText('home', 'viewAllPosts', locale);
+    const exploreMoreText = getUIText('home', 'exploreMore', locale);
+
     return (
         <motion.a
             href={href}
@@ -271,7 +282,7 @@ function ViewMoreCard({
             }}
             onMouseEnter={() => onHover(index)}
             onMouseLeave={() => onHover(null)}
-            aria-label="查看全部文章"
+            aria-label={viewAllText}
         >
             {/* 渐变背景 */}
             <div className="absolute inset-0 overflow-hidden">
@@ -312,9 +323,9 @@ function ViewMoreCard({
                         'transition-colors group-hover:text-white/90',
                     )}
                 >
-                    查看全部文章
+                    {viewAllText}
                 </h3>
-                <p className="mt-1 text-sm text-white/70">探索更多内容</p>
+                <p className="mt-1 text-sm text-white/70">{exploreMoreText}</p>
             </div>
 
             {/* Hover 阴影增强 */}
@@ -335,6 +346,7 @@ export default function PostsShowcaseCarousel({
     className,
     postsPageUrl = '/post-view',
     showMoreButton = true,
+    locale = DEFAULT_LOCALE,
 }: PostsShowcaseCarouselProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -571,6 +583,7 @@ export default function PostsShowcaseCarousel({
                             hoveredIndex !== posts.length
                         }
                         onHover={setHoveredIndex}
+                        locale={locale}
                     />
                 )}
             </div>

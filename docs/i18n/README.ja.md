@@ -2,6 +2,11 @@
 
 ![thumbnail](../assets/thumbnail.png)
 
+![Node.js](https://img.shields.io/badge/Node.js-≥18-339933?logo=node.js&logoColor=white)
+![pnpm](https://img.shields.io/badge/pnpm-≥9-F69220?logo=pnpm&logoColor=white)
+![Astro](https://img.shields.io/badge/Astro-5.x-BC52EE?logo=astro&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-blue)
+
 Astro で構築し、Ghost CMS の Content API で駆動するモダンな個人ブログ UI です。
 
 Read this in: [English](../../README.md) | [简体中文](README.zh.md) | 日本語

@@ -2,6 +2,11 @@
 
 ![thumbnail](../assets/thumbnail.png)
 
+![Node.js](https://img.shields.io/badge/Node.js-≥18-339933?logo=node.js&logoColor=white)
+![pnpm](https://img.shields.io/badge/pnpm-≥9-F69220?logo=pnpm&logoColor=white)
+![Astro](https://img.shields.io/badge/Astro-5.x-BC52EE?logo=astro&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-blue)
+
 一个使用 Astro 构建、并由 Ghost CMS Content API 驱动的现代个人博客界面。
 
 阅读语言： [English](../../README.md) | 简体中文 | [日本語](README.ja.md)
