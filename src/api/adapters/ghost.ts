@@ -5,6 +5,7 @@ const TAG_PREFIXES = {
     TYPE: 'type-',
     CATEGORY: 'category-',
     SERIES: 'series-',
+    HASH: 'hash-',
 } as const;
 
 const DEFAULT_TAG_VALUE = 'default';
@@ -54,7 +55,7 @@ function extractTagInfo(tags: PostTag[] | undefined): TagInfo {
             result.post_category = slug.replace(TAG_PREFIXES.CATEGORY, '');
         } else if (slug.startsWith(TAG_PREFIXES.SERIES)) {
             result.post_series = name;
-        } else {
+        } else if (!slug.startsWith(TAG_PREFIXES.HASH)) {
             result.post_general_tags.push(name);
         }
     }

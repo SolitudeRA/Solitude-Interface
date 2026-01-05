@@ -1,35 +1,16 @@
 ---
 import type { Post } from '@api/ghost/types';
-import { Chip } from '@components/common/badge';
+import BaseCard from './BaseCard.astro';
 
 interface Props {
     post: Post;
 }
 
 const { post } = Astro.props;
-// 使用主题色调的渐变覆盖层
-const postFeatureImageUrl = `url(${post.feature_image.toString()})`;
 ---
 
-<div
-    class="post-view-card-gallery flex h-full w-full flex-col rounded-[35px] p-6 shadow-lg transition-all duration-300 hover:shadow-2xl"
->
-    <!-- 顶部标签区 -->
-    <div class="mb-4 flex items-center justify-between">
-        <Chip variant="flat" colorScheme="primary" client:visible>
-            🖼️ {post.post_type}
-        </Chip>
-        {
-            post.post_series && (
-                <Chip variant="flat" colorScheme="secondary" client:visible>
-                    {post.post_series}
-                </Chip>
-            )
-        }
-    </div>
-
-    <!-- 画廊图标区 -->
-    <div class="flex items-center justify-center py-6">
+<BaseCard post={post} typeIcon="🖼️">
+    <div slot="decoration" class="flex items-center justify-center py-6">
         <div class="gallery-grid grid grid-cols-3 gap-2 opacity-80">
             <div class="gallery-cell h-8 w-8 rounded"></div>
             <div class="gallery-cell h-8 w-8 rounded"></div>
@@ -39,153 +20,12 @@ const postFeatureImageUrl = `url(${post.feature_image.toString()})`;
             <div class="gallery-cell h-8 w-8 rounded"></div>
         </div>
     </div>
+</BaseCard>
 
-    <!-- 标题区 -->
-    <div class="mb-4">
-        <h3
-            class="card-title line-clamp-3 text-center text-2xl leading-tight font-bold"
-        >
-            {post.title}
-        </h3>
-    </div>
-
-    <!-- 摘要区（flex-1 占据剩余空间） -->
-    <div class="mb-4 flex-1 overflow-hidden">
-        <p class="card-excerpt line-clamp-[6] text-base leading-relaxed">
-            {post.excerpt}
-        </p>
-    </div>
-
-    <!-- 底部信息区 -->
-    <div class="mt-auto space-y-3">
-        <div class="card-meta text-center text-sm">
-            {post.published_at.split('T')[0]}
-        </div>
-        {
-            post.post_general_tags && post.post_general_tags.length > 0 && (
-                <div class="flex flex-wrap justify-center gap-2">
-                    {post.post_general_tags
-                        .slice(0, 4)
-                        .map((tagName: string) => (
-                            <Chip
-                                colorScheme="success"
-                                variant="flat"
-                                client:visible
-                            >
-                                {tagName}
-                            </Chip>
-                        ))}
-                </div>
-            )
-        }
-    </div>
-</div>
-
-<style
-    define:vars={{
-        postFeatureImageUrl: postFeatureImageUrl,
-    }}
->
-    .post-view-card-gallery {
-        position: relative;
-        background-size: cover;
-        background-position: center;
-        background-image: var(--postFeatureImageUrl);
-        box-shadow: 0 8px 32px var(--post-view-card-shadow);
-    }
-
-    /* 彩虹色亮边 - 使用伪元素实现 */
-    .post-view-card-gallery::after {
-        content: '';
-        position: absolute;
-        inset: -1px;
-        border-radius: inherit;
-        padding: 1px;
-        background: conic-gradient(
-            from 0deg,
-            #ff6b6b,
-            #feca57,
-            #48dbfb,
-            #ff9ff3,
-            #54a0ff,
-            #5f27cd,
-            #ff6b6b
-        );
-        -webkit-mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        pointer-events: none;
-        opacity: 0.6;
-        transition: opacity 0.3s ease;
-        z-index: 0;
-    }
-
-    .post-view-card-gallery:hover::after {
-        opacity: 0.9;
-    }
-
-    /* 渐变覆盖层 - 画廊卡片使用较轻的覆盖以突出图片 */
-    .post-view-card-gallery::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background: linear-gradient(
-            180deg,
-            var(--post-view-card-overlay-start) 0%,
-            var(--post-view-card-overlay-mid) 60%,
-            var(--post-view-card-overlay-end) 100%
-        );
-        opacity: 0.9;
-        pointer-events: none;
-        transition: opacity 0.3s ease;
-    }
-
-    /* 确保内容在覆盖层之上 */
-    .post-view-card-gallery > * {
-        position: relative;
-        z-index: 1;
-    }
-
-    /* 画廊格子使用主题色 */
+<style>
     .gallery-cell {
         background: var(--post-view-card-border);
         backdrop-filter: blur(4px);
-    }
-
-    /* 悬停效果增强 */
-    .post-view-card-gallery:hover {
-        box-shadow: 0 12px 48px var(--post-view-card-shadow-hover);
-    }
-
-    .post-view-card-gallery:hover::before {
-        opacity: 0.8;
-    }
-
-    /* 文字颜色 - 使用主题变量提高可读性 */
-    .card-title {
-        color: var(--post-view-card-title);
-        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-
-    .card-excerpt {
-        color: var(--post-view-card-excerpt);
-        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
-    }
-
-    .card-meta {
-        color: var(--post-view-card-meta);
-    }
-
-    /* 暗色主题文字阴影调整 */
-    :global(.dark) .card-title {
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-    }
-
-    :global(.dark) .card-excerpt {
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
     }
 
     .gallery-grid {
