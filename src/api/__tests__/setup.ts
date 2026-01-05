@@ -16,6 +16,10 @@ vi.mock('@api/config/env', () => ({
         image: {
             imageHostUrl: '',
         },
+        cloudflare: {
+            accessClientId: '',
+            accessClientSecret: '',
+        },
     },
 }));
 

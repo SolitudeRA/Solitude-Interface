@@ -2,6 +2,10 @@
   "name": "solitude-interface",
   "type": "module",
   "version": "0.5.0-alpha",
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=9"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

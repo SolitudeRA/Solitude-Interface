@@ -5,6 +5,8 @@ import {
     GHOST_TIMEOUT,
     SITE_URL,
     IMAGE_HOST_URL,
+    CF_ACCESS_CLIENT_ID,
+    CF_ACCESS_CLIENT_SECRET,
 } from 'astro:env/server';
 
 interface SiteEnvVars {
@@ -22,6 +24,11 @@ interface GhostEnvVars {
     timeout: number;
 }
 
+interface CloudflareEnvVars {
+    accessClientId: string;
+    accessClientSecret: string;
+}
+
 export const env = Object.freeze({
     site: {
         url: SITE_URL,
@@ -35,4 +42,8 @@ export const env = Object.freeze({
         version: GHOST_VERSION,
         timeout: GHOST_TIMEOUT,
     } as GhostEnvVars,
+    cloudflare: {
+        accessClientId: CF_ACCESS_CLIENT_ID,
+        accessClientSecret: CF_ACCESS_CLIENT_SECRET,
+    } as CloudflareEnvVars,
 });
