@@ -1,0 +1,46 @@
+---
+/**
+ * Astro 页面模板
+ *
+ * 用法: 复制此文件到 src/pages/[lang]/ 目录并重命名
+ *
+ * 功能:
+ * - 多语言支持 (getStaticPaths 生成各语言路由)
+ * - SEO 元数据
+ * - 基础布局
+ */
+import { LOCALES, type Locale } from '@lib/i18n';
+import BaseLayout from '@layouts/base/BaseLayout.astro';
+// import { getPosts } from '@api/ghost/posts';
+
+// 类型定义
+interface Props {
+    lang: Locale;
+    // 添加页面所需的其他 props
+}
+
+// 静态路径生成 (多语言)
+export async function getStaticPaths() {
+    return LOCALES.map((lang) => ({
+        params: { lang },
+        props: { lang },
+    }));
+}
+
+const { lang } = Astro.props;
+
+// 页面元数据
+const pageTitle = '页面标题';
+const pageDescription = '页面描述';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} lang={lang}>
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="mb-6 text-3xl font-bold">{pageTitle}</h1>
+
+        <!-- 页面内容 -->
+        <section>
+            <p>页面内容区域</p>
+        </section>
+    </main>
+</BaseLayout>

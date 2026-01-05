@@ -16,9 +16,36 @@ pnpm-debug.log*
 # environment variables
 .env
 .env.production
+.env.local
+.env.*.local
 
 # macOS-specific files
 .DS_Store
 
 # jetbrains setting folder
 .idea/
+
+# ============================================================
+# 以下配置用于减少 Cline AI 助手的上下文开销
+# ============================================================
+
+# 测试覆盖率报告
+coverage/
+.nyc_output/
+
+# Vitest UI 临时文件
+.vitest/
+
+# TypeScript 构建缓存
+*.tsbuildinfo
+
+# Cline 本地配置 (个人偏好)
+.clinerules.local
+
+# 编辑器临时文件
+*.swp
+*.swo
+*~
+
+# 锁文件 (体积大，通常不需要 AI 阅读)
+# 注意: pnpm-lock.yaml 应该提交到 git，但 Cline 通常不需要读取
