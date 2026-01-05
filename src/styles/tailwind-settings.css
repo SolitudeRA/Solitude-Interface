@@ -1,7 +1,15 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --font-noto-sans: 'Noto Sans SC Variable';
+    /* 多语言字体栈 - 按语言优先级排列 */
+    --font-noto-sans:
+        'Noto Sans Variable', 'Noto Sans SC Variable', 'Noto Sans JP Variable',
+        system-ui, sans-serif;
+    --font-noto-sans-zh:
+        'Noto Sans SC Variable', 'Noto Sans Variable', system-ui, sans-serif;
+    --font-noto-sans-ja:
+        'Noto Sans JP Variable', 'Noto Sans Variable', system-ui, sans-serif;
+    --font-noto-sans-en: 'Noto Sans Variable', system-ui, sans-serif;
     /* 自定义断点 - 4K显示器支持 */
     --breakpoint-3xl: 2048px;
 }

@@ -1,4 +1,6 @@
 @import '@fontsource-variable/noto-sans-sc';
+@import '@fontsource-variable/noto-sans-jp';
+@import '@fontsource-variable/noto-sans';
 @import 'tailwindcss';
 @import './theme.css';
 @import './tailwind-settings.css';
