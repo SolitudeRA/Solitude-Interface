@@ -2,9 +2,44 @@ import * as React from 'react';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
-import type { FeaturedPost, PostTag } from '@api/ghost/types';
+import type { FeaturedPost } from '@api/ghost/types';
 import { Chip } from '@components/common/badge';
 import { cn } from '@components/common/lib/utils';
+
+// 颜色方案类型（与 badge.tsx 保持一致）
+type ChipColorScheme =
+    | 'default'
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'warning'
+    | 'info'
+    | 'purple'
+    | 'rose';
+
+// Type 配置：不同文章类型使用不同颜色
+const DEFAULT_TYPE_CONFIG = {
+    colorScheme: 'secondary' as ChipColorScheme,
+};
+
+const TYPE_CONFIG: Record<string, { colorScheme: ChipColorScheme }> = {
+    article: { colorScheme: 'primary' }, // 蓝色 - 经典、专业
+    gallery: { colorScheme: 'purple' }, // 紫色 - 艺术、创意
+    video: { colorScheme: 'rose' }, // 玫红 - 热情、动感
+    music: { colorScheme: 'warning' }, // 琥珀 - 温暖、活力
+    default: DEFAULT_TYPE_CONFIG,
+};
+
+// Category 配置：不同分类使用不同颜色
+const DEFAULT_CATEGORY_CONFIG = {
+    colorScheme: 'secondary' as ChipColorScheme,
+};
+
+const CATEGORY_CONFIG: Record<string, { colorScheme: ChipColorScheme }> = {
+    tech: { colorScheme: 'info' }, // 青色 - 科技感
+    life: { colorScheme: 'success' }, // 绿色 - 生活、自然
+    default: DEFAULT_CATEGORY_CONFIG,
+};
 
 interface PostsShowcaseCarouselProps {
     posts: FeaturedPost[];
@@ -37,16 +72,14 @@ function ShowcaseCard({
     const hasImage =
         post.feature_image && post.feature_image.toString().length > 0;
 
-    // 获取要显示的标签（最多3个，排除系统标签）
-    const displayTags = React.useMemo(() => {
-        if (!post.tags || post.tags.length === 0) return [];
-        return post.tags
-            .filter((tag: PostTag) => !tag.slug?.startsWith('hash-'))
-            .slice(0, 3);
-    }, [post.tags]);
+    // 获取 type 配置
+    const typeKey = post.post_type?.toLowerCase() || 'default';
+    const typeConfig = TYPE_CONFIG[typeKey] ?? DEFAULT_TYPE_CONFIG;
 
-    // 分类（primary_tag 或 post_category）
-    const category = post.primary_tag?.name || post.post_category || null;
+    // 获取 category 配置
+    const categoryKey = post.post_category?.toLowerCase() || 'default';
+    const categoryConfig =
+        CATEGORY_CONFIG[categoryKey] ?? DEFAULT_CATEGORY_CONFIG;
 
     return (
         <motion.a
@@ -112,36 +145,32 @@ function ShowcaseCard({
             />
 
             {/* 内容区域 */}
-            <div className="absolute inset-0 flex flex-col justify-end p-4">
-                {/* 分类标签 */}
-                {category && (
-                    <div className="mb-2">
-                        <span
-                            className="text-xs font-medium tracking-wider uppercase"
-                            style={{ color: 'var(--post-view-card-meta)' }}
+            <div className="absolute inset-0 flex flex-col justify-between p-4">
+                {/* 顶部标签区 - 与 BaseCard 保持一致 */}
+                <div className="flex items-center justify-between">
+                    {/* 左上角：Type 标签 */}
+                    {post.post_type && (
+                        <Chip
+                            variant="flat"
+                            colorScheme={typeConfig.colorScheme}
+                            className="backdrop-blur-sm"
                         >
-                            {category}
-                        </span>
-                    </div>
-                )}
+                            {post.post_type}
+                        </Chip>
+                    )}
+                    {/* 右上角：Category 标签 */}
+                    {post.post_category && (
+                        <Chip
+                            variant="flat"
+                            colorScheme={categoryConfig.colorScheme}
+                            className="backdrop-blur-sm"
+                        >
+                            {post.post_category}
+                        </Chip>
+                    )}
+                </div>
 
-                {/* 标签 Pills */}
-                {displayTags.length > 0 && (
-                    <div className="mb-2 flex flex-wrap gap-1.5">
-                        {displayTags.map((tag: PostTag) => (
-                            <Chip
-                                key={tag.id}
-                                variant="flat"
-                                colorScheme="primary"
-                                className="px-2 py-0.5 text-[10px] backdrop-blur-sm"
-                            >
-                                {tag.name}
-                            </Chip>
-                        ))}
-                    </div>
-                )}
-
-                {/* 标题 */}
+                {/* 底部：标题 */}
                 <h3
                     className={cn(
                         'text-lg leading-tight font-bold',
@@ -178,12 +207,13 @@ function SkeletonCard({ index }: { index: number }) {
             )}
             style={{ animationDelay: `${index * 100}ms` }}
         >
-            <div className="flex h-full flex-col justify-end p-4">
-                <div className="bg-muted-foreground/20 mb-2 h-3 w-16 rounded" />
-                <div className="mb-2 flex gap-1.5">
-                    <div className="bg-muted-foreground/20 h-5 w-12 rounded-full" />
-                    <div className="bg-muted-foreground/20 h-5 w-16 rounded-full" />
+            <div className="flex h-full flex-col justify-between p-4">
+                {/* 顶部标签占位 */}
+                <div className="flex items-center justify-between">
+                    <div className="bg-muted-foreground/20 h-6 w-20 rounded-full" />
+                    <div className="bg-muted-foreground/20 h-6 w-16 rounded-full" />
                 </div>
+                {/* 底部标题占位 */}
                 <div className="space-y-2">
                     <div className="bg-muted-foreground/20 h-5 w-full rounded" />
                     <div className="bg-muted-foreground/20 h-5 w-3/4 rounded" />

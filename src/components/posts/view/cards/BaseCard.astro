@@ -2,9 +2,31 @@
 import type { Post } from '@api/ghost/types';
 import { Chip } from '@components/common/badge';
 
-// Category 配置：图标和颜色方案
-type ChipColorScheme = 'default' | 'primary' | 'secondary' | 'success';
+// 颜色方案类型（与 badge.tsx 保持一致）
+type ChipColorScheme =
+    | 'default'
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'warning'
+    | 'info'
+    | 'purple'
+    | 'rose';
 
+// Type 配置：不同文章类型使用不同颜色
+const DEFAULT_TYPE_CONFIG = {
+    colorScheme: 'secondary' as ChipColorScheme,
+};
+
+const TYPE_CONFIG: Record<string, { colorScheme: ChipColorScheme }> = {
+    article: { colorScheme: 'primary' }, // 蓝色 - 经典、专业
+    gallery: { colorScheme: 'purple' }, // 紫色 - 艺术、创意
+    video: { colorScheme: 'rose' }, // 玫红 - 热情、动感
+    music: { colorScheme: 'warning' }, // 琥珀 - 温暖、活力
+    default: DEFAULT_TYPE_CONFIG,
+};
+
+// Category 配置：不同分类使用不同颜色和图标
 const DEFAULT_CATEGORY_CONFIG = {
     icon: '📂',
     colorScheme: 'secondary' as ChipColorScheme,
@@ -14,8 +36,8 @@ const CATEGORY_CONFIG: Record<
     string,
     { icon: string; colorScheme: ChipColorScheme }
 > = {
-    tech: { icon: '💻', colorScheme: 'primary' },
-    life: { icon: '🌱', colorScheme: 'success' },
+    tech: { icon: '💻', colorScheme: 'info' }, // 青色 - 科技感
+    life: { icon: '🌱', colorScheme: 'success' }, // 绿色 - 生活、自然
     default: DEFAULT_CATEGORY_CONFIG,
 };
 
@@ -29,6 +51,10 @@ interface Props {
 
 const { post, typeIcon, className = '' } = Astro.props;
 const postFeatureImageUrl = `url(${post.feature_image.toString()})`;
+
+// 获取 type 配置
+const typeKey = post.post_type?.toLowerCase() || 'default';
+const typeConfig = TYPE_CONFIG[typeKey] ?? DEFAULT_TYPE_CONFIG;
 
 // 获取 category 配置
 const categoryKey = post.post_category?.toLowerCase() || 'default';
@@ -44,21 +70,13 @@ const categoryConfig = CATEGORY_CONFIG[categoryKey] ?? DEFAULT_CATEGORY_CONFIG;
 >
     <!-- 顶部标签区 -->
     <div class="mb-5 flex items-center justify-between">
-        <Chip
-            variant="flat"
-            colorScheme="primary"
-            className="px-3.5 py-1 text-sm"
-        >
+        <Chip variant="flat" colorScheme={typeConfig.colorScheme}>
             {typeIcon && <span class="mr-1">{typeIcon}</span>}
             {post.post_type}
         </Chip>
         {
             post.post_category && (
-                <Chip
-                    variant="flat"
-                    colorScheme={categoryConfig.colorScheme}
-                    className="px-3.5 py-1 text-sm"
-                >
+                <Chip variant="flat" colorScheme={categoryConfig.colorScheme}>
                     <span class="mr-1">{categoryConfig.icon}</span>
                     {post.post_category}
                 </Chip>
@@ -67,9 +85,9 @@ const categoryConfig = CATEGORY_CONFIG[categoryKey] ?? DEFAULT_CATEGORY_CONFIG;
     </div>
 
     <!-- 标题区 -->
-    <div class="mt-2 mb-10">
+    <div class="mt-2 mb-6">
         <h3
-            class="card-title line-clamp-3 text-center text-[1.875rem] leading-snug font-semibold tracking-tight"
+            class="card-title line-clamp-3 text-center text-[1.75rem] leading-relaxed font-medium tracking-normal"
         >
             {post.title}
         </h3>
@@ -79,13 +97,16 @@ const categoryConfig = CATEGORY_CONFIG[categoryKey] ?? DEFAULT_CATEGORY_CONFIG;
     <slot name="richtext" />
 
     <!-- 摘要区（flex-1 占据剩余空间） -->
-    <div class="mb-5 flex-1 overflow-hidden">
+    <div class="mb-auto flex-1 overflow-hidden">
         <p
-            class="card-excerpt line-clamp-[7] text-base leading-[1.75] tracking-normal"
+            class="card-excerpt line-clamp-5 text-[1.05rem] leading-[1.85] tracking-wide"
         >
             {post.excerpt}
         </p>
     </div>
+
+    <!-- 分隔装饰线 - 彩虹渐变 -->
+    <div class="card-divider mx-auto my-4 h-0.5 w-3/7 rounded-full"></div>
 
     <!-- 底部信息区 -->
     <div class="mt-auto space-y-3">
@@ -175,18 +196,36 @@ const categoryConfig = CATEGORY_CONFIG[categoryKey] ?? DEFAULT_CATEGORY_CONFIG;
     .card-title {
         color: var(--post-view-card-title);
         text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
-        letter-spacing: -0.02em;
     }
 
     .card-excerpt {
         color: var(--post-view-card-excerpt);
         text-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
-        word-spacing: 0.05em;
     }
 
     .card-meta {
         color: var(--post-view-card-meta);
         letter-spacing: 0.05em;
+    }
+
+    .card-divider {
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            #ff6b6b 10%,
+            #feca57 25%,
+            #48dbfb 40%,
+            #ff9ff3 55%,
+            #54a0ff 70%,
+            #5f27cd 85%,
+            transparent 100%
+        );
+        opacity: 0.35;
+        transition: opacity 0.3s ease;
+    }
+
+    .base-card:hover .card-divider {
+        opacity: 0.55;
     }
 
     /* 暗色主题文字阴影调整 */
