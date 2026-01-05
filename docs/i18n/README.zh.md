@@ -84,15 +84,42 @@ GOOGLE_ANALYTICS_TAG_ID=
 
 #### 环境变量说明
 
-| 变量                      | 必填 | 说明                                                                   |
-| ------------------------- | ---- | ---------------------------------------------------------------------- |
-| `GHOST_URL`               | 是   | Ghost 实例的基础 URL                                                   |
-| `GHOST_CONTENT_KEY`       | 是   | Ghost Content API Key                                                  |
-| `GHOST_VERSION`           | 否   | Ghost Content API 版本（默认：`v5.0`）                                 |
-| `GHOST_TIMEOUT`           | 否   | Ghost 请求超时时间（毫秒，默认：`5000`）                               |
-| `SITE_URL`                | 是   | 站点公开 URL（用于 canonical / hreflang）                              |
-| `IMAGE_HOST_URL`          | 否   | 可选：图片域名/CDN，用于远程图片域名白名单（默认：空）                 |
-| `GOOGLE_ANALYTICS_TAG_ID` | 否   | 可选：Google tag / GA4 Measurement ID（如 `G-XXXX`）。留空即可关闭统计 |
+| 变量                      | 必填 | 说明                                                                                      |
+| ------------------------- | ---- | ----------------------------------------------------------------------------------------- |
+| `GHOST_URL`               | 是   | Ghost 实例的基础 URL                                                                      |
+| `GHOST_CONTENT_KEY`       | 是   | Ghost Content API Key                                                                     |
+| `GHOST_VERSION`           | 否   | Ghost Content API 版本（默认：`v5.0`）                                                    |
+| `GHOST_TIMEOUT`           | 否   | Ghost 请求超时时间（毫秒，默认：`5000`）                                                  |
+| `SITE_URL`                | 是   | 站点公开 URL（用于 canonical / hreflang）                                                 |
+| `IMAGE_HOST_URL`          | 否   | 可选：图片域名/CDN，用于远程图片域名白名单（默认：空）                                    |
+| `GOOGLE_ANALYTICS_TAG_ID` | 否   | 可选：Google tag / GA4 Measurement ID（如 `G-XXXX`）。留空即可关闭统计                    |
+| `CF_ACCESS_CLIENT_ID`     | 否   | Cloudflare Access Service Token Client ID（仅当 Ghost 使用 Cloudflare Access 保护时需要） |
+| `CF_ACCESS_CLIENT_SECRET` | 否   | Cloudflare Access Service Token Client Secret                                             |
+
+### Cloudflare 配置（可选）
+
+如果你的 Ghost 实例使用 Cloudflare 保护，可能需要额外配置：
+
+#### Bot Fight Mode
+
+创建 WAF 自定义规则跳过 API 的机器人保护：
+
+1. Cloudflare Dashboard → **Security** → **WAF** → **Custom rules**
+2. 创建规则：URI Path `starts with` `/ghost/api/content/`
+3. Action: **Skip** → 勾选 "All Super Bot Fight Mode rules"
+
+#### Zero Trust Access
+
+如果使用 Cloudflare Zero Trust Access：
+
+1. Zero Trust Dashboard → **Access** → **Applications**
+2. 为 `your-ghost-domain.com/ghost/api/content/*` 添加应用
+3. 策略设置为 **Bypass**
+
+或使用 Service Auth Token：
+
+1. Zero Trust → **Access** → **Service Auth** → 创建 Service Token
+2. 将 Client ID 和 Secret 添加到 `.env` 文件
 
 ### 3. 获取 Ghost Content API Key
 

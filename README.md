@@ -93,6 +93,33 @@ GOOGLE_ANALYTICS_TAG_ID=
 | `SITE_URL`                | Yes      | Public site URL for canonical and hreflang                                                  |
 | `IMAGE_HOST_URL`          | No       | Optional image host/CDN used for remote image domain allowlist (default: empty)             |
 | `GOOGLE_ANALYTICS_TAG_ID` | No       | Optional Google tag / GA4 Measurement ID (e.g., `G-XXXX`). Leave empty to disable analytics |
+| `CF_ACCESS_CLIENT_ID`     | No       | Cloudflare Access Service Token Client ID (only if Ghost is protected by Cloudflare Access) |
+| `CF_ACCESS_CLIENT_SECRET` | No       | Cloudflare Access Service Token Client Secret                                               |
+
+### Cloudflare Configuration (Optional)
+
+If your Ghost instance is protected by Cloudflare, you may need additional configuration:
+
+#### Bot Fight Mode
+
+Create a WAF Custom Rule to skip bot protection for the API:
+
+1. Cloudflare Dashboard → **Security** → **WAF** → **Custom rules**
+2. Create rule: URI Path `starts with` `/ghost/api/content/`
+3. Action: **Skip** → Check "All Super Bot Fight Mode rules"
+
+#### Zero Trust Access
+
+If using Cloudflare Zero Trust Access:
+
+1. Zero Trust Dashboard → **Access** → **Applications**
+2. Add application for `your-ghost-domain.com/ghost/api/content/*`
+3. Set policy action to **Bypass**
+
+Or use Service Auth Token:
+
+1. Zero Trust → **Access** → **Service Auth** → Create Service Token
+2. Add the Client ID and Secret to your `.env` file
 
 ### 3. Get Your Ghost Content API Key
 

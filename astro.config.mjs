@@ -44,6 +44,18 @@ export default defineConfig({
                 optional: true,
                 default: '',
             }),
+            CF_ACCESS_CLIENT_ID: envField.string({
+                context: 'server',
+                access: 'secret',
+                optional: true,
+                default: '',
+            }),
+            CF_ACCESS_CLIENT_SECRET: envField.string({
+                context: 'server',
+                access: 'secret',
+                optional: true,
+                default: '',
+            }),
         },
     },
 

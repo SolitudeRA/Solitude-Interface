@@ -34,15 +34,27 @@ export class GhostAPIClient {
     constructor(retryConfig: Partial<RetryConfig> = {}) {
         this.retryConfig = { ...DEFAULT_RETRY_CONFIG, ...retryConfig };
 
+        // 构建 headers，如果配置了 Cloudflare Access 则添加相关 headers
+        const headers: Record<string, string> = {
+            'Accept-Version': env.ghost.version,
+        };
+
+        if (
+            env.cloudflare.accessClientId &&
+            env.cloudflare.accessClientSecret
+        ) {
+            headers['CF-Access-Client-Id'] = env.cloudflare.accessClientId;
+            headers['CF-Access-Client-Secret'] =
+                env.cloudflare.accessClientSecret;
+        }
+
         this.axiosInstance = axios.create({
             baseURL: `${env.ghost.url}/ghost/api/content/`,
             timeout: env.ghost.timeout,
             params: {
                 key: env.ghost.key,
             },
-            headers: {
-                'Accept-Version': env.ghost.version,
-            },
+            headers,
             responseType: 'json',
         });
 

@@ -84,15 +84,42 @@ GOOGLE_ANALYTICS_TAG_ID=
 
 #### 環境変数
 
-| 変数                      | 必須 | 説明                                                                     |
-| ------------------------- | ---- | ------------------------------------------------------------------------ |
-| `GHOST_URL`               | Yes  | Ghost インスタンスのベース URL                                           |
-| `GHOST_CONTENT_KEY`       | Yes  | Ghost Content API キー                                                   |
-| `GHOST_VERSION`           | No   | Ghost Content API バージョン（デフォルト：`v5.0`）                       |
-| `GHOST_TIMEOUT`           | No   | Ghost リクエストのタイムアウト（ms、デフォルト：`5000`）                 |
-| `SITE_URL`                | Yes  | 公開サイト URL（canonical / hreflang 用）                                |
-| `IMAGE_HOST_URL`          | No   | 任意：画像ホスト/CDN（リモート画像ドメイン許可リスト用、デフォルト：空） |
-| `GOOGLE_ANALYTICS_TAG_ID` | No   | 任意：Google tag / GA4 Measurement ID（例：`G-XXXX`）。空なら解析無効    |
+| 変数                      | 必須 | 説明                                                                                                 |
+| ------------------------- | ---- | ---------------------------------------------------------------------------------------------------- |
+| `GHOST_URL`               | Yes  | Ghost インスタンスのベース URL                                                                       |
+| `GHOST_CONTENT_KEY`       | Yes  | Ghost Content API キー                                                                               |
+| `GHOST_VERSION`           | No   | Ghost Content API バージョン（デフォルト：`v5.0`）                                                   |
+| `GHOST_TIMEOUT`           | No   | Ghost リクエストのタイムアウト（ms、デフォルト：`5000`）                                             |
+| `SITE_URL`                | Yes  | 公開サイト URL（canonical / hreflang 用）                                                            |
+| `IMAGE_HOST_URL`          | No   | 任意：画像ホスト/CDN（リモート画像ドメイン許可リスト用、デフォルト：空）                             |
+| `GOOGLE_ANALYTICS_TAG_ID` | No   | 任意：Google tag / GA4 Measurement ID（例：`G-XXXX`）。空なら解析無効                                |
+| `CF_ACCESS_CLIENT_ID`     | No   | Cloudflare Access Service Token Client ID（Ghost が Cloudflare Access で保護されている場合のみ必要） |
+| `CF_ACCESS_CLIENT_SECRET` | No   | Cloudflare Access Service Token Client Secret                                                        |
+
+### Cloudflare 設定（任意）
+
+Ghost インスタンスが Cloudflare で保護されている場合、追加設定が必要な場合があります：
+
+#### Bot Fight Mode
+
+API のボット保護をスキップする WAF カスタムルールを作成：
+
+1. Cloudflare Dashboard → **Security** → **WAF** → **Custom rules**
+2. ルール作成：URI Path `starts with` `/ghost/api/content/`
+3. Action: **Skip** → "All Super Bot Fight Mode rules" をチェック
+
+#### Zero Trust Access
+
+Cloudflare Zero Trust Access を使用している場合：
+
+1. Zero Trust Dashboard → **Access** → **Applications**
+2. `your-ghost-domain.com/ghost/api/content/*` 用のアプリケーションを追加
+3. ポリシーアクションを **Bypass** に設定
+
+または Service Auth Token を使用：
+
+1. Zero Trust → **Access** → **Service Auth** → Service Token を作成
+2. Client ID と Secret を `.env` ファイルに追加
 
 ### 3. Ghost Content API Key を取得する
 
