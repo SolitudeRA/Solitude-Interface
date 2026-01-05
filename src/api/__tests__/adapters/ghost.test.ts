@@ -220,6 +220,49 @@ describe('Ghost Adapters', () => {
             expect(adapted.html).toBe('<p>Test HTML content</p>');
         });
 
+        it('should filter out internal tags (hash- prefix)', () => {
+            const tagsWithInternal: PostTag[] = [
+                {
+                    id: '1',
+                    slug: 'type-article',
+                    name: 'Article',
+                },
+                {
+                    id: '2',
+                    slug: 'javascript',
+                    name: 'JavaScript',
+                },
+                {
+                    id: '3',
+                    slug: 'hash-lang-zh',
+                    name: '#lang-zh',
+                },
+                {
+                    id: '4',
+                    slug: 'hash-i18n-test-post',
+                    name: '#i18n-test-post',
+                },
+            ];
+
+            const mockPost: FeaturedPost = {
+                id: 'test-post',
+                title: 'Test',
+                url: new URL('https://ghost.example.com/test'),
+                feature_image: new URL('https://ghost.example.com/image.jpg'),
+                published_at: '2024-01-01',
+                tags: tagsWithInternal,
+                post_type: '',
+                post_category: '',
+                post_series: '',
+            };
+
+            const adapted = adaptGhostPost(mockPost);
+
+            expect(adapted.post_general_tags).toEqual(['JavaScript']);
+            expect(adapted.post_general_tags).not.toContain('#lang-zh');
+            expect(adapted.post_general_tags).not.toContain('#i18n-test-post');
+        });
+
         it('should handle cases with only partial special tags', () => {
             const partialTags: PostTag[] = [
                 {
