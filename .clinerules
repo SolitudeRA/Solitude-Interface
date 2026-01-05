@@ -1,0 +1,172 @@
+# Solitude Interface - Cline 项目规则
+
+## 项目概述
+
+这是一个基于 **Astro + React + TypeScript + TailwindCSS** 的个人博客前端项目，与 **Ghost CMS** 集成作为 headless CMS。
+
+### 技术栈
+- **框架**: Astro 5.x (静态站点生成)
+- **UI 库**: React 19.x
+- **类型系统**: TypeScript 5.x (严格模式)
+- **样式**: TailwindCSS 4.x + Emotion CSS-in-JS
+- **状态管理**: Jotai
+- **动画**: Motion (Framer Motion)
+- **CMS**: Ghost Content API
+- **测试**: Vitest
+- **包管理器**: pnpm
+
+---
+
+## 目录结构
+
+```
+src/
+├── api/                    # Ghost API 集成层
+│   ├── adapters/           # 数据转换器 (Ghost → 前端格式)
+│   ├── clients/            # API 客户端
+│   ├── config/             # 环境变量配置
+│   ├── ghost/              # Ghost API 模块 (posts, settings)
+│   ├── utils/              # 工具函数 (缓存, 错误处理)
+│   └── __tests__/          # API 测试
+├── components/             # UI 组件
+│   ├── common/             # 通用组件 (Button, Card, Badge 等)
+│   ├── home/               # 首页组件
+│   ├── i18n/               # 国际化组件
+│   ├── layout/             # 布局组件 (Navbar, Dock)
+│   ├── pages/              # 页面专用组件
+│   ├── posts/              # 文章展示组件
+│   └── utils/              # 工具组件
+├── layouts/                # Astro 布局
+├── lib/                    # 核心库 (i18n)
+├── pages/                  # Astro 页面路由
+├── stores/                 # Jotai 状态管理
+├── styles/                 # 全局样式
+└── types/                  # TypeScript 类型定义
+```
+
+---
+
+## 路径别名
+
+| 别名 | 路径 | 用途 |
+|------|------|------|
+| `@api/*` | `src/api/*` | API 层 |
+| `@components/*` | `src/components/*` | UI 组件 |
+| `@layouts/*` | `src/layouts/*` | 布局 |
+| `@styles/*` | `src/styles/*` | 样式 |
+| `@stores/*` | `src/stores/*` | 状态管理 |
+| `@assets/*` | `src/assets/*` | 静态资源 |
+| `@types/*` | `src/types/*` | 类型定义 |
+| `@lib/*` | `src/lib/*` | 核心库 |
+
+**示例**:
+```typescript
+import { getPosts } from '@api/ghost/posts';
+import { Button } from '@components/common';
+import { postViewAtom } from '@stores/postViewAtom';
+```
+
+---
+
+## 多语言系统 (i18n)
+
+### 支持的语言
+- `zh` - 中文 (默认)
+- `ja` - 日本語
+- `en` - English
+
+### Ghost 标签约定
+- 语言标签: `#lang-{locale}` → API slug: `hash-lang-{locale}`
+- 翻译组: `#i18n-{key}` → API slug: `hash-i18n-{key}`
+
+### URL 结构
+- `/{lang}/` - 文章列表
+- `/{lang}/p/{key}` - 文章详情
+
+---
+
+## 组件开发规范
+
+### Astro vs React 选择标准
+
+| 场景 | 推荐 | 原因 |
+|------|------|------|
+| 静态内容/布局 | Astro (.astro) | 零 JS 开销 |
+| 需要交互/状态 | React (.tsx) | 客户端交互 |
+| 服务端数据获取 | Astro | 构建时获取 |
+
+### 组件命名规范
+- Astro 组件: `PascalCase.astro`
+- React 组件: `PascalCase.tsx`
+- 测试文件: `*.test.ts` (单元) / `*.integration.test.ts` (集成)
+
+---
+
+## 常用标签前缀
+
+| 前缀 | 用途 | 示例 |
+|------|------|------|
+| `type-` | 文章类型 | `type-article`, `type-gallery`, `type-video`, `type-music` |
+| `category-` | 分类 | `category-tech`, `category-life` |
+| `series-` | 系列 | `series-astro-tutorial` |
+
+---
+
+## 常用命令
+
+```bash
+pnpm dev              # 启动开发服务器 (localhost:4321)
+pnpm build            # 生产构建
+pnpm preview          # 预览生产构建
+pnpm test             # 运行测试 (watch 模式)
+pnpm test:unit        # 仅运行单元测试
+pnpm test:integration # 仅运行集成测试
+pnpm format           # 格式化代码
+pnpm astro check      # TypeScript 类型检查
+```
+
+---
+
+## 代码风格
+
+- 使用 Prettier 格式化 (配置见 `.prettierrc.mjs`)
+- 缩进: 4 空格
+- 引号: 单引号
+- 分号: 必须
+- 尾逗号: ES5
+
+---
+
+## 开发注意事项
+
+1. **环境变量**: 修改 `.env` 后需重启开发服务器
+2. **类型生成**: schema 变更后运行 `pnpm astro sync`
+3. **测试**: 集成测试需要配置真实的 Ghost API
+4. **图片**: 远程图片域名需在 `astro.config.mjs` 中配置
+
+---
+
+## 相关文档
+
+### 项目文档
+- [README.md](README.md) - 用户指南
+- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) - 开发指南
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - 架构设计
+
+### 任务上下文 (优先参考)
+根据任务类型，优先阅读对应的上下文文档：
+
+| 任务类型 | 参考文档 |
+|---------|---------|
+| 创建新组件 | [docs/cline/TASK_NEW_COMPONENT.md](docs/cline/TASK_NEW_COMPONENT.md) |
+| 添加新页面 | [docs/cline/TASK_ADD_PAGE.md](docs/cline/TASK_ADD_PAGE.md) |
+| 修改 API 层 | [docs/cline/TASK_API_CHANGE.md](docs/cline/TASK_API_CHANGE.md) |
+
+### 代码模板
+创建新文件时，优先使用以下模板：
+
+| 模板 | 用途 | 位置 |
+|------|------|------|
+| Astro 页面 | 多语言页面 | [docs/cline/templates/astro-page.astro](docs/cline/templates/astro-page.astro) |
+| React 组件 | 交互式组件 | [docs/cline/templates/react-component.tsx](docs/cline/templates/react-component.tsx) |
+| 单元测试 | Vitest 测试 | [docs/cline/templates/unit-test.test.ts](docs/cline/templates/unit-test.test.ts) |
