@@ -26,6 +26,12 @@ importers:
       '@emotion/server':
         specifier: ^11.11.0
         version: 11.11.0(@emotion/css@11.13.5)
+      '@fontsource-variable/noto-sans':
+        specifier: ^5.2.10
+        version: 5.2.10
+      '@fontsource-variable/noto-sans-jp':
+        specifier: ^5.2.9
+        version: 5.2.9
       '@fontsource-variable/noto-sans-sc':
         specifier: ^5.2.9
         version: 5.2.9
@@ -692,8 +698,14 @@ packages:
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
 
+  '@fontsource-variable/noto-sans-jp@5.2.9':
+    resolution: {integrity: sha512-osPL5f7dvGDjuMuFwDTGPLG37030D8X5zk+3BWea6txAVDFeE/ZIrKW0DY0uSDfRn9+NiKbiFn/2QvZveKXTog==}
+
   '@fontsource-variable/noto-sans-sc@5.2.9':
     resolution: {integrity: sha512-ZEEpZlxjYEIVdg85K38mqaoeBcorrN3Z6MaIkwK5w5Dqn/e9v5uVIYr0ukoLsFxaVyEXSi/c3caOeMHjbOMtfA==}
+
+  '@fontsource-variable/noto-sans@5.2.10':
+    resolution: {integrity: sha512-wyFgKkFu7jki5kEL8qv7avjQ8rxHX0J/nhLWvbR9T0hOH1HRKZEvb9EW9lMjZfWHHfEzKkYf5J+NadwgCS7TXA==}
 
   '@fontsource-variable/noto-serif-sc@5.2.9':
     resolution: {integrity: sha512-7zfvfNQSlcgzuln7ycuyz25ng+DFMhSg7kkjxQeG/smJjRcy0skFvaEbwUsDxLXxWodMmHjO5efJ6bx5Up81CA==}
@@ -4308,7 +4320,11 @@ snapshots:
 
   '@floating-ui/utils@0.2.10': {}
 
+  '@fontsource-variable/noto-sans-jp@5.2.9': {}
+
   '@fontsource-variable/noto-sans-sc@5.2.9': {}
+
+  '@fontsource-variable/noto-sans@5.2.10': {}
 
   '@fontsource-variable/noto-serif-sc@5.2.9': {}
 
