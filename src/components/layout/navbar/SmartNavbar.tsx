@@ -63,8 +63,8 @@ export default function SmartNavbar({
 
     const navClasses = [
         'smart-navbar',
-        // 响应式高度：移动端较小，桌面端较大
-        'h-[12vh] sm:h-[13vh] md:h-[14vh]',
+        // 响应式高度：移动端较小，桌面端较大（使用 svh 避免移动端地址栏导致的高度变化）
+        'h-[12svh] sm:h-[13svh] md:h-[14svh]',
         'min-h-[60px] sm:min-h-[70px] md:min-h-[80px]',
         'w-full',
         'transition-all',
