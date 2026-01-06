@@ -98,28 +98,7 @@ GOOGLE_ANALYTICS_TAG_ID=
 
 ### Cloudflare Configuration (Optional)
 
-If your Ghost instance is protected by Cloudflare, you may need additional configuration:
-
-#### Bot Fight Mode
-
-Create a WAF Custom Rule to skip bot protection for the API:
-
-1. Cloudflare Dashboard → **Security** → **WAF** → **Custom rules**
-2. Create rule: URI Path `starts with` `/ghost/api/content/`
-3. Action: **Skip** → Check "All Super Bot Fight Mode rules"
-
-#### Zero Trust Access
-
-If using Cloudflare Zero Trust Access:
-
-1. Zero Trust Dashboard → **Access** → **Applications**
-2. Add application for `your-ghost-domain.com/ghost/api/content/*`
-3. Set policy action to **Bypass**
-
-Or use Service Auth Token:
-
-1. Zero Trust → **Access** → **Service Auth** → Create Service Token
-2. Add the Client ID and Secret to your `.env` file
+If your Ghost instance is protected by Cloudflare, you may need additional configuration:"
 
 ### 3. Get Your Ghost Content API Key
 
