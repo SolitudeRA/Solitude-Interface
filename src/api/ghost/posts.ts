@@ -2,7 +2,7 @@ import { getGhostClient } from '@api/clients/ghost';
 import { adaptGhostPost } from '@api/adapters/ghost';
 import type { FeaturedPost, Post } from '@api/ghost/types';
 import { handleApiError } from '@api/utils/errorHandlers';
-import { cacheService } from '@api/utils/cache';
+import { getCache, setCache } from '@api/utils/cache';
 import {
     type Locale,
     LOCALES,
@@ -19,8 +19,8 @@ export async function getHighlightPosts(
     include: string = 'tags',
 ): Promise<FeaturedPost[]> {
     const cacheKey = `featured_posts:${limit}:${fields}:${include}`;
-    const cachedPosts = cacheService.get<FeaturedPost[]>(cacheKey);
-    if (cachedPosts) {
+    const cachedPosts = getCache<FeaturedPost[]>(cacheKey);
+    if (cachedPosts !== undefined) {
         return cachedPosts;
     }
 
@@ -33,7 +33,7 @@ export async function getHighlightPosts(
         const posts = response.posts || [];
         const adaptedPosts = posts.map((post) => adaptGhostPost(post));
 
-        cacheService.set(cacheKey, adaptedPosts);
+        setCache(cacheKey, adaptedPosts);
 
         return adaptedPosts;
     } catch (error) {
@@ -54,8 +54,8 @@ export async function listPostsByLocale(
     const langTag = localeToLangTag(locale);
     const cacheKey = `posts_by_locale:${locale}:${page}:${limit}`;
 
-    const cachedPosts = cacheService.get<Post[]>(cacheKey);
-    if (cachedPosts) {
+    const cachedPosts = getCache<Post[]>(cacheKey);
+    if (cachedPosts !== undefined) {
         return cachedPosts;
     }
 
@@ -73,7 +73,7 @@ export async function listPostsByLocale(
         const posts = response.posts || [];
         const adaptedPosts = posts.map((post) => adaptGhostPost(post));
 
-        cacheService.set(cacheKey, adaptedPosts);
+        setCache(cacheKey, adaptedPosts);
 
         return adaptedPosts;
     } catch (error) {
@@ -94,7 +94,7 @@ export async function getPostByGroupAndLocale(
     const i18nTag = i18nKeyToTag(key);
     const cacheKey = `post_by_group:${key}:${locale}`;
 
-    const cachedPost = cacheService.get<Post | null>(cacheKey);
+    const cachedPost = getCache<Post | null>(cacheKey);
     if (cachedPost !== undefined) {
         return cachedPost;
     }
@@ -112,12 +112,12 @@ export async function getPostByGroupAndLocale(
         const posts = response.posts || [];
         const firstPost = posts[0];
         if (!firstPost) {
-            cacheService.set(cacheKey, null);
+            setCache(cacheKey, null);
             return null;
         }
 
         const adaptedPost = adaptGhostPost<Post>(firstPost);
-        cacheService.set(cacheKey, adaptedPost);
+        setCache(cacheKey, adaptedPost);
 
         return adaptedPost;
     } catch (error) {
@@ -141,9 +141,8 @@ export async function getVariantsByGroup(
     const i18nTag = i18nKeyToTag(key);
     const cacheKey = `variants_by_group:${key}`;
 
-    const cachedVariants =
-        cacheService.get<Record<Locale, Post | null>>(cacheKey);
-    if (cachedVariants) {
+    const cachedVariants = getCache<Record<Locale, Post | null>>(cacheKey);
+    if (cachedVariants !== undefined) {
         return cachedVariants;
     }
 
@@ -175,7 +174,7 @@ export async function getVariantsByGroup(
             }
         }
 
-        cacheService.set(cacheKey, variants);
+        setCache(cacheKey, variants);
 
         return variants;
     } catch (error) {
@@ -191,8 +190,8 @@ export async function getVariantsByGroup(
 export async function listAllGroupKeys(): Promise<string[]> {
     const cacheKey = 'all_group_keys';
 
-    const cachedKeys = cacheService.get<string[]>(cacheKey);
-    if (cachedKeys) {
+    const cachedKeys = getCache<string[]>(cacheKey);
+    if (cachedKeys !== undefined) {
         return cachedKeys;
     }
 
@@ -234,7 +233,7 @@ export async function listAllGroupKeys(): Promise<string[]> {
         }
 
         const keysArray = Array.from(allKeys);
-        cacheService.set(cacheKey, keysArray);
+        setCache(cacheKey, keysArray);
 
         return keysArray;
     } catch (error) {
@@ -304,8 +303,8 @@ export async function getPosts(include: string = 'tags'): Promise<Post[]> {
     const cacheKey = `all_posts:${include}`;
 
     // 尝试从缓存获取
-    const cachedPosts = cacheService.get<Post[]>(cacheKey);
-    if (cachedPosts) {
+    const cachedPosts = getCache<Post[]>(cacheKey);
+    if (cachedPosts !== undefined) {
         return cachedPosts;
     }
 
@@ -318,7 +317,7 @@ export async function getPosts(include: string = 'tags'): Promise<Post[]> {
         const posts = response.posts || [];
         const adaptedPosts = posts.map((post) => adaptGhostPost(post));
 
-        cacheService.set(cacheKey, adaptedPosts);
+        setCache(cacheKey, adaptedPosts);
 
         return adaptedPosts;
     } catch (error) {
@@ -336,8 +335,8 @@ export async function listAllPosts(
     const { page = 1, limit = 100 } = options;
     const cacheKey = `all_posts_view:${page}:${limit}`;
 
-    const cachedPosts = cacheService.get<Post[]>(cacheKey);
-    if (cachedPosts) {
+    const cachedPosts = getCache<Post[]>(cacheKey);
+    if (cachedPosts !== undefined) {
         return cachedPosts;
     }
 
@@ -354,7 +353,7 @@ export async function listAllPosts(
         const posts = response.posts || [];
         const adaptedPosts = posts.map((post) => adaptGhostPost(post));
 
-        cacheService.set(cacheKey, adaptedPosts);
+        setCache(cacheKey, adaptedPosts);
 
         return adaptedPosts;
     } catch (error) {

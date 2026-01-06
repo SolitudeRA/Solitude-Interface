@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { getSiteInformation, initializeSiteData } from '@api/ghost/settings';
-import { cacheService } from '@api/utils/cache';
+import { clearCache, getCache } from '@api/utils/cache';
 
 describe('Settings API Integration Tests', () => {
     beforeEach(() => {
         // 确保每个测试开始时缓存是清空的
-        cacheService.clear();
+        clearCache();
     });
 
     describe('getSiteInformation', () => {
@@ -158,9 +158,11 @@ describe('Settings API Integration Tests', () => {
             const siteInfo1 = await getSiteInformation();
             expect(siteInfo1).toBeDefined();
 
-            // 验证缓存已设置
-            const cached = cacheService.get('site_information');
-            expect(cached).not.toBeNull();
+            // 验证缓存已设置（使用默认 fields 参数）
+            const cacheKey =
+                'site_information:title,description,logo,icon,cover_image,twitter,timezone,navigation';
+            const cached = getCache(cacheKey);
+            expect(cached).not.toBeUndefined();
             expect(cached).toEqual(siteInfo1);
         }, 15000);
 
@@ -185,7 +187,7 @@ describe('Settings API Integration Tests', () => {
             const siteInfo1 = await getSiteInformation();
 
             // 清除缓存
-            cacheService.clear();
+            clearCache();
 
             // 第二次调用应该重新从 API 获取
             const siteInfo2 = await getSiteInformation();
@@ -214,11 +216,11 @@ describe('Settings API Integration Tests', () => {
 
     describe('Real Data Validation', () => {
         it('should return consistent data across multiple calls', async () => {
-            cacheService.clear();
+            clearCache();
 
             const siteInfo1 = await getSiteInformation();
 
-            cacheService.clear();
+            clearCache();
 
             const siteInfo2 = await getSiteInformation();
 
@@ -250,7 +252,7 @@ describe('Settings API Integration Tests', () => {
 
     describe('API Performance', () => {
         it('should complete site information request within reasonable time', async () => {
-            cacheService.clear();
+            clearCache();
 
             const startTime = Date.now();
             await getSiteInformation();
@@ -261,7 +263,7 @@ describe('Settings API Integration Tests', () => {
         }, 10000);
 
         it('should complete site data initialization within reasonable time', async () => {
-            cacheService.clear();
+            clearCache();
 
             const startTime = Date.now();
             await initializeSiteData();

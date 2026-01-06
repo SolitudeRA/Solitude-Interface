@@ -1,20 +1,15 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { getSiteInformation, initializeSiteData } from '@api/ghost/settings';
 import { getGhostClient } from '@api/clients/ghost';
-import { cacheService } from '@api/utils/cache';
+import * as cache from '@api/utils/cache';
 import type { SiteInformation } from '@api/ghost/types';
 
 // Mock dependencies
 vi.mock('@api/clients/ghost');
 vi.mock('@api/utils/cache', () => ({
-    cacheService: {
-        get: vi.fn(),
-        set: vi.fn(),
-        has: vi.fn(),
-        delete: vi.fn(),
-        clear: vi.fn(),
-    },
-    withCache: (fn: any) => fn, // Return the original function directly, skipping cache
+    getCache: vi.fn(),
+    setCache: vi.fn(),
+    clearCache: vi.fn(),
 }));
 
 describe('Settings API', () => {
@@ -36,7 +31,8 @@ describe('Settings API', () => {
         vi.clearAllMocks();
         // Mock getGhostClient to return mock client
         vi.mocked(getGhostClient).mockReturnValue(mockClient as any);
-        vi.mocked(cacheService.get).mockReturnValue(null);
+        // Mock cache - return undefined to indicate no cache
+        vi.mocked(cache.getCache).mockReturnValue(undefined);
     });
 
     describe('getSiteInformation', () => {
@@ -51,6 +47,29 @@ describe('Settings API', () => {
             // 只检查是否成功获取到值
             expect(result).toBeDefined();
             expect(result.title).toBeDefined();
+        });
+
+        it('should read data from cache', async () => {
+            vi.mocked(cache.getCache).mockReturnValue(mockSiteInfo);
+
+            const result = await getSiteInformation();
+
+            expect(result).toEqual(mockSiteInfo);
+            expect(mockGet).not.toHaveBeenCalled();
+        });
+
+        it('should cache API response', async () => {
+            mockGet.mockResolvedValue({
+                settings: mockSiteInfo,
+            });
+            vi.mocked(cache.getCache).mockReturnValue(undefined);
+
+            await getSiteInformation();
+
+            expect(cache.setCache).toHaveBeenCalledWith(
+                expect.stringContaining('site_information:'),
+                mockSiteInfo,
+            );
         });
 
         it('should handle API errors', async () => {
