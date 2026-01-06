@@ -1,12 +1,16 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { getHighlightPosts, getPosts } from '@api/ghost/posts';
 import { getGhostClient } from '@api/clients/ghost';
-import { cacheService } from '@api/utils/cache';
+import * as cache from '@api/utils/cache';
 import type { FeaturedPost, Post, PostTag } from '@api/ghost/types';
 
 // Mock dependencies
 vi.mock('@api/clients/ghost');
-vi.mock('@api/utils/cache');
+vi.mock('@api/utils/cache', () => ({
+    getCache: vi.fn(),
+    setCache: vi.fn(),
+    clearCache: vi.fn(),
+}));
 
 describe('Posts API', () => {
     const mockTags: PostTag[] = [
@@ -55,9 +59,8 @@ describe('Posts API', () => {
         vi.clearAllMocks();
         // Mock getGhostClient to return mock client
         vi.mocked(getGhostClient).mockReturnValue(mockClient as any);
-        // Mock cache service
-        vi.mocked(cacheService.get).mockReturnValue(null);
-        vi.mocked(cacheService.set).mockImplementation(() => {});
+        // Mock cache - return undefined to indicate no cache
+        vi.mocked(cache.getCache).mockReturnValue(undefined);
     });
 
     describe('getHighlightPosts', () => {
@@ -133,7 +136,7 @@ describe('Posts API', () => {
                 },
             ];
 
-            vi.mocked(cacheService.get).mockReturnValue(cachedPosts);
+            vi.mocked(cache.getCache).mockReturnValue(cachedPosts);
 
             const result = await getHighlightPosts();
 
@@ -145,11 +148,11 @@ describe('Posts API', () => {
             mockGet.mockResolvedValue({
                 posts: mockRawPosts,
             });
-            vi.mocked(cacheService.get).mockReturnValue(null);
+            vi.mocked(cache.getCache).mockReturnValue(undefined);
 
             await getHighlightPosts(10);
 
-            expect(cacheService.set).toHaveBeenCalledWith(
+            expect(cache.setCache).toHaveBeenCalledWith(
                 'featured_posts:10:id,title,url,feature_image,primary_tag,published_at:tags',
                 expect.any(Array),
             );
@@ -169,7 +172,7 @@ describe('Posts API', () => {
             const result = await getHighlightPosts();
 
             expect(result).toEqual([]);
-            expect(cacheService.set).toHaveBeenCalled();
+            expect(cache.setCache).toHaveBeenCalled();
         });
     });
 
@@ -250,7 +253,7 @@ describe('Posts API', () => {
                 },
             ];
 
-            vi.mocked(cacheService.get).mockReturnValue(cachedPosts);
+            vi.mocked(cache.getCache).mockReturnValue(cachedPosts);
 
             const result = await getPosts();
 
@@ -262,11 +265,11 @@ describe('Posts API', () => {
             mockGet.mockResolvedValue({
                 posts: mockFullPosts,
             });
-            vi.mocked(cacheService.get).mockReturnValue(null);
+            vi.mocked(cache.getCache).mockReturnValue(undefined);
 
             await getPosts('tags');
 
-            expect(cacheService.set).toHaveBeenCalledWith(
+            expect(cache.setCache).toHaveBeenCalledWith(
                 'all_posts:tags',
                 expect.any(Array),
             );
@@ -298,7 +301,7 @@ describe('Posts API', () => {
             const result = await getPosts();
 
             expect(result).toEqual([]);
-            expect(cacheService.set).toHaveBeenCalled();
+            expect(cache.setCache).toHaveBeenCalled();
         });
 
         it('should use different cache keys for different include parameters', async () => {
@@ -307,10 +310,10 @@ describe('Posts API', () => {
             });
 
             await getPosts('tags');
-            expect(cacheService.get).toHaveBeenCalledWith('all_posts:tags');
+            expect(cache.getCache).toHaveBeenCalledWith('all_posts:tags');
 
             await getPosts('authors');
-            expect(cacheService.get).toHaveBeenCalledWith('all_posts:authors');
+            expect(cache.getCache).toHaveBeenCalledWith('all_posts:authors');
         });
     });
 });

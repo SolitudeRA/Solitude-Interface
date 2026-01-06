@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { getHighlightPosts, getPosts } from '@api/ghost/posts';
-import { cacheService } from '@api/utils/cache';
+import { clearCache, getCache } from '@api/utils/cache';
 
 describe('Posts API Integration Tests', () => {
     beforeEach(() => {
         // 确保每个测试开始时缓存是清空的
-        cacheService.clear();
+        clearCache();
     });
 
     describe('getHighlightPosts', () => {
@@ -90,8 +90,8 @@ describe('Posts API Integration Tests', () => {
             // 验证缓存已设置
             const cacheKey =
                 'featured_posts:5:id,title,url,feature_image,primary_tag,published_at:tags';
-            const cached = cacheService.get(cacheKey);
-            expect(cached).not.toBeNull();
+            const cached = getCache(cacheKey);
+            expect(cached).not.toBeUndefined();
             expect(cached).toEqual(posts1);
         }, 15000);
 
@@ -117,7 +117,7 @@ describe('Posts API Integration Tests', () => {
             expect(initialPosts.length).toBeGreaterThan(0);
 
             // 清除缓存
-            cacheService.clear();
+            clearCache();
 
             // 第二次调用应该重新从 API 获取
             const newPosts = await getHighlightPosts(5);
@@ -177,8 +177,8 @@ describe('Posts API Integration Tests', () => {
 
             // 验证缓存
             const cacheKey = `all_posts:${include}`;
-            const cached = cacheService.get(cacheKey);
-            expect(cached).not.toBeNull();
+            const cached = getCache(cacheKey);
+            expect(cached).not.toBeUndefined();
             expect(cached).toEqual(posts);
         }, 15000);
 
@@ -188,11 +188,11 @@ describe('Posts API Integration Tests', () => {
             const posts2 = await getPosts('authors');
 
             // 验证两个不同的缓存键
-            const cached1 = cacheService.get('all_posts:tags');
-            const cached2 = cacheService.get('all_posts:authors');
+            const cached1 = getCache('all_posts:tags');
+            const cached2 = getCache('all_posts:authors');
 
-            expect(cached1).not.toBeNull();
-            expect(cached2).not.toBeNull();
+            expect(cached1).not.toBeUndefined();
+            expect(cached2).not.toBeUndefined();
             expect(cached1).toEqual(posts1);
             expect(cached2).toEqual(posts2);
         }, 15000);

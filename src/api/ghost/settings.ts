@@ -1,47 +1,48 @@
 import { getGhostClient } from '@api/clients/ghost';
 import { handleApiError } from '@api/utils/errorHandlers';
-import { withCache } from '@api/utils/cache';
+import { getCache, setCache } from '@api/utils/cache';
 import type { SiteInformation } from '@api/ghost/types';
 
 const DEFAULT_FIELDS =
     'title,description,logo,icon,cover_image,twitter,timezone,navigation';
 
-export class SiteService {
-    private async _getSiteInformation(
-        fields: string = DEFAULT_FIELDS,
-    ): Promise<SiteInformation> {
-        try {
-            const response = await getGhostClient().get<{
-                settings: SiteInformation;
-            }>({
-                endpoint: '/settings/',
-                params: { fields },
-            });
-
-            return response.settings;
-        } catch (error) {
-            return handleApiError(error);
-        }
-    }
-
-    public getSiteInformation = withCache(
-        this._getSiteInformation.bind(this),
-        'site_information',
-        15 * 60 * 1000,
-    );
-}
-
-const siteService = new SiteService();
-
+/**
+ * 获取站点信息
+ * @param fields 要获取的字段
+ */
 export async function getSiteInformation(
     fields: string = DEFAULT_FIELDS,
 ): Promise<SiteInformation> {
-    return siteService.getSiteInformation(fields);
+    const cacheKey = `site_information:${fields}`;
+
+    const cached = getCache<SiteInformation>(cacheKey);
+    if (cached !== undefined) {
+        return cached;
+    }
+
+    try {
+        const response = await getGhostClient().get<{
+            settings: SiteInformation;
+        }>({
+            endpoint: '/settings/',
+            params: { fields },
+        });
+
+        setCache(cacheKey, response.settings);
+
+        return response.settings;
+    } catch (error) {
+        return handleApiError(error);
+    }
 }
 
+/**
+ * 初始化站点数据
+ * 用于在页面加载时获取基础站点信息
+ */
 export async function initializeSiteData() {
     try {
-        const siteInformation = await siteService.getSiteInformation();
+        const siteInformation = await getSiteInformation();
 
         if (!siteInformation) {
             throw new Error('Site information is undefined');
