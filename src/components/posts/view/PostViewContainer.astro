@@ -56,24 +56,65 @@ const postDates = posts.map((post) => post.published_at);
         height: 594px;
     }
 
-    @media (min-width: 1440px) {
+    /* 触摸设备基础优化 (手机、平板) */
+    @media (pointer: coarse) {
+        .post-card-wrapper {
+            width: 260px;
+            height: 520px;
+        }
+    }
+
+    /* 大屏触摸设备 (iPad 横屏、iPad Pro 等) */
+    @media (pointer: coarse) and (min-width: 1024px) {
+        .post-card-wrapper {
+            width: 300px;
+            height: 590px;
+        }
+    }
+
+    /* 桌面端大屏 (非触摸设备) */
+    @media (pointer: fine) and (min-width: 1440px) {
         .post-card-wrapper {
             width: 342px; /* 346 - 4 */
             height: 673px;
         }
     }
 
-    @media (min-width: 1920px) {
+    @media (pointer: fine) and (min-width: 1920px) {
         .post-card-wrapper {
             width: 385px; /* 389 - 4 */
             height: 766px;
         }
     }
 
-    @media (min-width: 2560px) {
+    @media (pointer: fine) and (min-width: 2560px) {
         .post-card-wrapper {
             width: 428px; /* 432 - 4 */
             height: 880px;
+        }
+    }
+
+    /* 兼容性回退：保留原有大屏断点（针对不支持 pointer 查询的浏览器） */
+    @supports not (selector(:has(*))) {
+        @media (min-width: 1440px) {
+            .post-card-wrapper {
+                width: 342px;
+                height: 673px;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            .post-card-wrapper {
+                width: 385px;
+                height: 766px;
+            }
+        }
+
+        @media (min-width: 2560px) {
+            .post-card-wrapper {
+                width: 428px;
+                height: 880px;
+            }
         }
     }
 </style>

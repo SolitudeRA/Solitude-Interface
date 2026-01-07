@@ -16,8 +16,22 @@ const featuredPosts = posts || [];
 <div class="flex min-h-[75svh] w-full flex-col md:min-h-[75svh]">
     <Welcome />
     <div class="flex flex-1 items-end justify-start px-4 pb-4 md:pb-7 md:pl-7">
-        <div class="w-full max-w-full md:max-w-[56%]">
+        <!-- 桌面端（大屏+鼠标）限制宽度，触摸设备满宽 -->
+        <div class="posts-showcase-wrapper w-full">
             <PostsShowcase featuredPosts={featuredPosts} locale={locale} />
         </div>
     </div>
 </div>
+
+<style>
+    .posts-showcase-wrapper {
+        max-width: 100%;
+    }
+
+    /* 桌面端：大屏 + 支持悬停（非触摸设备） */
+    @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+        .posts-showcase-wrapper {
+            max-width: 56%;
+        }
+    }
+</style>
