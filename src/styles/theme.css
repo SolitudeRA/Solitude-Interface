@@ -134,6 +134,12 @@ html[lang='en-GB'] {
     --article-content-code-bg: oklch(0.92 0.01 264.665);
     --article-content-pre-bg: oklch(0.95 0.005 264.665);
     --article-content-pre-border: oklch(0.88 0.01 264.665);
+
+    /* Shiki 代码高亮双主题变量 */
+    --shiki-light: inherit;
+    --shiki-light-bg: oklch(0.95 0.005 264.665);
+    --shiki-dark: inherit;
+    --shiki-dark-bg: oklch(0.15 0.005 271);
     --article-content-blockquote-bg: oklch(0.55 0.2 300 / 0.1);
     --article-content-blockquote-text: oklch(0.4 0.15 300);
     --article-content-blockquote-border: oklch(0.55 0.2 300);
