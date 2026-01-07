@@ -1,6 +1,7 @@
 ---
 import PostHeader from './PostHeader.astro';
 import TableOfContents from './TableOfContents.tsx';
+import CodeHighlighter from './CodeHighlighter.tsx';
 import type { PostTag } from '@api/ghost/types';
 
 interface Props {
@@ -39,6 +40,7 @@ const featureImageUrl = feature_image?.toString() || '';
         </div>
         <div>
             <div class="solitude-article-content" set:html={html} />
+            <CodeHighlighter client:idle />
         </div>
     </div>
 
