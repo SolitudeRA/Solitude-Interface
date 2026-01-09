@@ -28,10 +28,19 @@ const coverImageUrlStr = coverImageUrl
 <html lang={lang}>
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="generator" content={Astro.generator} />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- Security Headers -->
+        <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+        <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self' https://www.google-analytics.com; frame-ancestors 'self';"
+        />
+
         {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
         {
             alternateLinks.map((link) => (
@@ -75,13 +84,27 @@ const coverImageUrlStr = coverImageUrl
 </style>
 
 <script is:inline>
+    // 安全地解析主题设置，验证值的有效性
+    function getValidTheme(stored) {
+        if (!stored) return 'dark';
+        try {
+            const parsed = JSON.parse(stored);
+            // 只接受有效的主题值
+            return parsed === 'dark' || parsed === 'light' ? parsed : 'dark';
+        } catch {
+            return 'dark';
+        }
+    }
+
     const storedTheme = localStorage.getItem('theme');
-    const themeMode = storedTheme ? JSON.parse(storedTheme) : 'dark';
+    const themeMode = getValidTheme(storedTheme);
     document.documentElement.classList.add(themeMode);
 
     // 监听主题切换事件
     window.addEventListener('themeChanged', function (e) {
         const newTheme = e.detail.theme;
+        // 验证新主题值
+        if (newTheme !== 'dark' && newTheme !== 'light') return;
         document.documentElement.classList.toggle('dark', newTheme === 'dark');
         document.documentElement.classList.toggle(
             'light',

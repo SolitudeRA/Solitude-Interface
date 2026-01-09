@@ -3,6 +3,7 @@ import PostHeader from './PostHeader.astro';
 import TableOfContents from './TableOfContents.tsx';
 import CodeHighlighter from './CodeHighlighter.tsx';
 import type { PostTag } from '@api/ghost/types';
+import { sanitizeHtml, containsSuspiciousContent } from '@api/utils/sanitize';
 
 interface Props {
     title: string;
@@ -16,6 +17,15 @@ interface Props {
 const { title, feature_image, primary_tag, tags, published_at, html } =
     Astro.props;
 const featureImageUrl = feature_image?.toString() || '';
+
+// 安全：在服务端渲染时净化 HTML 内容
+// 检测可疑内容用于日志监控（开发环境）
+if (import.meta.env.DEV && containsSuspiciousContent(html)) {
+    console.warn(`[PostContent] Suspicious content detected in post: ${title}`);
+}
+
+// 净化 HTML，移除潜在的 XSS 攻击向量
+const sanitizedHtml = sanitizeHtml(html);
 ---
 
 <div class="solitude-article-container grid grid-cols-1 lg:grid-cols-12">
@@ -39,7 +49,7 @@ const featureImageUrl = feature_image?.toString() || '';
             />
         </div>
         <div>
-            <div class="solitude-article-content" set:html={html} />
+            <div class="solitude-article-content" set:html={sanitizedHtml} />
             <CodeHighlighter client:idle />
         </div>
     </div>
