@@ -1,7 +1,22 @@
 ---
 import { GOOGLE_ANALYTICS_TAG_ID } from 'astro:env/client';
+
+/**
+ * 验证 Google Analytics 4 的 Measurement ID 格式
+ * GA4 格式: G-XXXXXXXXXX (G- 后跟 10 个字母数字字符)
+ */
+const GA4_ID_PATTERN = /^G-[A-Z0-9]{10,}$/i;
+
 const id = (GOOGLE_ANALYTICS_TAG_ID ?? '').trim();
-const enabled = import.meta.env.PROD && id.length > 0;
+const isValidGAId = GA4_ID_PATTERN.test(id);
+const enabled = import.meta.env.PROD && isValidGAId;
+
+// 开发环境下警告无效的 GA ID
+if (import.meta.env.DEV && id && !isValidGAId) {
+    console.warn(
+        `[GoogleAnalytics] Invalid GA4 ID format: "${id}". Expected format: G-XXXXXXXXXX`,
+    );
+}
 ---
 
 {
