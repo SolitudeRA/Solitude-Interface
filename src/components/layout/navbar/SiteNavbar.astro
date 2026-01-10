@@ -7,10 +7,17 @@ interface Props {
     logoUrl: string;
     siteTitle: string;
     siteSubTitle: string;
+    homeUrl?: string;
     isFixed?: boolean;
 }
 
-const { logoUrl, siteTitle, siteSubTitle, isFixed = false } = Astro.props;
+const {
+    logoUrl,
+    siteTitle,
+    siteSubTitle,
+    homeUrl = '/',
+    isFixed = false,
+} = Astro.props;
 ---
 
 <SmartNavbar isFixed={isFixed} client:load>
@@ -18,6 +25,7 @@ const { logoUrl, siteTitle, siteSubTitle, isFixed = false } = Astro.props;
         logoImageUrl={logoUrl}
         siteTitle={siteTitle}
         siteSubTitle={siteSubTitle}
+        homeUrl={homeUrl}
     />
     <NavbarUtility />
 </SmartNavbar>
