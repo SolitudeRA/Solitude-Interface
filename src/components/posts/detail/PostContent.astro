@@ -1,9 +1,9 @@
 ---
 import PostHeader from './PostHeader.astro';
 import TableOfContents from './TableOfContents.tsx';
-import CodeHighlighter from './CodeHighlighter.tsx';
 import type { PostTag } from '@api/ghost/types';
 import { sanitizeHtml, containsSuspiciousContent } from '@api/utils/sanitize';
+import { highlightCodeBlocks } from '@api/utils/codeHighlight';
 
 interface Props {
     title: string;
@@ -26,6 +26,9 @@ if (import.meta.env.DEV && containsSuspiciousContent(html)) {
 
 // 净化 HTML，移除潜在的 XSS 攻击向量
 const sanitizedHtml = sanitizeHtml(html);
+
+// 服务端代码高亮 - 在构建时处理所有代码块
+const highlightedHtml = await highlightCodeBlocks(sanitizedHtml);
 ---
 
 <div class="solitude-article-container grid grid-cols-1 lg:grid-cols-12">
@@ -49,8 +52,7 @@ const sanitizedHtml = sanitizeHtml(html);
             />
         </div>
         <div>
-            <div class="solitude-article-content" set:html={sanitizedHtml} />
-            <CodeHighlighter client:idle />
+            <div class="solitude-article-content" set:html={highlightedHtml} />
         </div>
     </div>
 
