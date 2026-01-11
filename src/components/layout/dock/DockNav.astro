@@ -1,5 +1,6 @@
 ---
 import DockNavMobile from './DockNavMobile.tsx';
+import RssSelector from '@components/common/RssSelector.tsx';
 import { type Locale, DEFAULT_LOCALE, buildLocalePath } from '@lib/i18n';
 
 interface Props {
@@ -62,13 +63,9 @@ const privacyLink = buildLocalePath(lang, 'privacy-policy');
                 >Contact</a
             >
         </div>
-        <!-- RSS 在平板竖屏隐藏，横屏及以上显示 -->
-        <div class="hidden lg:block">
-            <a
-                href=""
-                class="text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
-                >RSS</a
-            >
+        <!-- RSS 选择器 - 在平板竖屏隐藏，横屏及以上显示 -->
+        <div class="hidden lg:flex lg:items-center">
+            <RssSelector client:load showLabel={true} />
         </div>
         <!-- Privacy Policy 仅在大屏显示 -->
         <div class="hidden xl:block">

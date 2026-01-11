@@ -51,5 +51,8 @@ export {
     TooltipProvider,
 } from './tooltip';
 
+// RSS Selector
+export { default as RssSelector } from './RssSelector';
+
 // Utils
 export { cn } from './lib/utils';

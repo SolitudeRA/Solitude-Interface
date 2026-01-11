@@ -31,6 +31,7 @@
   "dependencies": {
     "@astrojs/check": "^0.9.6",
     "@astrojs/react": "^4.4.2",
+    "@astrojs/rss": "^4.0.14",
     "@astrojs/ts-plugin": "^1.10.6",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
@@ -80,5 +81,6 @@
     "sharp": "^0.34.5",
     "vite-tsconfig-paths": "^6.0.3",
     "vitest": "^4.0.15"
-  }
+  },
+  "packageManager": "pnpm@10.28.0+sha512.05df71d1421f21399e053fde567cea34d446fa02c76571441bfc1c7956e98e363088982d940465fd34480d4d90a0668bc12362f8aa88000a64e83d0b0e47be48"
 }

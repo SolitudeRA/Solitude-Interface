@@ -9,6 +9,8 @@ interface Props {
     lang?: string;
     canonicalUrl?: string;
     alternateLinks?: AlternateLink[];
+    /** 当前页面的语言代码 (用于 RSS 发现) */
+    locale?: 'zh' | 'ja' | 'en';
 }
 
 const {
@@ -17,7 +19,12 @@ const {
     lang = 'zh-CN',
     canonicalUrl,
     alternateLinks = [],
+    locale = 'zh',
 } = Astro.props;
+
+// RSS Feed URLs
+const rssCurrentLang = `/${locale}/rss.xml`;
+const rssAll = '/rss.xml';
 
 const coverImageUrlStr = coverImageUrl
     ? `url(${coverImageUrl.toString()})`
@@ -51,6 +58,21 @@ const coverImageUrlStr = coverImageUrl
                 />
             ))
         }
+
+        <!-- RSS Feed Discovery -->
+        <link
+            rel="alternate"
+            type="application/rss+xml"
+            title={`${siteTitle} RSS Feed`}
+            href={rssCurrentLang}
+        />
+        <link
+            rel="alternate"
+            type="application/rss+xml"
+            title={`${siteTitle} RSS Feed (All Languages)`}
+            href={rssAll}
+        />
+
         <GoogleAnalytics />
         <style data-emotion-insertion-point="emotion"></style>
         <title>{siteTitle}</title>
