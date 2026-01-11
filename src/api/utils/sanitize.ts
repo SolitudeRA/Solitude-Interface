@@ -5,6 +5,9 @@ import DOMPurify, { type Config } from 'isomorphic-dompurify';
  * 针对博客文章内容优化的白名单配置
  */
 const SANITIZE_CONFIG: Config = {
+    // 允许所有 data-* 属性 (代码高亮、行号等功能需要)
+    ALLOW_DATA_ATTR: true,
+
     // 允许的 HTML 标签 - 博客文章常用标签
     ALLOWED_TAGS: [
         // 文本结构
@@ -130,13 +133,7 @@ const SANITIZE_CONFIG: Config = {
 
         // 时间属性
         'datetime',
-
-        // 数据属性 (用于代码高亮等)
-        'data-*',
-
-        // 代码块语言标识
-        'data-language',
-        'data-line',
+        // 注: data-* 属性已通过 ALLOW_DATA_ATTR: true 全局允许
     ],
 
     // 允许的 URI 协议
