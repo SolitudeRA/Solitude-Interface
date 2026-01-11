@@ -19,6 +19,20 @@ const LOCALE_FLAGS: Record<Locale, string> = {
     en: '🇺🇸',
 };
 
+// 多语言文本
+const UI_TEXTS = {
+    allLanguages: {
+        zh: '全部语言',
+        ja: 'すべての言語',
+        en: 'All Languages',
+    },
+    current: {
+        zh: '当前',
+        ja: '現在',
+        en: 'Current',
+    },
+} as const;
+
 // 默认语言
 const DEFAULT_LOCALE: Locale = 'zh';
 
@@ -92,11 +106,15 @@ export default function RssSelector({
         }
     };
 
+    // 获取多语言文本
+    const allLanguagesText = UI_TEXTS.allLanguages[currentLocale];
+    const currentText = UI_TEXTS.current[currentLocale];
+
     // 生成 RSS 选项列表
     const rssOptions: RssOption[] = [
         {
             id: 'all',
-            label: '全部语言',
+            label: allLanguagesText,
             href: '/rss.xml',
             flag: '📡',
         },
@@ -168,7 +186,7 @@ export default function RssSelector({
                             </span>
                             {option.isCurrent && (
                                 <span className="text-primary text-xs">
-                                    当前
+                                    {currentText}
                                 </span>
                             )}
                         </button>

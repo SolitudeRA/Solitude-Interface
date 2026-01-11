@@ -22,6 +22,20 @@ const LOCALE_FLAGS: Record<Locale, string> = {
     en: '🇺🇸',
 };
 
+// 多语言文本
+const UI_TEXTS = {
+    allLanguages: {
+        zh: '全部语言',
+        ja: 'すべての言語',
+        en: 'All Languages',
+    },
+    current: {
+        zh: '当前',
+        ja: '現在',
+        en: 'Current',
+    },
+} as const;
+
 /**
  * 从当前 URL 中提取语言代码
  */
@@ -80,10 +94,19 @@ export default function DockNavMobile() {
         setCurrentLocale(getCurrentLocale());
     }, []);
 
+    // 获取多语言文本
+    const allLanguagesText = UI_TEXTS.allLanguages[currentLocale];
+    const currentText = UI_TEXTS.current[currentLocale];
+
     // RSS 选项列表
     const rssOptions: RssOption[] = useMemo(
         () => [
-            { id: 'all', label: '全部语言', href: '/rss.xml', flag: '📡' },
+            {
+                id: 'all',
+                label: allLanguagesText,
+                href: '/rss.xml',
+                flag: '📡',
+            },
             ...LOCALES.map((locale) => ({
                 id: locale,
                 label: LOCALE_NAMES[locale],
@@ -91,7 +114,7 @@ export default function DockNavMobile() {
                 flag: LOCALE_FLAGS[locale],
             })),
         ],
-        [],
+        [allLanguagesText],
     );
 
     // 根据当前语言构建导航链接
@@ -266,7 +289,7 @@ export default function DockNavMobile() {
                                                 {option.id ===
                                                     currentLocale && (
                                                     <span className="text-primary ml-auto text-xs">
-                                                        当前
+                                                        {currentText}
                                                     </span>
                                                 )}
                                             </button>
