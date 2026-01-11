@@ -11,6 +11,20 @@ A modern personal blog interface built with Astro and powered by Ghost CMS API.
 
 Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](docs/i18n/README.ja.md)
 
+---
+
+## 📑 Table of Contents
+
+- [Features](#-features)
+- [Screenshots](#-screenshots)
+- [Quick Start](#-quick-start)
+- [Content Publishing Guide](#-content-publishing-guide)
+- [Multi-language Content](#-multi-language-content)
+- [For Developers](#️-for-developers)
+- [License](#-license)
+
+---
+
 ## 🚀 Features
 
 - High-performance static site built with Astro
@@ -20,7 +34,12 @@ Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](doc
 - Multiple post type displays (articles, gallery, video, music)
 - SEO optimized (hreflang, canonical, html lang)
 
-## Screenshots
+---
+
+## 📸 Screenshots
+
+<details>
+<summary>Click to expand screenshots</summary>
 
 ### Home
 
@@ -37,6 +56,10 @@ Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](doc
 ### Post Detail
 
 ![Post-Detail](docs/assets/post-detail.png)
+
+</details>
+
+---
 
 ## 📖 Documentation
 
@@ -84,21 +107,46 @@ GOOGLE_ANALYTICS_TAG_ID=
 
 #### Environment Variables
 
-| Variable                  | Required | Description                                                                                 |
-| ------------------------- | -------- | ------------------------------------------------------------------------------------------- |
-| `GHOST_URL`               | Yes      | Base URL of your Ghost instance                                                             |
-| `GHOST_CONTENT_KEY`       | Yes      | Ghost Content API key                                                                       |
-| `GHOST_VERSION`           | No       | Ghost Content API version (default: `v5.0`)                                                 |
-| `GHOST_TIMEOUT`           | No       | Ghost request timeout in milliseconds (default: `5000`)                                     |
-| `SITE_URL`                | Yes      | Public site URL for canonical and hreflang                                                  |
-| `IMAGE_HOST_URL`          | No       | Optional image host/CDN used for remote image domain allowlist (default: empty)             |
-| `GOOGLE_ANALYTICS_TAG_ID` | No       | Optional Google tag / GA4 Measurement ID (e.g., `G-XXXX`). Leave empty to disable analytics |
-| `CF_ACCESS_CLIENT_ID`     | No       | Cloudflare Access Service Token Client ID (only if Ghost is protected by Cloudflare Access) |
-| `CF_ACCESS_CLIENT_SECRET` | No       | Cloudflare Access Service Token Client Secret                                               |
+##### Required
 
-### Cloudflare Configuration (Optional)
+| Variable            | Description                                |
+| ------------------- | ------------------------------------------ |
+| `GHOST_URL`         | Base URL of your Ghost instance            |
+| `GHOST_CONTENT_KEY` | Ghost Content API key                      |
+| `SITE_URL`          | Public site URL for canonical and hreflang |
 
-If your Ghost instance is protected by Cloudflare, you may need additional configuration:"
+##### Optional
+
+| Variable                  | Default | Description                                                                    |
+| ------------------------- | ------- | ------------------------------------------------------------------------------ |
+| `GHOST_VERSION`           | `v5.0`  | Ghost Content API version                                                      |
+| `GHOST_TIMEOUT`           | `5000`  | Ghost request timeout in milliseconds                                          |
+| `IMAGE_HOST_URL`          | -       | Image host/CDN used for remote image domain allowlist                          |
+| `GOOGLE_ANALYTICS_TAG_ID` | -       | Google tag / GA4 Measurement ID (e.g., `G-XXXX`). Leave empty to disable       |
+| `CF_ACCESS_CLIENT_ID`     | -       | Cloudflare Access Service Token Client ID (if Ghost is protected by CF Access) |
+| `CF_ACCESS_CLIENT_SECRET` | -       | Cloudflare Access Service Token Client Secret                                  |
+
+### Cloudflare Access Configuration (Optional)
+
+If your Ghost instance is protected by [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/policies/access/), you need to configure Service Tokens to allow API access:
+
+1. **Create a Service Token** in your Cloudflare Zero Trust dashboard:
+    - Go to **Access** → **Service Auth** → **Service Tokens**
+    - Click **Create Service Token**
+    - Copy the **Client ID** and **Client Secret**
+
+2. **Add the token to your `.env`**:
+
+    ```env
+    CF_ACCESS_CLIENT_ID=your-client-id.access
+    CF_ACCESS_CLIENT_SECRET=your-client-secret
+    ```
+
+3. **Add a bypass policy** in your Access Application:
+    - Go to **Access** → **Applications** → Your Ghost App
+    - Add a policy with **Action: Service Auth** and select your service token
+
+> **Note**: The API client will automatically include `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers when these environment variables are set.
 
 ### 3. Get Your Ghost Content API Key
 
@@ -122,7 +170,9 @@ pnpm dev
 
 Visit `http://localhost:4321` to see your site.
 
-## Common Commands
+---
+
+## 🔧 Common Commands
 
 | Command            | Description                                                 |
 | ------------------ | ----------------------------------------------------------- |
@@ -186,7 +236,8 @@ Use **internal tags** (starting with `#`) in Ghost:
 
 > **Note**: In Ghost Content API, internal tags `#xxx` are converted to slug format `hash-xxx`.
 
-### Step-by-Step: Creating Multi-language Posts
+<details>
+<summary><strong>📘 Step-by-Step Guide: Creating Multi-language Posts</strong></summary>
 
 **Important**: Each language version is a **separate post** in Ghost. They are linked together using the same `#i18n-{key}` tag.
 
@@ -251,6 +302,8 @@ Users can switch between versions using the language switcher on the article pag
 | "Astro入門ガイド" (Japanese)           | `#lang-ja`, `#i18n-astro-guide`, `type-article`, `category-tech` |
 | "Getting Started with Astro" (English) | `#lang-en`, `#i18n-astro-guide`, `type-article`, `category-tech` |
 
+</details>
+
 ### Fallback Behavior
 
 - If a language version doesn't exist, the default language (Chinese) is shown
@@ -267,6 +320,19 @@ See [**docs/DEVELOPMENT.md**](docs/DEVELOPMENT.md) for:
 - 🧞 Available Commands
 - 📋 Testing Guide (Unit & Integration)
 - 🏗️ Architecture & Code Reference
+
+### Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+---
+
+## 🙏 Acknowledgments
+
+- [Astro](https://astro.build/) - The web framework for content-driven websites
+- [Ghost](https://ghost.org/) - The professional publishing platform
+- [TailwindCSS](https://tailwindcss.com/) - A utility-first CSS framework
+- [React](https://react.dev/) - The library for web and native user interfaces
 
 ---
 
