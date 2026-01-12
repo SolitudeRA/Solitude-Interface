@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Globe, ChevronDown, Check } from 'lucide-react';
 import { cn } from '@components/common/lib/utils';
+import { useAtomValue } from 'jotai';
+import { themeSwitchAtom } from '@stores/themeAtom';
 
 // 支持的语言列表
 const LOCALES = ['zh', 'ja', 'en'] as const;
@@ -63,6 +65,8 @@ export default function LanguageSwitcher() {
     const [isOpen, setIsOpen] = useState(false);
     const [currentLocale, setCurrentLocale] = useState<Locale>(DEFAULT_LOCALE);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const theme = useAtomValue(themeSwitchAtom);
+    const isLightMode = theme === 'light';
 
     // 客户端初始化当前语言
     useEffect(() => {
@@ -108,19 +112,21 @@ export default function LanguageSwitcher() {
                 onClick={() => setIsOpen(!isOpen)}
                 onKeyDown={handleKeyDown}
                 className={cn(
-                    'flex items-center gap-1.5 px-3 py-2',
-                    'rounded-lg',
-                    'bg-transparent',
-                    'text-foreground/80 hover:text-foreground',
-                    'hover:bg-muted/50',
-                    'transition-all duration-200',
-                    'focus-visible:ring-ring focus:outline-none focus-visible:ring-2',
+                    'flex items-center gap-1.5 px-3 py-1.5',
+                    'rounded-full',
+                    'border transition-all duration-300',
+                    'shadow-md hover:shadow-lg',
+                    'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                    // 主题适配样式
+                    isLightMode
+                        ? 'hover:bg-amber-150 border-amber-300 bg-amber-100 text-amber-800'
+                        : 'border-neutral-700 bg-neutral-900 text-neutral-200 hover:bg-neutral-800',
                 )}
                 aria-label="切换语言"
                 aria-expanded={isOpen}
                 aria-haspopup="listbox"
             >
-                <Globe className="h-4 w-4" />
+                <Globe className="h-4 w-4" strokeWidth={2.5} />
                 <span className="hidden text-sm font-medium sm:inline">
                     {LOCALE_NAMES[currentLocale]}
                 </span>
@@ -129,6 +135,7 @@ export default function LanguageSwitcher() {
                         'h-3.5 w-3.5 transition-transform duration-200',
                         isOpen && 'rotate-180',
                     )}
+                    strokeWidth={2.5}
                 />
             </button>
 
@@ -138,12 +145,15 @@ export default function LanguageSwitcher() {
                     className={cn(
                         'absolute top-full right-0 z-50 mt-2',
                         'min-w-[140px]',
-                        'rounded-xl',
-                        'bg-background/95 backdrop-blur-md',
-                        'border-border border',
-                        'shadow-lg shadow-black/10',
+                        'rounded-2xl',
+                        'border backdrop-blur-md',
+                        'shadow-lg',
                         'py-1.5',
                         'animate-in fade-in-0 zoom-in-95 duration-150',
+                        // 主题适配样式
+                        isLightMode
+                            ? 'border-amber-200 bg-amber-50/95 shadow-amber-200/30'
+                            : 'border-neutral-700 bg-neutral-900/95 shadow-black/30',
                     )}
                     role="listbox"
                     aria-label="选择语言"
@@ -158,9 +168,14 @@ export default function LanguageSwitcher() {
                                     'flex w-full items-center gap-2.5 px-3 py-2',
                                     'text-left text-sm',
                                     'transition-colors duration-150',
+                                    // 主题适配样式
                                     isSelected
-                                        ? 'bg-primary/10 text-primary'
-                                        : 'text-foreground/80 hover:bg-muted/50 hover:text-foreground',
+                                        ? isLightMode
+                                            ? 'bg-amber-200/50 text-amber-900'
+                                            : 'bg-neutral-700/50 text-neutral-100'
+                                        : isLightMode
+                                          ? 'text-amber-800 hover:bg-amber-100/50'
+                                          : 'text-neutral-300 hover:bg-neutral-800/50',
                                 )}
                                 role="option"
                                 aria-selected={isSelected}
@@ -172,7 +187,14 @@ export default function LanguageSwitcher() {
                                     {LOCALE_NAMES[locale]}
                                 </span>
                                 {isSelected && (
-                                    <Check className="text-primary h-4 w-4" />
+                                    <Check
+                                        className={cn(
+                                            'h-4 w-4',
+                                            isLightMode
+                                                ? 'text-amber-700'
+                                                : 'text-neutral-300',
+                                        )}
+                                    />
                                 )}
                             </button>
                         );
