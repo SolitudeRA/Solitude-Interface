@@ -95,7 +95,10 @@ function ShowcaseCard({
                 'w-56 sm:w-64 md:w-72 lg:w-80',
                 'aspect-[16/11] cursor-pointer',
                 'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-                'shadow-lg',
+                // 玻璃态效果：半透明边框 + 阴影 + 内高光
+                'border border-white/25 dark:border-white/15',
+                'shadow-lg shadow-black/20',
+                'ring-1 ring-white/10 ring-inset',
             )}
             initial={{ opacity: 0, x: 50 }}
             animate={{
@@ -256,7 +259,10 @@ function ViewMoreCard({
                 'w-56 sm:w-64 md:w-72 lg:w-80',
                 'aspect-[16/11] cursor-pointer',
                 'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-                'shadow-lg',
+                // 玻璃态效果：半透明边框 + 阴影 + 内高光
+                'border border-white/25 dark:border-white/15',
+                'shadow-lg shadow-black/20',
+                'ring-1 ring-white/10 ring-inset',
             )}
             initial={{ opacity: 0, x: 50 }}
             animate={{
