@@ -6,4 +6,5 @@
 @import './tailwind-settings.css';
 @import './components/article/index.css';
 @import './components/navbar.css';
+@import './components/dock.css';
 @import './utilities/text-utilities.css';

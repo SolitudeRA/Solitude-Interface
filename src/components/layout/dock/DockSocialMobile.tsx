@@ -56,7 +56,7 @@ export default function DockSocialMobile() {
             {/* 汉堡按钮 */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`flex h-10 w-10 items-center justify-center rounded-full bg-gray-100/85 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-105 sm:h-11 sm:w-11 dark:bg-zinc-800/85 ${isOpen ? 'ring-2 ring-blue-400' : ''} `}
+                className={`dock-button flex h-10 w-10 items-center justify-center sm:h-11 sm:w-11 ${isOpen ? 'dock-button--active' : ''}`}
                 aria-label="Social links menu"
                 aria-expanded={isOpen}
             >
@@ -66,16 +66,14 @@ export default function DockSocialMobile() {
             {/* 遮罩层 */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+                    className="dock-overlay fixed inset-0 z-40"
                     onClick={() => setIsOpen(false)}
                 />
             )}
 
             {/* 弹出菜单 */}
             {isOpen && (
-                <div
-                    className={`animate-in slide-in-from-bottom-4 fade-in fixed right-4 bottom-24 z-50 min-w-[200px] rounded-2xl bg-gray-100/95 p-4 shadow-2xl backdrop-blur-md duration-200 sm:right-6 dark:bg-zinc-800/95`}
-                >
+                <div className="dock-menu animate-in slide-in-from-bottom-4 fade-in fixed right-4 bottom-24 z-50 min-w-[200px] p-4 duration-200 sm:right-6">
                     <div className="flex flex-col gap-3">
                         {socialLinks.map((link) => (
                             <a
@@ -83,7 +81,7 @@ export default function DockSocialMobile() {
                                 href={link.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-gray-200/80 dark:hover:bg-zinc-700/80"
+                                className="dock-social-item flex items-center gap-3"
                                 onClick={() => setIsOpen(false)}
                             >
                                 <link.icon className="h-5 w-5" />
