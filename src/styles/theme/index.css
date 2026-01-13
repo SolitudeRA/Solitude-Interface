@@ -1,0 +1,8 @@
+/**
+ * 主题变量入口
+ * 按亮/暗模式分目录组织，便于独立维护
+ */
+
+@import './base.css'; /* 基础设置：radius、字体栈（无主题色） */
+@import './light/index.css'; /* 亮色主题变量 */
+@import './dark/index.css'; /* 暗色主题变量覆盖 */

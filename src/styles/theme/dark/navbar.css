@@ -1,0 +1,9 @@
+/**
+ * 暗色主题 - 导航栏颜色
+ */
+
+.dark {
+    --navbar-scrolled-bg: oklch(0.1 0.02 264.665 / 0.85);
+    --navbar-scrolled-border: oklch(0.98 0.005 264.665 / 0.05);
+    --navbar-scrolled-shadow: oklch(0 0 0 / 0.2);
+}

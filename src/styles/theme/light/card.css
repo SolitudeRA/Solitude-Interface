@@ -1,0 +1,34 @@
+/**
+ * 亮色主题 - 卡片颜色
+ */
+
+:root {
+    /* 网站背景遮罩 */
+    --site-bg-overlay: rgba(180, 180, 185, 0.65);
+
+    /* 首页文章卡片覆盖层渐变 */
+    --home-card-overlay-start: oklch(0.98 0 0 / 0.55);
+    --home-card-overlay-mid: oklch(0.96 0 0 / 0.5);
+    --home-card-overlay-end: oklch(0.94 0 0 / 0.45);
+
+    /* Post View 卡片覆盖层渐变 */
+    --post-view-card-overlay-start: oklch(0.98 0 0 / 0.78);
+    --post-view-card-overlay-mid: oklch(0.96 0 0 / 0.72);
+    --post-view-card-overlay-end: oklch(0.94 0 0 / 0.68);
+
+    /* Post View 滚动遮罩 */
+    --post-view-scroll-mask-start: oklch(0.99 0.003 264.665);
+    --post-view-scroll-mask-end: oklch(0.99 0.003 264.665 / 0);
+
+    /* Post View 卡片阴影 */
+    --post-view-card-shadow: oklch(0.35 0.05 264.376 / 0.22);
+    --post-view-card-shadow-hover: oklch(0.3 0.08 264.376 / 0.35);
+
+    /* Post View 卡片边框 */
+    --post-view-card-border: oklch(0.75 0.015 264.665 / 0.35);
+
+    /* Post View 卡片文字 */
+    --post-view-card-title: oklch(0.18 0.025 264.665);
+    --post-view-card-excerpt: oklch(0.28 0.02 264.665);
+    --post-view-card-meta: oklch(0.4 0.015 264.665);
+}

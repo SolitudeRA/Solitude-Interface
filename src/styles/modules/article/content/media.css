@@ -1,0 +1,60 @@
+/**
+ * 文章媒体样式 (img, figure, figcaption)
+ */
+
+@layer components {
+    .solitude-article-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 1rem auto;
+        display: block;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .solitude-article-content figure {
+        margin: 1.25rem 0;
+        text-align: center;
+    }
+
+    .solitude-article-content figcaption {
+        color: var(--article-content-h6);
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+        font-style: italic;
+    }
+
+    /* 768px (md) */
+    @media (min-width: 768px) {
+        .solitude-article-content img {
+            border-radius: 10px;
+            margin: 1.25rem auto;
+        }
+
+        .solitude-article-content figure {
+            margin: 1.5rem 0;
+        }
+
+        .solitude-article-content figcaption {
+            font-size: 0.85rem;
+            margin-top: 0.625rem;
+        }
+    }
+
+    /* 1024px (lg) */
+    @media (min-width: 1024px) {
+        .solitude-article-content img {
+            border-radius: 12px;
+            margin: 1.5rem auto;
+        }
+
+        .solitude-article-content figure {
+            margin: 2rem 0;
+        }
+
+        .solitude-article-content figcaption {
+            font-size: 0.9rem;
+            margin-top: 0.75rem;
+        }
+    }
+}

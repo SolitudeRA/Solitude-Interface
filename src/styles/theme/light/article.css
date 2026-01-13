@@ -1,0 +1,63 @@
+/**
+ * 亮色主题 - 文章页颜色
+ */
+
+:root {
+    /* 文章头部 */
+    --article-header-title: oklch(0.18 0.025 264.665);
+    --article-header-date: oklch(0.35 0.02 264.665);
+
+    /* 文章头部标签 - 主要标签 */
+    --article-header-tag-bg: oklch(0.5 0.2 264.376 / 0.2);
+    --article-header-tag-text: oklch(0.45 0.15 264.376);
+    --article-header-tag-border: oklch(0.5 0.2 264.376 / 0.35);
+
+    /* 文章头部标签 - 次要标签 */
+    --article-header-secondary-tag-bg: oklch(0.5 0.02 264.665 / 0.15);
+    --article-header-secondary-tag-text: oklch(0.4 0.015 264.665);
+    --article-header-secondary-tag-border: oklch(0.5 0.02 264.665 / 0.2);
+
+    /* 文章内容 - 标题层级 */
+    --article-content-h1: oklch(0.15 0.025 264.665);
+    --article-content-h2: oklch(0.18 0.025 264.665);
+    --article-content-h3: oklch(0.22 0.02 264.665);
+    --article-content-h4: oklch(0.28 0.02 264.665);
+    --article-content-h5: oklch(0.35 0.015 264.665);
+    --article-content-h6: oklch(0.42 0.015 264.665);
+
+    /* 文章内容 - 文本 */
+    --article-content-text: oklch(0.28 0.02 264.665);
+    --article-content-strong: oklch(0.15 0.025 264.665);
+    --article-content-em: oklch(0.22 0.02 264.665);
+
+    /* 文章内容 - 链接 */
+    --article-content-link: oklch(0.45 0.2 264.376);
+    --article-content-link-hover: oklch(0.55 0.22 264.376);
+
+    /* 文章内容 - 行内代码 */
+    --article-content-code: oklch(0.5 0.2 330);
+    --article-content-code-bg: oklch(0.92 0.01 264.665);
+
+    /* 文章内容 - 代码块 */
+    --article-content-pre-bg: oklch(0.95 0.005 264.665);
+    --article-content-pre-border: oklch(0.88 0.01 264.665);
+
+    /* Shiki 代码高亮双主题变量 */
+    --shiki-light: inherit;
+    --shiki-light-bg: oklch(0.95 0.005 264.665);
+    --shiki-dark: inherit;
+    --shiki-dark-bg: oklch(0.15 0.005 271);
+
+    /* 文章内容 - 引用块 */
+    --article-content-blockquote-bg: oklch(0.55 0.2 300 / 0.1);
+    --article-content-blockquote-text: oklch(0.4 0.15 300);
+    --article-content-blockquote-border: oklch(0.55 0.2 300);
+
+    /* 文章内容 - 表格 */
+    --article-content-table-header-bg: oklch(0.92 0.01 264.665);
+    --article-content-table-border: oklch(0.88 0.01 264.665);
+
+    /* 文章布局 */
+    --article-body-bg: oklch(0.96 0.005 264.665);
+    --article-rail-bg: oklch(0.92 0.008 264.665);
+}

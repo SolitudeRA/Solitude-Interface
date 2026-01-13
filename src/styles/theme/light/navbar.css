@@ -1,0 +1,9 @@
+/**
+ * 亮色主题 - 导航栏颜色
+ */
+
+:root {
+    --navbar-scrolled-bg: oklch(0.96 0.005 264.665 / 0.85);
+    --navbar-scrolled-border: oklch(0.5 0.01 264.665 / 0.1);
+    --navbar-scrolled-shadow: oklch(0.3 0.02 264.665 / 0.15);
+}

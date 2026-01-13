@@ -1,0 +1,13 @@
+/**
+ * 暗色主题入口
+ * 所有 .dark 选择器下的主题变量覆盖
+ */
+
+@import './semantic.css';
+@import './text.css';
+@import './article.css';
+@import './navbar.css';
+@import './dock.css';
+@import './toc.css';
+@import './card.css';
+@import './page.css';

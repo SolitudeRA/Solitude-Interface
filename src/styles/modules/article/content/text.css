@@ -1,0 +1,57 @@
+/**
+ * 文章文本样式 (p, a, strong, em)
+ */
+
+@layer components {
+    .solitude-article-content a {
+        color: var(--article-content-link);
+        text-decoration: none;
+        border-bottom: 1px solid var(--article-content-link);
+        transition: all 0.2s ease;
+    }
+
+    .solitude-article-content a:hover {
+        color: var(--article-content-link-hover);
+        border-bottom-color: var(--article-content-link-hover);
+    }
+
+    .solitude-article-content p {
+        color: var(--article-content-text);
+        font-size: 1rem;
+        line-height: 1.7;
+        margin-top: 0.75rem;
+        margin-bottom: 0.75rem;
+        letter-spacing: 0.015em;
+        word-spacing: 0.05em;
+    }
+
+    .solitude-article-content strong {
+        color: var(--article-content-strong);
+        font-weight: 600;
+    }
+
+    .solitude-article-content em {
+        color: var(--article-content-em);
+        font-style: italic;
+    }
+
+    /* 768px (md) */
+    @media (min-width: 768px) {
+        .solitude-article-content p {
+            font-size: 1.0625rem;
+            line-height: 1.725;
+            margin-top: 0.875rem;
+            margin-bottom: 0.875rem;
+        }
+    }
+
+    /* 1024px (lg) */
+    @media (min-width: 1024px) {
+        .solitude-article-content p {
+            font-size: 1.125rem;
+            line-height: 1.75;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+    }
+}

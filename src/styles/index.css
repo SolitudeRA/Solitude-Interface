@@ -1,10 +1,24 @@
+/**
+ * 全局样式入口
+ * 按 SMACSS 精简版架构组织导入顺序
+ */
+
+/* ===== 1. 字体 ===== */
 @import '@fontsource-variable/noto-sans-sc';
 @import '@fontsource-variable/noto-sans-jp';
 @import '@fontsource-variable/noto-sans';
+
+/* ===== 2. Tailwind CSS ===== */
 @import 'tailwindcss';
-@import './theme.css';
+
+/* ===== 3. 主题变量 ===== */
+@import './theme/index.css';
+
+/* ===== 4. Tailwind 配置 ===== */
 @import './tailwind-settings.css';
-@import './components/article/index.css';
-@import './components/navbar.css';
-@import './components/dock.css';
+
+/* ===== 5. 组件样式模块 ===== */
+@import './modules/index.css';
+
+/* ===== 6. 工具类 ===== */
 @import './utilities/text-utilities.css';
