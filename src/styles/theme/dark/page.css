@@ -1,0 +1,28 @@
+/**
+ * 暗色主题 - 静态页面颜色
+ */
+
+.dark {
+    /* 主强调色 - 淡蓝紫 */
+    --page-accent: oklch(0.7 0.12 270);
+    --page-accent-hover: oklch(0.78 0.1 270);
+
+    /* 链接 - 柔和蓝紫 */
+    --page-link: oklch(0.72 0.14 280);
+    --page-link-hover: oklch(0.8 0.12 280);
+
+    /* Badge - 淡蓝紫 */
+    --page-badge-text: oklch(0.75 0.1 270);
+
+    /* 装饰元素 - 蓝紫渐变 */
+    --page-decorator-start: oklch(0.65 0.18 300);
+    --page-decorator-end: oklch(0.7 0.15 250);
+
+    /* 图标 - 淡蓝 */
+    --page-icon: oklch(0.75 0.12 260);
+
+    /* 编号/圆点 - 彩虹蓝紫 */
+    --page-bullet-1: oklch(0.7 0.16 320);
+    --page-bullet-2: oklch(0.72 0.14 280);
+    --page-bullet-3: oklch(0.75 0.12 240);
+}

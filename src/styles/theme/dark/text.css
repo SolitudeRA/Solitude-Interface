@@ -1,0 +1,17 @@
+/**
+ * 暗色主题 - 文本颜色
+ */
+
+.dark {
+    /* 网站标题和副标题 */
+    --text-site-title: oklch(0.98 0.001 247.839);
+    --text-site-subtitle: oklch(0.92 0.005 247.839);
+
+    /* UI 文本（导航、按钮等） */
+    --text-ui-primary: oklch(0.96 0.003 247.839);
+    --text-ui-secondary: oklch(0.85 0.01 247.839);
+
+    /* 内容文本（正文、描述等） */
+    --text-content-primary: oklch(0.9 0.01 247.839);
+    --text-content-secondary: oklch(0.65 0.02 261.325);
+}

@@ -1,4 +1,8 @@
-/* 文章目录（Table of Contents）样式 */
+/**
+ * 文章目录（Table of Contents）样式
+ * 侧边栏目录导航的布局和交互规则
+ */
+
 @layer components {
     .toc-wrapper {
         position: sticky;

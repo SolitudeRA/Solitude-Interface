@@ -1,3 +1,8 @@
+/**
+ * 导航栏组件样式
+ * 顶部导航栏的布局和状态变化规则
+ */
+
 @layer components {
     .smart-navbar {
         background: transparent;

@@ -1,0 +1,27 @@
+/**
+ * 亮色主题 - Dock 组件颜色
+ */
+
+:root {
+    /* 桌面端导航栏 */
+    --dock-nav-bg: oklch(0.98 0.003 264.665 / 0.9);
+    --dock-nav-opacity: 1;
+    --dock-nav-shadow: oklch(0.3 0.02 264.665 / 0.12);
+    --dock-nav-radius: 1rem;
+
+    /* 汉堡按钮（移动端菜单触发器） */
+    --dock-button-bg: oklch(0.98 0.003 264.665 / 0.95);
+    --dock-button-shadow: oklch(0.3 0.02 264.665 / 0.15);
+    --dock-button-ring: oklch(0.5 0.15 264.376);
+
+    /* 遮罩层 */
+    --dock-overlay-bg: oklch(0.2 0.02 264.665 / 0.5);
+
+    /* 菜单面板 */
+    --dock-menu-bg: oklch(0.98 0.003 264.665 / 0.95);
+    --dock-menu-shadow: oklch(0.3 0.02 264.665 / 0.2);
+
+    /* 菜单项 */
+    --dock-menu-item-hover-bg: oklch(0.92 0.005 264.665);
+    --dock-menu-item-active-bg: oklch(0.88 0.008 264.665);
+}

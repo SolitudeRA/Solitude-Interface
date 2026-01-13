@@ -1,0 +1,13 @@
+/**
+ * 文章内容样式入口
+ * 按元素类型拆分，便于维护
+ */
+
+@import './container.css'; /* 容器 padding */
+@import './headings.css'; /* 标题 h1-h6 */
+@import './text.css'; /* 段落、链接、强调 */
+@import './lists.css'; /* 列表 ul/ol */
+@import './blockquote.css'; /* 引用块 */
+@import './code.css'; /* 代码（行内 + 代码块 + Shiki） */
+@import './media.css'; /* 图片、figure */
+@import './table.css'; /* 表格、水平线 */

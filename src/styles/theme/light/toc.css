@@ -1,0 +1,13 @@
+/**
+ * 亮色主题 - 目录颜色
+ */
+
+:root {
+    --toc-container-bg: oklch(0.96 0.005 264.665 / 0.9);
+    --toc-border: oklch(0.85 0.01 264.665);
+    --toc-header: oklch(0.15 0.025 264.665);
+    --toc-link: oklch(0.45 0.015 264.665);
+    --toc-link-hover: oklch(0.28 0.02 264.665);
+    --toc-link-active: oklch(0.45 0.2 264.376);
+    --toc-link-active-bg: oklch(0.45 0.2 264.376 / 0.1);
+}

@@ -1,0 +1,81 @@
+/**
+ * 文章表格和水平线样式 (table, th, td, hr)
+ */
+
+@layer components {
+    .solitude-article-content table {
+        width: 100%;
+        margin: 1rem 0;
+        border-collapse: collapse;
+        border-radius: 6px;
+        overflow: hidden;
+        font-size: 0.875rem;
+    }
+
+    .solitude-article-content th {
+        background: var(--article-content-table-header-bg);
+        color: var(--article-content-h2);
+        font-weight: 600;
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+        border-bottom: 2px solid var(--article-content-table-border);
+    }
+
+    .solitude-article-content td {
+        padding: 0.5rem 0.75rem;
+        color: var(--article-content-text);
+        border-bottom: 1px solid var(--article-content-table-border);
+    }
+
+    .solitude-article-content tr:hover td {
+        background: var(--article-content-table-header-bg);
+    }
+
+    .solitude-article-content hr {
+        border: none;
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            var(--article-content-table-border) 50%,
+            transparent 100%
+        );
+        margin: 1.5rem 0;
+    }
+
+    /* 768px (md) */
+    @media (min-width: 768px) {
+        .solitude-article-content table {
+            margin: 1.25rem 0;
+            border-radius: 7px;
+            font-size: 0.9375rem;
+        }
+
+        .solitude-article-content th,
+        .solitude-article-content td {
+            padding: 0.625rem 0.875rem;
+        }
+
+        .solitude-article-content hr {
+            margin: 2rem 0;
+        }
+    }
+
+    /* 1024px (lg) */
+    @media (min-width: 1024px) {
+        .solitude-article-content table {
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .solitude-article-content th,
+        .solitude-article-content td {
+            padding: 0.75rem 1rem;
+        }
+
+        .solitude-article-content hr {
+            margin: 2.5rem 0;
+        }
+    }
+}

@@ -1,4 +1,8 @@
-/* 文章布局样式 - 容器、侧边栏、主体 */
+/**
+ * 文章布局样式
+ * 包含容器、侧边栏、主体区域的布局规则
+ */
+
 @layer components {
     .solitude-article-container {
         width: 100%;

@@ -1,4 +1,8 @@
-/* 文章头部元信息样式 */
+/**
+ * 文章头部元信息样式
+ * 包含标题区域、标签、日期等的布局和响应式规则
+ */
+
 @layer components {
     .solitude-article-meta {
         height: 400px;

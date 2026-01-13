@@ -1,0 +1,37 @@
+/**
+ * 文章引用块样式 (blockquote)
+ */
+
+@layer components {
+    .solitude-article-content blockquote {
+        margin: 1rem 0;
+        padding: 0.75rem 1rem;
+        border-left: 3px solid var(--article-content-blockquote-border);
+        background: var(--article-content-blockquote-bg);
+        border-radius: 0 6px 6px 0;
+    }
+
+    .solitude-article-content blockquote p {
+        color: var(--article-content-blockquote-text);
+        font-style: italic;
+        margin: 0;
+    }
+
+    /* 768px (md) */
+    @media (min-width: 768px) {
+        .solitude-article-content blockquote {
+            margin: 1.25rem 0;
+            padding: 0.875rem 1.25rem;
+            border-left-width: 4px;
+            border-radius: 0 8px 8px 0;
+        }
+    }
+
+    /* 1024px (lg) */
+    @media (min-width: 1024px) {
+        .solitude-article-content blockquote {
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+        }
+    }
+}

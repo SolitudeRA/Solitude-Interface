@@ -1,0 +1,42 @@
+/**
+ * 基础主题设置
+ * 包含圆角、字体栈、多语言字体优先级
+ */
+
+:root {
+    /* ===== 圆角设置 ===== */
+    --radius: 0.625rem;
+
+    /* ===== 默认字体栈 ===== */
+    font-family:
+        'Noto Sans Variable', 'Noto Sans SC Variable', 'Noto Sans JP Variable',
+        system-ui, sans-serif;
+}
+
+/* ===== 多语言字体优先级 ===== */
+
+/* 中文页面 - 优先使用简体中文字形 */
+html[lang='zh'],
+html[lang='zh-CN'],
+html[lang='zh-Hans'] {
+    font-family:
+        'Noto Sans SC Variable', 'Noto Sans Variable', 'Noto Sans JP Variable',
+        system-ui, sans-serif;
+}
+
+/* 日文页面 - 优先使用日文字形 */
+html[lang='ja'],
+html[lang='ja-JP'] {
+    font-family:
+        'Noto Sans JP Variable', 'Noto Sans Variable', 'Noto Sans SC Variable',
+        system-ui, sans-serif;
+}
+
+/* 英文页面 - 优先使用拉丁字形 */
+html[lang='en'],
+html[lang='en-US'],
+html[lang='en-GB'] {
+    font-family:
+        'Noto Sans Variable', 'Noto Sans SC Variable', 'Noto Sans JP Variable',
+        system-ui, sans-serif;
+}
