@@ -188,11 +188,9 @@ export default function DockNavMobile() {
             <button
                 onClick={toggleMenu}
                 className={cn(
-                    'text-color-ui flex h-12 w-12 items-center justify-center rounded-full',
-                    'bg-gray-100 opacity-85 shadow-lg transition-all duration-300',
-                    'dark:bg-zinc-800',
-                    'hover:opacity-100 active:scale-95',
-                    'focus-visible:ring-foreground/50 focus:outline-none focus-visible:ring-2',
+                    'dock-button',
+                    'text-color-ui flex h-12 w-12 items-center justify-center',
+                    isOpen && 'dock-button--active',
                 )}
                 aria-label={isOpen ? '关闭菜单' : '打开菜单'}
                 aria-expanded={isOpen}
@@ -207,7 +205,7 @@ export default function DockNavMobile() {
             {/* 遮罩层 */}
             <div
                 className={cn(
-                    'fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300',
+                    'dock-overlay fixed inset-0 z-40 transition-opacity duration-300',
                     isOpen
                         ? 'pointer-events-auto opacity-100'
                         : 'pointer-events-none opacity-0',
@@ -219,8 +217,8 @@ export default function DockNavMobile() {
             {/* 菜单面板 */}
             <div
                 className={cn(
-                    'fixed right-4 bottom-20 left-4 z-50',
-                    'rounded-2xl bg-gray-100 p-4 shadow-2xl dark:bg-zinc-800',
+                    'dock-menu',
+                    'fixed right-4 bottom-20 left-4 z-50 p-4',
                     'transform transition-all duration-300 ease-out',
                     'max-h-[70vh] overflow-y-auto',
                     isOpen
@@ -238,13 +236,20 @@ export default function DockNavMobile() {
                                 <button
                                     onClick={toggleRssMenu}
                                     className={cn(
-                                        'text-color-ui flex w-full items-center justify-between rounded-xl px-4 py-3 font-medium',
-                                        'transition-colors duration-200',
-                                        'hover:bg-gray-200 dark:hover:bg-zinc-700',
+                                        'dock-menu-item',
+                                        'text-color-ui flex w-full items-center justify-between',
                                         isRssExpanded &&
-                                            'bg-gray-200 dark:bg-zinc-700',
+                                            'dock-menu-item--active',
                                     )}
                                     aria-expanded={isRssExpanded}
+                                    style={
+                                        isRssExpanded
+                                            ? {
+                                                  background:
+                                                      'var(--dock-menu-item-hover-bg)',
+                                              }
+                                            : undefined
+                                    }
                                 >
                                     <span>{item.label}</span>
                                     <ChevronDown
@@ -274,9 +279,8 @@ export default function DockNavMobile() {
                                                     )
                                                 }
                                                 className={cn(
-                                                    'text-color-ui flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium',
-                                                    'transition-colors duration-200',
-                                                    'hover:bg-gray-200 dark:hover:bg-zinc-700',
+                                                    'dock-menu-subitem',
+                                                    'text-color-ui flex items-center gap-2',
                                                     option.id === currentLocale
                                                         ? 'bg-primary/10 text-primary'
                                                         : '',
@@ -303,10 +307,8 @@ export default function DockNavMobile() {
                                 href={item.href}
                                 onClick={closeMenu}
                                 className={cn(
-                                    'text-color-ui block rounded-xl px-4 py-3 font-medium',
-                                    'transition-colors duration-200',
-                                    'hover:bg-gray-200 dark:hover:bg-zinc-700',
-                                    'active:bg-gray-300 dark:active:bg-zinc-600',
+                                    'dock-menu-item',
+                                    'text-color-ui block',
                                 )}
                             >
                                 {item.label}

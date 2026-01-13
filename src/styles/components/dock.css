@@ -1,0 +1,122 @@
+/**
+ * Dock 组件样式
+ * 底部导航栏及移动端菜单的主题化样式
+ */
+
+@layer components {
+    /* ===== 桌面端导航栏 ===== */
+    .dock-nav {
+        position: relative;
+        background: var(--dock-nav-bg);
+        opacity: var(--dock-nav-opacity);
+        box-shadow: 0 10px 40px var(--dock-nav-shadow);
+        border-radius: var(--dock-nav-radius);
+    }
+
+    /* 彩虹色边框 - 与 PostView 卡片一致 */
+    .dock-nav::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        padding: 1px;
+        background: conic-gradient(
+            from 0deg,
+            #ff6b6b,
+            #feca57,
+            #48dbfb,
+            #ff9ff3,
+            #54a0ff,
+            #5f27cd,
+            #ff6b6b
+        );
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+        z-index: 0;
+    }
+
+    .dock-nav:hover::after {
+        opacity: 0.8;
+    }
+
+    /* 确保导航栏内容在彩虹边框之上 */
+    .dock-nav > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ===== 汉堡按钮（移动端菜单触发器） ===== */
+    .dock-button {
+        background: var(--dock-button-bg);
+        box-shadow: 0 4px 20px var(--dock-button-shadow);
+        @apply rounded-full transition-all duration-300;
+    }
+
+    .dock-button:hover {
+        @apply opacity-100;
+    }
+
+    .dock-button:active {
+        @apply scale-95;
+    }
+
+    .dock-button:focus-visible {
+        @apply ring-2 outline-none;
+        --tw-ring-color: var(--dock-button-ring);
+    }
+
+    .dock-button--active {
+        @apply ring-2;
+        --tw-ring-color: var(--dock-button-ring);
+    }
+
+    /* ===== 遮罩层 ===== */
+    .dock-overlay {
+        background: var(--dock-overlay-bg);
+        @apply backdrop-blur-sm;
+    }
+
+    /* ===== 菜单面板 ===== */
+    .dock-menu {
+        background: var(--dock-menu-bg);
+        box-shadow: 0 25px 50px -12px var(--dock-menu-shadow);
+        @apply rounded-2xl backdrop-blur-md;
+    }
+
+    /* ===== 菜单项 ===== */
+    .dock-menu-item {
+        @apply rounded-xl px-4 py-3 font-medium transition-colors duration-200;
+    }
+
+    .dock-menu-item:hover {
+        background: var(--dock-menu-item-hover-bg);
+    }
+
+    .dock-menu-item:active {
+        background: var(--dock-menu-item-active-bg);
+    }
+
+    /* 子菜单项（RSS 选项等） */
+    .dock-menu-subitem {
+        @apply rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200;
+    }
+
+    .dock-menu-subitem:hover {
+        background: var(--dock-menu-item-hover-bg);
+    }
+
+    /* ===== 社交链接菜单项 ===== */
+    .dock-social-item {
+        @apply rounded-lg px-3 py-2 transition-colors duration-200;
+    }
+
+    .dock-social-item:hover {
+        background: var(--dock-menu-item-hover-bg);
+    }
+}
