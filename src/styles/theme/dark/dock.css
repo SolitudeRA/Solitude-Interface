@@ -4,10 +4,10 @@
 
 .dark {
     /* 桌面端导航栏 */
-    --dock-nav-bg: oklch(0.18 0.025 264.665 / 0.9);
+    --dock-nav-bg: oklch(0.13 0.028 261.692 / 0.85);
     --dock-nav-opacity: 1;
     --dock-nav-shadow: oklch(0 0 0 / 0.3);
-    --dock-nav-radius: 1rem;
+    --dock-nav-radius: 1.2rem;
 
     /* 汉堡按钮（移动端菜单触发器） */
     --dock-button-bg: oklch(0.2 0.03 264.665 / 0.95);
