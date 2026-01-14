@@ -183,6 +183,104 @@
         content: none;
     }
 
+    /* ===== 响应式右侧边框 - Contact (md 断点) ===== */
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .dock-nav-item.dock-nav-item-right-md {
+            border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
+            overflow: hidden;
+        }
+
+        .dock-nav-item.dock-nav-item-right-md::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            left: -2px;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            height: auto;
+            padding: 2px;
+            background: linear-gradient(
+                45deg,
+                #ff6b6b,
+                #feca57,
+                #48dbfb,
+                #54a0ff
+            );
+            border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .dock-nav-item.dock-nav-item-right-md:hover::before {
+            opacity: 1;
+        }
+
+        .dock-nav-item.dock-nav-item-right-md::after {
+            content: none;
+        }
+
+        .dock-nav-item.dock-nav-item-right-md .dock-nav-link {
+            padding-right: 1.5rem;
+        }
+    }
+
+    /* ===== 响应式右侧边框 - RSS (lg 断点) ===== */
+    @media (min-width: 1024px) and (max-width: 1279px) {
+        .dock-nav-item.dock-nav-item-right-lg {
+            border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
+            overflow: hidden;
+        }
+
+        .dock-nav-item.dock-nav-item-right-lg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            left: -2px;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            height: auto;
+            padding: 2px;
+            background: linear-gradient(
+                45deg,
+                #ff6b6b,
+                #feca57,
+                #48dbfb,
+                #54a0ff
+            );
+            border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .dock-nav-item.dock-nav-item-right-lg:hover::before {
+            opacity: 1;
+        }
+
+        .dock-nav-item.dock-nav-item-right-lg::after {
+            content: none;
+        }
+
+        .dock-nav-item.dock-nav-item-right-lg .dock-nav-link {
+            padding-right: 2rem;
+        }
+    }
+
     /* 导航项下边框 */
     .dock-nav-item::after {
         content: '';
@@ -197,10 +295,29 @@
         z-index: 10;
     }
 
-    /* hover 触发上下边框渐显 */
-    .dock-nav-item:hover::before,
-    .dock-nav-item:hover::after {
+    /* hover 触发上下边框渐显 - 排除响应式右侧元素 */
+    .dock-nav-item:not(.dock-nav-item-right-md):not(
+            .dock-nav-item-right-lg
+        ):hover::before,
+    .dock-nav-item:not(.dock-nav-item-right-md):not(
+            .dock-nav-item-right-lg
+        ):hover::after {
         opacity: 1;
+    }
+
+    /* 响应式右侧元素在对应断点外使用默认样式 */
+    @media (min-width: 1024px) {
+        .dock-nav-item.dock-nav-item-right-md:hover::before,
+        .dock-nav-item.dock-nav-item-right-md:hover::after {
+            opacity: 1;
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .dock-nav-item.dock-nav-item-right-lg:hover::before,
+        .dock-nav-item.dock-nav-item-right-lg:hover::after {
+            opacity: 1;
+        }
     }
 
     @media (min-width: 1024px) {
@@ -232,7 +349,9 @@
     /* 玻璃质感高光 hover 效果 */
     .dock-nav-item:hover,
     .dock-nav-item-left:hover,
-    .dock-nav-item-right:hover {
+    .dock-nav-item-right:hover,
+    .dock-nav-item-right-md:hover,
+    .dock-nav-item-right-lg:hover {
         background: oklch(1 0 0 / 0.1);
         box-shadow:
             inset 0 1px 0 oklch(1 0 0 / 0.2),
@@ -302,6 +421,8 @@
     .dock-nav-item:hover .dock-nav-link,
     .dock-nav-item-left:hover .dock-nav-link,
     .dock-nav-item-right:hover .dock-nav-link,
+    .dock-nav-item-right-md:hover .dock-nav-link,
+    .dock-nav-item-right-lg:hover .dock-nav-link,
     .dock-nav-link:hover {
         color: oklch(0.85 0.1 280);
     }

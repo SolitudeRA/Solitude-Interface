@@ -54,18 +54,19 @@ const privacyLink = buildLocalePath(lang, 'privacy-policy');
                 >About</a
             >
         </div>
-        <div class="dock-nav-item">
+        <!-- Contact - md 时为右侧，lg+ 时为普通 -->
+        <div class="dock-nav-item dock-nav-item-right-md">
             <a
                 href={contactLink}
                 class="dock-nav-link text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
                 >Contact</a
             >
         </div>
-        <!-- RSS 选择器 - 在平板竖屏隐藏，横屏及以上显示 -->
-        <div class="dock-nav-item hidden lg:flex">
+        <!-- RSS 选择器 - lg 时为右侧，xl 时为普通 -->
+        <div class="dock-nav-item dock-nav-item-right-lg hidden lg:flex">
             <RssSelector client:load showLabel={true} />
         </div>
-        <!-- Privacy Policy 仅在大屏显示 -->
+        <!-- Privacy Policy 仅在大屏显示，xl+ 为右侧 -->
         <div class="dock-nav-item-right hidden xl:flex">
             <a
                 href={privacyLink}
