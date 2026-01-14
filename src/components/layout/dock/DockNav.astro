@@ -35,45 +35,73 @@ const privacyLink = buildLocalePath(lang, 'privacy-policy');
             '3xl:space-x-12 space-x-2 md:space-x-3 lg:space-x-5 xl:space-x-8 2xl:space-x-10',
         ]}
     >
-        <div>
+        <div class="dock-nav-item">
             <a
                 href={homeLink}
-                class="text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
+                class="dock-nav-link text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
                 >Home</a
             >
         </div>
-        <div>
+        <div class="dock-nav-item">
             <a
                 href={postsLink}
-                class="text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
+                class="dock-nav-link text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
                 >Posts</a
             >
         </div>
-        <div>
+        <div class="dock-nav-item">
             <a
                 href={aboutLink}
-                class="text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
+                class="dock-nav-link text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
                 >About</a
             >
         </div>
-        <div>
+        <div class="dock-nav-item">
             <a
                 href={contactLink}
-                class="text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
+                class="dock-nav-link text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
                 >Contact</a
             >
         </div>
         <!-- RSS 选择器 - 在平板竖屏隐藏，横屏及以上显示 -->
-        <div class="hidden lg:flex lg:items-center">
+        <div class="dock-nav-item hidden lg:flex">
             <RssSelector client:load showLabel={true} />
         </div>
         <!-- Privacy Policy 仅在大屏显示 -->
-        <div class="hidden xl:block">
+        <div class="dock-nav-item hidden xl:flex">
             <a
                 href={privacyLink}
-                class="text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
+                class="dock-nav-link text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
                 >Privacy</a
             >
         </div>
     </div>
 </div>
+
+<script>
+    // 方向感知下划线效果
+    function initDirectionalUnderline() {
+        const items = document.querySelectorAll('.dock-nav-item');
+
+        items.forEach((item) => {
+            const link = item.querySelector('.dock-nav-link');
+            if (!link) return;
+
+            item.addEventListener('mouseenter', (e) => {
+                const rect = item.getBoundingClientRect();
+                const mouseX = (e as MouseEvent).clientX;
+                const centerX = rect.left + rect.width / 2;
+
+                // 根据鼠标进入位置判断方向
+                const direction = mouseX < centerX ? 'left' : 'right';
+                link.setAttribute('data-direction', direction);
+            });
+        });
+    }
+
+    // 页面加载时初始化
+    initDirectionalUnderline();
+
+    // 支持 Astro 视图过渡
+    document.addEventListener('astro:after-swap', initDirectionalUnderline);
+</script>

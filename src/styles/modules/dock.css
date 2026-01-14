@@ -10,8 +10,31 @@
         position: relative;
         background: var(--dock-nav-bg);
         opacity: var(--dock-nav-opacity);
-        box-shadow: 0 10px 40px var(--dock-nav-shadow);
         border-radius: var(--dock-nav-radius);
+        /* 玻璃质感效果 */
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow:
+            0 10px 40px var(--dock-nav-shadow),
+            inset 0 1px 1px oklch(1 0 0 / 0.1),
+            inset 0 -1px 1px oklch(0 0 0 / 0.05);
+    }
+
+    /* 顶部光泽渐变 - 玻璃高光效果 + 彩虹光晕 */
+    .dock-nav::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(
+            180deg,
+            oklch(1 0 0 / 0.12) 0%,
+            oklch(1 0 0 / 0.04) 30%,
+            transparent 60%
+        );
+        box-shadow: 0 0 30px oklch(0.7 0.15 280 / 0.15);
+        pointer-events: none;
+        z-index: 1;
     }
 
     /* 彩虹色边框 - 与 PostView 卡片一致 */
@@ -20,7 +43,7 @@
         position: absolute;
         inset: -1px;
         border-radius: inherit;
-        padding: 1px;
+        padding: 2px;
         background: conic-gradient(
             from 0deg,
             #ff6b6b,
@@ -37,19 +60,92 @@
         -webkit-mask-composite: xor;
         mask-composite: exclude;
         pointer-events: none;
-        opacity: 0.5;
-        transition: opacity 0.3s ease;
+        opacity: 0.4;
+        filter: blur(1px);
+        transition:
+            opacity 0.3s ease,
+            filter 0.3s ease;
         z-index: 0;
     }
 
     .dock-nav:hover::after {
-        opacity: 0.8;
+        opacity: 0.9;
+        filter: blur(2px);
     }
 
     /* 确保导航栏内容在彩虹边框之上 */
     .dock-nav > * {
         position: relative;
         z-index: 1;
+    }
+
+    /* ===== 导航项容器 - 扩展触发区域 ===== */
+    .dock-nav-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        padding: 0 0.5rem;
+        cursor: pointer;
+        border-radius: 8px;
+        transition:
+            background 0.3s ease,
+            box-shadow 0.3s ease;
+    }
+
+    /* 玻璃质感高光 hover 效果 */
+    .dock-nav-item:hover {
+        background: oklch(1 0 0 / 0.1);
+        box-shadow:
+            inset 0 1px 0 oklch(1 0 0 / 0.2),
+            inset 0 -1px 0 oklch(0 0 0 / 0.05);
+    }
+
+    /* ===== 导航链接 hover 效果 - 方向感知下划线 ===== */
+    .dock-nav-link {
+        position: relative;
+        display: inline-block;
+        transition: color 0.3s ease;
+    }
+
+    .dock-nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        height: 2px;
+        background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #54a0ff);
+        border-radius: 1px;
+        transition:
+            left 0.3s ease,
+            right 0.3s ease,
+            width 0.3s ease;
+        width: 0;
+        left: 0;
+        right: auto;
+    }
+
+    /* 父容器 hover 或链接自身 hover 都触发效果 */
+    .dock-nav-item:hover .dock-nav-link::after,
+    .dock-nav-link:hover::after {
+        width: 100%;
+    }
+
+    /* 从右到左进入 */
+    .dock-nav-link[data-direction='right']::after {
+        left: auto;
+        right: 0;
+    }
+
+    /* 从左到右进入 */
+    .dock-nav-link[data-direction='left']::after {
+        left: 0;
+        right: auto;
+    }
+
+    /* 父容器 hover 或链接自身 hover 都改变颜色 */
+    .dock-nav-item:hover .dock-nav-link,
+    .dock-nav-link:hover {
+        color: oklch(0.85 0.1 280);
     }
 
     /* ===== 汉堡按钮（移动端菜单触发器） ===== */

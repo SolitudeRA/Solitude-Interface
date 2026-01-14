@@ -139,7 +139,10 @@ export default function RssSelector({
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 onKeyDown={handleKeyDown}
-                className="text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
+                className={cn(
+                    'text-xs font-medium whitespace-nowrap md:text-sm lg:text-base',
+                    'dock-nav-link',
+                )}
                 aria-label="订阅 RSS"
                 aria-expanded={isOpen}
                 aria-haspopup="listbox"
