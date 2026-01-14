@@ -79,71 +79,229 @@
         z-index: 1;
     }
 
-    /* ===== 导航项容器 - 扩展触发区域 ===== */
-    .dock-nav-item {
+    /* ===== 导航项容器 - 均分布局 ===== */
+    .dock-nav-item,
+    .dock-nav-item-left,
+    .dock-nav-item-right {
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
         height: 100%;
-        padding: 0 0.5rem;
-        cursor: pointer;
-        border-radius: 8px;
+        flex: 1;
+        padding: 0;
+        min-width: 4.4rem;
+        border-radius: 0;
         transition:
             background 0.3s ease,
             box-shadow 0.3s ease;
     }
 
+    .dock-nav-item-left {
+        border-radius: var(--dock-nav-radius) 0 0 var(--dock-nav-radius);
+    }
+
+    .dock-nav-item-right {
+        border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
+    }
+
+    /* 导航项上边框 */
+    .dock-nav-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #54a0ff);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 10;
+    }
+
+    /* ===== 首个导航项 - 完整边框 + overflow 隐藏右边 ===== */
+    .dock-nav-item-left {
+        overflow: hidden;
+    }
+
+    .dock-nav-item-left::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        /* 向右延伸超出容器，然后被 overflow: hidden 裁剪 */
+        right: -2px;
+        padding: 2px;
+        background: linear-gradient(135deg, #ff6b6b, #feca57, #48dbfb, #54a0ff);
+        border-radius: var(--dock-nav-radius) 0 0 var(--dock-nav-radius);
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 5;
+        pointer-events: none;
+    }
+
+    .dock-nav-item-left:hover::before {
+        opacity: 1;
+    }
+
+    /* ===== 最后导航项 - 完整边框 + overflow 隐藏左边 ===== */
+    .dock-nav-item-right {
+        overflow: hidden;
+    }
+
+    .dock-nav-item-right::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        /* 向左延伸超出容器，然后被 overflow: hidden 裁剪 */
+        left: -2px;
+        padding: 2px;
+        background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #54a0ff);
+        border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 5;
+        pointer-events: none;
+    }
+
+    .dock-nav-item-right:hover::before {
+        opacity: 1;
+    }
+
+    /* 清除 ::after 伪元素 */
+    .dock-nav-item-left::after,
+    .dock-nav-item-right::after {
+        content: none;
+    }
+
+    /* 导航项下边框 */
+    .dock-nav-item::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #54a0ff);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 10;
+    }
+
+    /* hover 触发上下边框渐显 */
+    .dock-nav-item:hover::before,
+    .dock-nav-item:hover::after {
+        opacity: 1;
+    }
+
+    @media (min-width: 1024px) {
+        .dock-nav-item {
+            min-width: 5.28rem;
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .dock-nav-item {
+            min-width: 4rem;
+        }
+    }
+
+    /* 首个导航项 - 左侧圆角 */
+    .dock-nav-item:first-child::before,
+    .dock-nav-item:first-child::after {
+        position: relative;
+        border-radius: var(--dock-nav-radius) 0 0 var(--dock-nav-radius);
+    }
+
+    /* 最后一个可见的导航项 - 右侧圆角 */
+    .dock-nav-item:last-child::before,
+    .dock-nav-item:last-child::after {
+        position: relative;
+        border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
+    }
+
     /* 玻璃质感高光 hover 效果 */
-    .dock-nav-item:hover {
+    .dock-nav-item:hover,
+    .dock-nav-item-left:hover,
+    .dock-nav-item-right:hover {
         background: oklch(1 0 0 / 0.1);
         box-shadow:
             inset 0 1px 0 oklch(1 0 0 / 0.2),
             inset 0 -1px 0 oklch(0 0 0 / 0.05);
     }
 
-    /* ===== 导航链接 hover 效果 - 方向感知下划线 ===== */
+    /* ===== 导航链接 - 填满整个区域可点击 ===== */
     .dock-nav-link {
         position: relative;
-        display: inline-block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        padding: 0 1.32rem;
+        cursor: pointer;
         transition: color 0.3s ease;
     }
 
-    .dock-nav-link::after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        height: 2px;
-        background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #54a0ff);
-        border-radius: 1px;
-        transition:
-            left 0.3s ease,
-            right 0.3s ease,
-            width 0.3s ease;
-        width: 0;
-        left: 0;
-        right: auto;
+    @media (min-width: 1024px) {
+        .dock-nav-link {
+            padding: 0 1.76rem;
+        }
     }
 
-    /* 父容器 hover 或链接自身 hover 都触发效果 */
-    .dock-nav-item:hover .dock-nav-link::after,
-    .dock-nav-link:hover::after {
-        width: 100%;
+    @media (min-width: 1280px) {
+        .dock-nav-link {
+            padding: 0 1.6rem;
+        }
     }
 
-    /* 从右到左进入 */
-    .dock-nav-link[data-direction='right']::after {
-        left: auto;
-        right: 0;
+    /* 首个导航项的链接 - 左侧额外padding */
+    .dock-nav-item:first-child .dock-nav-link,
+    .dock-nav-item-left .dock-nav-link {
+        padding-left: 1.5rem;
     }
 
-    /* 从左到右进入 */
-    .dock-nav-link[data-direction='left']::after {
-        left: 0;
-        right: auto;
+    /* 最后一个导航项的链接 - 右侧额外padding */
+    .dock-nav-item:last-child .dock-nav-link,
+    .dock-nav-item-right .dock-nav-link {
+        padding-right: 1.5rem;
+    }
+
+    @media (min-width: 1024px) {
+        .dock-nav-item:first-child .dock-nav-link,
+        .dock-nav-item-left .dock-nav-link {
+            padding-left: 2rem;
+        }
+        .dock-nav-item:last-child .dock-nav-link,
+        .dock-nav-item-right .dock-nav-link {
+            padding-right: 2rem;
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .dock-nav-item:first-child .dock-nav-link,
+        .dock-nav-item-left .dock-nav-link {
+            padding-left: 2.8rem;
+        }
+        .dock-nav-item:last-child .dock-nav-link,
+        .dock-nav-item-right .dock-nav-link {
+            padding-right: 2.8rem;
+        }
     }
 
     /* 父容器 hover 或链接自身 hover 都改变颜色 */
     .dock-nav-item:hover .dock-nav-link,
+    .dock-nav-item-left:hover .dock-nav-link,
+    .dock-nav-item-right:hover .dock-nav-link,
     .dock-nav-link:hover {
         color: oklch(0.85 0.1 280);
     }
