@@ -95,12 +95,25 @@ const coverImageUrlStr = coverImageUrl
         background-image: var(--coverImageUrlStr);
     }
 
-    /* 遮罩层使用伪元素，颜色从 theme.css 动态加载 */
+    /* 遮罩层使用伪元素：上浅下深渐变 + 暗角效果 */
     .solitude-body::before {
         content: '';
         position: absolute;
         inset: 0;
-        background-color: var(--site-bg-overlay);
+        background:
+            /* 径向暗角 - 四周略深，聚焦视觉中心 */
+            radial-gradient(
+                ellipse 120% 100% at 50% 50%,
+                transparent 0%,
+                transparent 50%,
+                var(--site-bg-vignette) 100%
+            ),
+            /* 上浅下深线性渐变 - 让下半屏卡片对比更稳定 */
+            linear-gradient(
+                    to bottom,
+                    var(--site-bg-overlay-top) 0%,
+                    var(--site-bg-overlay-bottom) 100%
+                );
         pointer-events: none;
     }
 </style>
