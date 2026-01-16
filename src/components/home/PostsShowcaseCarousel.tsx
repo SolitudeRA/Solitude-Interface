@@ -91,23 +91,31 @@ function ShowcaseCard({
         <motion.a
             href={post.url?.toString() || '#'}
             className={cn(
-                'showcase-card group relative flex-shrink-0 overflow-hidden rounded-xl',
-                'w-56 sm:w-64 md:w-72 lg:w-80',
-                'aspect-[16/11] cursor-pointer',
-                'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-                // 玻璃态效果：半透明边框 + 阴影 + 内高光
-                'border border-white/25 dark:border-white/15',
-                'shadow-lg shadow-black/20',
+                // layout / stacking
+                'group relative isolate flex-shrink-0 overflow-hidden rounded-xl',
+                'aspect-[16/11] w-56 cursor-pointer sm:w-64 md:w-72 lg:w-80',
+
+                // glass material
+                'border border-white/25 dark:border-white/25',
                 'ring-1 ring-white/10 ring-inset',
+                'bg-white/[0.02]', // 给玻璃一个极淡的“基底”，更像材质
+                'shadow-lg shadow-black/20',
+
+                // motion / interaction (把阴影也放到同一层，不需要额外 div)
+                'transition-[transform,opacity,box-shadow] duration-200 ease-out',
+                'hover:shadow-2xl hover:shadow-black/30',
+
+                // accessibility
+                'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
             )}
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{
-                opacity: isOtherHovered ? 0.6 : 1,
-                x: 0,
-                scale: isOtherHovered ? 0.98 : 1,
+                opacity: isOtherHovered ? 0.62 : 1,
+                y: 0,
+                scale: isOtherHovered ? 0.985 : 1,
             }}
             transition={{
-                duration: 0.15,
+                duration: 0.22,
                 delay: index * 0.05,
                 ease: 'easeOut',
             }}
@@ -115,7 +123,7 @@ function ShowcaseCard({
                 scale: 1.03,
                 y: -6,
                 opacity: 1,
-                transition: { duration: 0.1, ease: 'easeOut' },
+                transition: { duration: 0.12, ease: 'easeOut' },
             }}
             whileFocus={{
                 scale: 1.03,
@@ -124,13 +132,15 @@ function ShowcaseCard({
             }}
             onMouseEnter={() => onHover(index)}
             onMouseLeave={() => onHover(null)}
+            onFocus={() => onHover(index)}
+            onBlur={() => onHover(null)}
             aria-label={`阅读文章: ${post.title}`}
         >
-            {/* 背景图片或渐变 fallback */}
-            <div className="absolute inset-0 overflow-hidden">
+            {/* 背景层 */}
+            <div className="absolute inset-0 -z-20 overflow-hidden">
                 {hasImage ? (
                     <div
-                        className="h-full w-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                        className="h-full w-full bg-cover bg-center transition-transform duration-500 will-change-transform group-hover:scale-105"
                         style={{
                             backgroundImage: `url(${post.feature_image?.toString()})`,
                         }}
@@ -140,66 +150,64 @@ function ShowcaseCard({
                 )}
             </div>
 
-            {/* 渐变遮罩 - 使用首页卡片专用的 CSS 变量 */}
+            {/* 统一用 pseudo-like 的 overlay：不挡点击 */}
             <div
-                className="absolute inset-0 rounded-xl"
+                className="pointer-events-none absolute inset-0 -z-10 rounded-xl"
                 style={{
                     background: `linear-gradient(
-                        to top,
-                        var(--home-card-overlay-end) 0%,
-                        var(--home-card-overlay-mid) 40%,
-                        var(--home-card-overlay-start) 100%
-                    )`,
+        to top,
+        var(--home-card-overlay-end) 0%,
+        var(--home-card-overlay-mid) 40%,
+        var(--home-card-overlay-start) 100%
+      )`,
                 }}
             />
 
-            {/* 内容区域 */}
+            {/* 内高光（更“玻璃”）：hover 才出现，克制一点更高级 */}
+            <div className="pointer-events-none absolute inset-0 rounded-xl opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                <div className="absolute -top-24 right-0 left-0 h-40 bg-white/10 blur-2xl" />
+                <div className="absolute inset-0 ring-1 ring-white/10 ring-inset" />
+            </div>
+
+            {/* 内容 */}
             <div className="absolute inset-0 flex flex-col justify-between p-4">
-                {/* 顶部标签区 - 与 BaseCard 保持一致 */}
-                <div className="flex items-center justify-between">
-                    {/* 左上角：Type 标签 */}
+                <div className="flex items-center justify-between gap-2">
                     {post.post_type && (
                         <Chip
                             variant="flat"
                             colorScheme={typeConfig.colorScheme}
-                            className="backdrop-blur-sm"
+                            className={cn(
+                                'backdrop-blur-md',
+                                'border border-white/15 bg-white/10',
+                            )}
                         >
                             {post.post_type}
                         </Chip>
                     )}
-                    {/* 右上角：Category 标签 */}
                     {post.post_category && (
                         <Chip
                             variant="flat"
                             colorScheme={categoryConfig.colorScheme}
-                            className="backdrop-blur-sm"
+                            className={cn(
+                                'backdrop-blur-md',
+                                'border border-white/15 bg-white/10',
+                            )}
                         >
                             {post.post_category}
                         </Chip>
                     )}
                 </div>
 
-                {/* 底部：标题 */}
                 <h3
                     className={cn(
-                        'text-lg leading-tight font-bold',
-                        'line-clamp-2',
-                        'transition-colors',
+                        'line-clamp-2 text-lg leading-tight font-bold',
+                        'drop-shadow-sm', // 让标题在复杂背景上更稳
                     )}
                     style={{ color: 'var(--post-view-card-title)' }}
                 >
                     {post.title}
                 </h3>
             </div>
-
-            {/* Hover 阴影增强 */}
-            <div
-                className={cn(
-                    'absolute inset-0 rounded-2xl',
-                    'shadow-lg transition-shadow duration-300',
-                    'group-hover:shadow-2xl group-hover:shadow-black/30',
-                )}
-            />
         </motion.a>
     );
 }
