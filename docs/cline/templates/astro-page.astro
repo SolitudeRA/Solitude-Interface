@@ -30,13 +30,14 @@ export async function getStaticPaths() {
 const { lang } = Astro.props;
 
 // 页面元数据
-const pageTitle = '页面标题';
-const pageDescription = '页面描述';
+const siteTitle = '页面标题';
+// const pageDescription = '页面描述';  // 如需描述，可添加到 BaseLayout Props
+const coverImageUrl = null; // 封面图片 URL，可为 URL | string | null
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription} lang={lang}>
+<BaseLayout siteTitle={siteTitle} coverImageUrl={coverImageUrl} locale={lang}>
     <main class="container mx-auto px-4 py-8">
-        <h1 class="mb-6 text-3xl font-bold">{pageTitle}</h1>
+        <h1 class="mb-6 text-3xl font-bold">{siteTitle}</h1>
 
         <!-- 页面内容 -->
         <section>

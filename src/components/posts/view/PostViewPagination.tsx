@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useAtomValue } from 'jotai';
 import { cn } from '@components/common/lib/utils';
 import { postViewAtom } from '@stores/postViewAtom';
@@ -100,7 +99,6 @@ export default function PostViewPagination({
     const renderMarker = (index: number) => {
         const isCircle = isEndpoint(index);
         const isVisible = isIndexVisible(index);
-        const isActive = index === activeIndex;
         const dynamicWidth = getMarkerWidth(index);
 
         const baseClasses = cn(

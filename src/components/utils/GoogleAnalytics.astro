@@ -23,10 +23,11 @@ if (import.meta.env.DEV && id && !isValidGAId) {
     enabled && (
         <>
             <script
+                is:inline
                 async
                 src={`https://www.googletagmanager.com/gtag/js?id=${id}`}
             />
-            <script define:vars={{ id }}>
+            <script is:inline define:vars={{ id }}>
                 window.dataLayer = window.dataLayer || []; function gtag()
                 {dataLayer.push(arguments)}
                 gtag('js', new Date()); gtag('config', id);

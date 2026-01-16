@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import type { Post, PostTag } from '@api/ghost/types';
+import type { Post } from '@api/ghost/types';
 import { PostType } from '@api/ghost/types';
 import { Chip } from '@components/common/badge';
 import { cn } from '@components/common/lib/utils';
