@@ -185,7 +185,7 @@ function addSecurityToLinks(html: string): string {
             // 如果已有 rel 属性，确保包含 noopener noreferrer
             return match.replace(
                 /rel="([^"]*)"/i,
-                (relMatch, relValue: string) => {
+                (_relMatch, relValue: string) => {
                     const values = new Set(relValue.split(/\s+/));
                     values.add('noopener');
                     values.add('noreferrer');

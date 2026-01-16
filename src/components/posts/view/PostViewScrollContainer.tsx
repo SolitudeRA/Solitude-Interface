@@ -50,17 +50,7 @@ export default function PostViewScrollContainer({
 
         if (cards.length === 0) return;
 
-        const firstCard = cards[0] as HTMLElement;
-        const cardWidth = firstCard.getBoundingClientRect().width;
-        const containerWidth = container.clientWidth;
-        const { gap, peekRatio, initialVisibleCount } = LAYOUT_CONFIG;
-
-        // 总宽度 = 左padding(gap) + 5*cardWidth + 4*gap + gap + 第6张15%
-        // containerWidth = gap + 5*cardWidth + 5*gap + cardWidth*peekRatio
-        // 由于卡片宽度已知，我们计算 padding = gap
-        // 实际需要的宽度 = gap + 5*cardWidth + 5*gap + cardWidth*peekRatio
-        //                = 6*gap + 5*cardWidth + cardWidth*peekRatio
-        //                = 6*gap + cardWidth*(5 + peekRatio)
+        const { gap } = LAYOUT_CONFIG;
 
         // 使用 gap 作为 padding
         const padding = gap;

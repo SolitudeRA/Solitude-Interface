@@ -121,7 +121,14 @@ describe('ModuleName', () => {
 // 辅助函数 (测试专用)
 // ============================================================
 
-function createMockPost(overrides = {}) {
+/**
+ * 创建模拟文章数据
+ * @example const post = _createMockPost({ title: 'Custom Title' });
+ *
+ * 注意: 函数名以下划线开头表示这是模板示例函数，
+ * 使用时请根据需要重命名（去掉下划线）
+ */
+function _createMockPost(overrides = {}) {
     return {
         id: 'mock-id',
         title: 'Mock Post',
@@ -132,3 +139,7 @@ function createMockPost(overrides = {}) {
         ...overrides,
     };
 }
+
+// 示例用法
+const _mockPost = _createMockPost({ title: '自定义标题' });
+void _mockPost; // 防止未使用警告
