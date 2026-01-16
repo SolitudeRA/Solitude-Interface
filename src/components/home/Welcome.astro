@@ -12,4 +12,18 @@
     .welcome-title {
         color: var(--text-site-title);
     }
+
+    /* 暗色主题 - 增强标题对比度，防止亮背景区域发灰 */
+    :global(.dark) .welcome-title {
+        text-shadow:
+            0 2px 8px rgba(0, 0, 0, 0.45),
+            0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    /* 亮色主题 - 轻微阴影增强可读性 */
+    :global(.light) .welcome-title {
+        text-shadow:
+            0 1px 4px rgba(255, 255, 255, 0.6),
+            0 2px 8px rgba(0, 0, 0, 0.08);
+    }
 </style>

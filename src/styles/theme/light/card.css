@@ -3,8 +3,10 @@
  */
 
 :root {
-    /* 网站背景遮罩 */
-    --site-bg-overlay: rgba(180, 180, 185, 0.65);
+    /* 网站背景遮罩 - 上浅下深渐变 + 暗角 */
+    --site-bg-overlay-top: rgba(240, 240, 242, 0.45);
+    --site-bg-overlay-bottom: rgba(180, 180, 185, 0.72);
+    --site-bg-vignette: rgba(100, 100, 105, 0.12);
 
     /* 首页文章卡片覆盖层渐变 */
     --home-card-overlay-start: oklch(0.98 0 0 / 0.55);
