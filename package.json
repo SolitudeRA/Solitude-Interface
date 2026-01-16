@@ -24,7 +24,10 @@
     "test:all": "vitest run"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,astro,json,md,yml,yaml,css,scss}": [
+    "*.{astro,tsx,ts,jsx,js}": [
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css,scss,html}": [
       "prettier --write"
     ]
   },

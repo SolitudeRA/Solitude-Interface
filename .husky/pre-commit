@@ -1,4 +1,5 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+# TypeScript 类型检查
+pnpm astro check
 
+# 格式化暂存文件
 pnpm format:staged
