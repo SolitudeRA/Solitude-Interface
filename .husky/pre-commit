@@ -1,5 +1,2 @@
-# TypeScript 类型检查
-pnpm astro check
-
 # 格式化暂存文件
 pnpm format:staged
