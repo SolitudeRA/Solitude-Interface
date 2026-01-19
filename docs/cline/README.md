@@ -18,11 +18,11 @@ docs/cline/
 
 ## 📋 任务上下文文件
 
-| 文件                    | 用途                   |
-| ----------------------- | ---------------------- |
-| `TASK_NEW_COMPONENT.md` | 创建新 UI 组件时的参考 |
-| `TASK_ADD_PAGE.md`      | 添加新页面路由时的参考 |
-| `TASK_API_CHANGE.md`    | 修改 API 层时的参考    |
+| 文件                    | 用途                              |
+| ----------------------- | --------------------------------- |
+| `TASK_NEW_COMPONENT.md` | 创建新 UI 组件 (React/Astro)      |
+| `TASK_ADD_PAGE.md`      | 添加新页面路由 (多语言/RSS)       |
+| `TASK_API_CHANGE.md`    | 修改 API 层 (Ghost API/缓存/测试) |
 
 ## 📄 代码模板
 
@@ -70,3 +70,9 @@ docs/cline/
 
 [注意事项]
 ```
+
+## 📚 相关链接
+
+- [.clinerules](../../.clinerules) - 项目规则 (主入口)
+- [docs/DEVELOPMENT.md](../DEVELOPMENT.md) - 开发指南
+- [docs/ARCHITECTURE.md](../ARCHITECTURE.md) - 架构设计
