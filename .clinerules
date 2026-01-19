@@ -5,15 +5,20 @@
 这是一个基于 **Astro + React + TypeScript + TailwindCSS** 的个人博客前端项目，与 **Ghost CMS** 集成作为 headless CMS。
 
 ### 技术栈
-- **框架**: Astro 5.x (静态站点生成)
-- **UI 库**: React 19.x
-- **类型系统**: TypeScript 5.x (严格模式)
-- **样式**: TailwindCSS 4.x + Emotion CSS-in-JS
-- **状态管理**: Jotai
-- **动画**: Motion (Framer Motion)
-- **CMS**: Ghost Content API
-- **测试**: Vitest
-- **包管理器**: pnpm
+
+| 类别 | 技术 | 版本 |
+|------|------|------|
+| **框架** | Astro | 5.x |
+| **UI 库** | React | 19.x |
+| **类型系统** | TypeScript | 5.x (严格模式) |
+| **样式** | TailwindCSS + Emotion CSS-in-JS | 4.x |
+| **UI 组件** | Radix UI | 最新 |
+| **状态管理** | Jotai | 2.x |
+| **动画** | Motion (Framer Motion) | 12.x |
+| **代码高亮** | Shiki | 3.x |
+| **CMS** | Ghost Content API | - |
+| **测试** | Vitest | 4.x |
+| **包管理器** | pnpm | 10.x |
 
 ---
 
@@ -25,22 +30,50 @@ src/
 │   ├── adapters/           # 数据转换器 (Ghost → 前端格式)
 │   ├── clients/            # API 客户端
 │   ├── config/             # 环境变量配置
-│   ├── ghost/              # Ghost API 模块 (posts, settings)
-│   ├── utils/              # 工具函数 (缓存, 错误处理)
+│   ├── ghost/              # Ghost API 模块 (posts, settings, types)
+│   ├── utils/              # 工具函数
+│   │   ├── cache.ts        # 请求缓存
+│   │   ├── codeHighlight.ts # Shiki 代码高亮
+│   │   ├── errorHandlers.ts # 错误处理
+│   │   ├── sanitize.ts     # HTML 清理 (DOMPurify)
+│   │   └── url.ts          # URL 工具
 │   └── __tests__/          # API 测试
 ├── components/             # UI 组件
-│   ├── common/             # 通用组件 (Button, Card, Badge 等)
+│   ├── common/             # 通用组件 (Button, Card, Badge, Tooltip 等)
+│   │   └── lib/            # 组件工具函数 (cn, utils)
 │   ├── home/               # 首页组件
-│   ├── i18n/               # 国际化组件
-│   ├── layout/             # 布局组件 (Navbar, Dock)
+│   ├── i18n/               # 国际化组件 (FallbackNotice, LanguageSwitcher)
+│   ├── layout/             # 布局组件
+│   │   ├── dock/           # Dock 导航栏
+│   │   └── navbar/         # 顶部导航栏
 │   ├── pages/              # 页面专用组件
+│   │   ├── about/
+│   │   ├── contact/
+│   │   └── privacy-policy/
 │   ├── posts/              # 文章展示组件
-│   └── utils/              # 工具组件
+│   │   ├── detail/         # 文章详情组件
+│   │   └── view/           # 文章列表视图组件
+│   └── utils/              # 工具组件 (GoogleAnalytics 等)
 ├── layouts/                # Astro 布局
-├── lib/                    # 核心库 (i18n)
+│   └── base/               # 基础布局
+├── lib/                    # 核心库
+│   └── i18n.ts             # 国际化工具函数
 ├── pages/                  # Astro 页面路由
+│   ├── [lang]/             # 多语言动态路由
+│   │   └── p/              # 文章详情页
+│   └── posts/              # 文章页面
 ├── stores/                 # Jotai 状态管理
-├── styles/                 # 全局样式
+├── styles/                 # 样式系统
+│   ├── index.css           # 样式入口
+│   ├── tailwind-settings.css # TailwindCSS 配置
+│   ├── modules/            # 组件模块样式
+│   │   └── article/        # 文章样式
+│   │       └── content/    # 文章内容样式
+│   ├── theme/              # 主题系统
+│   │   ├── base.css        # 主题基础
+│   │   ├── dark/           # 暗色主题
+│   │   └── light/          # 亮色主题
+│   └── utilities/          # 工具类
 └── types/                  # TypeScript 类型定义
 ```
 
@@ -64,6 +97,47 @@ src/
 import { getPosts } from '@api/ghost/posts';
 import { Button } from '@components/common';
 import { postViewAtom } from '@stores/postViewAtom';
+import { cn } from '@components/common/lib/utils';
+```
+
+---
+
+## 样式系统
+
+### 主题架构
+
+```
+src/styles/theme/
+├── base.css          # 共享变量和基础样式
+├── dark/             # 暗色主题
+│   ├── semantic.css  # 语义化颜色变量
+│   ├── text.css      # 文字颜色
+│   ├── page.css      # 页面背景
+│   ├── navbar.css    # 导航栏
+│   ├── dock.css      # Dock 栏
+│   ├── card.css      # 卡片
+│   ├── article.css   # 文章
+│   └── toc.css       # 目录
+└── light/            # 亮色主题 (同结构)
+```
+
+### 样式优先级
+
+1. **TailwindCSS 类** (推荐) - 使用 `className`
+2. **CSS 变量** - 使用主题变量 (如 `var(--background)`)
+3. **Emotion CSS-in-JS** - 仅在需要动态样式时使用
+
+### 常用 CSS 变量
+
+```css
+/* 语义化颜色 */
+--background      /* 页面背景 */
+--foreground      /* 主要文字 */
+--muted           /* 次要背景 */
+--muted-foreground /* 次要文字 */
+--primary         /* 主要强调色 */
+--accent          /* 次要强调色 */
+--border          /* 边框 */
 ```
 
 ---
@@ -83,6 +157,14 @@ import { postViewAtom } from '@stores/postViewAtom';
 - `/{lang}/` - 文章列表
 - `/{lang}/p/{key}` - 文章详情
 
+### 常用 i18n 函数
+
+```typescript
+import { LOCALES, type Locale, DEFAULT_LOCALE } from '@lib/i18n';
+import { filterPostsByLocale, extractLocaleFromTags } from '@lib/i18n';
+import { buildPostPath, buildLocalePath } from '@lib/i18n';
+```
+
 ---
 
 ## 组件开发规范
@@ -100,6 +182,26 @@ import { postViewAtom } from '@stores/postViewAtom';
 - React 组件: `PascalCase.tsx`
 - 测试文件: `*.test.ts` (单元) / `*.integration.test.ts` (集成)
 
+### 常用 UI 库
+
+```typescript
+// Radix UI (无样式原语组件)
+import * as Tooltip from '@radix-ui/react-tooltip';
+import * as Switch from '@radix-ui/react-switch';
+import { Slot } from '@radix-ui/react-slot';
+
+// 图标
+import { Menu, X, Sun, Moon } from 'lucide-react';
+import { FaGithub, FaTwitter } from 'react-icons/fa';
+
+// 动画
+import { motion, AnimatePresence } from 'motion/react';
+
+// 样式工具
+import { cn } from '@components/common/lib/utils';
+import { cva, type VariantProps } from 'class-variance-authority';
+```
+
 ---
 
 ## 常用标签前缀
@@ -109,6 +211,7 @@ import { postViewAtom } from '@stores/postViewAtom';
 | `type-` | 文章类型 | `type-article`, `type-gallery`, `type-video`, `type-music` |
 | `category-` | 分类 | `category-tech`, `category-life` |
 | `series-` | 系列 | `series-astro-tutorial` |
+| `hash-` | 内部标签 (不显示) | `hash-lang-zh`, `hash-i18n-intro` |
 
 ---
 
@@ -121,8 +224,11 @@ pnpm preview          # 预览生产构建
 pnpm test             # 运行测试 (watch 模式)
 pnpm test:unit        # 仅运行单元测试
 pnpm test:integration # 仅运行集成测试
+pnpm test:run         # 运行全部测试 (单次)
+pnpm test:coverage    # 生成测试覆盖率报告
 pnpm format           # 格式化代码
 pnpm astro check      # TypeScript 类型检查
+pnpm astro sync       # 生成 Astro 类型定义
 ```
 
 ---
@@ -143,6 +249,8 @@ pnpm astro check      # TypeScript 类型检查
 2. **类型生成**: schema 变更后运行 `pnpm astro sync`
 3. **测试**: 集成测试需要配置真实的 Ghost API
 4. **图片**: 远程图片域名需在 `astro.config.mjs` 中配置
+5. **HTML 清理**: 使用 `sanitize.ts` 处理用户内容
+6. **代码高亮**: 使用 `codeHighlight.ts` 处理代码块
 
 ---
 
