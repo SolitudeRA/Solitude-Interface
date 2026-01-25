@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { handleApiError } from '@api/utils/errorHandlers';
-import axios, { AxiosError } from 'axios';
+import axios, { type AxiosError } from 'axios';
 
 describe('Error Handlers', () => {
     beforeEach(() => {
@@ -35,7 +35,7 @@ describe('Error Handlers', () => {
             };
 
             expect(() => handleApiError(axiosError)).toThrow(
-                'API request failed: 404 - Request failed',
+                'API request failed: 404 - Request failed'
             );
         });
 
@@ -70,7 +70,7 @@ describe('Error Handlers', () => {
                 expect.objectContaining({
                     message: 'Network Error',
                     status: 500,
-                }),
+                })
             );
         });
 
@@ -85,7 +85,7 @@ describe('Error Handlers', () => {
             };
 
             expect(() => handleApiError(axiosError)).toThrow(
-                'API request failed: undefined - Network Error',
+                'API request failed: undefined - Network Error'
             );
         });
 
@@ -105,7 +105,7 @@ describe('Error Handlers', () => {
             };
 
             expect(() => handleApiError(axiosError)).toThrow(
-                'API request failed: 400 - Unknown Error',
+                'API request failed: 400 - Unknown Error'
             );
         });
 
@@ -144,7 +144,7 @@ describe('Error Handlers', () => {
                 'API Error:',
                 expect.objectContaining({
                     data: errorData,
-                }),
+                })
             );
         });
 
@@ -152,7 +152,7 @@ describe('Error Handlers', () => {
             const genericError = new Error('Something went wrong');
 
             expect(() => handleApiError(genericError)).toThrow(
-                'Unknown error: Something went wrong',
+                'Unknown error: Something went wrong'
             );
         });
 
@@ -166,36 +166,27 @@ describe('Error Handlers', () => {
                 // Expected to throw
             }
 
-            expect(consoleSpy).toHaveBeenCalledWith(
-                'Unknown error:',
-                genericError,
-            );
+            expect(consoleSpy).toHaveBeenCalledWith('Unknown error:', genericError);
         });
 
         it('should handle error objects without message', () => {
             const errorWithoutMessage = {};
 
             expect(() => handleApiError(errorWithoutMessage)).toThrow(
-                'Unknown error: No information',
+                'Unknown error: No information'
             );
         });
 
         it('should handle string errors', () => {
             const stringError = 'String error message';
 
-            expect(() => handleApiError(stringError)).toThrow(
-                'Unknown error: No information',
-            );
+            expect(() => handleApiError(stringError)).toThrow('Unknown error: No information');
         });
 
         it('should handle null or undefined', () => {
-            expect(() => handleApiError(null)).toThrow(
-                'Unknown error: No information',
-            );
+            expect(() => handleApiError(null)).toThrow('Unknown error: No information');
 
-            expect(() => handleApiError(undefined)).toThrow(
-                'Unknown error: No information',
-            );
+            expect(() => handleApiError(undefined)).toThrow('Unknown error: No information');
         });
 
         it('should include endpoint information in error', () => {
@@ -229,7 +220,7 @@ describe('Error Handlers', () => {
                 'API Error:',
                 expect.objectContaining({
                     url: '/api/settings',
-                }),
+                })
             );
         });
 
@@ -254,9 +245,7 @@ describe('Error Handlers', () => {
                     },
                 };
 
-                expect(() => handleApiError(axiosError)).toThrow(
-                    `API request failed: ${status}`,
-                );
+                expect(() => handleApiError(axiosError)).toThrow(`API request failed: ${status}`);
             });
         });
 

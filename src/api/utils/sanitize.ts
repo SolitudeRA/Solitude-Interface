@@ -137,8 +137,7 @@ const SANITIZE_CONFIG: Config = {
     ],
 
     // 允许的 URI 协议
-    ALLOWED_URI_REGEXP:
-        /^(?:(?:https?|mailto|tel):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+    ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto|tel):|[^a-z]|[a-z+.-]+(?:[^a-z+.-:]|$))/i,
 
     // 安全设置
     FORBID_TAGS: ['script', 'style', 'object', 'embed', 'form', 'input'],
@@ -176,24 +175,18 @@ export function sanitizeHtml(html: string): string {
  */
 function addSecurityToLinks(html: string): string {
     // 匹配 target="_blank" 的链接，如果没有 rel 属性则添加
-    return html.replace(
-        /<a\s+([^>]*target="_blank"[^>]*)>/gi,
-        (match, attrs) => {
-            if (!/rel=/.test(attrs)) {
-                return `<a ${attrs} rel="noopener noreferrer">`;
-            }
-            // 如果已有 rel 属性，确保包含 noopener noreferrer
-            return match.replace(
-                /rel="([^"]*)"/i,
-                (_relMatch, relValue: string) => {
-                    const values = new Set(relValue.split(/\s+/));
-                    values.add('noopener');
-                    values.add('noreferrer');
-                    return `rel="${Array.from(values).join(' ')}"`;
-                },
-            );
-        },
-    );
+    return html.replace(/<a\s+([^>]*target="_blank"[^>]*)>/gi, (match, attrs) => {
+        if (!/rel=/.test(attrs)) {
+            return `<a ${attrs} rel="noopener noreferrer">`;
+        }
+        // 如果已有 rel 属性，确保包含 noopener noreferrer
+        return match.replace(/rel="([^"]*)"/i, (_relMatch, relValue: string) => {
+            const values = new Set(relValue.split(/\s+/));
+            values.add('noopener');
+            values.add('noreferrer');
+            return `rel="${Array.from(values).join(' ')}"`;
+        });
+    });
 }
 
 /**
