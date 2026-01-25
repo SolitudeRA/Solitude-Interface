@@ -11,13 +11,7 @@ interface Props {
     isFixed?: boolean;
 }
 
-const {
-    logoUrl,
-    siteTitle,
-    siteSubTitle,
-    homeUrl = '/',
-    isFixed = false,
-} = Astro.props;
+const { logoUrl, siteTitle, siteSubTitle, homeUrl = '/', isFixed = false } = Astro.props;
 ---
 
 <SmartNavbar isFixed={isFixed} client:load>

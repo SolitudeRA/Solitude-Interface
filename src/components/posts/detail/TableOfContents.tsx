@@ -57,7 +57,7 @@ export default function TableOfContents({
     useEffect(() => {
         const handleScroll = () => {
             const headingElements = document.querySelectorAll(
-                `${contentSelector} h2, ${contentSelector} h3, ${contentSelector} h4`,
+                `${contentSelector} h2, ${contentSelector} h3, ${contentSelector} h4`
             );
 
             let currentActiveId = '';
@@ -128,10 +128,7 @@ export default function TableOfContents({
                             activeId === heading.id ? 'toc-active' : ''
                         }`}
                     >
-                        <button
-                            onClick={() => handleClick(heading.id)}
-                            className="toc-link"
-                        >
+                        <button onClick={() => handleClick(heading.id)} className="toc-link">
                             {heading.text}
                         </button>
                     </li>

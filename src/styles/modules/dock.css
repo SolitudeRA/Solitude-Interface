@@ -200,13 +200,7 @@
             bottom: 0;
             height: auto;
             padding: 2px;
-            background: linear-gradient(
-                45deg,
-                #ff6b6b,
-                #feca57,
-                #48dbfb,
-                #54a0ff
-            );
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #54a0ff);
             border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
             -webkit-mask:
                 linear-gradient(#fff 0 0) content-box,
@@ -249,13 +243,7 @@
             bottom: 0;
             height: auto;
             padding: 2px;
-            background: linear-gradient(
-                45deg,
-                #ff6b6b,
-                #feca57,
-                #48dbfb,
-                #54a0ff
-            );
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #54a0ff);
             border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
             -webkit-mask:
                 linear-gradient(#fff 0 0) content-box,
@@ -296,12 +284,8 @@
     }
 
     /* hover 触发上下边框渐显 - 排除响应式右侧元素 */
-    .dock-nav-item:not(.dock-nav-item-right-md):not(
-            .dock-nav-item-right-lg
-        ):hover::before,
-    .dock-nav-item:not(.dock-nav-item-right-md):not(
-            .dock-nav-item-right-lg
-        ):hover::after {
+    .dock-nav-item:not(.dock-nav-item-right-md):not(.dock-nav-item-right-lg):hover::before,
+    .dock-nav-item:not(.dock-nav-item-right-md):not(.dock-nav-item-right-lg):hover::after {
         opacity: 1;
     }
 

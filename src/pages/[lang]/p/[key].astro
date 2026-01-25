@@ -1,9 +1,5 @@
 ---
-import {
-    listAllGroupKeys,
-    getPostWithFallback,
-    getVariantsByGroup,
-} from '@api/ghost/posts';
+import { listAllGroupKeys, getPostWithFallback, getVariantsByGroup } from '@api/ghost/posts';
 import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
 import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
@@ -44,14 +40,10 @@ if (!isLocale(lang) || !key) {
 
 const locale = lang as Locale;
 
-const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
-    await initializeSiteData();
+const { siteTitle, siteDescription, logoUrl, coverImageUrl } = await initializeSiteData();
 
 // 获取文章（带 fallback 逻辑）
-const { post, displayedLocale, isFallback } = await getPostWithFallback(
-    key,
-    locale,
-);
+const { post, displayedLocale, isFallback } = await getPostWithFallback(key, locale);
 
 // 如果没有找到任何文章，显示 404
 if (!post) {
@@ -63,17 +55,11 @@ const variants = await getVariantsByGroup(key);
 const availableLocales = LOCALES.filter((l) => variants[l] !== null);
 
 // 生成 SEO 链接
-const alternateLinks = generateAlternateLinks(
-    env.site.url,
-    `/p/${key}`,
-    availableLocales,
-);
+const alternateLinks = generateAlternateLinks(env.site.url, `/p/${key}`, availableLocales);
 const canonicalUrl = `${env.site.url}/${displayedLocale}/p/${key}`;
 
 // Fallback 提示消息
-const fallbackMessage = isFallback
-    ? getFallbackMessage(locale, displayedLocale)
-    : '';
+const fallbackMessage = isFallback ? getFallbackMessage(locale, displayedLocale) : '';
 ---
 
 <BaseLayout
@@ -91,18 +77,10 @@ const fallbackMessage = isFallback
         isFixed={true}
     />
 
-    {
-        isFallback && fallbackMessage && (
-            <FallbackNotice message={fallbackMessage} />
-        )
-    }
+    {isFallback && fallbackMessage && <FallbackNotice message={fallbackMessage} />}
 
     <div class="container mx-auto mt-20 px-4">
-        <PostLanguageSwitcher
-            currentLocale={locale}
-            i18nKey={key}
-            variants={variants}
-        />
+        <PostLanguageSwitcher currentLocale={locale} i18nKey={key} variants={variants} />
     </div>
 
     <PostContent

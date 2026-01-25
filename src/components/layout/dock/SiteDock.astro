@@ -10,11 +10,7 @@ interface Props {
     lang?: Locale;
 }
 
-const {
-    isFixed = false,
-    layout = 'default',
-    lang = DEFAULT_LOCALE,
-} = Astro.props;
+const { isFixed = false, layout = 'default', lang = DEFAULT_LOCALE } = Astro.props;
 ---
 
 <Dock isFixed={isFixed}>

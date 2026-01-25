@@ -29,8 +29,7 @@ if (!isLocale(lang)) {
 const locale = lang as Locale;
 const htmlLang = LOCALE_HTML_LANG[locale];
 
-const { siteTitle, siteDescription, logoUrl, coverImageUrl } =
-    await initializeSiteData();
+const { siteTitle, siteDescription, logoUrl, coverImageUrl } = await initializeSiteData();
 // 获取最近文章用于首页展示（不按语言筛选）
 const posts = await getHighlightPosts(12);
 

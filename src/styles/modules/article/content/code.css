@@ -5,8 +5,7 @@
 @layer components {
     /* 行内代码 */
     .solitude-article-content code {
-        font-family:
-            'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+        font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
         font-size: 0.85em;
         padding: 0.15em 0.35em;
         background: var(--article-content-code-bg);

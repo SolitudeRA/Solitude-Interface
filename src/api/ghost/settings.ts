@@ -3,15 +3,14 @@ import { handleApiError } from '@api/utils/errorHandlers';
 import { getCache, setCache } from '@api/utils/cache';
 import type { SiteInformation } from '@api/ghost/types';
 
-const DEFAULT_FIELDS =
-    'title,description,logo,icon,cover_image,twitter,timezone,navigation';
+const DEFAULT_FIELDS = 'title,description,logo,icon,cover_image,twitter,timezone,navigation';
 
 /**
  * 获取站点信息
  * @param fields 要获取的字段
  */
 export async function getSiteInformation(
-    fields: string = DEFAULT_FIELDS,
+    fields: string = DEFAULT_FIELDS
 ): Promise<SiteInformation> {
     const cacheKey = `site_information:${fields}`;
 

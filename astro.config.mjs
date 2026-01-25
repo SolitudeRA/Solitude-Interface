@@ -5,10 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { extractDomains } from './src/api/utils/url';
 
 // 配置远程图片允许的域名
-const imageDomains = extractDomains(
-    process.env.GHOST_URL,
-    process.env.IMAGE_HOST_URL,
-);
+const imageDomains = extractDomains(process.env.GHOST_URL, process.env.IMAGE_HOST_URL);
 
 // https://astro.build/config
 export default defineConfig({

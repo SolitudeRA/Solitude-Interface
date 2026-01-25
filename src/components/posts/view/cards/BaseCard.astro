@@ -32,10 +32,7 @@ const DEFAULT_CATEGORY_CONFIG = {
     colorScheme: 'secondary' as ChipColorScheme,
 };
 
-const CATEGORY_CONFIG: Record<
-    string,
-    { icon: string; colorScheme: ChipColorScheme }
-> = {
+const CATEGORY_CONFIG: Record<string, { icon: string; colorScheme: ChipColorScheme }> = {
     tech: { icon: '💻', colorScheme: 'info' }, // 青色 - 科技感
     life: { icon: '🌱', colorScheme: 'success' }, // 绿色 - 生活、自然
     default: DEFAULT_CATEGORY_CONFIG,
@@ -98,9 +95,7 @@ const categoryConfig = CATEGORY_CONFIG[categoryKey] ?? DEFAULT_CATEGORY_CONFIG;
 
     <!-- 摘要区（flex-1 占据剩余空间） -->
     <div class="mb-auto flex-1 overflow-hidden">
-        <p
-            class="card-excerpt line-clamp-5 text-[1.05rem] leading-[1.85] tracking-wide"
-        >
+        <p class="card-excerpt line-clamp-5 text-[1.05rem] leading-[1.85] tracking-wide">
             {post.excerpt}
         </p>
     </div>
@@ -116,13 +111,11 @@ const categoryConfig = CATEGORY_CONFIG[categoryKey] ?? DEFAULT_CATEGORY_CONFIG;
         {
             post.post_general_tags && post.post_general_tags.length > 0 && (
                 <div class="flex flex-wrap justify-center gap-1.5">
-                    {post.post_general_tags
-                        .slice(0, 3)
-                        .map((tagName: string) => (
-                            <Chip colorScheme="success" variant="flat">
-                                {tagName}
-                            </Chip>
-                        ))}
+                    {post.post_general_tags.slice(0, 3).map((tagName: string) => (
+                        <Chip colorScheme="success" variant="flat">
+                            {tagName}
+                        </Chip>
+                    ))}
                 </div>
             )
         }

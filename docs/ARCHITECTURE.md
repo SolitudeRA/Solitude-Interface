@@ -158,10 +158,7 @@ export function extractLocaleFromTags(tags: PostTag[]): Locale | null;
 export function extractI18nKey(tags: PostTag[]): string | null;
 
 // 多语言文章过滤
-export function filterPostsByLocale<T>(
-    posts: T[],
-    currentLocale: Locale,
-): LocalizedPost<T>[];
+export function filterPostsByLocale<T>(posts: T[], currentLocale: Locale): LocalizedPost<T>[];
 ```
 
 #### 多语言文章过滤逻辑

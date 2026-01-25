@@ -14,8 +14,7 @@ interface Props {
     html: string;
 }
 
-const { title, feature_image, primary_tag, tags, published_at, html } =
-    Astro.props;
+const { title, feature_image, primary_tag, tags, published_at, html } = Astro.props;
 const featureImageUrl = feature_image?.toString() || '';
 
 // 安全：在服务端渲染时净化 HTML 内容

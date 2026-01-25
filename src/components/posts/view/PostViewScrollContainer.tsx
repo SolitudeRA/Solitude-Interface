@@ -242,10 +242,7 @@ export default function PostViewScrollContainer({
 
     return (
         <div
-            className={cn(
-                'post-view-scroll-wrapper relative flex w-full flex-col',
-                className,
-            )}
+            className={cn('post-view-scroll-wrapper relative flex w-full flex-col', className)}
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
         >
@@ -261,7 +258,7 @@ export default function PostViewScrollContainer({
                             transition={{ duration: 0.25 }}
                             className={cn(
                                 'pointer-events-none absolute top-0 left-0 z-10',
-                                'h-full w-32',
+                                'h-full w-32'
                             )}
                             style={{
                                 background:
@@ -285,7 +282,7 @@ export default function PostViewScrollContainer({
                             transition={{ duration: 0.25 }}
                             className={cn(
                                 'pointer-events-none absolute top-0 right-0 z-10',
-                                'h-full w-32',
+                                'h-full w-32'
                             )}
                             style={{
                                 background:
@@ -315,7 +312,7 @@ export default function PostViewScrollContainer({
                                 'border-border border shadow-lg',
                                 'hover:bg-background hover:scale-110',
                                 'transition-all duration-200',
-                                'focus-visible:ring-ring focus:outline-none focus-visible:ring-2',
+                                'focus-visible:ring-ring focus:outline-none focus-visible:ring-2'
                             )}
                             aria-label="向左滚动"
                         >
@@ -340,7 +337,7 @@ export default function PostViewScrollContainer({
                                 'border-border border shadow-lg',
                                 'hover:bg-background hover:scale-110',
                                 'transition-all duration-200',
-                                'focus-visible:ring-ring focus:outline-none focus-visible:ring-2',
+                                'focus-visible:ring-ring focus:outline-none focus-visible:ring-2'
                             )}
                             aria-label="向右滚动"
                         >
@@ -365,7 +362,7 @@ export default function PostViewScrollContainer({
                         // scroll-snap 使滚动时卡片居中对齐
                         'snap-x snap-mandatory',
                         // 子元素居中对齐
-                        '[&_.post-card-wrapper]:snap-center',
+                        '[&_.post-card-wrapper]:snap-center'
                     )}
                     style={{
                         paddingLeft: dynamicPadding.left || '5%',

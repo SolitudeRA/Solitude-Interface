@@ -52,9 +52,7 @@ describe('Settings API Integration Tests', () => {
 
             if (siteInfo.timezone) {
                 // 时区应该是有效格式，如 "Asia/Tokyo", "UTC"
-                expect(siteInfo.timezone).toMatch(
-                    /^[A-Za-z]+\/[A-Za-z_]+$|^UTC$/,
-                );
+                expect(siteInfo.timezone).toMatch(/^[A-Za-z]+\/[A-Za-z_]+$|^UTC$/);
             }
         }, 15000);
 
@@ -241,9 +239,7 @@ describe('Settings API Integration Tests', () => {
 
             // 确保没有返回错误的默认值
             expect(siteData.siteTitle).not.toBe('Error');
-            expect(siteData.siteDescription).not.toBe(
-                'Failed to initialize site data',
-            );
+            expect(siteData.siteDescription).not.toBe('Failed to initialize site data');
 
             // 确保有实际的站点信息
             expect(siteData.siteTitle.length).toBeGreaterThan(0);

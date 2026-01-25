@@ -16,7 +16,7 @@ import {
 export async function getHighlightPosts(
     limit: number = 12,
     fields: string = 'id,title,url,feature_image,primary_tag,published_at',
-    include: string = 'tags',
+    include: string = 'tags'
 ): Promise<FeaturedPost[]> {
     const cacheKey = `featured_posts:${limit}:${fields}:${include}`;
     const cachedPosts = getCache<FeaturedPost[]>(cacheKey);
@@ -48,7 +48,7 @@ export async function getHighlightPosts(
  */
 export async function listPostsByLocale(
     locale: Locale,
-    options: { page?: number; limit?: number } = {},
+    options: { page?: number; limit?: number } = {}
 ): Promise<Post[]> {
     const { page = 1, limit = 15 } = options;
     const langTag = localeToLangTag(locale);
@@ -86,10 +86,7 @@ export async function listPostsByLocale(
  * @param key - 翻译组 key (不含 hash-i18n- 前缀)
  * @param locale - 语言代码
  */
-export async function getPostByGroupAndLocale(
-    key: string,
-    locale: Locale,
-): Promise<Post | null> {
+export async function getPostByGroupAndLocale(key: string, locale: Locale): Promise<Post | null> {
     const langTag = localeToLangTag(locale);
     const i18nTag = i18nKeyToTag(key);
     const cacheKey = `post_by_group:${key}:${locale}`;
@@ -122,10 +119,7 @@ export async function getPostByGroupAndLocale(
         return adaptedPost;
     } catch (error) {
         // 如果是 404 或文章不存在，返回 null 而不是抛出错误
-        console.error(
-            `Failed to get post for key=${key}, locale=${locale}:`,
-            error,
-        );
+        console.error(`Failed to get post for key=${key}, locale=${locale}:`, error);
         return null;
     }
 }
@@ -135,9 +129,7 @@ export async function getPostByGroupAndLocale(
  * @param key - 翻译组 key
  * @returns 包含每个语言版本是否存在的记录
  */
-export async function getVariantsByGroup(
-    key: string,
-): Promise<Record<Locale, Post | null>> {
+export async function getVariantsByGroup(key: string): Promise<Record<Locale, Post | null>> {
     const i18nTag = i18nKeyToTag(key);
     const cacheKey = `variants_by_group:${key}`;
 
@@ -200,7 +192,6 @@ export async function listAllGroupKeys(): Promise<string[]> {
     const limit = 100; // Ghost API 最大单页数量
 
     try {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         while (true) {
             const response = await getGhostClient().get<{
                 posts: Post[];
@@ -250,7 +241,7 @@ export async function listAllGroupKeys(): Promise<string[]> {
  */
 export async function getPostWithFallback(
     key: string,
-    requestedLocale: Locale,
+    requestedLocale: Locale
 ): Promise<{
     post: Post | null;
     displayedLocale: Locale;
@@ -330,7 +321,7 @@ export async function getPosts(include: string = 'tags'): Promise<Post[]> {
  * @param options - 分页选项
  */
 export async function listAllPosts(
-    options: { page?: number; limit?: number } = {},
+    options: { page?: number; limit?: number } = {}
 ): Promise<Post[]> {
     const { page = 1, limit = 100 } = options;
     const cacheKey = `all_posts_view:${page}:${limit}`;

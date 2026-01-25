@@ -12,9 +12,12 @@
     "preview": "astro preview",
     "astro": "astro",
     "prepare": "husky",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "format:staged": "lint-staged",
+    "check": "pnpm lint && pnpm format:check && astro check",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
@@ -25,6 +28,7 @@
   },
   "lint-staged": {
     "*.{astro,tsx,ts,jsx,js}": [
+      "eslint --fix",
       "prettier --write"
     ],
     "*.{json,md,yml,yaml,css,scss,html}": [
@@ -67,15 +71,24 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@types/dompurify": "^3.2.0",
     "@types/node": "^25.0.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.53.1",
+    "@typescript-eslint/parser": "^8.53.1",
     "@vitest/coverage-v8": "^4.0.15",
     "@vitest/ui": "^4.0.15",
     "autoprefixer": "^10.4.22",
     "axios-mock-adapter": "^2.1.0",
     "cssnano": "^7.1.2",
+    "eslint": "^9.39.2",
+    "eslint-plugin-astro": "^1.5.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "globals": "^17.1.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.7.4",

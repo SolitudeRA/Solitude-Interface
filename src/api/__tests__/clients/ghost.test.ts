@@ -1,9 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import {
-    GhostAPIClient,
-    getGhostClient,
-    resetGhostClient,
-} from '@api/clients/ghost';
+import { GhostAPIClient, getGhostClient, resetGhostClient } from '@api/clients/ghost';
 import axios from 'axios';
 
 // Mock axios
@@ -28,9 +24,7 @@ describe('GhostAPIClient', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
-        vi.mocked(axios.create).mockReturnValue(
-            createMockAxiosInstance() as any,
-        );
+        vi.mocked(axios.create).mockReturnValue(createMockAxiosInstance() as any);
     });
 
     describe('constructor', () => {
@@ -59,7 +53,7 @@ describe('GhostAPIClient', () => {
 
             const mockRequest = vi.fn().mockResolvedValue({ data: mockData });
             vi.mocked(axios.create).mockReturnValue(
-                createMockAxiosInstance({ request: mockRequest }) as any,
+                createMockAxiosInstance({ request: mockRequest }) as any
             );
 
             const client = new GhostAPIClient();
@@ -79,7 +73,7 @@ describe('GhostAPIClient', () => {
             const mockData = { posts: [] };
             const mockRequest = vi.fn().mockResolvedValue({ data: mockData });
             vi.mocked(axios.create).mockReturnValue(
-                createMockAxiosInstance({ request: mockRequest }) as any,
+                createMockAxiosInstance({ request: mockRequest }) as any
             );
 
             const client = new GhostAPIClient();
@@ -101,7 +95,7 @@ describe('GhostAPIClient', () => {
 
             const mockRequest = vi.fn().mockRejectedValue(error);
             vi.mocked(axios.create).mockReturnValue(
-                createMockAxiosInstance({ request: mockRequest }) as any,
+                createMockAxiosInstance({ request: mockRequest }) as any
             );
             vi.mocked(axios.isAxiosError).mockReturnValue(false);
 
@@ -110,7 +104,7 @@ describe('GhostAPIClient', () => {
             await expect(
                 client.get({
                     endpoint: '/posts/',
-                }),
+                })
             ).rejects.toThrow();
         });
     });
@@ -126,7 +120,7 @@ describe('GhostAPIClient', () => {
                 .mockResolvedValueOnce({ data: mockData });
 
             vi.mocked(axios.create).mockReturnValue(
-                createMockAxiosInstance({ request: mockRequest }) as any,
+                createMockAxiosInstance({ request: mockRequest }) as any
             );
             vi.mocked(axios.isAxiosError).mockReturnValue(true);
 
@@ -151,7 +145,7 @@ describe('GhostAPIClient', () => {
                 .mockResolvedValueOnce({ data: mockData });
 
             vi.mocked(axios.create).mockReturnValue(
-                createMockAxiosInstance({ request: mockRequest }) as any,
+                createMockAxiosInstance({ request: mockRequest }) as any
             );
             vi.mocked(axios.isAxiosError).mockReturnValue(true);
 
@@ -172,7 +166,7 @@ describe('GhostAPIClient', () => {
             const mockRequest = vi.fn().mockRejectedValue(clientError);
 
             vi.mocked(axios.create).mockReturnValue(
-                createMockAxiosInstance({ request: mockRequest }) as any,
+                createMockAxiosInstance({ request: mockRequest }) as any
             );
             vi.mocked(axios.isAxiosError).mockReturnValue(true);
 
@@ -191,7 +185,7 @@ describe('GhostAPIClient', () => {
             const mockRequest = vi.fn().mockRejectedValue(networkError);
 
             vi.mocked(axios.create).mockReturnValue(
-                createMockAxiosInstance({ request: mockRequest }) as any,
+                createMockAxiosInstance({ request: mockRequest }) as any
             );
             vi.mocked(axios.isAxiosError).mockReturnValue(true);
 

@@ -25,8 +25,7 @@ describe('HTML Sanitization', () => {
         });
 
         it('should preserve images', () => {
-            const input =
-                '<img src="https://example.com/image.jpg" alt="Image" />';
+            const input = '<img src="https://example.com/image.jpg" alt="Image" />';
             const result = sanitizeHtml(input);
             expect(result).toContain('<img');
             expect(result).toContain('src="https://example.com/image.jpg"');
@@ -34,8 +33,7 @@ describe('HTML Sanitization', () => {
         });
 
         it('should preserve code blocks', () => {
-            const input =
-                '<pre><code class="language-js">const x = 1;</code></pre>';
+            const input = '<pre><code class="language-js">const x = 1;</code></pre>';
             expect(sanitizeHtml(input)).toBe(input);
         });
 
@@ -83,21 +81,18 @@ describe('HTML Sanitization', () => {
         });
 
         it('should preserve data attributes for code highlighting', () => {
-            const input =
-                '<pre data-language="javascript" data-line="1-5"><code>code</code></pre>';
+            const input = '<pre data-language="javascript" data-line="1-5"><code>code</code></pre>';
             expect(sanitizeHtml(input)).toBe(input);
         });
 
         it('should add rel="noopener noreferrer" to target="_blank" links', () => {
-            const input =
-                '<a href="https://example.com" target="_blank">Link</a>';
+            const input = '<a href="https://example.com" target="_blank">Link</a>';
             const result = sanitizeHtml(input);
             expect(result).toContain('rel="noopener noreferrer"');
         });
 
         it('should preserve existing rel attribute and add security values', () => {
-            const input =
-                '<a href="https://example.com" target="_blank" rel="external">Link</a>';
+            const input = '<a href="https://example.com" target="_blank" rel="external">Link</a>';
             const result = sanitizeHtml(input);
             expect(result).toContain('noopener');
             expect(result).toContain('noreferrer');
@@ -108,9 +103,7 @@ describe('HTML Sanitization', () => {
                 '<iframe src="https://www.youtube.com/embed/abc123" frameborder="0" allowfullscreen></iframe>';
             const result = sanitizeHtml(input);
             expect(result).toContain('<iframe');
-            expect(result).toContain(
-                'src="https://www.youtube.com/embed/abc123"',
-            );
+            expect(result).toContain('src="https://www.youtube.com/embed/abc123"');
         });
 
         it('should remove form elements', () => {
@@ -122,8 +115,7 @@ describe('HTML Sanitization', () => {
         });
 
         it('should remove object and embed tags', () => {
-            const input =
-                '<object data="evil.swf"></object><embed src="evil.swf" />';
+            const input = '<object data="evil.swf"></object><embed src="evil.swf" />';
             const result = sanitizeHtml(input);
             expect(result).not.toContain('<object');
             expect(result).not.toContain('<embed');
@@ -133,52 +125,32 @@ describe('HTML Sanitization', () => {
     describe('containsSuspiciousContent', () => {
         it('should return false for safe content', () => {
             expect(containsSuspiciousContent('<p>Hello World</p>')).toBe(false);
-            expect(
-                containsSuspiciousContent(
-                    '<a href="https://example.com">Link</a>',
-                ),
-            ).toBe(false);
+            expect(containsSuspiciousContent('<a href="https://example.com">Link</a>')).toBe(false);
         });
 
         it('should return false for empty/null input', () => {
             expect(containsSuspiciousContent('')).toBe(false);
-            expect(containsSuspiciousContent(null as unknown as string)).toBe(
-                false,
-            );
+            expect(containsSuspiciousContent(null as unknown as string)).toBe(false);
         });
 
         it('should detect script tags', () => {
-            expect(containsSuspiciousContent('<script>alert(1)</script>')).toBe(
-                true,
-            );
-            expect(containsSuspiciousContent('<SCRIPT>alert(1)</SCRIPT>')).toBe(
-                true,
-            );
+            expect(containsSuspiciousContent('<script>alert(1)</script>')).toBe(true);
+            expect(containsSuspiciousContent('<SCRIPT>alert(1)</SCRIPT>')).toBe(true);
         });
 
         it('should detect javascript: URLs', () => {
-            expect(
-                containsSuspiciousContent('<a href="javascript:alert(1)">'),
-            ).toBe(true);
+            expect(containsSuspiciousContent('<a href="javascript:alert(1)">')).toBe(true);
         });
 
         it('should detect event handlers', () => {
-            expect(containsSuspiciousContent('<img onerror="alert(1)">')).toBe(
-                true,
-            );
-            expect(containsSuspiciousContent('<div onclick="alert(1)">')).toBe(
-                true,
-            );
-            expect(containsSuspiciousContent('<body onload="alert(1)">')).toBe(
-                true,
-            );
+            expect(containsSuspiciousContent('<img onerror="alert(1)">')).toBe(true);
+            expect(containsSuspiciousContent('<div onclick="alert(1)">')).toBe(true);
+            expect(containsSuspiciousContent('<body onload="alert(1)">')).toBe(true);
         });
 
         it('should detect data:text/html URLs', () => {
             expect(
-                containsSuspiciousContent(
-                    '<iframe src="data:text/html,<script>alert(1)</script>">',
-                ),
+                containsSuspiciousContent('<iframe src="data:text/html,<script>alert(1)</script>">')
             ).toBe(true);
         });
     });

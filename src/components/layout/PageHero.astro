@@ -19,20 +19,10 @@ interface Props {
     date?: string;
 }
 
-const {
-    title,
-    backgroundImage,
-    subtitle,
-    badgeText,
-    badgeIcon = false,
-    date,
-} = Astro.props;
+const { title, backgroundImage, subtitle, badgeText, badgeIcon = false, date } = Astro.props;
 ---
 
-<div
-    class="page-hero"
-    style={backgroundImage ? `--bg-image: url(${backgroundImage})` : ''}
->
+<div class="page-hero" style={backgroundImage ? `--bg-image: url(${backgroundImage})` : ''}>
     <div class="page-hero-overlay"></div>
     <div class="page-hero-content">
         <h1 class="page-hero-title">{title}</h1>

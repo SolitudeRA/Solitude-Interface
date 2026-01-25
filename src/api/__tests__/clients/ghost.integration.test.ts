@@ -79,7 +79,7 @@ describe('GhostAPIClient Integration Tests', () => {
             await expect(
                 client.get({
                     endpoint: '/invalid-endpoint/',
-                }),
+                })
             ).rejects.toThrow();
         }, 10000);
 
@@ -91,7 +91,7 @@ describe('GhostAPIClient Integration Tests', () => {
                     params: {
                         limit: 'invalid', // 无效的 limit 参数
                     },
-                }),
+                })
             ).rejects.toThrow();
         }, 10000);
     });

@@ -1,14 +1,7 @@
 ---
 import type { FeaturedPost } from '@api/ghost/types';
-import PostsShowcaseCarousel, {
-    PostsShowcaseSkeleton,
-} from './PostsShowcaseCarousel';
-import {
-    filterPostsByLocale,
-    type Locale,
-    DEFAULT_LOCALE,
-    buildLocalePath,
-} from '@lib/i18n';
+import PostsShowcaseCarousel, { PostsShowcaseSkeleton } from './PostsShowcaseCarousel';
+import { filterPostsByLocale, type Locale, DEFAULT_LOCALE, buildLocalePath } from '@lib/i18n';
 
 const MAX_POSTS = 8;
 
@@ -29,12 +22,7 @@ interface Props {
     className?: string;
 }
 
-const {
-    featuredPosts,
-    locale = DEFAULT_LOCALE,
-    isLoading = false,
-    className = '',
-} = Astro.props;
+const { featuredPosts, locale = DEFAULT_LOCALE, isLoading = false, className = '' } = Astro.props;
 
 // 按语言过滤文章：优先显示当前语言，如果没有则显示其他语言版本
 const localizedPosts = filterPostsByLocale(featuredPosts || [], locale);
@@ -52,10 +40,7 @@ const postsPageUrl = buildLocalePath(locale, 'post-view');
 
 {
     shouldRender && (
-        <section
-            class:list={['posts-showcase w-full', className]}
-            aria-label="最近文章"
-        >
+        <section class:list={['posts-showcase w-full', className]} aria-label="最近文章">
             {isLoading ? (
                 <PostsShowcaseSkeleton count={5} client:load />
             ) : (

@@ -65,10 +65,7 @@ export default function DockSocialMobile() {
 
             {/* 遮罩层 */}
             {isOpen && (
-                <div
-                    className="dock-overlay fixed inset-0 z-40"
-                    onClick={() => setIsOpen(false)}
-                />
+                <div className="dock-overlay fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
             )}
 
             {/* 弹出菜单 */}
@@ -85,9 +82,7 @@ export default function DockSocialMobile() {
                                 onClick={() => setIsOpen(false)}
                             >
                                 <link.icon className="h-5 w-5" />
-                                <span className="text-sm font-medium">
-                                    {link.name}
-                                </span>
+                                <span className="text-sm font-medium">{link.name}</span>
                             </a>
                         ))}
                     </div>
