@@ -12,10 +12,7 @@ interface PostViewPaginationProps {
 /** 视野外最多显示的横杠数量 */
 const MAX_OUTSIDE_MARKERS = 3;
 
-export default function PostViewPagination({
-    onScrollToPost,
-    className,
-}: PostViewPaginationProps) {
+export default function PostViewPagination({ onScrollToPost, className }: PostViewPaginationProps) {
     const postViewState = useAtomValue(postViewAtom);
     const { totalPosts, visibleIndices, activeIndex } = postViewState;
 
@@ -23,7 +20,7 @@ export default function PostViewPagination({
         (index: number) => {
             onScrollToPost(index);
         },
-        [onScrollToPost],
+        [onScrollToPost]
     );
 
     // 如果没有文章，不渲染
@@ -38,22 +35,17 @@ export default function PostViewPagination({
     const unifiedHeight = Math.max(circleSize, 4);
 
     // Q弹动画曲线
-    const bounceTransition =
-        'transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]';
+    const bounceTransition = 'transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]';
 
     // 判断是否是首尾文章（显示圆圈）
-    const isEndpoint = (index: number) =>
-        index === 0 || index === totalPosts - 1;
+    const isEndpoint = (index: number) => index === 0 || index === totalPosts - 1;
 
     // 判断是否可见
     const isIndexVisible = (index: number) => visibleIndices.includes(index);
 
     // 计算要显示的索引范围（以 activeIndex 为中心）
     const leftCount = Math.min(activeIndex, MAX_OUTSIDE_MARKERS);
-    const rightCount = Math.min(
-        totalPosts - 1 - activeIndex,
-        MAX_OUTSIDE_MARKERS,
-    );
+    const rightCount = Math.min(totalPosts - 1 - activeIndex, MAX_OUTSIDE_MARKERS);
 
     // 左侧显示的范围
     const leftStart = activeIndex - leftCount;
@@ -82,8 +74,7 @@ export default function PostViewPagination({
     // 当前位置 = activePositionInDisplay
     // 偏移量 = (中心位置 - 当前位置) * markerTotalWidth
     const centerPosition = (totalDisplayCount - 1) / 2;
-    const offsetX =
-        (centerPosition - activePositionInDisplay) * markerTotalWidth;
+    const offsetX = (centerPosition - activePositionInDisplay) * markerTotalWidth;
 
     // 计算横条宽度（宽度渐变效果）：距离 activeIndex 越近越宽
     const getMarkerWidth = (index: number): number => {
@@ -107,7 +98,7 @@ export default function PostViewPagination({
             'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
             isVisible
                 ? 'bg-foreground/90 hover:opacity-80'
-                : 'bg-foreground/25 hover:bg-foreground/40 hover:scale-110',
+                : 'bg-foreground/25 hover:bg-foreground/40 hover:scale-110'
         );
 
         if (isCircle) {
@@ -124,16 +115,14 @@ export default function PostViewPagination({
                         'bg-transparent',
                         isVisible
                             ? 'border-foreground/90 hover:opacity-80'
-                            : 'border-foreground/25 hover:border-foreground/40 hover:scale-110',
+                            : 'border-foreground/25 hover:border-foreground/40 hover:scale-110'
                     )}
                     style={{
                         width: dynamicCircleSize,
                         height: dynamicCircleSize,
                         borderWidth: 4,
                     }}
-                    aria-label={
-                        index === 0 ? '跳转到第一篇文章' : '跳转到最后一篇文章'
-                    }
+                    aria-label={index === 0 ? '跳转到第一篇文章' : '跳转到最后一篇文章'}
                 />
             );
         }
@@ -156,15 +145,12 @@ export default function PostViewPagination({
                 'post-view-pagination',
                 'flex items-center justify-center',
                 'w-full pt-1',
-                className,
+                className
             )}
         >
             {/* 整体容器，使用 transform 偏移使 activeIndex 居中 */}
             <div
-                className={cn(
-                    'flex items-center justify-center',
-                    bounceTransition,
-                )}
+                className={cn('flex items-center justify-center', bounceTransition)}
                 style={{
                     height: unifiedHeight,
                     gap: markerGap,
@@ -175,10 +161,7 @@ export default function PostViewPagination({
                 {showLeftEllipsis && (
                     <button
                         onClick={() => handleMarkerClick(0)}
-                        className={cn(
-                            'flex items-center hover:opacity-80',
-                            bounceTransition,
-                        )}
+                        className={cn('flex items-center hover:opacity-80', bounceTransition)}
                         style={{ gap: markerGap }}
                         aria-label="跳转到第一篇文章"
                     >
@@ -195,10 +178,7 @@ export default function PostViewPagination({
                 {showRightEllipsis && (
                     <button
                         onClick={() => handleMarkerClick(totalPosts - 1)}
-                        className={cn(
-                            'flex items-center hover:opacity-80',
-                            bounceTransition,
-                        )}
+                        className={cn('flex items-center hover:opacity-80', bounceTransition)}
                         style={{ gap: markerGap }}
                         aria-label="跳转到最后一篇文章"
                     >

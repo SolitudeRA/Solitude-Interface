@@ -26,9 +26,7 @@ const {
 const rssCurrentLang = `/${locale}/rss.xml`;
 const rssAll = '/rss.xml';
 
-const coverImageUrlStr = coverImageUrl
-    ? `url(${coverImageUrl.toString()})`
-    : 'none';
+const coverImageUrlStr = coverImageUrl ? `url(${coverImageUrl.toString()})` : 'none';
 ---
 
 <!doctype html>
@@ -51,11 +49,7 @@ const coverImageUrlStr = coverImageUrl
         {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
         {
             alternateLinks.map((link) => (
-                <link
-                    rel="alternate"
-                    hreflang={link.hreflang}
-                    href={link.href}
-                />
+                <link rel="alternate" hreflang={link.hreflang} href={link.href} />
             ))
         }
 
@@ -141,9 +135,6 @@ const coverImageUrlStr = coverImageUrl
         // 验证新主题值
         if (newTheme !== 'dark' && newTheme !== 'light') return;
         document.documentElement.classList.toggle('dark', newTheme === 'dark');
-        document.documentElement.classList.toggle(
-            'light',
-            newTheme === 'light',
-        );
+        document.documentElement.classList.toggle('light', newTheme === 'light');
     });
 </script>

@@ -39,13 +39,9 @@ export class GhostAPIClient {
             'Accept-Version': env.ghost.version,
         };
 
-        if (
-            env.cloudflare.accessClientId &&
-            env.cloudflare.accessClientSecret
-        ) {
+        if (env.cloudflare.accessClientId && env.cloudflare.accessClientSecret) {
             headers['CF-Access-Client-Id'] = env.cloudflare.accessClientId;
-            headers['CF-Access-Client-Secret'] =
-                env.cloudflare.accessClientSecret;
+            headers['CF-Access-Client-Secret'] = env.cloudflare.accessClientSecret;
         }
 
         this.axiosInstance = axios.create({
@@ -77,10 +73,7 @@ export class GhostAPIClient {
     /**
      * 带重试机制的请求方法
      */
-    private async requestWithRetry<T>(
-        config: AxiosRequestConfig,
-        attempt: number = 1,
-    ): Promise<T> {
+    private async requestWithRetry<T>(config: AxiosRequestConfig, attempt: number = 1): Promise<T> {
         try {
             const response = await this.axiosInstance.request<T>(config);
             return response.data;
@@ -107,9 +100,7 @@ export class GhostAPIClient {
             if (!error.response) {
                 return true; // 网络错误
             }
-            return this.retryConfig.retryableStatuses.includes(
-                error.response.status,
-            );
+            return this.retryConfig.retryableStatuses.includes(error.response.status);
         }
 
         return false;
@@ -141,7 +132,7 @@ export class GhostAPIClient {
             },
             (error: unknown) => {
                 return Promise.reject(error);
-            },
+            }
         );
 
         // 响应拦截器 - 可用于统一处理响应
@@ -151,7 +142,7 @@ export class GhostAPIClient {
             },
             (error: unknown) => {
                 return Promise.reject(error);
-            },
+            }
         );
     }
 }

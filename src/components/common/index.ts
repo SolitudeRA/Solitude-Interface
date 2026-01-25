@@ -44,12 +44,7 @@ export {
 export { Switch } from './switch';
 
 // Tooltip
-export {
-    Tooltip,
-    TooltipTrigger,
-    TooltipContent,
-    TooltipProvider,
-} from './tooltip';
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './tooltip';
 
 // RSS Selector
 export { default as RssSelector } from './RssSelector';

@@ -3,13 +3,7 @@ import type { APIContext } from 'astro';
 import { listPostsByLocale } from '@api/ghost/posts';
 import { getSiteInformation } from '@api/ghost/settings';
 import type { Post } from '@api/ghost/types';
-import {
-    type Locale,
-    LOCALES,
-    isLocale,
-    extractI18nKey,
-    LOCALE_NAMES,
-} from '@lib/i18n';
+import { type Locale, LOCALES, isLocale, extractI18nKey, LOCALE_NAMES } from '@lib/i18n';
 import { SITE_URL } from 'astro:env/server';
 
 /**
@@ -41,10 +35,7 @@ export async function GET(context: APIContext) {
     ]);
 
     // 使用环境变量中的 SITE_URL，或者 context.site
-    const siteUrl = (SITE_URL || context.site?.toString() || '').replace(
-        /\/$/,
-        '',
-    );
+    const siteUrl = (SITE_URL || context.site?.toString() || '').replace(/\/$/, '');
     const languageName = LOCALE_NAMES[locale];
 
     if (!siteUrl) {
@@ -61,8 +52,7 @@ export async function GET(context: APIContext) {
             // 提取 i18n key 作为文章路径
             const i18nKey = extractI18nKey(post.tags);
             // 使用 i18n key 或者从 URL 提取 slug
-            const postSlug =
-                i18nKey || post.url.toString().split('/').filter(Boolean).pop();
+            const postSlug = i18nKey || post.url.toString().split('/').filter(Boolean).pop();
             const postPath = `/${locale}/p/${postSlug}`;
 
             return {

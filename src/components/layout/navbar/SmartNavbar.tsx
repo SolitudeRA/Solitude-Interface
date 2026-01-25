@@ -5,10 +5,7 @@ interface SmartNavbarProps {
     isFixed?: boolean;
 }
 
-export default function SmartNavbar({
-    children,
-    isFixed = false,
-}: SmartNavbarProps) {
+export default function SmartNavbar({ children, isFixed = false }: SmartNavbarProps) {
     const [isVisible, setIsVisible] = useState(true);
     const [isScrolled, setIsScrolled] = useState(false);
     const lastScrollY = useRef(0);
@@ -33,10 +30,7 @@ export default function SmartNavbar({
                         if (currentScrollY > scrollThreshold) {
                             setIsVisible(false);
                         }
-                    } else if (
-                        currentScrollY <
-                        lastScrollY.current - scrollDelta
-                    ) {
+                    } else if (currentScrollY < lastScrollY.current - scrollDelta) {
                         // 向上滚动时显示
                         setIsVisible(true);
                     }

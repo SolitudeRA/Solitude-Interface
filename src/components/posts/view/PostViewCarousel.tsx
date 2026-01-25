@@ -37,13 +37,11 @@ function getPostTypeIcon(postType: string): string {
 
 // 单个卡片组件
 function PostCard({ post, index, isOtherHovered, onHover }: PostCardProps) {
-    const hasImage =
-        post.feature_image && post.feature_image.toString().length > 0;
+    const hasImage = post.feature_image && post.feature_image.toString().length > 0;
 
     // 获取要显示的标签（最多3个）
     const displayTags = React.useMemo(() => {
-        if (!post.post_general_tags || post.post_general_tags.length === 0)
-            return [];
+        if (!post.post_general_tags || post.post_general_tags.length === 0) return [];
         return post.post_general_tags.slice(0, 3);
     }, [post.post_general_tags]);
 
@@ -59,7 +57,7 @@ function PostCard({ post, index, isOtherHovered, onHover }: PostCardProps) {
                 'w-64 sm:w-72 md:w-80 lg:w-[22rem]',
                 'aspect-[9/14] cursor-pointer',
                 'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-                'shadow-lg',
+                'shadow-lg'
             )}
             initial={{ opacity: 0, x: 50 }}
             animate={{
@@ -106,7 +104,7 @@ function PostCard({ post, index, isOtherHovered, onHover }: PostCardProps) {
                 className={cn(
                     'absolute inset-0',
                     'bg-gradient-to-t from-black/85 via-black/40 to-black/20',
-                    'dark:from-black/90 dark:via-black/50 dark:to-black/30',
+                    'dark:from-black/90 dark:via-black/50 dark:to-black/30'
                 )}
             />
 
@@ -148,16 +146,14 @@ function PostCard({ post, index, isOtherHovered, onHover }: PostCardProps) {
                         className={cn(
                             'text-xl leading-tight font-bold text-white',
                             'mb-3 line-clamp-2',
-                            'transition-colors group-hover:text-white/90',
+                            'transition-colors group-hover:text-white/90'
                         )}
                     >
                         {post.title}
                     </h3>
 
                     {/* 摘要 */}
-                    <p className="mb-4 line-clamp-3 text-sm text-white/80">
-                        {post.excerpt}
-                    </p>
+                    <p className="mb-4 line-clamp-3 text-sm text-white/80">{post.excerpt}</p>
 
                     {/* 底部：日期和标签 */}
                     <div className="space-y-2">
@@ -168,18 +164,16 @@ function PostCard({ post, index, isOtherHovered, onHover }: PostCardProps) {
                         {/* 标签 */}
                         {displayTags.length > 0 && (
                             <div className="flex flex-wrap gap-1.5">
-                                {displayTags.map(
-                                    (tagName: string, tagIndex: number) => (
-                                        <Chip
-                                            key={tagIndex}
-                                            variant="flat"
-                                            colorScheme="success"
-                                            className="bg-white/15 px-2 py-0.5 text-[10px] text-white backdrop-blur-sm"
-                                        >
-                                            {tagName}
-                                        </Chip>
-                                    ),
-                                )}
+                                {displayTags.map((tagName: string, tagIndex: number) => (
+                                    <Chip
+                                        key={tagIndex}
+                                        variant="flat"
+                                        colorScheme="success"
+                                        className="bg-white/15 px-2 py-0.5 text-[10px] text-white backdrop-blur-sm"
+                                    >
+                                        {tagName}
+                                    </Chip>
+                                ))}
                             </div>
                         )}
                     </div>
@@ -191,7 +185,7 @@ function PostCard({ post, index, isOtherHovered, onHover }: PostCardProps) {
                 className={cn(
                     'absolute inset-0 rounded-3xl',
                     'shadow-lg transition-shadow duration-300',
-                    'group-hover:shadow-2xl group-hover:shadow-black/30',
+                    'group-hover:shadow-2xl group-hover:shadow-black/30'
                 )}
             />
         </motion.a>
@@ -206,7 +200,7 @@ function SkeletonCard({ index }: { index: number }) {
                 'flex-shrink-0 overflow-hidden rounded-3xl',
                 'w-64 sm:w-72 md:w-80 lg:w-[22rem]',
                 'aspect-[9/14]',
-                'bg-muted animate-pulse',
+                'bg-muted animate-pulse'
             )}
             style={{ animationDelay: `${index * 100}ms` }}
         >
@@ -232,10 +226,7 @@ function SkeletonCard({ index }: { index: number }) {
 }
 
 // 主组件
-export default function PostViewCarousel({
-    posts,
-    className,
-}: PostViewCarouselProps) {
+export default function PostViewCarousel({ posts, className }: PostViewCarouselProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
@@ -280,8 +271,7 @@ export default function PostViewCarousel({
 
             // 判断是否在边界
             const atStart = scrollLeft <= 0 && e.deltaY < 0;
-            const atEnd =
-                scrollLeft >= scrollWidth - clientWidth && e.deltaY > 0;
+            const atEnd = scrollLeft >= scrollWidth - clientWidth && e.deltaY > 0;
 
             // 仅在可横向滚动且不在边界时拦截
             if (canScroll && !atStart && !atEnd) {
@@ -302,7 +292,7 @@ export default function PostViewCarousel({
                 });
             }
         },
-        [isHovering],
+        [isHovering]
     );
 
     // 滚动一屏
@@ -338,7 +328,7 @@ export default function PostViewCarousel({
                         className={cn(
                             'pointer-events-none absolute top-0 left-0 z-10',
                             'h-full w-32',
-                            'from-background via-background/40 bg-gradient-to-r to-transparent',
+                            'from-background via-background/40 bg-gradient-to-r to-transparent'
                         )}
                         style={{
                             maskImage:
@@ -361,7 +351,7 @@ export default function PostViewCarousel({
                         className={cn(
                             'pointer-events-none absolute top-0 right-0 z-10',
                             'h-full w-32',
-                            'from-background via-background/40 bg-gradient-to-l to-transparent',
+                            'from-background via-background/40 bg-gradient-to-l to-transparent'
                         )}
                         style={{
                             maskImage:
@@ -389,7 +379,7 @@ export default function PostViewCarousel({
                             'border-border border shadow-lg',
                             'hover:bg-background hover:scale-110',
                             'transition-all duration-200',
-                            'focus-visible:ring-ring focus:outline-none focus-visible:ring-2',
+                            'focus-visible:ring-ring focus:outline-none focus-visible:ring-2'
                         )}
                         aria-label="向左滚动"
                     >
@@ -414,7 +404,7 @@ export default function PostViewCarousel({
                             'border-border border shadow-lg',
                             'hover:bg-background hover:scale-110',
                             'transition-all duration-200',
-                            'focus-visible:ring-ring focus:outline-none focus-visible:ring-2',
+                            'focus-visible:ring-ring focus:outline-none focus-visible:ring-2'
                         )}
                         aria-label="向右滚动"
                     >
@@ -436,7 +426,7 @@ export default function PostViewCarousel({
                     '[-ms-overflow-style:none]',
                     '[scrollbar-width:none]',
                     // 触控优化
-                    'touch-pan-x',
+                    'touch-pan-x'
                 )}
                 role="list"
                 aria-label="文章列表"
@@ -446,9 +436,7 @@ export default function PostViewCarousel({
                         key={post.id}
                         post={post}
                         index={index}
-                        isOtherHovered={
-                            hoveredIndex !== null && hoveredIndex !== index
-                        }
+                        isOtherHovered={hoveredIndex !== null && hoveredIndex !== index}
                         onHover={setHoveredIndex}
                     />
                 ))}
@@ -461,12 +449,7 @@ export default function PostViewCarousel({
 export function PostViewCarouselSkeleton({ count = 5 }: { count?: number }) {
     return (
         <div className="relative h-[75vh] w-full">
-            <div
-                className={cn(
-                    'flex h-full items-center gap-6 overflow-hidden',
-                    'px-[5%] py-4',
-                )}
-            >
+            <div className={cn('flex h-full items-center gap-6 overflow-hidden', 'px-[5%] py-4')}>
                 {Array.from({ length: count }).map((_, index) => (
                     <SkeletonCard key={index} index={index} />
                 ))}

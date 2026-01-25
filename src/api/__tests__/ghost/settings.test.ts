@@ -68,7 +68,7 @@ describe('Settings API', () => {
 
             expect(cache.setCache).toHaveBeenCalledWith(
                 expect.stringContaining('site_information:'),
-                mockSiteInfo,
+                mockSiteInfo
             );
         });
 
@@ -111,27 +111,20 @@ describe('Settings API', () => {
             const result = await initializeSiteData();
 
             // coverImageUrl 可以是 URL 对象或 null
-            expect(
-                result.coverImageUrl === null ||
-                    result.coverImageUrl instanceof URL,
-            ).toBe(true);
+            expect(result.coverImageUrl === null || result.coverImageUrl instanceof URL).toBe(true);
         });
 
         it('should return default values on error', async () => {
             mockGet.mockRejectedValue(new Error('API Error'));
 
             // Mock console.error to suppress error output in tests
-            const consoleErrorSpy = vi
-                .spyOn(console, 'error')
-                .mockImplementation(() => {});
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
             const result = await initializeSiteData();
 
             // 检查返回了默认值
             expect(result.siteTitle).toBe('Solitude');
-            expect(result.siteDescription).toBe(
-                'Failed to initialize site data',
-            );
+            expect(result.siteDescription).toBe('Failed to initialize site data');
             expect(result.logoUrl).toBe('');
             expect(result.coverImageUrl).toBeNull();
 
@@ -142,9 +135,7 @@ describe('Settings API', () => {
             const error = new Error('Test Error');
             mockGet.mockRejectedValue(error);
 
-            const consoleErrorSpy = vi
-                .spyOn(console, 'error')
-                .mockImplementation(() => {});
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
             await initializeSiteData();
 

@@ -69,14 +69,8 @@ interface ShowcaseCardProps {
 }
 
 // 单个卡片组件
-function ShowcaseCard({
-    post,
-    index,
-    isOtherHovered,
-    onHover,
-}: ShowcaseCardProps) {
-    const hasImage =
-        post.feature_image && post.feature_image.toString().length > 0;
+function ShowcaseCard({ post, index, isOtherHovered, onHover }: ShowcaseCardProps) {
+    const hasImage = post.feature_image && post.feature_image.toString().length > 0;
 
     // 获取 type 配置
     const typeKey = post.post_type?.toLowerCase() || 'default';
@@ -84,8 +78,7 @@ function ShowcaseCard({
 
     // 获取 category 配置
     const categoryKey = post.post_category?.toLowerCase() || 'default';
-    const categoryConfig =
-        CATEGORY_CONFIG[categoryKey] ?? DEFAULT_CATEGORY_CONFIG;
+    const categoryConfig = CATEGORY_CONFIG[categoryKey] ?? DEFAULT_CATEGORY_CONFIG;
 
     return (
         <motion.a
@@ -106,7 +99,7 @@ function ShowcaseCard({
                 'hover:shadow-2xl hover:shadow-black/30',
 
                 // accessibility
-                'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+                'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
             )}
             initial={{ opacity: 0, y: 12 }}
             animate={{
@@ -176,10 +169,7 @@ function ShowcaseCard({
                         <Chip
                             variant="flat"
                             colorScheme={typeConfig.colorScheme}
-                            className={cn(
-                                'backdrop-blur-md',
-                                'border border-white/15 bg-white/10',
-                            )}
+                            className={cn('backdrop-blur-md', 'border border-white/15 bg-white/10')}
                         >
                             {post.post_type}
                         </Chip>
@@ -188,10 +178,7 @@ function ShowcaseCard({
                         <Chip
                             variant="flat"
                             colorScheme={categoryConfig.colorScheme}
-                            className={cn(
-                                'backdrop-blur-md',
-                                'border border-white/15 bg-white/10',
-                            )}
+                            className={cn('backdrop-blur-md', 'border border-white/15 bg-white/10')}
                         >
                             {post.post_category}
                         </Chip>
@@ -201,7 +188,7 @@ function ShowcaseCard({
                 <h3
                     className={cn(
                         'line-clamp-2 text-lg leading-tight font-bold',
-                        'drop-shadow-sm', // 让标题在复杂背景上更稳
+                        'drop-shadow-sm' // 让标题在复杂背景上更稳
                     )}
                     style={{ color: 'var(--post-view-card-title)' }}
                 >
@@ -220,7 +207,7 @@ function SkeletonCard({ index }: { index: number }) {
                 'flex-shrink-0 overflow-hidden rounded-xl',
                 'w-56 sm:w-64 md:w-72 lg:w-80',
                 'aspect-[16/11]',
-                'bg-muted animate-pulse',
+                'bg-muted animate-pulse'
             )}
             style={{ animationDelay: `${index * 100}ms` }}
         >
@@ -249,13 +236,7 @@ interface ViewMoreCardProps {
     locale: Locale;
 }
 
-function ViewMoreCard({
-    href,
-    index,
-    isOtherHovered,
-    onHover,
-    locale,
-}: ViewMoreCardProps) {
+function ViewMoreCard({ href, index, isOtherHovered, onHover, locale }: ViewMoreCardProps) {
     const viewAllText = getUIText('home', 'viewAllPosts', locale);
     const exploreMoreText = getUIText('home', 'exploreMore', locale);
 
@@ -270,7 +251,7 @@ function ViewMoreCard({
                 // 玻璃态效果：半透明边框 + 阴影 + 内高光
                 'border border-white/25 dark:border-white/15',
                 'shadow-lg shadow-black/20',
-                'ring-1 ring-white/10 ring-inset',
+                'ring-1 ring-white/10 ring-inset'
             )}
             initial={{ opacity: 0, x: 50 }}
             animate={{
@@ -308,7 +289,7 @@ function ViewMoreCard({
                 className={cn(
                     'absolute inset-0',
                     'bg-gradient-to-t from-black/60 via-black/20 to-transparent',
-                    'dark:from-black/70 dark:via-black/30',
+                    'dark:from-black/70 dark:via-black/30'
                 )}
             />
 
@@ -322,7 +303,7 @@ function ViewMoreCard({
                         'bg-white/20 backdrop-blur-sm',
                         'border border-white/30',
                         'transition-all duration-300',
-                        'group-hover:scale-110 group-hover:bg-white/30',
+                        'group-hover:scale-110 group-hover:bg-white/30'
                     )}
                     whileHover={{ rotate: 0 }}
                 >
@@ -334,7 +315,7 @@ function ViewMoreCard({
                     className={cn(
                         'text-lg leading-tight font-bold text-white',
                         'text-center',
-                        'transition-colors group-hover:text-white/90',
+                        'transition-colors group-hover:text-white/90'
                     )}
                 >
                     {viewAllText}
@@ -347,7 +328,7 @@ function ViewMoreCard({
                 className={cn(
                     'absolute inset-0 rounded-2xl',
                     'shadow-lg transition-shadow duration-300',
-                    'group-hover:shadow-2xl group-hover:shadow-black/30',
+                    'group-hover:shadow-2xl group-hover:shadow-black/30'
                 )}
             />
         </motion.a>
@@ -406,8 +387,7 @@ export default function PostsShowcaseCarousel({
 
             // 判断是否在边界
             const atStart = scrollLeft <= 0 && e.deltaY < 0;
-            const atEnd =
-                scrollLeft >= scrollWidth - clientWidth && e.deltaY > 0;
+            const atEnd = scrollLeft >= scrollWidth - clientWidth && e.deltaY > 0;
 
             // 仅在可横向滚动且不在边界时拦截
             if (canScroll && !atStart && !atEnd) {
@@ -428,7 +408,7 @@ export default function PostsShowcaseCarousel({
                 });
             }
         },
-        [isHovering],
+        [isHovering]
     );
 
     // 滚动一屏
@@ -464,7 +444,7 @@ export default function PostsShowcaseCarousel({
                         className={cn(
                             'pointer-events-none absolute top-0 left-0 z-10',
                             'h-full w-24',
-                            'from-background via-background/40 bg-gradient-to-r to-transparent',
+                            'from-background via-background/40 bg-gradient-to-r to-transparent'
                         )}
                         style={{
                             maskImage:
@@ -487,7 +467,7 @@ export default function PostsShowcaseCarousel({
                         className={cn(
                             'pointer-events-none absolute top-0 right-0 z-10',
                             'h-full w-24',
-                            'from-background via-background/40 bg-gradient-to-l to-transparent',
+                            'from-background via-background/40 bg-gradient-to-l to-transparent'
                         )}
                         style={{
                             maskImage:
@@ -515,7 +495,7 @@ export default function PostsShowcaseCarousel({
                             'border-border border shadow-lg',
                             'hover:bg-background hover:scale-110',
                             'transition-all duration-200',
-                            'focus-visible:ring-ring focus:outline-none focus-visible:ring-2',
+                            'focus-visible:ring-ring focus:outline-none focus-visible:ring-2'
                         )}
                         aria-label="向左滚动"
                     >
@@ -540,7 +520,7 @@ export default function PostsShowcaseCarousel({
                             'border-border border shadow-lg',
                             'hover:bg-background hover:scale-110',
                             'transition-all duration-200',
-                            'focus-visible:ring-ring focus:outline-none focus-visible:ring-2',
+                            'focus-visible:ring-ring focus:outline-none focus-visible:ring-2'
                         )}
                         aria-label="向右滚动"
                     >
@@ -562,7 +542,7 @@ export default function PostsShowcaseCarousel({
                     '[-ms-overflow-style:none]',
                     '[scrollbar-width:none]',
                     // 触控优化
-                    'touch-pan-x',
+                    'touch-pan-x'
                 )}
                 style={{
                     maskImage: `
@@ -581,9 +561,7 @@ export default function PostsShowcaseCarousel({
                         key={post.id}
                         post={post}
                         index={index}
-                        isOtherHovered={
-                            hoveredIndex !== null && hoveredIndex !== index
-                        }
+                        isOtherHovered={hoveredIndex !== null && hoveredIndex !== index}
                         onHover={setHoveredIndex}
                     />
                 ))}
@@ -592,10 +570,7 @@ export default function PostsShowcaseCarousel({
                     <ViewMoreCard
                         href={postsPageUrl}
                         index={posts.length}
-                        isOtherHovered={
-                            hoveredIndex !== null &&
-                            hoveredIndex !== posts.length
-                        }
+                        isOtherHovered={hoveredIndex !== null && hoveredIndex !== posts.length}
                         onHover={setHoveredIndex}
                         locale={locale}
                     />

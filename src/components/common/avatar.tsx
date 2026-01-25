@@ -22,10 +22,7 @@ function Avatar({
     return (
         <div
             data-slot="avatar"
-            className={cn(
-                'relative flex shrink-0 overflow-hidden rounded-full',
-                className,
-            )}
+            className={cn('relative flex shrink-0 overflow-hidden rounded-full', className)}
             {...props}
         >
             {src && !imageError ? (

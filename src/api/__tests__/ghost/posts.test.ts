@@ -154,7 +154,7 @@ describe('Posts API', () => {
 
             expect(cache.setCache).toHaveBeenCalledWith(
                 'featured_posts:10:id,title,url,feature_image,primary_tag,published_at:tags',
-                expect.any(Array),
+                expect.any(Array)
             );
         });
 
@@ -269,10 +269,7 @@ describe('Posts API', () => {
 
             await getPosts('tags');
 
-            expect(cache.setCache).toHaveBeenCalledWith(
-                'all_posts:tags',
-                expect.any(Array),
-            );
+            expect(cache.setCache).toHaveBeenCalledWith('all_posts:tags', expect.any(Array));
         });
 
         it('should preserve all post fields', async () => {

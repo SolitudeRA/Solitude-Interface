@@ -68,7 +68,7 @@ export const UI_TEXTS = {
 export function getUIText<S extends keyof typeof UI_TEXTS>(
     section: S,
     key: keyof (typeof UI_TEXTS)[S],
-    locale: Locale,
+    locale: Locale
 ): string {
     const texts = UI_TEXTS[section][key] as Record<Locale, string>;
     return texts[locale] ?? texts[DEFAULT_LOCALE];
@@ -123,9 +123,7 @@ export function extractI18nKeyFromTagSlug(slug: string): string | null {
 /**
  * 从文章的 tags 数组中提取语言代码
  */
-export function extractLocaleFromTags(
-    tags: PostTag[] | undefined,
-): Locale | null {
+export function extractLocaleFromTags(tags: PostTag[] | undefined): Locale | null {
     if (!tags?.length) {
         return null;
     }
@@ -184,7 +182,7 @@ export interface AlternateLink {
 export function generateAlternateLinks(
     siteUrl: string,
     path: string,
-    availableLocales: readonly Locale[],
+    availableLocales: readonly Locale[]
 ): AlternateLink[] {
     const links: AlternateLink[] = [];
 
@@ -209,10 +207,7 @@ export function generateAlternateLinks(
 /**
  * 获取 fallback 提示消息
  */
-export function getFallbackMessage(
-    requestedLocale: Locale,
-    displayedLocale: Locale,
-): string {
+export function getFallbackMessage(requestedLocale: Locale, displayedLocale: Locale): string {
     const messages: Record<Locale, Record<Locale, string>> = {
         zh: {
             zh: '',
@@ -238,9 +233,7 @@ export function getFallbackMessage(
 /**
  * 多语言文章过滤结果
  */
-export interface LocalizedPost<
-    T extends { tags?: PostTag[]; published_at: string },
-> {
+export interface LocalizedPost<T extends { tags?: PostTag[]; published_at: string }> {
     post: T;
     locale: Locale | null;
     i18nKey: string | null;
@@ -260,9 +253,10 @@ export interface LocalizedPost<
  * @param currentLocale 当前语言
  * @returns 过滤后的文章列表（带有 fallback 标记）
  */
-export function filterPostsByLocale<
-    T extends { tags?: PostTag[]; published_at: string },
->(posts: T[], currentLocale: Locale): LocalizedPost<T>[] {
+export function filterPostsByLocale<T extends { tags?: PostTag[]; published_at: string }>(
+    posts: T[],
+    currentLocale: Locale
+): LocalizedPost<T>[] {
     // 按 i18n key 分组文章
     const i18nGroups = new Map<string, T[]>();
     const standalonePostsCurrentLocale: T[] = [];
@@ -295,7 +289,7 @@ export function filterPostsByLocale<
     for (const [i18nKey, groupPosts] of i18nGroups) {
         // 先找当前语言版本
         const currentLocalePost = groupPosts.find(
-            (p) => extractLocaleFromTags(p.tags) === currentLocale,
+            (p) => extractLocaleFromTags(p.tags) === currentLocale
         );
 
         if (currentLocalePost) {
@@ -308,9 +302,7 @@ export function filterPostsByLocale<
         } else {
             // 没有当前语言版本，选择第一个可用的版本（按发布日期最新的）
             const sortedGroupPosts = [...groupPosts].sort(
-                (a, b) =>
-                    new Date(b.published_at).getTime() -
-                    new Date(a.published_at).getTime(),
+                (a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
             );
             const fallbackPost = sortedGroupPosts[0];
             if (fallbackPost) {
@@ -346,9 +338,7 @@ export function filterPostsByLocale<
 
     // 按发布日期排序（最新的在前）
     result.sort(
-        (a, b) =>
-            new Date(b.post.published_at).getTime() -
-            new Date(a.post.published_at).getTime(),
+        (a, b) => new Date(b.post.published_at).getTime() - new Date(a.post.published_at).getTime()
     );
 
     return result;

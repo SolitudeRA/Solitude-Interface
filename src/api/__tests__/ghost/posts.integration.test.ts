@@ -53,9 +53,7 @@ describe('Posts API Integration Tests', () => {
             const posts = await getHighlightPosts(5);
 
             // 查找有标签的文章
-            const postWithTags = posts.find(
-                (post) => post.tags && post.tags.length > 0,
-            );
+            const postWithTags = posts.find((post) => post.tags && post.tags.length > 0);
 
             if (postWithTags) {
                 // 验证 post_type 提取（type- 前缀）
@@ -69,9 +67,7 @@ describe('Posts API Integration Tests', () => {
 
                 // 验证一般标签过滤（应该过滤掉特殊前缀的标签）
                 if (postWithTags.post_general_tags) {
-                    expect(Array.isArray(postWithTags.post_general_tags)).toBe(
-                        true,
-                    );
+                    expect(Array.isArray(postWithTags.post_general_tags)).toBe(true);
                     // 确保一般标签中没有特殊前缀
                     postWithTags.post_general_tags.forEach((tag) => {
                         expect(tag).not.toMatch(/^type-/);
@@ -201,9 +197,7 @@ describe('Posts API Integration Tests', () => {
             const posts = await getPosts();
 
             // 查找有 HTML 内容的文章
-            const postWithHtml = posts.find(
-                (post) => post.html && post.html.length > 0,
-            );
+            const postWithHtml = posts.find((post) => post.html && post.html.length > 0);
 
             if (postWithHtml) {
                 expect(typeof postWithHtml.html).toBe('string');
@@ -217,9 +211,7 @@ describe('Posts API Integration Tests', () => {
             const posts = await getPosts();
 
             // 查找有摘要的文章
-            const postWithExcerpt = posts.find(
-                (post) => post.excerpt && post.excerpt.length > 0,
-            );
+            const postWithExcerpt = posts.find((post) => post.excerpt && post.excerpt.length > 0);
 
             if (postWithExcerpt) {
                 expect(typeof postWithExcerpt.excerpt).toBe('string');

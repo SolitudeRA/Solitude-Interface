@@ -13,20 +13,14 @@ const enabled = import.meta.env.PROD && isValidGAId;
 
 // 开发环境下警告无效的 GA ID
 if (import.meta.env.DEV && id && !isValidGAId) {
-    console.warn(
-        `[GoogleAnalytics] Invalid GA4 ID format: "${id}". Expected format: G-XXXXXXXXXX`,
-    );
+    console.warn(`[GoogleAnalytics] Invalid GA4 ID format: "${id}". Expected format: G-XXXXXXXXXX`);
 }
 ---
 
 {
     enabled && (
         <>
-            <script
-                is:inline
-                async
-                src={`https://www.googletagmanager.com/gtag/js?id=${id}`}
-            />
+            <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${id}`} />
             <script is:inline define:vars={{ id }}>
                 window.dataLayer = window.dataLayer || []; function gtag()
                 {dataLayer.push(arguments)}

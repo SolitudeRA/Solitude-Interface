@@ -67,10 +67,7 @@ interface RssSelectorProps {
     showLabel?: boolean;
 }
 
-export default function RssSelector({
-    className,
-    showLabel = true,
-}: RssSelectorProps) {
+export default function RssSelector({ className, showLabel = true }: RssSelectorProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [currentLocale, setCurrentLocale] = useState<Locale>(DEFAULT_LOCALE);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -83,17 +80,13 @@ export default function RssSelector({
     // 点击外部关闭下拉菜单
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target as Node)
-            ) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
             }
         }
 
         document.addEventListener('mousedown', handleClickOutside);
-        return () =>
-            document.removeEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     // 键盘导航支持
@@ -141,7 +134,7 @@ export default function RssSelector({
                 onKeyDown={handleKeyDown}
                 className={cn(
                     'text-xs font-medium whitespace-nowrap md:text-sm lg:text-base',
-                    'dock-nav-link',
+                    'dock-nav-link'
                 )}
                 aria-label="订阅 RSS"
                 aria-expanded={isOpen}
@@ -161,7 +154,7 @@ export default function RssSelector({
                         'border-border border',
                         'shadow-lg shadow-black/10',
                         'py-1.5',
-                        'animate-in fade-in-0 zoom-in-95 duration-150',
+                        'animate-in fade-in-0 zoom-in-95 duration-150'
                     )}
                     role="listbox"
                     aria-label="选择 RSS 订阅源"
@@ -176,21 +169,15 @@ export default function RssSelector({
                                 'transition-colors duration-150',
                                 option.isCurrent
                                     ? 'bg-primary/10 text-primary'
-                                    : 'text-foreground/80 hover:bg-muted/50 hover:text-foreground',
+                                    : 'text-foreground/80 hover:bg-muted/50 hover:text-foreground'
                             )}
                             role="option"
                             aria-selected={option.isCurrent}
                         >
-                            <span className="text-base leading-none">
-                                {option.flag}
-                            </span>
-                            <span className="flex-1 font-medium">
-                                {option.label}
-                            </span>
+                            <span className="text-base leading-none">{option.flag}</span>
+                            <span className="flex-1 font-medium">{option.label}</span>
                             {option.isCurrent && (
-                                <span className="text-primary text-xs">
-                                    {currentText}
-                                </span>
+                                <span className="text-primary text-xs">{currentText}</span>
                             )}
                         </button>
                     ))}

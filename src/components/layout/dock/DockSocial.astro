@@ -1,13 +1,7 @@
 ---
 import { Avatar } from '@components/common/avatar';
 import DockSocialMobile from './DockSocialMobile.tsx';
-import {
-    FaGithub,
-    FaSquareXTwitter,
-    FaSteam,
-    FaSpotify,
-    FaBilibili,
-} from 'react-icons/fa6';
+import { FaGithub, FaSquareXTwitter, FaSteam, FaSpotify, FaBilibili } from 'react-icons/fa6';
 import solitudeAvatar from '@assets/avatar.jpg';
 import { type Locale, DEFAULT_LOCALE, buildLocalePath } from '@lib/i18n';
 
@@ -19,13 +13,7 @@ const { lang = DEFAULT_LOCALE } = Astro.props;
 const aboutUrl = buildLocalePath(lang, '/about');
 ---
 
-<div
-    class:list={[
-        'text-color-ui flex items-center',
-        'min-h-[4em] 2xl:min-h-[5em]',
-        'justify-end',
-    ]}
->
+<div class:list={['text-color-ui flex items-center', 'min-h-[4em] 2xl:min-h-[5em]', 'justify-end']}>
     <!-- 移动端、平板、小桌面：社交链接汉堡菜单（<1536px） -->
     <div class="flex items-center gap-3 sm:gap-4 2xl:hidden">
         <DockSocialMobile client:load />
@@ -41,13 +29,7 @@ const aboutUrl = buildLocalePath(lang, '/about');
 
     <!-- 大屏桌面端：完整社交图标展示（≥1536px） -->
     <div class="hidden items-center 2xl:flex">
-        <div
-            class:list={[
-                'flex items-center',
-                '3xl:mr-14 mr-12',
-                '3xl:space-x-12 space-x-10',
-            ]}
-        >
+        <div class:list={['flex items-center', '3xl:mr-14 mr-12', '3xl:space-x-12 space-x-10']}>
             <span>
                 <a
                     href="https://github.com/SolitudeRA"

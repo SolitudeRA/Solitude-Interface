@@ -51,7 +51,7 @@ describe('Ghost Adapters', () => {
             const adapted = adaptGhostPost(mockPost);
 
             expect(adapted.url.toString()).toBe(
-                'https://test-site.example.com/posts/test-post-123',
+                'https://test-site.example.com/posts/test-post-123'
             );
         });
 
@@ -143,15 +143,10 @@ describe('Ghost Adapters', () => {
 
             const adapted = adaptGhostPost(mockPost);
 
-            expect(adapted.post_general_tags).toEqual([
-                'JavaScript',
-                'TypeScript',
-            ]);
+            expect(adapted.post_general_tags).toEqual(['JavaScript', 'TypeScript']);
             expect(adapted.post_general_tags).not.toContain('Article');
             expect(adapted.post_general_tags).not.toContain('Technology');
-            expect(adapted.post_general_tags).not.toContain(
-                'Web Development Series',
-            );
+            expect(adapted.post_general_tags).not.toContain('Web Development Series');
         });
 
         it('should use default values when tags do not exist', () => {

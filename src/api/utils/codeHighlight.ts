@@ -1,9 +1,4 @@
-import {
-    codeToHtml,
-    bundledLanguages,
-    type BundledLanguage,
-    type SpecialLanguage,
-} from 'shiki';
+import { codeToHtml, bundledLanguages, type BundledLanguage, type SpecialLanguage } from 'shiki';
 
 type SupportedLanguage = BundledLanguage | SpecialLanguage;
 
@@ -90,10 +85,7 @@ function decodeHtmlEntities(text: string): string {
         '&nbsp;': ' ',
     };
 
-    return text.replace(
-        /&(?:lt|gt|amp|quot|#39|#x27|nbsp);/g,
-        (match) => entities[match] || match,
-    );
+    return text.replace(/&(?:lt|gt|amp|quot|#39|#x27|nbsp);/g, (match) => entities[match] || match);
 }
 
 /**
@@ -101,10 +93,7 @@ function decodeHtmlEntities(text: string): string {
  */
 function isSupportedLanguage(lang: string): boolean {
     const normalizedLang = lang.toLowerCase();
-    return (
-        SUPPORTED_LANGUAGES.has(normalizedLang) &&
-        normalizedLang in bundledLanguages
-    );
+    return SUPPORTED_LANGUAGES.has(normalizedLang) && normalizedLang in bundledLanguages;
 }
 
 /**
@@ -142,10 +131,7 @@ function getValidLanguage(lang: string): SupportedLanguage {
 /**
  * 高亮单个代码块
  */
-async function highlightCode(
-    code: string,
-    lang: string,
-): Promise<string | null> {
+async function highlightCode(code: string, lang: string): Promise<string | null> {
     try {
         const validLang = getValidLanguage(lang);
         const decodedCode = decodeHtmlEntities(code);
@@ -210,7 +196,7 @@ export async function highlightCodeBlocks(html: string): Promise<string> {
 
     // 并行处理所有代码块
     const highlightedResults = await Promise.all(
-        matches.map(async ({ lang, code }) => highlightCode(code, lang)),
+        matches.map(async ({ lang, code }) => highlightCode(code, lang))
     );
 
     // 从后向前替换（避免索引偏移问题）
@@ -224,7 +210,7 @@ export async function highlightCodeBlocks(html: string): Promise<string> {
             // 添加标记 class 表示已高亮
             const enhancedHtml = highlighted.replace(
                 '<pre',
-                `<pre data-language="${lang}" data-highlighted="shiki"`,
+                `<pre data-language="${lang}" data-highlighted="shiki"`
             );
             result = result.replace(fullMatch, enhancedHtml);
         }

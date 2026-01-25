@@ -34,12 +34,7 @@ interface ComponentNameProps {
 // 组件实现
 // ============================================================
 
-export default function ComponentName({
-    title,
-    children,
-    className,
-    onClick,
-}: ComponentNameProps) {
+export default function ComponentName({ title, children, className, onClick }: ComponentNameProps) {
     // 状态管理
     const [isActive, setIsActive] = useState(false);
 
@@ -57,7 +52,7 @@ export default function ComponentName({
                 // 条件样式
                 isActive && 'border-primary bg-primary/10',
                 // 外部传入的类名
-                className,
+                className
             )}
             onClick={handleClick}
             role="button"
@@ -78,8 +73,6 @@ interface ComponentNameItemProps {
     label: string;
 }
 
-ComponentName.Item = function ComponentNameItem({
-    label,
-}: ComponentNameItemProps) {
+ComponentName.Item = function ComponentNameItem({ label }: ComponentNameItemProps) {
     return <span className="text-muted-foreground text-sm">{label}</span>;
 };

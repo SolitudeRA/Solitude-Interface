@@ -22,9 +22,7 @@ import { DEFAULT_LOCALE, LOCALES } from '@lib/i18n';
         <script is:inline define:vars={{ DEFAULT_LOCALE, LOCALES }}>
             (function () {
                 // 获取浏览器语言设置
-                const browserLangs = navigator.languages || [
-                    navigator.language,
-                ];
+                const browserLangs = navigator.languages || [navigator.language];
 
                 // 查找匹配的语言
                 let targetLocale = DEFAULT_LOCALE;
@@ -43,9 +41,7 @@ import { DEFAULT_LOCALE, LOCALES } from '@lib/i18n';
         </script>
         <noscript>
             <p>
-                Redirecting to <a href={`/${DEFAULT_LOCALE}/`}
-                    >/{DEFAULT_LOCALE}/</a
-                >...
+                Redirecting to <a href={`/${DEFAULT_LOCALE}/`}>/{DEFAULT_LOCALE}/</a>...
             </p>
         </noscript>
     </body>

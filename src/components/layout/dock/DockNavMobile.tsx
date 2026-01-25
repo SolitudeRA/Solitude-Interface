@@ -114,7 +114,7 @@ export default function DockNavMobile() {
                 flag: LOCALE_FLAGS[locale],
             })),
         ],
-        [allLanguagesText],
+        [allLanguagesText]
     );
 
     // 根据当前语言构建导航链接
@@ -156,7 +156,7 @@ export default function DockNavMobile() {
             window.open(href, '_blank', 'noopener,noreferrer');
             closeMenu();
         },
-        [closeMenu],
+        [closeMenu]
     );
 
     // 按ESC键关闭菜单
@@ -190,7 +190,7 @@ export default function DockNavMobile() {
                 className={cn(
                     'dock-button',
                     'text-color-ui flex h-12 w-12 items-center justify-center',
-                    isOpen && 'dock-button--active',
+                    isOpen && 'dock-button--active'
                 )}
                 aria-label={isOpen ? '关闭菜单' : '打开菜单'}
                 aria-expanded={isOpen}
@@ -206,9 +206,7 @@ export default function DockNavMobile() {
             <div
                 className={cn(
                     'dock-overlay fixed inset-0 z-40 transition-opacity duration-300',
-                    isOpen
-                        ? 'pointer-events-auto opacity-100'
-                        : 'pointer-events-none opacity-0',
+                    isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
                 )}
                 onClick={closeMenu}
                 aria-hidden="true"
@@ -223,7 +221,7 @@ export default function DockNavMobile() {
                     'max-h-[70vh] overflow-y-auto',
                     isOpen
                         ? 'translate-y-0 scale-100 opacity-100'
-                        : 'pointer-events-none translate-y-4 scale-95 opacity-0',
+                        : 'pointer-events-none translate-y-4 scale-95 opacity-0'
                 )}
                 role="navigation"
                 aria-label="移动端导航菜单"
@@ -238,15 +236,13 @@ export default function DockNavMobile() {
                                     className={cn(
                                         'dock-menu-item',
                                         'text-color-ui flex w-full items-center justify-between',
-                                        isRssExpanded &&
-                                            'dock-menu-item--active',
+                                        isRssExpanded && 'dock-menu-item--active'
                                     )}
                                     aria-expanded={isRssExpanded}
                                     style={
                                         isRssExpanded
                                             ? {
-                                                  background:
-                                                      'var(--dock-menu-item-hover-bg)',
+                                                  background: 'var(--dock-menu-item-hover-bg)',
                                               }
                                             : undefined
                                     }
@@ -255,7 +251,7 @@ export default function DockNavMobile() {
                                     <ChevronDown
                                         className={cn(
                                             'h-4 w-4 transition-transform duration-200',
-                                            isRssExpanded && 'rotate-180',
+                                            isRssExpanded && 'rotate-180'
                                         )}
                                     />
                                 </button>
@@ -264,34 +260,25 @@ export default function DockNavMobile() {
                                 <div
                                     className={cn(
                                         'overflow-hidden transition-all duration-200',
-                                        isRssExpanded
-                                            ? 'max-h-60 opacity-100'
-                                            : 'max-h-0 opacity-0',
+                                        isRssExpanded ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'
                                     )}
                                 >
                                     <div className="mt-1 ml-4 flex flex-col gap-1">
                                         {rssOptions.map((option) => (
                                             <button
                                                 key={option.id}
-                                                onClick={() =>
-                                                    handleRssOptionClick(
-                                                        option.href,
-                                                    )
-                                                }
+                                                onClick={() => handleRssOptionClick(option.href)}
                                                 className={cn(
                                                     'dock-menu-subitem',
                                                     'text-color-ui flex items-center gap-2',
                                                     option.id === currentLocale
                                                         ? 'bg-primary/10 text-primary'
-                                                        : '',
+                                                        : ''
                                                 )}
                                             >
-                                                <span className="text-base">
-                                                    {option.flag}
-                                                </span>
+                                                <span className="text-base">{option.flag}</span>
                                                 <span>{option.label}</span>
-                                                {option.id ===
-                                                    currentLocale && (
+                                                {option.id === currentLocale && (
                                                     <span className="text-primary ml-auto text-xs">
                                                         {currentText}
                                                     </span>
@@ -306,14 +293,11 @@ export default function DockNavMobile() {
                                 key={item.label}
                                 href={item.href}
                                 onClick={closeMenu}
-                                className={cn(
-                                    'dock-menu-item',
-                                    'text-color-ui block',
-                                )}
+                                className={cn('dock-menu-item', 'text-color-ui block')}
                             >
                                 {item.label}
                             </a>
-                        ),
+                        )
                     )}
                 </nav>
             </div>

@@ -143,12 +143,7 @@ const { lang, post } = Astro.props;
 import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
 import { getPosts } from '@api/ghost/posts';
-import {
-    LOCALES,
-    type Locale,
-    filterPostsByLocale,
-    buildPostPath,
-} from '@lib/i18n';
+import { LOCALES, type Locale, filterPostsByLocale, buildPostPath } from '@lib/i18n';
 
 export async function getStaticPaths() {
     return LOCALES.map((lang) => ({

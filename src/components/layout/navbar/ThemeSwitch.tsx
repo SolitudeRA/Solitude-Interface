@@ -37,7 +37,7 @@ export default function ThemeSwitch() {
                 'shadow-md hover:shadow-lg',
                 'data-[state=checked]:bg-amber-100 data-[state=unchecked]:bg-neutral-900',
                 'data-[state=checked]:border-amber-300 data-[state=unchecked]:border-neutral-700',
-                'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
             )}
         >
             <SwitchPrimitive.Thumb
@@ -46,7 +46,7 @@ export default function ThemeSwitch() {
                     'shadow-lg transition-all duration-300',
                     'data-[state=checked]:translate-x-7 data-[state=unchecked]:translate-x-1',
                     'data-[state=checked]:bg-amber-400 data-[state=unchecked]:bg-neutral-600',
-                    'data-[state=checked]:shadow-amber-300/50 data-[state=unchecked]:shadow-black/50',
+                    'data-[state=checked]:shadow-amber-300/50 data-[state=unchecked]:shadow-black/50'
                 )}
             >
                 {isLightMode ? (

@@ -92,22 +92,17 @@ export default function DockTimelineContainer({
             // 同时调用回调（如果有）
             onScrollToPost?.(index);
         },
-        [setScrollToPost, onScrollToPost],
+        [setScrollToPost, onScrollToPost]
     );
 
     // 获取当前可见的文章信息，用于构建时间线
     const timelineSegments = useMemo<TimelineSegment[]>(() => {
         // 优先使用 atom 中的日期数据，fallback 到 props
-        const dates =
-            postDates.length > 0
-                ? postDates
-                : posts.map((p) => p.published_at || '');
+        const dates = postDates.length > 0 ? postDates : posts.map((p) => p.published_at || '');
 
         // 获取可见文章的索引（如果没有，使用前5个）
         const indices =
-            visibleIndices.length > 0
-                ? visibleIndices
-                : posts.slice(0, 5).map((_, i) => i);
+            visibleIndices.length > 0 ? visibleIndices : posts.slice(0, 5).map((_, i) => i);
 
         const segments: TimelineSegment[] = [];
 
@@ -115,8 +110,7 @@ export default function DockTimelineContainer({
             const postIndex = indices[i];
             if (postIndex === undefined) continue;
 
-            const dateString =
-                dates[postIndex] || posts[postIndex]?.published_at || null;
+            const dateString = dates[postIndex] || posts[postIndex]?.published_at || null;
             const dateLabel = formatDateLabel(dateString);
             const date = dateString ? new Date(dateString) : new Date();
 
@@ -125,8 +119,7 @@ export default function DockTimelineContainer({
             if (i < indices.length - 1) {
                 const nextIndex = indices[i + 1];
                 if (nextIndex !== undefined) {
-                    const nextDateString =
-                        dates[nextIndex] || posts[nextIndex]?.published_at;
+                    const nextDateString = dates[nextIndex] || posts[nextIndex]?.published_at;
                     if (nextDateString && dateString) {
                         const nextDate = new Date(nextDateString);
                         const daysDiff = calculateDaysBetween(date, nextDate);
@@ -148,21 +141,14 @@ export default function DockTimelineContainer({
 
     // 找出当前活动文章在可见段中的位置
     const activeSegmentIndex = useMemo(() => {
-        return timelineSegments.findIndex(
-            (seg) => seg.postIndex === activeIndex,
-        );
+        return timelineSegments.findIndex((seg) => seg.postIndex === activeIndex);
     }, [timelineSegments, activeIndex]);
 
     // 计算边界刻度数量（基于边界文章的时间差）
     const boundaryTickCounts = useMemo(() => {
-        const dates =
-            postDates.length > 0
-                ? postDates
-                : posts.map((p) => p.published_at || '');
+        const dates = postDates.length > 0 ? postDates : posts.map((p) => p.published_at || '');
         const indices =
-            visibleIndices.length > 0
-                ? visibleIndices
-                : posts.slice(0, 5).map((_, i) => i);
+            visibleIndices.length > 0 ? visibleIndices : posts.slice(0, 5).map((_, i) => i);
 
         let leftCount = 0;
         let rightCount = 0;
@@ -173,14 +159,12 @@ export default function DockTimelineContainer({
             if (firstVisibleIndex !== undefined && firstVisibleIndex > 0) {
                 const prevIndex = firstVisibleIndex - 1;
                 const firstDateStr =
-                    dates[firstVisibleIndex] ||
-                    posts[firstVisibleIndex]?.published_at;
-                const prevDateStr =
-                    dates[prevIndex] || posts[prevIndex]?.published_at;
+                    dates[firstVisibleIndex] || posts[firstVisibleIndex]?.published_at;
+                const prevDateStr = dates[prevIndex] || posts[prevIndex]?.published_at;
                 if (firstDateStr && prevDateStr) {
                     const daysDiff = calculateDaysBetween(
                         new Date(firstDateStr),
-                        new Date(prevDateStr),
+                        new Date(prevDateStr)
                     );
                     leftCount = calculateSubTickCount(daysDiff);
                 }
@@ -190,20 +174,15 @@ export default function DockTimelineContainer({
         // 计算右边界刻度数（最后一个可见文章与之后一篇文章的时间差）
         if (indices.length > 0) {
             const lastVisibleIndex = indices[indices.length - 1];
-            if (
-                lastVisibleIndex !== undefined &&
-                lastVisibleIndex < posts.length - 1
-            ) {
+            if (lastVisibleIndex !== undefined && lastVisibleIndex < posts.length - 1) {
                 const nextIndex = lastVisibleIndex + 1;
                 const lastDateStr =
-                    dates[lastVisibleIndex] ||
-                    posts[lastVisibleIndex]?.published_at;
-                const nextDateStr =
-                    dates[nextIndex] || posts[nextIndex]?.published_at;
+                    dates[lastVisibleIndex] || posts[lastVisibleIndex]?.published_at;
+                const nextDateStr = dates[nextIndex] || posts[nextIndex]?.published_at;
                 if (lastDateStr && nextDateStr) {
                     const daysDiff = calculateDaysBetween(
                         new Date(lastDateStr),
-                        new Date(nextDateStr),
+                        new Date(nextDateStr)
                     );
                     rightCount = calculateSubTickCount(daysDiff);
                 }
@@ -232,8 +211,7 @@ export default function DockTimelineContainer({
             const isActive = segment.postIndex === activeIndex;
             const isInActiveRange =
                 activeSegmentIndex !== -1 &&
-                (segIndex === activeSegmentIndex ||
-                    segIndex === activeSegmentIndex - 1);
+                (segIndex === activeSegmentIndex || segIndex === activeSegmentIndex - 1);
 
             // 记录活动刻度位置
             if (isActive) {
@@ -317,7 +295,7 @@ export default function DockTimelineContainer({
                 setHoverIndex(null);
             }
         },
-        [ticksData.length, offsetX],
+        [ticksData.length, offsetX]
     );
 
     const handleMouseLeave = useCallback(() => {
@@ -346,16 +324,13 @@ export default function DockTimelineContainer({
                 if (tick) {
                     if (tick.type === 'main' && tick.postIndex !== undefined) {
                         handleScrollToPost(tick.postIndex);
-                    } else if (
-                        tick.type === 'sub' &&
-                        tick.nextPostIndex !== undefined
-                    ) {
+                    } else if (tick.type === 'sub' && tick.nextPostIndex !== undefined) {
                         handleScrollToPost(tick.nextPostIndex);
                     }
                 }
             }
         },
-        [ticksData, offsetX, handleScrollToPost],
+        [ticksData, offsetX, handleScrollToPost]
     );
 
     // 根据与hover位置的距离计算刻度的放大比例
@@ -375,7 +350,7 @@ export default function DockTimelineContainer({
 
             return { height: heightScale, gap: gapScale };
         },
-        [hoverIndex],
+        [hoverIndex]
     );
 
     return (
@@ -408,18 +383,13 @@ export default function DockTimelineContainer({
                                     className={cn(
                                         'w-1 rounded-full transition-all duration-150 ease-out',
                                         'focus-visible:ring-foreground/50 focus:outline-none focus-visible:ring-2',
-                                        tick.isActive
-                                            ? 'bg-foreground/90'
-                                            : 'bg-foreground/60',
+                                        tick.isActive ? 'bg-foreground/90' : 'bg-foreground/60'
                                     )}
                                     style={{
                                         height: scaledHeight,
-                                        marginLeft:
-                                            index > 0 ? scaledGap / 2 : 0,
+                                        marginLeft: index > 0 ? scaledGap / 2 : 0,
                                         marginRight:
-                                            index < ticksData.length - 1
-                                                ? scaledGap / 2
-                                                : 0,
+                                            index < ticksData.length - 1 ? scaledGap / 2 : 0,
                                     }}
                                     onClick={() => {
                                         if (tick.postIndex !== undefined) {
@@ -428,24 +398,20 @@ export default function DockTimelineContainer({
                                     }}
                                     aria-label={`跳转到第 ${(tick.postIndex ?? 0) + 1} 篇文章`}
                                 />
-                            ) : tick.type === 'sub' &&
-                              tick.nextPostIndex !== undefined ? (
+                            ) : tick.type === 'sub' && tick.nextPostIndex !== undefined ? (
                                 <button
                                     className={cn(
                                         'w-1 rounded-full transition-all duration-150 ease-out',
                                         'focus:outline-none',
                                         tick.isInActiveRange
                                             ? 'bg-foreground/40'
-                                            : 'bg-foreground/25',
+                                            : 'bg-foreground/25'
                                     )}
                                     style={{
                                         height: scaledHeight,
-                                        marginLeft:
-                                            index > 0 ? scaledGap / 2 : 0,
+                                        marginLeft: index > 0 ? scaledGap / 2 : 0,
                                         marginRight:
-                                            index < ticksData.length - 1
-                                                ? scaledGap / 2
-                                                : 0,
+                                            index < ticksData.length - 1 ? scaledGap / 2 : 0,
                                     }}
                                     onClick={() => {
                                         handleScrollToPost(tick.nextPostIndex!);
@@ -460,16 +426,13 @@ export default function DockTimelineContainer({
                                             ? 'bg-foreground/20'
                                             : tick.isInActiveRange
                                               ? 'bg-foreground/40'
-                                              : 'bg-foreground/25',
+                                              : 'bg-foreground/25'
                                     )}
                                     style={{
                                         height: scaledHeight,
-                                        marginLeft:
-                                            index > 0 ? scaledGap / 2 : 0,
+                                        marginLeft: index > 0 ? scaledGap / 2 : 0,
                                         marginRight:
-                                            index < ticksData.length - 1
-                                                ? scaledGap / 2
-                                                : 0,
+                                            index < ticksData.length - 1 ? scaledGap / 2 : 0,
                                     }}
                                 />
                             )}
@@ -496,10 +459,7 @@ export default function DockTimelineContainer({
                             className="relative flex w-1 justify-center transition-all duration-150 ease-out"
                             style={{
                                 marginLeft: index > 0 ? scaledGap / 2 : 0,
-                                marginRight:
-                                    index < ticksData.length - 1
-                                        ? scaledGap / 2
-                                        : 0,
+                                marginRight: index < ticksData.length - 1 ? scaledGap / 2 : 0,
                             }}
                         >
                             {tick.type === 'main' && tick.dateLabel && (
@@ -508,7 +468,7 @@ export default function DockTimelineContainer({
                                         'absolute text-[10px] whitespace-nowrap tabular-nums transition-opacity duration-500 ease-out',
                                         tick.isActive
                                             ? 'text-foreground/80 font-medium'
-                                            : 'text-foreground/40',
+                                            : 'text-foreground/40'
                                     )}
                                 >
                                     {tick.dateLabel}

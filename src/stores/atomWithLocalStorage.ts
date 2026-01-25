@@ -14,10 +14,7 @@ export const atomWithLocalStorage = <T>(key: string, initialValue: T) => {
                 try {
                     return JSON.parse(item) as T;
                 } catch (error) {
-                    console.error(
-                        `Error parsing localStorage item for key "${key}":`,
-                        error,
-                    );
+                    console.error(`Error parsing localStorage item for key "${key}":`, error);
                     return initialValue;
                 }
             }
@@ -31,22 +28,17 @@ export const atomWithLocalStorage = <T>(key: string, initialValue: T) => {
         (get) => get(baseAtom),
         (get, set, update: T | ((prev: T) => T)) => {
             const nextValue =
-                typeof update === 'function'
-                    ? (update as (prev: T) => T)(get(baseAtom))
-                    : update;
+                typeof update === 'function' ? (update as (prev: T) => T)(get(baseAtom)) : update;
             set(baseAtom, nextValue);
 
             if (typeof window !== 'undefined' && window.localStorage) {
                 try {
                     localStorage.setItem(key, JSON.stringify(nextValue));
                 } catch (error) {
-                    console.error(
-                        `Error saving to localStorage for key "${key}":`,
-                        error,
-                    );
+                    console.error(`Error saving to localStorage for key "${key}":`, error);
                 }
             }
-        },
+        }
     );
 
     return derivedAtom;

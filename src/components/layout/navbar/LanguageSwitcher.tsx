@@ -76,17 +76,13 @@ export default function LanguageSwitcher() {
     // 点击外部关闭下拉菜单
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target as Node)
-            ) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
             }
         }
 
         document.addEventListener('mousedown', handleClickOutside);
-        return () =>
-            document.removeEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     // 键盘导航支持
@@ -120,7 +116,7 @@ export default function LanguageSwitcher() {
                     // 主题适配样式
                     isLightMode
                         ? 'hover:bg-amber-150 border-amber-300 bg-amber-100 text-amber-800'
-                        : 'border-neutral-700 bg-neutral-900 text-neutral-200 hover:bg-neutral-800',
+                        : 'border-neutral-700 bg-neutral-900 text-neutral-200 hover:bg-neutral-800'
                 )}
                 aria-label="切换语言"
                 aria-expanded={isOpen}
@@ -133,7 +129,7 @@ export default function LanguageSwitcher() {
                 <ChevronDown
                     className={cn(
                         'h-3.5 w-3.5 transition-transform duration-200',
-                        isOpen && 'rotate-180',
+                        isOpen && 'rotate-180'
                     )}
                     strokeWidth={2.5}
                 />
@@ -153,7 +149,7 @@ export default function LanguageSwitcher() {
                         // 主题适配样式
                         isLightMode
                             ? 'border-amber-200 bg-amber-50/95 shadow-amber-200/30'
-                            : 'border-neutral-700 bg-neutral-900/95 shadow-black/30',
+                            : 'border-neutral-700 bg-neutral-900/95 shadow-black/30'
                     )}
                     role="listbox"
                     aria-label="选择语言"
@@ -175,7 +171,7 @@ export default function LanguageSwitcher() {
                                             : 'bg-neutral-700/50 text-neutral-100'
                                         : isLightMode
                                           ? 'text-amber-800 hover:bg-amber-100/50'
-                                          : 'text-neutral-300 hover:bg-neutral-800/50',
+                                          : 'text-neutral-300 hover:bg-neutral-800/50'
                                 )}
                                 role="option"
                                 aria-selected={isSelected}
@@ -183,16 +179,12 @@ export default function LanguageSwitcher() {
                                 <span className="text-base leading-none">
                                     {LOCALE_FLAGS[locale]}
                                 </span>
-                                <span className="flex-1 font-medium">
-                                    {LOCALE_NAMES[locale]}
-                                </span>
+                                <span className="flex-1 font-medium">{LOCALE_NAMES[locale]}</span>
                                 {isSelected && (
                                     <Check
                                         className={cn(
                                             'h-4 w-4',
-                                            isLightMode
-                                                ? 'text-amber-700'
-                                                : 'text-neutral-300',
+                                            isLightMode ? 'text-amber-700' : 'text-neutral-300'
                                         )}
                                     />
                                 )}
