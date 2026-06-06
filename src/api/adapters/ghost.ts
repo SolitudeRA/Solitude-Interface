@@ -1,5 +1,6 @@
 import { env } from '@api/config/env';
 import type { FeaturedPost, Post, PostTag } from '@api/ghost/types';
+import { buildPostPathFromTags } from '@lib/i18n';
 
 const TAG_PREFIXES = {
     TYPE: 'type-',
@@ -23,14 +24,14 @@ export function adaptGhostPost<T extends Post | FeaturedPost>(post: T): T {
 
     return {
         ...post,
-        url: convertPostIdToFrontendUrl(post.id),
+        url: convertPostToFrontendUrl(post.id, post.tags),
         feature_image: post.feature_image,
         ...tagInfo,
     };
 }
 
-function convertPostIdToFrontendUrl(id: string): URL {
-    return new URL(`${env.site.url}/posts/${id}`);
+function convertPostToFrontendUrl(id: string, tags: PostTag[] | undefined): URL {
+    return new URL(buildPostPathFromTags(id, tags), env.site.url);
 }
 
 /**

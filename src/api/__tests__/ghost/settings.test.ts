@@ -74,8 +74,11 @@ describe('Settings API', () => {
 
         it('should handle API errors', async () => {
             mockGet.mockRejectedValue(new Error('API Error'));
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
             await expect(getSiteInformation()).rejects.toThrow();
+
+            consoleErrorSpy.mockRestore();
         });
     });
 

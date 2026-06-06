@@ -8,10 +8,72 @@ import {
     LOCALES,
     DEFAULT_LOCALE,
     localeToLangTag,
-    i18nKeyToTag,
     extractI18nKey,
     extractLocaleFromTags,
 } from '@lib/i18n';
+
+const MAX_GHOST_PAGE_SIZE = 100;
+const POST_INDEX_BY_GROUP_CACHE_KEY = 'post_index_by_group';
+
+interface GhostPostsResponse {
+    posts: Post[];
+    meta?: {
+        pagination?: {
+            pages?: number;
+        };
+    };
+}
+
+type PostIndexByGroup = Map<string, Partial<Record<Locale, Post>>>;
+
+function createEmptyVariants(): Record<Locale, Post | null> {
+    return {
+        zh: null,
+        ja: null,
+        en: null,
+    };
+}
+
+function adaptPosts<T extends Post | FeaturedPost>(posts: T[] | undefined): T[] {
+    return (posts || []).map((post) => adaptGhostPost(post));
+}
+
+async function fetchPostsPage(page: number, limit: number): Promise<GhostPostsResponse> {
+    return getGhostClient().get<GhostPostsResponse>({
+        endpoint: '/posts/',
+        params: {
+            include: 'tags',
+            page,
+            limit,
+        },
+    });
+}
+
+async function getPostIndexByGroup(): Promise<PostIndexByGroup> {
+    const cachedIndex = getCache<PostIndexByGroup>(POST_INDEX_BY_GROUP_CACHE_KEY);
+    if (cachedIndex !== undefined) {
+        return cachedIndex;
+    }
+
+    const posts = await listAllPosts({ limit: MAX_GHOST_PAGE_SIZE });
+    const index: PostIndexByGroup = new Map();
+
+    for (const post of posts) {
+        const key = extractI18nKey(post.tags);
+        const locale = extractLocaleFromTags(post.tags);
+
+        if (!key || !locale) {
+            continue;
+        }
+
+        const variants = index.get(key) ?? {};
+        variants[locale] = post;
+        index.set(key, variants);
+    }
+
+    setCache(POST_INDEX_BY_GROUP_CACHE_KEY, index);
+    return index;
+}
 
 export async function getHighlightPosts(
     limit: number = 12,
@@ -30,8 +92,7 @@ export async function getHighlightPosts(
             params: { limit, fields, include },
         });
 
-        const posts = response.posts || [];
-        const adaptedPosts = posts.map((post) => adaptGhostPost(post));
+        const adaptedPosts = adaptPosts(response.posts);
 
         setCache(cacheKey, adaptedPosts);
 
@@ -87,8 +148,6 @@ export async function listPostsByLocale(
  * @param locale - 语言代码
  */
 export async function getPostByGroupAndLocale(key: string, locale: Locale): Promise<Post | null> {
-    const langTag = localeToLangTag(locale);
-    const i18nTag = i18nKeyToTag(key);
     const cacheKey = `post_by_group:${key}:${locale}`;
 
     const cachedPost = getCache<Post | null>(cacheKey);
@@ -97,28 +156,12 @@ export async function getPostByGroupAndLocale(key: string, locale: Locale): Prom
     }
 
     try {
-        const response = await getGhostClient().get<{ posts: Post[] }>({
-            endpoint: '/posts/',
-            params: {
-                include: 'tags',
-                filter: `tag:${i18nTag}+tag:${langTag}`,
-                limit: 1,
-            },
-        });
+        const index = await getPostIndexByGroup();
+        const post = index.get(key)?.[locale] ?? null;
 
-        const posts = response.posts || [];
-        const firstPost = posts[0];
-        if (!firstPost) {
-            setCache(cacheKey, null);
-            return null;
-        }
-
-        const adaptedPost = adaptGhostPost<Post>(firstPost);
-        setCache(cacheKey, adaptedPost);
-
-        return adaptedPost;
+        setCache(cacheKey, post);
+        return post;
     } catch (error) {
-        // 如果是 404 或文章不存在，返回 null 而不是抛出错误
         console.error(`Failed to get post for key=${key}, locale=${locale}:`, error);
         return null;
     }
@@ -130,7 +173,6 @@ export async function getPostByGroupAndLocale(key: string, locale: Locale): Prom
  * @returns 包含每个语言版本是否存在的记录
  */
 export async function getVariantsByGroup(key: string): Promise<Record<Locale, Post | null>> {
-    const i18nTag = i18nKeyToTag(key);
     const cacheKey = `variants_by_group:${key}`;
 
     const cachedVariants = getCache<Record<Locale, Post | null>>(cacheKey);
@@ -138,32 +180,13 @@ export async function getVariantsByGroup(key: string): Promise<Record<Locale, Po
         return cachedVariants;
     }
 
-    // 构建 filter: tag:hash-i18n-xxx+tag:[hash-lang-zh,hash-lang-ja,hash-lang-en]
-    const langTags = LOCALES.map((l) => localeToLangTag(l)).join(',');
-    const filter = `tag:${i18nTag}+tag:[${langTags}]`;
-
     try {
-        const response = await getGhostClient().get<{ posts: Post[] }>({
-            endpoint: '/posts/',
-            params: {
-                include: 'tags',
-                filter,
-                limit: LOCALES.length,
-            },
-        });
+        const index = await getPostIndexByGroup();
+        const indexedVariants = index.get(key);
+        const variants = createEmptyVariants();
 
-        const posts = response.posts || [];
-        const variants: Record<Locale, Post | null> = {
-            zh: null,
-            ja: null,
-            en: null,
-        };
-
-        for (const post of posts) {
-            const locale = extractLocaleFromTags(post.tags);
-            if (locale) {
-                variants[locale] = adaptGhostPost<Post>(post);
-            }
+        for (const locale of LOCALES) {
+            variants[locale] = indexedVariants?.[locale] ?? null;
         }
 
         setCache(cacheKey, variants);
@@ -171,7 +194,7 @@ export async function getVariantsByGroup(key: string): Promise<Record<Locale, Po
         return variants;
     } catch (error) {
         console.error(`Failed to get variants for key=${key}:`, error);
-        return { zh: null, ja: null, en: null };
+        return createEmptyVariants();
     }
 }
 
@@ -187,43 +210,9 @@ export async function listAllGroupKeys(): Promise<string[]> {
         return cachedKeys;
     }
 
-    const allKeys = new Set<string>();
-    let page = 1;
-    const limit = 100; // Ghost API 最大单页数量
-
     try {
-        while (true) {
-            const response = await getGhostClient().get<{
-                posts: Post[];
-                meta: { pagination: { pages: number } };
-            }>({
-                endpoint: '/posts/',
-                params: {
-                    include: 'tags',
-                    fields: 'id',
-                    page,
-                    limit,
-                },
-            });
-
-            const posts = response.posts || [];
-
-            for (const post of posts) {
-                const key = extractI18nKey(post.tags);
-                if (key) {
-                    allKeys.add(key);
-                }
-            }
-
-            // 检查是否还有更多页
-            const totalPages = response.meta?.pagination?.pages ?? 1;
-            if (page >= totalPages) {
-                break;
-            }
-            page++;
-        }
-
-        const keysArray = Array.from(allKeys);
+        const postIndex = await getPostIndexByGroup();
+        const keysArray = Array.from(postIndex.keys());
         setCache(cacheKey, keysArray);
 
         return keysArray;
@@ -305,8 +294,7 @@ export async function getPosts(include: string = 'tags'): Promise<Post[]> {
             params: { include },
         });
 
-        const posts = response.posts || [];
-        const adaptedPosts = posts.map((post) => adaptGhostPost(post));
+        const adaptedPosts = adaptPosts(response.posts);
 
         setCache(cacheKey, adaptedPosts);
 
@@ -317,14 +305,15 @@ export async function getPosts(include: string = 'tags'): Promise<Post[]> {
 }
 
 /**
- * 获取所有文章用于视图展示（不按语言过滤，支持分页）
+ * 获取文章用于视图展示。
+ * 未指定 page 时会分页拉取全部文章；指定 page 时只拉取该页。
  * @param options - 分页选项
  */
 export async function listAllPosts(
     options: { page?: number; limit?: number } = {}
 ): Promise<Post[]> {
-    const { page = 1, limit = 100 } = options;
-    const cacheKey = `all_posts_view:${page}:${limit}`;
+    const { page, limit = MAX_GHOST_PAGE_SIZE } = options;
+    const cacheKey = page ? `all_posts_view:${page}:${limit}` : `all_posts_view:all:${limit}`;
 
     const cachedPosts = getCache<Post[]>(cacheKey);
     if (cachedPosts !== undefined) {
@@ -332,21 +321,29 @@ export async function listAllPosts(
     }
 
     try {
-        const response = await getGhostClient().get<{ posts: Post[] }>({
-            endpoint: '/posts/',
-            params: {
-                include: 'tags',
-                page,
-                limit,
-            },
-        });
+        if (page !== undefined) {
+            const response = await fetchPostsPage(page, limit);
+            const pagePosts = adaptPosts(response.posts);
 
-        const posts = response.posts || [];
-        const adaptedPosts = posts.map((post) => adaptGhostPost(post));
+            setCache(cacheKey, pagePosts);
+            return pagePosts;
+        }
 
-        setCache(cacheKey, adaptedPosts);
+        const allPosts: Post[] = [];
+        let currentPage = 1;
+        let totalPages = 1;
 
-        return adaptedPosts;
+        do {
+            const response = await fetchPostsPage(currentPage, limit);
+            allPosts.push(...adaptPosts(response.posts));
+
+            totalPages = response.meta?.pagination?.pages ?? 1;
+            currentPage++;
+        } while (currentPage <= totalPages);
+
+        setCache(cacheKey, allPosts);
+
+        return allPosts;
     } catch (error) {
         return handleApiError(error);
     }

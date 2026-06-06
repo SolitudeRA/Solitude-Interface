@@ -61,7 +61,7 @@ describe('Error Handlers', () => {
 
             try {
                 handleApiError(axiosError);
-            } catch (e) {
+            } catch (_e) {
                 // Expected to throw
             }
 
@@ -136,7 +136,7 @@ describe('Error Handlers', () => {
 
             try {
                 handleApiError(axiosError);
-            } catch (e) {
+            } catch (_e) {
                 // Expected to throw
             }
 
@@ -162,7 +162,7 @@ describe('Error Handlers', () => {
 
             try {
                 handleApiError(genericError);
-            } catch (e) {
+            } catch (_e) {
                 // Expected to throw
             }
 
@@ -212,7 +212,7 @@ describe('Error Handlers', () => {
 
             try {
                 handleApiError(axiosError);
-            } catch (e) {
+            } catch (_e) {
                 // Expected to throw
             }
 
@@ -255,7 +255,7 @@ describe('Error Handlers', () => {
             const error = new Error('Test');
             try {
                 handleApiError(error);
-            } catch (e) {
+            } catch (_e) {
                 // Expected to throw
             }
 

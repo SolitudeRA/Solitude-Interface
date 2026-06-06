@@ -51,7 +51,7 @@ function PostCard({ post, index, isOtherHovered, onHover }: PostCardProps) {
 
     return (
         <motion.a
-            href={`/posts/${post.id}`}
+            href={post.url.toString()}
             className={cn(
                 'post-view-card group relative shrink-0 overflow-hidden rounded-3xl',
                 'w-64 sm:w-72 md:w-80 lg:w-[22rem]',
@@ -314,8 +314,8 @@ export default function PostViewCarousel({ posts, className }: PostViewCarouselP
     return (
         <div
             className={cn('relative h-[75vh] w-full', className)}
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
+            onPointerEnter={() => setIsHovering(true)}
+            onPointerLeave={() => setIsHovering(false)}
         >
             {/* 左侧渐隐遮罩 */}
             <AnimatePresence>

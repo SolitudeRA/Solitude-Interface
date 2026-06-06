@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { getHighlightPosts, getPosts } from '@api/ghost/posts';
+import { getHighlightPosts, getPosts, listAllPosts } from '@api/ghost/posts';
 import { getGhostClient } from '@api/clients/ghost';
 import * as cache from '@api/utils/cache';
 import type { FeaturedPost, Post, PostTag } from '@api/ghost/types';
@@ -160,8 +160,11 @@ describe('Posts API', () => {
 
         it('should handle API errors', async () => {
             mockGet.mockRejectedValue(new Error('API Error'));
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
             await expect(getHighlightPosts()).rejects.toThrow();
+
+            consoleErrorSpy.mockRestore();
         });
 
         it('should handle empty results', async () => {
@@ -286,8 +289,11 @@ describe('Posts API', () => {
 
         it('should handle API errors', async () => {
             mockGet.mockRejectedValue(new Error('API Error'));
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
             await expect(getPosts()).rejects.toThrow();
+
+            consoleErrorSpy.mockRestore();
         });
 
         it('should handle empty results', async () => {
@@ -311,6 +317,93 @@ describe('Posts API', () => {
 
             await getPosts('authors');
             expect(cache.getCache).toHaveBeenCalledWith('all_posts:authors');
+        });
+    });
+
+    describe('listAllPosts', () => {
+        const mockFullPosts: Post[] = [
+            {
+                id: 'post-1',
+                title: 'Full Post 1',
+                url: new URL('https://ghost.example.com/post-1'),
+                feature_image: new URL('https://ghost.example.com/image1.jpg'),
+                published_at: '2024-01-01',
+                comment_id: 'comment-1',
+                excerpt: 'Excerpt 1',
+                html: '<p>Content 1</p>',
+                tags: mockTags,
+                post_type: '',
+                post_category: '',
+                post_series: '',
+            },
+            {
+                id: 'post-2',
+                title: 'Full Post 2',
+                url: new URL('https://ghost.example.com/post-2'),
+                feature_image: new URL('https://ghost.example.com/image2.jpg'),
+                published_at: '2024-01-02',
+                comment_id: 'comment-2',
+                excerpt: 'Excerpt 2',
+                html: '<p>Content 2</p>',
+                tags: mockTags,
+                post_type: '',
+                post_category: '',
+                post_series: '',
+            },
+        ];
+
+        it('should fetch every page when page is not specified', async () => {
+            mockGet
+                .mockResolvedValueOnce({
+                    posts: [mockFullPosts[0]!],
+                    meta: { pagination: { pages: 2 } },
+                })
+                .mockResolvedValueOnce({
+                    posts: [mockFullPosts[1]!],
+                    meta: { pagination: { pages: 2 } },
+                });
+
+            const result = await listAllPosts({ limit: 1 });
+
+            expect(result).toHaveLength(2);
+            expect(mockGet).toHaveBeenNthCalledWith(1, {
+                endpoint: '/posts/',
+                params: {
+                    include: 'tags',
+                    page: 1,
+                    limit: 1,
+                },
+            });
+            expect(mockGet).toHaveBeenNthCalledWith(2, {
+                endpoint: '/posts/',
+                params: {
+                    include: 'tags',
+                    page: 2,
+                    limit: 1,
+                },
+            });
+            expect(cache.setCache).toHaveBeenCalledWith('all_posts_view:all:1', expect.any(Array));
+        });
+
+        it('should fetch only requested page when page is specified', async () => {
+            mockGet.mockResolvedValue({
+                posts: [mockFullPosts[0]!],
+                meta: { pagination: { pages: 2 } },
+            });
+
+            const result = await listAllPosts({ page: 2, limit: 1 });
+
+            expect(result).toHaveLength(1);
+            expect(mockGet).toHaveBeenCalledTimes(1);
+            expect(mockGet).toHaveBeenCalledWith({
+                endpoint: '/posts/',
+                params: {
+                    include: 'tags',
+                    page: 2,
+                    limit: 1,
+                },
+            });
+            expect(cache.setCache).toHaveBeenCalledWith('all_posts_view:2:1', expect.any(Array));
         });
     });
 });

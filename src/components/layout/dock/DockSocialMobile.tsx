@@ -65,7 +65,12 @@ export default function DockSocialMobile() {
 
             {/* 遮罩层 */}
             {isOpen && (
-                <div className="dock-overlay fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+                <button
+                    type="button"
+                    className="dock-overlay fixed inset-0 z-40"
+                    onClick={() => setIsOpen(false)}
+                    aria-label="Close social links menu"
+                />
             )}
 
             {/* 弹出菜单 */}
