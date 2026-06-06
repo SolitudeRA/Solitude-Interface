@@ -352,7 +352,12 @@
         height: 100%;
         padding: 0 1.32rem;
         cursor: pointer;
-        transition: color 0.3s ease;
+        text-shadow: none;
+        transform: translateY(0);
+        transition:
+            color 0.3s ease,
+            text-shadow 0.3s ease,
+            transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     @media (min-width: 1024px) {
@@ -408,7 +413,270 @@
     .dock-nav-item-right-md:hover .dock-nav-link,
     .dock-nav-item-right-lg:hover .dock-nav-link,
     .dock-nav-link:hover {
-        color: oklch(0.85 0.1 280);
+        color: oklch(0.98 0.008 270);
+        font-weight: 700;
+        text-shadow: 0 1px 10px oklch(0 0 0 / 0.58);
+        transform: translateY(-1px);
+    }
+
+    /* ===== 桌面导航 Hover：分段边缘高光 + 柔和侧向光晕 ===== */
+    .dock-nav {
+        overflow: visible;
+        --dock-hover-frame: linear-gradient(90deg, #ff8a8a, #ffd166, #6ee7ff, #8aa2ff);
+        --dock-hover-frame-center: linear-gradient(
+            90deg,
+            rgb(255 138 138 / 0) 0%,
+            #ff8a8a 14%,
+            #ffd166 32%,
+            #6ee7ff 68%,
+            #8aa2ff 86%,
+            rgb(138 162 255 / 0) 100%
+        );
+        --dock-hover-frame-left: linear-gradient(
+            90deg,
+            #ff8a8a 0%,
+            #ffd166 24%,
+            #6ee7ff 58%,
+            rgb(138 162 255 / 0) 100%
+        );
+        --dock-hover-frame-right: linear-gradient(
+            270deg,
+            #ff8a8a 0%,
+            #ffd166 24%,
+            #6ee7ff 58%,
+            rgb(138 162 255 / 0) 100%
+        );
+        --dock-hover-ring-left: linear-gradient(
+            90deg,
+            #ff8a8a 0%,
+            #ffd166 24%,
+            #6ee7ff 58%,
+            #8aa2ff 68%,
+            rgb(138 162 255 / 0.35) 84%,
+            rgb(138 162 255 / 0) 100%
+        );
+        --dock-hover-ring-right: linear-gradient(
+            270deg,
+            #ff8a8a 0%,
+            #ffd166 24%,
+            #6ee7ff 58%,
+            #8aa2ff 68%,
+            rgb(138 162 255 / 0.35) 84%,
+            rgb(138 162 255 / 0) 100%
+        );
+        --dock-hover-edge-extension: 22px;
+        --dock-hover-center-extension: 14px;
+        --dock-hover-frame-side: linear-gradient(180deg, #ff8a8a, #ffd166, #6ee7ff, #8aa2ff);
+    }
+
+    .dock-nav::after {
+        opacity: 0.28;
+        filter: blur(0.75px);
+    }
+
+    .dock-nav:hover::after {
+        opacity: 0.42;
+        filter: blur(1.2px);
+    }
+
+    .dock-nav-item,
+    .dock-nav-item-left,
+    .dock-nav-item-right,
+    .dock-nav-item-right-md,
+    .dock-nav-item-right-lg {
+        isolation: isolate;
+        overflow: visible;
+    }
+
+    .dock-nav .dock-nav-item::before,
+    .dock-nav .dock-nav-item-left::before,
+    .dock-nav .dock-nav-item-right::before,
+    .dock-nav .dock-nav-item-right-md::before,
+    .dock-nav .dock-nav-item-right-lg::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        left: calc(var(--dock-hover-center-extension) * -1);
+        right: calc(var(--dock-hover-center-extension) * -1);
+        width: auto;
+        height: auto;
+        padding: 0;
+        border-radius: 0;
+        background:
+            var(--dock-hover-frame-center) top / 100% 2px no-repeat,
+            var(--dock-hover-frame-center) bottom / 100% 2px no-repeat;
+        opacity: 0;
+        pointer-events: none;
+        transform: scaleX(0.96);
+        transition:
+            opacity 260ms ease,
+            transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+        z-index: 2;
+        -webkit-mask: none;
+        mask: none;
+    }
+
+    .dock-nav .dock-nav-item::after,
+    .dock-nav .dock-nav-item-left::after,
+    .dock-nav .dock-nav-item-right::after,
+    .dock-nav .dock-nav-item-right-md::after,
+    .dock-nav .dock-nav-item-right-lg::after {
+        content: '';
+        position: absolute;
+        inset: -16px -22px;
+        width: auto;
+        height: auto;
+        border-radius: calc(var(--dock-nav-radius) + 0.25rem);
+        background:
+            radial-gradient(ellipse at 0% 50%, oklch(0.78 0.16 230 / 0.34), transparent 62%),
+            radial-gradient(ellipse at 100% 50%, oklch(0.76 0.18 310 / 0.3), transparent 62%);
+        filter: blur(11px);
+        opacity: 0;
+        pointer-events: none;
+        transform: scaleX(0.94);
+        transition:
+            opacity 320ms ease,
+            transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+        z-index: 0;
+        -webkit-mask: none;
+        mask: none;
+    }
+
+    .dock-nav .dock-nav-link {
+        z-index: 3;
+    }
+
+    .dock-nav .dock-nav-item-left::before {
+        left: 0;
+        right: calc(var(--dock-hover-edge-extension) * -1);
+        padding: 2px;
+        border-radius: var(--dock-nav-radius) 0 0 var(--dock-nav-radius);
+        background: var(--dock-hover-ring-left);
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+    }
+
+    .dock-nav .dock-nav-item-left::after {
+        border-radius: var(--dock-nav-radius) 0 0 var(--dock-nav-radius);
+    }
+
+    .dock-nav .dock-nav-item-right::before {
+        left: calc(var(--dock-hover-edge-extension) * -1);
+        right: 0;
+        padding: 2px;
+        border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
+        background: var(--dock-hover-ring-right);
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+    }
+
+    .dock-nav .dock-nav-item-right::after {
+        border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .dock-nav .dock-nav-item.dock-nav-item-right-md::before {
+            left: calc(var(--dock-hover-edge-extension) * -1);
+            right: 0;
+            padding: 2px;
+            border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
+            background: var(--dock-hover-ring-right);
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        .dock-nav .dock-nav-item.dock-nav-item-right-md::after {
+            border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .dock-nav .dock-nav-item.dock-nav-item-right-md::before {
+            left: calc(var(--dock-hover-center-extension) * -1);
+            right: calc(var(--dock-hover-center-extension) * -1);
+            padding: 0;
+            border-radius: 0;
+            background:
+                var(--dock-hover-frame-center) top / 100% 2px no-repeat,
+                var(--dock-hover-frame-center) bottom / 100% 2px no-repeat;
+            -webkit-mask: none;
+            mask: none;
+        }
+    }
+
+    @media (min-width: 1024px) and (max-width: 1279px) {
+        .dock-nav .dock-nav-item.dock-nav-item-right-lg::before {
+            left: calc(var(--dock-hover-edge-extension) * -1);
+            right: 0;
+            padding: 2px;
+            border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
+            background: var(--dock-hover-ring-right);
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        .dock-nav .dock-nav-item.dock-nav-item-right-lg::after {
+            border-radius: 0 var(--dock-nav-radius) var(--dock-nav-radius) 0;
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .dock-nav .dock-nav-item.dock-nav-item-right-lg::before {
+            left: calc(var(--dock-hover-center-extension) * -1);
+            right: calc(var(--dock-hover-center-extension) * -1);
+            padding: 0;
+            border-radius: 0;
+            background:
+                var(--dock-hover-frame-center) top / 100% 2px no-repeat,
+                var(--dock-hover-frame-center) bottom / 100% 2px no-repeat;
+            -webkit-mask: none;
+            mask: none;
+        }
+    }
+
+    .dock-nav .dock-nav-item:hover,
+    .dock-nav .dock-nav-item-left:hover,
+    .dock-nav .dock-nav-item-right:hover,
+    .dock-nav .dock-nav-item-right-md:hover,
+    .dock-nav .dock-nav-item-right-lg:hover {
+        z-index: 4;
+        background: oklch(1 0 0 / 0.08);
+        box-shadow:
+            -16px 0 34px oklch(0.78 0.16 230 / 0.12),
+            16px 0 34px oklch(0.76 0.18 310 / 0.1),
+            inset 0 1px 0 oklch(1 0 0 / 0.18),
+            inset 0 -1px 0 oklch(0 0 0 / 0.05);
+    }
+
+    .dock-nav
+        .dock-nav-item:not(.dock-nav-item-right-md):not(.dock-nav-item-right-lg):hover::before,
+    .dock-nav .dock-nav-item.dock-nav-item-right-md:hover::before,
+    .dock-nav .dock-nav-item.dock-nav-item-right-lg:hover::before,
+    .dock-nav .dock-nav-item-left:hover::before,
+    .dock-nav .dock-nav-item-right:hover::before {
+        opacity: 0.95;
+        transform: scaleX(1);
+    }
+
+    .dock-nav .dock-nav-item:not(.dock-nav-item-right-md):not(.dock-nav-item-right-lg):hover::after,
+    .dock-nav .dock-nav-item.dock-nav-item-right-md:hover::after,
+    .dock-nav .dock-nav-item.dock-nav-item-right-lg:hover::after,
+    .dock-nav .dock-nav-item-left:hover::after,
+    .dock-nav .dock-nav-item-right:hover::after {
+        opacity: 0.62;
+        transform: scaleX(1.03);
     }
 
     /* ===== 汉堡按钮（移动端菜单触发器） ===== */
