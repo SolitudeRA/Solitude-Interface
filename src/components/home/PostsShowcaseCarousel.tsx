@@ -2,45 +2,40 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import type { FeaturedPost } from '@api/ghost/types';
-import { Chip } from '@components/common/badge';
 import { cn } from '@components/common/lib/utils';
 import { getUIText, DEFAULT_LOCALE, type Locale } from '@lib/i18n';
 import { useHorizontalScroll } from '@components/common/lib/useHorizontalScroll';
 
-// 颜色方案类型（与 badge.tsx 保持一致）
-type ChipColorScheme =
-    | 'default'
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'info'
-    | 'purple'
-    | 'rose';
+function isVisibleTag(value: string | null | undefined): value is string {
+    return Boolean(value && value.trim() && value.trim().toLowerCase() !== 'default');
+}
 
-// Type 配置：不同文章类型使用不同颜色
-const DEFAULT_TYPE_CONFIG = {
-    colorScheme: 'secondary' as ChipColorScheme,
-};
+function titleCaseTag(value: string): string {
+    return value
+        .trim()
+        .replace(/[-_]+/g, ' ')
+        .replace(/\b[a-z]/g, (char) => char.toUpperCase());
+}
 
-const TYPE_CONFIG: Record<string, { colorScheme: ChipColorScheme }> = {
-    article: { colorScheme: 'primary' }, // 蓝色 - 经典、专业
-    gallery: { colorScheme: 'purple' }, // 紫色 - 艺术、创意
-    video: { colorScheme: 'rose' }, // 玫红 - 热情、动感
-    music: { colorScheme: 'warning' }, // 琥珀 - 温暖、活力
-    default: DEFAULT_TYPE_CONFIG,
-};
+function getHomeTitleDensity(title: string): 'normal' | 'long' {
+    return Array.from(title.trim()).length > 34 ? 'long' : 'normal';
+}
 
-// Category 配置：不同分类使用不同颜色
-const DEFAULT_CATEGORY_CONFIG = {
-    colorScheme: 'secondary' as ChipColorScheme,
-};
+function getPublishedDate(value: string | null | undefined): string {
+    return value?.split('T')[0] ?? '';
+}
 
-const CATEGORY_CONFIG: Record<string, { colorScheme: ChipColorScheme }> = {
-    tech: { colorScheme: 'info' }, // 青色 - 科技感
-    life: { colorScheme: 'success' }, // 绿色 - 生活、自然
-    default: DEFAULT_CATEGORY_CONFIG,
-};
+function getTagPillClass(tone: 'type' | 'category'): string {
+    const base =
+        'inline-flex min-h-6 max-w-[min(9rem,44%)] items-center overflow-hidden rounded-full border px-2.5 py-1 text-[0.65rem] font-extrabold leading-none text-white/90 shadow-sm backdrop-blur-md [text-shadow:0_1px_8px_rgba(3,7,18,0.5)]';
+
+    const tones = {
+        type: 'border-cyan-200/50 bg-cyan-300/15',
+        category: 'border-lime-200/45 bg-lime-300/15',
+    };
+
+    return cn(base, tones[tone]);
+}
 
 interface PostsShowcaseCarouselProps {
     posts: FeaturedPost[];
@@ -78,39 +73,36 @@ function ShowcaseCard({
     prefersReducedMotion,
 }: ShowcaseCardProps) {
     const hasImage = post.feature_image && post.feature_image.toString().length > 0;
-
-    // 获取 type 配置
-    const typeKey = post.post_type?.toLowerCase() || 'default';
-    const typeConfig = TYPE_CONFIG[typeKey] ?? DEFAULT_TYPE_CONFIG;
-
-    // 获取 category 配置
-    const categoryKey = post.post_category?.toLowerCase() || 'default';
-    const categoryConfig = CATEGORY_CONFIG[categoryKey] ?? DEFAULT_CATEGORY_CONFIG;
+    const titleDensity = getHomeTitleDensity(post.title);
+    const publishedDate = getPublishedDate(post.published_at);
+    const typeLabel = isVisibleTag(post.post_type) ? titleCaseTag(post.post_type) : '';
+    const categoryLabel = isVisibleTag(post.post_category) ? titleCaseTag(post.post_category) : '';
 
     return (
         <motion.a
             href={post.url?.toString() || '#'}
+            data-title-density={titleDensity}
             className={cn(
                 // layout / stacking
-                'showcase-card group relative isolate flex-shrink-0 overflow-hidden rounded-xl',
-                'aspect-[16/11] w-56 cursor-pointer sm:w-64 md:w-72 lg:w-80',
+                'showcase-card group relative isolate flex-shrink-0 overflow-hidden rounded-[1.45rem] sm:rounded-[1.65rem]',
+                'aspect-[4/3] w-[15rem] cursor-pointer sm:w-[17rem] md:w-[19rem] lg:w-[21rem]',
 
-                // glass material
-                'border border-white/25 dark:border-white/25',
+                // media-card material
+                'border border-white/20 dark:border-white/20',
                 'ring-1 ring-white/10 ring-inset',
-                'bg-white/[0.02]', // 给玻璃一个极淡的“基底”，更像材质
-                'shadow-lg shadow-black/20',
+                'bg-slate-950/25',
+                'shadow-xl shadow-black/25',
 
-                // motion / interaction (把阴影也放到同一层，不需要额外 div)
-                'transition-[transform,opacity,box-shadow] duration-200 ease-out',
-                'hover:shadow-2xl hover:shadow-black/30',
+                // motion / interaction
+                'transition-[opacity,border-color,box-shadow] duration-300 ease-out',
+                'hover:border-white/30 hover:shadow-2xl hover:shadow-black/30',
 
                 // accessibility
                 'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
             )}
             initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
             animate={{
-                opacity: isOtherHovered ? 0.62 : 1,
+                opacity: isOtherHovered ? 0.66 : 1,
                 y: 0,
                 scale: prefersReducedMotion ? 1 : isOtherHovered ? 0.985 : 1,
             }}
@@ -127,13 +119,13 @@ function ShowcaseCard({
                 prefersReducedMotion
                     ? { opacity: 1 }
                     : {
-                          scale: 1.03,
-                          y: -6,
+                          scale: 1.025,
+                          y: -5,
                           opacity: 1,
-                          transition: { duration: 0.12, ease: 'easeOut' },
+                          transition: { duration: 0.16, ease: [0.22, 1, 0.36, 1] },
                       }
             }
-            whileFocus={prefersReducedMotion ? { opacity: 1 } : { scale: 1.03, y: -6, opacity: 1 }}
+            whileFocus={prefersReducedMotion ? { opacity: 1 } : { scale: 1.025, y: -5, opacity: 1 }}
             onPointerEnter={() => onHover(index)}
             onPointerLeave={() => onHover(null)}
             onFocus={() => onHover(index)}
@@ -141,7 +133,7 @@ function ShowcaseCard({
             aria-label={`阅读文章: ${post.title}`}
         >
             {/* 背景层 */}
-            <div className="absolute inset-0 -z-20 overflow-hidden">
+            <div className="absolute inset-0 -z-30 overflow-hidden">
                 {hasImage ? (
                     <img
                         src={post.feature_image.toString()}
@@ -150,62 +142,76 @@ function ShowcaseCard({
                         decoding="async"
                         className={cn(
                             'h-full w-full object-cover object-center',
-                            'transition-transform duration-500 will-change-transform group-hover:scale-105',
+                            'scale-[1.025] transition-[filter,transform] duration-700 will-change-transform',
+                            'group-hover:scale-[1.055] group-hover:contrast-[1.02] group-hover:saturate-[1.12]',
                             'motion-reduce:transform-none motion-reduce:transition-none'
                         )}
                     />
                 ) : (
-                    <div className="from-primary/30 via-secondary/20 to-accent/30 h-full w-full bg-gradient-to-br" />
+                    <div className="h-full w-full bg-[radial-gradient(circle_at_30%_20%,var(--card-image-fallback-highlight),transparent_32%),linear-gradient(135deg,var(--card-image-fallback-start),var(--card-image-fallback-end))]" />
                 )}
             </div>
 
-            {/* 统一用 pseudo-like 的 overlay：不挡点击 */}
+            {/* 图片遮罩：对齐 posts 卡片的全尺寸 media 语言 */}
             <div
-                className="pointer-events-none absolute inset-0 -z-10 rounded-xl"
+                className="pointer-events-none absolute inset-0 -z-20"
                 style={{
-                    background: `linear-gradient(
-        to top,
-        var(--home-card-overlay-end) 0%,
-        var(--home-card-overlay-mid) 40%,
-        var(--home-card-overlay-start) 100%
-      )`,
+                    background: `
+                        linear-gradient(rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0.48)),
+                        linear-gradient(
+                            180deg,
+                            rgba(5, 8, 15, 0.12) 0%,
+                            transparent 30%,
+                            transparent 48%,
+                            rgba(5, 8, 15, 0.3) 100%
+                        )
+                    `,
                 }}
             />
 
-            {/* 内高光（更“玻璃”）：hover 才出现，克制一点更高级 */}
-            <div className="pointer-events-none absolute inset-0 rounded-xl opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                <div className="absolute -top-24 right-0 left-0 h-40 bg-white/10 blur-2xl" />
-                <div className="absolute inset-0 ring-1 ring-white/10 ring-inset" />
+            <div className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-[opacity,transform] duration-500 ease-out group-hover:opacity-100">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_16%,rgba(255,255,255,0.16),transparent_34%),linear-gradient(160deg,rgba(125,211,252,0.13),transparent_38%)]" />
+                <div className="absolute inset-0 ring-1 ring-white/15 ring-inset" />
             </div>
 
-            {/* 内容 */}
-            <div className="absolute inset-0 flex flex-col justify-between p-4">
-                <div className="flex items-center justify-between gap-2">
-                    {post.post_type && (
-                        <Chip
-                            variant="flat"
-                            colorScheme={typeConfig.colorScheme}
-                            className={cn('backdrop-blur-md', 'border border-white/15 bg-white/10')}
-                        >
-                            {post.post_type}
-                        </Chip>
-                    )}
-                    {post.post_category && (
-                        <Chip
-                            variant="flat"
-                            colorScheme={categoryConfig.colorScheme}
-                            className={cn('backdrop-blur-md', 'border border-white/15 bg-white/10')}
-                        >
-                            {post.post_category}
-                        </Chip>
-                    )}
-                </div>
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[66%] bg-gradient-to-t from-black/75 via-black/40 to-transparent" />
 
-                <div className="rounded-lg border border-[var(--card-readable-panel-border)] bg-[var(--card-readable-panel-bg)] p-2.5 shadow-[0_10px_30px_var(--card-readable-panel-shadow)] backdrop-blur-sm">
-                    <h3 className="line-clamp-2 text-lg leading-tight font-bold text-[var(--card-readable-panel-title)]">
-                        {post.title}
-                    </h3>
-                </div>
+            {/* 标签只保留文章类型和分类 */}
+            <div
+                className="pointer-events-none absolute top-3 right-3 left-3 z-20 flex items-start justify-between gap-3 sm:top-4 sm:right-4 sm:left-4"
+                aria-label="Post type and category"
+            >
+                {typeLabel ? (
+                    <span className={getTagPillClass('type')}>{typeLabel}</span>
+                ) : (
+                    <span />
+                )}
+                {categoryLabel && (
+                    <span className={getTagPillClass('category')}>{categoryLabel}</span>
+                )}
+            </div>
+
+            {/* 标题落在底部渐变上，不再使用黑色药丸背景 */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 px-3 pt-16 pb-3 sm:px-4 sm:pt-20 sm:pb-4">
+                <h3
+                    className={cn(
+                        'm-0 overflow-hidden font-extrabold text-white',
+                        'leading-tight [text-shadow:0_2px_12px_rgba(3,7,18,0.82)]',
+                        titleDensity === 'long'
+                            ? 'line-clamp-2 text-[0.92rem] sm:line-clamp-3 sm:text-[1rem]'
+                            : 'line-clamp-2 text-[1.03rem] sm:text-[1.1rem]'
+                    )}
+                >
+                    {post.title}
+                </h3>
+                {publishedDate && (
+                    <time
+                        className="mt-2 block text-[0.68rem] leading-none font-bold text-white/70 [text-shadow:0_1px_8px_rgba(3,7,18,0.72)]"
+                        dateTime={publishedDate}
+                    >
+                        {publishedDate}
+                    </time>
+                )}
             </div>
         </motion.a>
     );
@@ -216,10 +222,10 @@ function SkeletonCard({ index }: { index: number }) {
     return (
         <div
             className={cn(
-                'flex-shrink-0 overflow-hidden rounded-xl',
-                'w-56 sm:w-64 md:w-72 lg:w-80',
-                'aspect-[16/11]',
-                'bg-muted animate-pulse'
+                'flex-shrink-0 overflow-hidden rounded-[1.45rem] sm:rounded-[1.65rem]',
+                'w-[15rem] sm:w-[17rem] md:w-[19rem] lg:w-[21rem]',
+                'aspect-[4/3]',
+                'bg-muted/80 animate-pulse border border-white/15 ring-1 ring-white/10 ring-inset'
             )}
             style={{ animationDelay: `${index * 100}ms` }}
         >
@@ -227,12 +233,13 @@ function SkeletonCard({ index }: { index: number }) {
                 {/* 顶部标签占位 */}
                 <div className="flex items-center justify-between">
                     <div className="bg-muted-foreground/20 h-6 w-20 rounded-full" />
-                    <div className="bg-muted-foreground/20 h-6 w-16 rounded-full" />
+                    <div className="bg-muted-foreground/20 h-6 w-24 rounded-full" />
                 </div>
                 {/* 底部标题占位 */}
-                <div className="space-y-2">
+                <div className="mt-auto space-y-2">
                     <div className="bg-muted-foreground/20 h-5 w-full rounded" />
                     <div className="bg-muted-foreground/20 h-5 w-3/4 rounded" />
+                    <div className="bg-muted-foreground/20 h-3 w-20 rounded" />
                 </div>
             </div>
         </div>
@@ -264,20 +271,20 @@ function ViewMoreCard({
         <motion.a
             href={href}
             className={cn(
-                'showcase-card group relative flex-shrink-0 overflow-hidden rounded-xl',
-                'w-56 sm:w-64 md:w-72 lg:w-80',
-                'aspect-[16/11] cursor-pointer',
+                'showcase-card group relative isolate flex-shrink-0 overflow-hidden rounded-[1.45rem] sm:rounded-[1.65rem]',
+                'w-[15rem] sm:w-[17rem] md:w-[19rem] lg:w-[21rem]',
+                'aspect-[4/3] cursor-pointer',
                 'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-                // 玻璃态效果：半透明边框 + 阴影 + 内高光
-                'border border-white/25 dark:border-white/15',
-                'shadow-lg shadow-black/20',
-                'ring-1 ring-white/10 ring-inset'
+                'border border-white/20 bg-slate-950/25 shadow-xl shadow-black/25',
+                'ring-1 ring-white/10 ring-inset',
+                'transition-[opacity,border-color,box-shadow] duration-300 ease-out',
+                'hover:border-white/30 hover:shadow-2xl hover:shadow-black/30'
             )}
             initial={prefersReducedMotion ? false : { opacity: 0, x: 50 }}
             animate={{
-                opacity: isOtherHovered ? 0.6 : 1,
+                opacity: isOtherHovered ? 0.66 : 1,
                 x: 0,
-                scale: prefersReducedMotion ? 1 : isOtherHovered ? 0.98 : 1,
+                scale: prefersReducedMotion ? 1 : isOtherHovered ? 0.985 : 1,
             }}
             transition={
                 prefersReducedMotion
@@ -292,69 +299,64 @@ function ViewMoreCard({
                 prefersReducedMotion
                     ? { opacity: 1 }
                     : {
-                          scale: 1.03,
-                          y: -6,
+                          scale: 1.025,
+                          y: -5,
                           opacity: 1,
-                          transition: { duration: 0.1, ease: 'easeOut' },
+                          transition: { duration: 0.16, ease: [0.22, 1, 0.36, 1] },
                       }
             }
-            whileFocus={prefersReducedMotion ? { opacity: 1 } : { scale: 1.03, y: -6, opacity: 1 }}
+            whileFocus={prefersReducedMotion ? { opacity: 1 } : { scale: 1.025, y: -5, opacity: 1 }}
             onPointerEnter={() => onHover(index)}
             onPointerLeave={() => onHover(null)}
             aria-label={viewAllText}
         >
-            {/* 渐变背景 */}
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="from-primary/40 via-secondary/30 to-accent/40 h-full w-full bg-gradient-to-br transition-all duration-500 group-hover:scale-105 group-hover:opacity-90" />
+            <div className="absolute inset-0 -z-30 overflow-hidden">
+                <div className="h-full w-full scale-[1.025] bg-[radial-gradient(circle_at_28%_18%,var(--card-image-fallback-highlight),transparent_34%),linear-gradient(135deg,var(--card-image-fallback-start),var(--card-image-fallback-end))] transition-transform duration-700 group-hover:scale-[1.055]" />
             </div>
 
-            {/* 渐变遮罩 */}
             <div
-                className={cn(
-                    'absolute inset-0',
-                    'bg-gradient-to-t from-black/60 via-black/20 to-transparent',
-                    'dark:from-black/70 dark:via-black/30'
-                )}
+                className="pointer-events-none absolute inset-0 -z-20"
+                style={{
+                    background: `
+                        linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)),
+                        linear-gradient(
+                            180deg,
+                            rgba(5, 8, 15, 0.08) 0%,
+                            transparent 36%,
+                            rgba(5, 8, 15, 0.28) 100%
+                        )
+                    `,
+                }}
             />
 
-            {/* 内容区域 */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-                {/* 图标 */}
-                <motion.div
-                    className={cn(
-                        'mb-4 flex h-16 w-16 items-center justify-center',
-                        'rounded-full',
-                        'bg-white/20 backdrop-blur-sm',
-                        'border border-white/30',
-                        'transition-all duration-300',
-                        'group-hover:scale-110 group-hover:bg-white/30'
-                    )}
-                    whileHover={{ rotate: 0 }}
-                >
-                    <ArrowRight className="h-8 w-8 text-white transition-transform duration-300 group-hover:translate-x-1" />
-                </motion.div>
+            <div className="pointer-events-none absolute inset-0 -z-10 opacity-80 transition-opacity duration-500 group-hover:opacity-100">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.18),transparent_35%),linear-gradient(160deg,rgba(125,211,252,0.16),transparent_40%)]" />
+                <div className="absolute inset-0 ring-1 ring-white/15 ring-inset" />
+            </div>
 
-                {/* 文字 */}
-                <h3
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[66%] bg-gradient-to-t from-black/75 via-black/40 to-transparent" />
+
+            <div className="absolute inset-0 z-20 flex items-center justify-center">
+                <div
                     className={cn(
-                        'text-lg leading-tight font-bold text-white',
-                        'text-center',
-                        'transition-colors group-hover:text-white/90'
+                        'flex h-14 w-14 items-center justify-center rounded-full',
+                        'border border-white/25 bg-white/[0.14] shadow-lg shadow-black/20 backdrop-blur-md',
+                        'transition-[background,transform] duration-300 ease-out',
+                        'group-hover:scale-105 group-hover:bg-white/20'
                     )}
                 >
+                    <ArrowRight className="h-7 w-7 text-white transition-transform duration-300 group-hover:translate-x-0.5" />
+                </div>
+            </div>
+
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 px-3 pt-16 pb-3 sm:px-4 sm:pt-20 sm:pb-4">
+                <h3 className="m-0 line-clamp-2 text-[1.03rem] leading-tight font-extrabold text-white [text-shadow:0_2px_12px_rgba(3,7,18,0.82)] sm:text-[1.1rem]">
                     {viewAllText}
                 </h3>
-                <p className="mt-1 text-sm text-white/70">{exploreMoreText}</p>
+                <p className="mt-2 line-clamp-1 text-[0.68rem] leading-none font-bold text-white/70 [text-shadow:0_1px_8px_rgba(3,7,18,0.72)]">
+                    {exploreMoreText}
+                </p>
             </div>
-
-            {/* Hover 阴影增强 */}
-            <div
-                className={cn(
-                    'absolute inset-0 rounded-2xl',
-                    'shadow-lg transition-shadow duration-300',
-                    'group-hover:shadow-2xl group-hover:shadow-black/30'
-                )}
-            />
         </motion.a>
     );
 }
@@ -380,7 +382,7 @@ export default function PostsShowcaseCarousel({
     } = useHorizontalScroll<HTMLDivElement>({
         itemSelector: '.showcase-card',
         itemGap: 16,
-        fallbackItemWidth: 288,
+        fallbackItemWidth: 304,
         requireHover: true,
         dependencyKey: `${posts.length}:${showMoreButton}`,
     });
@@ -498,7 +500,7 @@ export default function PostsShowcaseCarousel({
                 onWheel={handleWheel}
                 className={cn(
                     'flex gap-4 overflow-x-auto scroll-smooth',
-                    'px-4 py-2',
+                    'px-4 py-3',
                     // 隐藏滚动条但保留功能
                     'scrollbar-none',
                     '[&::-webkit-scrollbar]:hidden',
@@ -549,7 +551,7 @@ export default function PostsShowcaseCarousel({
 export function PostsShowcaseSkeleton({ count = 5 }: { count?: number }) {
     return (
         <div className="relative w-full">
-            <div className={cn('flex gap-4 overflow-hidden', 'px-4 py-2')}>
+            <div className={cn('flex gap-4 overflow-hidden', 'px-4 py-3')}>
                 {Array.from({ length: count }).map((_, index) => (
                     <SkeletonCard key={index} index={index} />
                 ))}
