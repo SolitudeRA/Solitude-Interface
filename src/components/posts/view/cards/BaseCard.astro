@@ -1,254 +1,524 @@
 ---
 import type { Post } from '@api/ghost/types';
-import { Chip } from '@components/common/badge';
-
-// 颜色方案类型（与 badge.tsx 保持一致）
-type ChipColorScheme =
-    | 'default'
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'info'
-    | 'purple'
-    | 'rose';
-
-// Type 配置：不同文章类型使用不同颜色
-const DEFAULT_TYPE_CONFIG = {
-    colorScheme: 'secondary' as ChipColorScheme,
-};
-
-const TYPE_CONFIG: Record<string, { colorScheme: ChipColorScheme }> = {
-    article: { colorScheme: 'primary' }, // 蓝色 - 经典、专业
-    gallery: { colorScheme: 'purple' }, // 紫色 - 艺术、创意
-    video: { colorScheme: 'rose' }, // 玫红 - 热情、动感
-    music: { colorScheme: 'warning' }, // 琥珀 - 温暖、活力
-    default: DEFAULT_TYPE_CONFIG,
-};
-
-// Category 配置：不同分类使用不同颜色和图标
-const DEFAULT_CATEGORY_CONFIG = {
-    icon: '📂',
-    colorScheme: 'secondary' as ChipColorScheme,
-};
-
-const CATEGORY_CONFIG: Record<string, { icon: string; colorScheme: ChipColorScheme }> = {
-    tech: { icon: '💻', colorScheme: 'info' }, // 青色 - 科技感
-    life: { icon: '🌱', colorScheme: 'success' }, // 绿色 - 生活、自然
-    default: DEFAULT_CATEGORY_CONFIG,
-};
+import { DEFAULT_LOCALE, type Locale } from '@lib/i18n';
 
 interface Props {
     post: Post;
-    /** 卡片类型图标，例如 📝、🖼️、🎵、🎬 */
+    /** Kept for the typed media-card wrappers; the visual type label comes from Ghost tags. */
     typeIcon?: string;
-    /** 自定义 CSS 类名 */
+    locale?: Locale;
     className?: string;
 }
 
-const { post, typeIcon, className = '' } = Astro.props;
-const postFeatureImageUrl = `url(${post.feature_image.toString()})`;
+const { post, locale = DEFAULT_LOCALE, className = '' } = Astro.props;
 
-// 获取 type 配置
-const typeKey = post.post_type?.toLowerCase() || 'default';
-const typeConfig = TYPE_CONFIG[typeKey] ?? DEFAULT_TYPE_CONFIG;
+const featureImageUrl = post.feature_image?.toString() ?? '';
+const hasFeatureImage = featureImageUrl.length > 0;
 
-// 获取 category 配置
-const categoryKey = post.post_category?.toLowerCase() || 'default';
-const categoryConfig = CATEGORY_CONFIG[categoryKey] ?? DEFAULT_CATEGORY_CONFIG;
+const PREVIEW_LIMITS: Record<Locale, number> = {
+    zh: 145,
+    ja: 145,
+    en: 265,
+};
+
+function isVisibleTag(value: string | null | undefined): value is string {
+    return Boolean(value && value.trim() && value.trim().toLowerCase() !== 'default');
+}
+
+function titleCaseTag(value: string): string {
+    return value
+        .trim()
+        .replace(/[-_]+/g, ' ')
+        .replace(/\b[a-z]/g, (char) => char.toUpperCase());
+}
+
+function truncatePreview(value: string | null | undefined, maxLength: number): string {
+    const normalized = (value ?? '').trim().replace(/\s+/g, ' ');
+    const chars = Array.from(normalized);
+
+    if (chars.length <= maxLength) return normalized;
+
+    const suffix = '...';
+    const sliceLength = Math.max(0, maxLength - suffix.length);
+
+    return `${chars.slice(0, sliceLength).join('').trimEnd()}${suffix}`;
+}
+
+function getTitleDensity(
+    title: string,
+    currentLocale: Locale
+): 'short' | 'medium' | 'long' | 'stress' {
+    const length = Array.from(title.trim()).length;
+
+    if (currentLocale === 'en') {
+        if (length > 90) return 'stress';
+        if (length > 58) return 'long';
+        if (length > 28) return 'medium';
+        return 'short';
+    }
+
+    if (length > 50) return 'stress';
+    if (length > 32) return 'long';
+    if (length > 18) return 'medium';
+    return 'short';
+}
+
+const previewText = truncatePreview(post.excerpt, PREVIEW_LIMITS[locale]);
+const titleDensity = getTitleDensity(post.title, locale);
+const publishedDate = post.published_at?.split('T')[0] ?? '';
+
+const typeLabel = isVisibleTag(post.post_type) ? titleCaseTag(post.post_type) : '';
+const categoryLabel = isVisibleTag(post.post_category) ? titleCaseTag(post.post_category) : '';
+const seriesLabel = isVisibleTag(post.post_series) ? post.post_series.trim() : '';
+const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
 ---
 
 <div
-    class:list={[
-        'base-card flex h-full w-full flex-col rounded-[35px] px-7 py-8 shadow-lg transition-all duration-300 hover:shadow-2xl',
-        className,
-    ]}
-    style={`--postFeatureImageUrl: ${postFeatureImageUrl}`}
+    class:list={['base-card', className]}
+    data-title-density={titleDensity}
+    data-card-locale={locale}
 >
-    <!-- 顶部标签区 -->
-    <div class="mb-5 flex items-center justify-between">
-        <Chip variant="flat" colorScheme={typeConfig.colorScheme}>
-            {typeIcon && <span class="mr-1">{typeIcon}</span>}
-            {post.post_type}
-        </Chip>
-        {
-            post.post_category && (
-                <Chip variant="flat" colorScheme={categoryConfig.colorScheme}>
-                    <span class="mr-1">{categoryConfig.icon}</span>
-                    {post.post_category}
-                </Chip>
-            )
-        }
-    </div>
+    {
+        hasFeatureImage ? (
+            <img
+                class="base-card-media base-card-image"
+                src={featureImageUrl}
+                alt=""
+                loading="lazy"
+                decoding="async"
+            />
+        ) : (
+            <div class="base-card-media base-card-image-fallback" aria-hidden="true" />
+        )
+    }
 
-    <!-- 标题区 -->
-    <div class="mt-2 mb-6">
-        <h3
-            class="card-title line-clamp-3 text-center text-[1.75rem] leading-relaxed font-medium tracking-normal"
-        >
-            {post.title}
-        </h3>
-    </div>
+    <div class="base-card-shade" aria-hidden="true"></div>
 
-    <!-- 自定义内容插槽（用于特殊卡片的图标/装饰区域） -->
-    <slot name="richtext" />
-
-    <!-- 摘要区（flex-1 占据剩余空间） -->
-    <div class="mb-auto flex-1 overflow-hidden">
-        <p class="card-excerpt line-clamp-5 text-[1.05rem] leading-[1.85] tracking-wide">
-            {post.excerpt}
-        </p>
-    </div>
-
-    <!-- 分隔装饰线 - 彩虹渐变 -->
-    <div class="card-divider mx-auto my-4 h-0.5 w-3/7 rounded-full"></div>
-
-    <!-- 底部信息区 -->
-    <div class="mt-auto space-y-3">
-        <div class="card-meta text-center text-xs font-medium tracking-wide">
-            {post.published_at.split('T')[0]}
+    <div class="corner-grid" aria-label="Ghost tag groups">
+        <div class="corner-zone" aria-label="Post type">
+            {typeLabel && <span class="corner-value is-type">{typeLabel}</span>}
         </div>
+        <div class="corner-zone" aria-label="Post series">
+            {seriesLabel && <span class="corner-value is-series">{seriesLabel}</span>}
+        </div>
+        <div class="corner-zone" aria-label="General tags">
+            {
+                generalTags.length > 0 && (
+                    <span class="corner-tags">
+                        {generalTags.map((tagName) => (
+                            <span class="corner-tag">{tagName}</span>
+                        ))}
+                    </span>
+                )
+            }
+        </div>
+        <div class="corner-zone" aria-label="Post category">
+            {categoryLabel && <span class="corner-value is-category">{categoryLabel}</span>}
+        </div>
+    </div>
+
+    <div class="card-inner">
+        <header class="title-section">
+            <h3 class="card-title">{post.title}</h3>
+        </header>
+
         {
-            post.post_general_tags && post.post_general_tags.length > 0 && (
-                <div class="flex flex-wrap justify-center gap-1.5">
-                    {post.post_general_tags.slice(0, 3).map((tagName: string) => (
-                        <Chip colorScheme="success" variant="flat">
-                            {tagName}
-                        </Chip>
-                    ))}
-                </div>
+            previewText && (
+                <section class="content-section">
+                    <p class="card-excerpt">{previewText}</p>
+                </section>
             )
         }
+
+        <footer class="meta-section">
+            {
+                publishedDate && (
+                    <time class="card-date" datetime={publishedDate}>
+                        {publishedDate}
+                    </time>
+                )
+            }
+        </footer>
     </div>
 </div>
 
 <style>
     .base-card {
+        --corner-inset: clamp(16px, 5.8cqw, 24px);
+        --corner-pill-bg: rgba(255, 255, 255, 0.1);
+        --corner-pill-border: rgba(255, 255, 255, 0.24);
+
+        container-type: inline-size;
         position: relative;
-        background-size: cover;
-        background-position: center;
-        background-image: var(--postFeatureImageUrl);
-        box-shadow: 0 8px 32px var(--post-view-card-shadow);
+        isolation: isolate;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 35px;
+        background: #0f172a;
+        box-shadow:
+            0 34px 80px rgba(0, 0, 0, 0.38),
+            0 1px 0 rgba(255, 255, 255, 0.22) inset;
+        transition:
+            border-color 360ms ease,
+            box-shadow 360ms ease;
     }
 
-    /* 彩虹色亮边 - 使用伪元素实现 */
-    .base-card::after {
-        content: '';
-        position: absolute;
-        inset: -1px;
-        border-radius: inherit;
-        padding: 1px;
-        background: conic-gradient(
-            from 0deg,
-            #ff6b6b,
-            #feca57,
-            #48dbfb,
-            #ff9ff3,
-            #54a0ff,
-            #5f27cd,
-            #ff6b6b
-        );
-        -webkit-mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        pointer-events: none;
-        opacity: 0.6;
-        transition: opacity 0.3s ease;
-        z-index: 0;
+    :global(.post-card-wrapper:hover) .base-card,
+    :global(.post-card-wrapper:focus-visible) .base-card,
+    .base-card:hover {
+        border-color: rgba(255, 255, 255, 0.32);
+        box-shadow:
+            0 38px 84px rgba(0, 0, 0, 0.42),
+            0 1px 0 rgba(255, 255, 255, 0.26) inset;
     }
 
-    .base-card:hover::after {
-        opacity: 0.9;
+    :global(.post-card-wrapper:active) .base-card {
+        border-color: rgba(255, 255, 255, 0.26);
+        box-shadow:
+            0 30px 72px rgba(0, 0, 0, 0.38),
+            0 1px 0 rgba(255, 255, 255, 0.22) inset;
     }
 
-    /* 渐变覆盖层 */
-    .base-card::before {
-        content: '';
+    .base-card-media,
+    .base-card-shade,
+    .card-inner {
         position: absolute;
         inset: 0;
-        border-radius: inherit;
-        background: linear-gradient(
-            180deg,
-            var(--post-view-card-overlay-start) 0%,
-            var(--post-view-card-overlay-mid) 50%,
-            var(--post-view-card-overlay-end) 100%
-        );
-        pointer-events: none;
-        transition: opacity 0.3s ease;
     }
 
-    /* 确保内容在覆盖层之上 */
-    .base-card > * {
-        position: relative;
+    .base-card-media {
+        z-index: 0;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        filter: saturate(1.05) contrast(0.98);
+        transform: scale(1.025) translate3d(0, 0, 0);
+        transition:
+            transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+            filter 700ms ease;
+    }
+
+    .base-card-image-fallback {
+        background:
+            radial-gradient(
+                circle at 30% 20%,
+                var(--card-image-fallback-highlight),
+                transparent 32%
+            ),
+            linear-gradient(
+                135deg,
+                var(--card-image-fallback-start),
+                var(--card-image-fallback-end)
+            );
+    }
+
+    .base-card-shade {
         z-index: 1;
+        background:
+            linear-gradient(rgba(0, 0, 0, 0.54), rgba(0, 0, 0, 0.54)),
+            linear-gradient(
+                180deg,
+                rgba(5, 8, 15, 0.16) 0%,
+                transparent 34%,
+                transparent 58%,
+                rgba(5, 8, 15, 0.2) 100%
+            );
+        pointer-events: none;
     }
 
-    /* 文字颜色 - 使用主题变量提高可读性 */
+    .base-card-shade::after {
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.14), transparent 34%),
+            linear-gradient(160deg, rgba(125, 211, 252, 0.12), transparent 36%);
+        content: '';
+        opacity: 0;
+        transform: translate3d(0, 10px, 0);
+        transition:
+            opacity 520ms ease,
+            transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    :global(.post-card-wrapper:hover) .base-card-media,
+    :global(.post-card-wrapper:focus-visible) .base-card-media,
+    .base-card:hover .base-card-media {
+        filter: saturate(1.12) contrast(1.02);
+        transform: scale(1.04) translate3d(0, 0, 0);
+    }
+
+    :global(.post-card-wrapper:hover) .base-card-shade::after,
+    :global(.post-card-wrapper:focus-visible) .base-card-shade::after,
+    .base-card:hover .base-card-shade::after {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+
+    .corner-grid {
+        position: absolute;
+        inset: var(--corner-inset);
+        z-index: 4;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        pointer-events: none;
+    }
+
+    .corner-zone {
+        display: grid;
+        max-width: min(148px, 42cqw);
+        gap: 5px;
+        pointer-events: none;
+    }
+
+    .corner-zone:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .corner-zone:nth-child(2) {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .corner-zone:nth-child(3) {
+        grid-column: 1;
+        grid-row: 3;
+        pointer-events: auto;
+    }
+
+    .corner-zone:nth-child(4) {
+        grid-column: 2;
+        grid-row: 3;
+    }
+
+    .corner-zone:nth-child(2),
+    .corner-zone:nth-child(4) {
+        justify-self: end;
+        text-align: right;
+    }
+
+    .corner-zone:nth-child(3),
+    .corner-zone:nth-child(4) {
+        align-self: end;
+    }
+
+    .corner-value,
+    .corner-tag {
+        display: inline-flex;
+        min-height: clamp(22px, 6.6cqw, 26px);
+        align-items: center;
+        border: 1px solid var(--corner-pill-border);
+        border-radius: 999px;
+        background: var(--corner-pill-bg);
+        color: rgba(255, 255, 255, 0.9);
+        font-size: clamp(0.625rem, 2.8cqw, 0.6875rem);
+        font-weight: 800;
+        line-height: 1;
+        text-shadow: 0 1px 8px rgba(3, 7, 18, 0.5);
+        white-space: nowrap;
+    }
+
+    .corner-value {
+        justify-self: start;
+        max-width: 148px;
+        overflow: hidden;
+        padding: 4px 10px;
+        text-overflow: ellipsis;
+    }
+
+    .corner-zone:nth-child(2) .corner-value,
+    .corner-zone:nth-child(4) .corner-value {
+        justify-self: end;
+    }
+
+    .corner-value.is-type {
+        border-color: rgba(125, 211, 252, 0.52);
+        background: rgba(125, 211, 252, 0.16);
+    }
+
+    .corner-value.is-series {
+        border-color: rgba(253, 164, 175, 0.42);
+        background: rgba(253, 164, 175, 0.14);
+    }
+
+    .corner-value.is-category {
+        border-color: rgba(190, 242, 100, 0.42);
+        background: rgba(190, 242, 100, 0.13);
+    }
+
+    .corner-tags {
+        display: flex;
+        width: fit-content;
+        max-width: 150px;
+        flex-flow: column-reverse wrap;
+        justify-content: flex-start;
+        gap: 5px;
+        pointer-events: auto;
+    }
+
+    .corner-tag {
+        max-width: 92px;
+        overflow: hidden;
+        padding: 4px 8px;
+        text-overflow: ellipsis;
+        transform: translate3d(0, 0, 0);
+        transition:
+            border-color 180ms ease,
+            background 180ms ease,
+            opacity 180ms ease,
+            transform 180ms ease;
+    }
+
+    .corner-zone:nth-child(3) .corner-tag:nth-child(n + 4) {
+        display: none;
+    }
+
+    .corner-tags:hover .corner-tag:nth-child(n + 4),
+    .corner-zone:nth-child(3):hover .corner-tag:nth-child(n + 4),
+    :global(.post-card-wrapper:hover) .corner-zone:nth-child(3) .corner-tag:nth-child(n + 4),
+    :global(.post-card-wrapper:focus-visible)
+        .corner-zone:nth-child(3)
+        .corner-tag:nth-child(n + 4),
+    .base-card:hover .corner-zone:nth-child(3) .corner-tag:nth-child(n + 4) {
+        display: inline-flex;
+        animation: tag-reveal 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .card-inner {
+        z-index: 3;
+        display: grid;
+        grid-template-rows: minmax(160px, auto) minmax(0, 1fr) minmax(88px, auto);
+        gap: clamp(10px, 3cqw, 16px);
+        padding: clamp(18px, 6cqw, 28px);
+        pointer-events: none;
+    }
+
+    .title-section {
+        display: grid;
+        min-width: 0;
+        align-content: end;
+        justify-items: center;
+        padding: clamp(48px, 14cqw, 64px) clamp(8px, 3cqw, 18px) 0;
+    }
+
     .card-title {
-        color: var(--post-view-card-title);
-        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+        display: -webkit-box;
+        max-width: 11ch;
+        margin: 0;
+        overflow: hidden;
+        color: #fff;
+        font-size: clamp(1.5rem, 8.6cqw, 2.125rem);
+        font-weight: 880;
+        letter-spacing: 0;
+        line-height: 0.98;
+        text-align: center;
+        text-shadow: 0 2px 14px rgba(3, 7, 18, 0.82);
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+    }
+
+    .base-card[data-title-density='long'] .card-title {
+        max-width: 13ch;
+        font-size: clamp(1.375rem, 7.6cqw, 1.875rem);
+        -webkit-line-clamp: 5;
+    }
+
+    .base-card[data-title-density='stress'] .card-title {
+        max-width: 15ch;
+        font-size: clamp(1.25rem, 6.85cqw, 1.6875rem);
+        line-height: 1.02;
+        -webkit-line-clamp: 5;
+    }
+
+    .content-section {
+        display: grid;
+        min-width: 0;
+        align-content: center;
+        justify-items: center;
+        padding: 0 clamp(10px, 4cqw, 22px);
     }
 
     .card-excerpt {
-        color: var(--post-view-card-excerpt);
-        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
+        display: -webkit-box;
+        max-width: 26ch;
+        margin: 0;
+        overflow: hidden;
+        color: rgba(255, 255, 255, 0.86);
+        font-size: clamp(0.875rem, 3.8cqw, 1.05rem);
+        font-weight: 520;
+        line-height: 1.55;
+        text-align: center;
+        text-shadow: 0 2px 10px rgba(3, 7, 18, 0.72);
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 10;
     }
 
-    .card-meta {
-        color: var(--post-view-card-meta);
-        letter-spacing: 0.05em;
+    .meta-section {
+        position: relative;
+        min-width: 0;
     }
 
-    .card-divider {
-        background: linear-gradient(
-            90deg,
-            transparent 0%,
-            #ff6b6b 10%,
-            #feca57 25%,
-            #48dbfb 40%,
-            #ff9ff3 55%,
-            #54a0ff 70%,
-            #5f27cd 85%,
-            transparent 100%
-        );
-        opacity: 0.35;
-        transition: opacity 0.3s ease;
+    .card-date {
+        position: absolute;
+        bottom: clamp(0px, 1cqw, 2px);
+        left: 50%;
+        color: rgba(255, 255, 255, 0.64);
+        font-size: clamp(0.625rem, 2.8cqw, 0.6875rem);
+        font-variant-numeric: tabular-nums;
+        font-weight: 750;
+        line-height: 1;
+        text-align: center;
+        text-shadow: 0 1px 8px rgba(3, 7, 18, 0.66);
+        transform: translateX(-50%);
+        white-space: nowrap;
     }
 
-    .base-card:hover .card-divider {
-        opacity: 0.55;
-    }
+    @keyframes tag-reveal {
+        from {
+            opacity: 0;
+            transform: translate3d(0, 10px, 0) scale(0.96);
+        }
 
-    /* 暗色主题文字阴影调整 */
-    :global(.dark) .card-title {
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-    }
-
-    :global(.dark) .card-excerpt {
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-    }
-
-    /* 悬停效果增强 */
-    .base-card:hover {
-        box-shadow: 0 12px 48px var(--post-view-card-shadow-hover);
-    }
-
-    .base-card:hover::before {
-        opacity: 0.85;
-    }
-
-    /* 响应式优化 - 大屏幕增加 padding */
-    @media (min-width: 1440px) {
-        .base-card {
-            padding: 2.25rem 2rem;
+        to {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1);
         }
     }
 
-    @media (min-width: 1920px) {
+    @media (max-width: 640px) {
         .base-card {
-            padding: 2.5rem 2.25rem;
+            border-radius: 28px;
+        }
+
+        .card-inner {
+            grid-template-rows: minmax(132px, auto) minmax(0, 1fr) minmax(74px, auto);
+            padding: clamp(16px, 5.2cqw, 20px);
+        }
+
+        .title-section {
+            padding-top: clamp(42px, 13cqw, 54px);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .base-card,
+        .base-card-media,
+        .base-card-shade::after,
+        .corner-tag {
+            transition: none;
+        }
+
+        .corner-tags:hover .corner-tag:nth-child(n + 4),
+        .corner-zone:nth-child(3):hover .corner-tag:nth-child(n + 4),
+        :global(.post-card-wrapper:hover) .corner-zone:nth-child(3) .corner-tag:nth-child(n + 4),
+        :global(.post-card-wrapper:focus-visible)
+            .corner-zone:nth-child(3)
+            .corner-tag:nth-child(n + 4),
+        .base-card:hover .corner-zone:nth-child(3) .corner-tag:nth-child(n + 4) {
+            animation: none;
         }
     }
 </style>

@@ -1,0 +1,1384 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Post View Card Demo</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --page-bg: #111827;
+        --page-panel: rgba(17, 24, 39, 0.72);
+        --page-panel-border: rgba(255, 255, 255, 0.14);
+        --text: #f8fafc;
+        --muted: rgba(248, 250, 252, 0.74);
+        --quiet: rgba(248, 250, 252, 0.56);
+        --accent: #7dd3fc;
+        --accent-2: #fda4af;
+        --accent-3: #bef264;
+        --card-radius: 30px;
+        --overlay: 0.54;
+        --band-alpha: 0.14;
+        --blur: 0px;
+        --text-scale: 1;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+      }
+
+      body {
+        margin: 0;
+        background:
+          linear-gradient(145deg, rgba(9, 12, 20, 0.94), rgba(20, 35, 48, 0.78)),
+          url("https://ghost.solitudera.com/content/images/2026/01/91719981_p0.jpg")
+            center / cover fixed;
+        color: var(--text);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+      }
+
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+
+      .demo-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+        gap: clamp(20px, 4vw, 48px);
+        width: min(1180px, calc(100vw - 36px));
+        min-height: 100svh;
+        margin: 0 auto;
+        padding: clamp(20px, 4vw, 56px) 0;
+        align-items: center;
+      }
+
+      .stage {
+        display: grid;
+        min-height: min(760px, calc(100svh - 48px));
+        perspective: 1200px;
+        place-items: center;
+      }
+
+      .rail-preview {
+        --rail-gap: clamp(20px, 4vw, 60px);
+        display: flex;
+        width: min(100%, 980px);
+        align-items: center;
+        justify-content: center;
+        gap: var(--rail-gap);
+        overflow: hidden;
+        padding: 24px 0;
+      }
+
+      .rail-ghost-card {
+        position: relative;
+        flex: 0 0 clamp(150px, 22vw, 310px);
+        aspect-ratio: 394 / 780;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: var(--card-radius);
+        background:
+          linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.58)),
+          url("https://ghost.solitudera.com/content/images/2026/01/91719981_p0.jpg")
+            center / cover;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.24);
+        opacity: 0.46;
+        pointer-events: none;
+        transform: scale(0.96);
+      }
+
+      .post-card {
+        position: relative;
+        flex: 0 0 auto;
+        isolation: isolate;
+        width: min(394px, 82vw);
+        aspect-ratio: 394 / 780;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: var(--card-radius);
+        box-shadow:
+          0 34px 80px rgba(0, 0, 0, 0.38),
+          0 1px 0 rgba(255, 255, 255, 0.22) inset;
+        background: #0f172a;
+        transform: translate3d(0, 0, 0);
+        transform-origin: center;
+        transition:
+          border-color 360ms ease,
+          box-shadow 360ms ease;
+      }
+
+      .post-card:not(.no-motion):hover {
+        border-color: rgba(255, 255, 255, 0.32);
+        box-shadow:
+          0 38px 84px rgba(0, 0, 0, 0.42),
+          0 1px 0 rgba(255, 255, 255, 0.26) inset;
+      }
+
+      .post-card:not(.no-motion):active {
+        border-color: rgba(255, 255, 255, 0.26);
+        box-shadow:
+          0 30px 72px rgba(0, 0, 0, 0.38),
+          0 1px 0 rgba(255, 255, 255, 0.22) inset;
+      }
+
+      .card-media,
+      .card-shade,
+      .card-inner {
+        position: absolute;
+        inset: 0;
+      }
+
+      .card-media {
+        z-index: -3;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: saturate(1.05) contrast(0.98);
+        transform: scale(var(--image-scale, 1.025)) translate3d(0, 0, 0);
+        transition:
+          transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+          filter 700ms ease;
+      }
+
+      .card-shade {
+        z-index: -2;
+        background:
+          linear-gradient(rgba(0, 0, 0, var(--overlay)), rgba(0, 0, 0, var(--overlay))),
+          linear-gradient(
+            180deg,
+            rgba(5, 8, 15, 0.16) 0%,
+            transparent 34%,
+            transparent 58%,
+            rgba(5, 8, 15, 0.2) 100%
+          );
+      }
+
+      .card-shade::after {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            circle at 50% 18%,
+            rgba(255, 255, 255, 0.14),
+            transparent 34%
+          ),
+          linear-gradient(160deg, rgba(125, 211, 252, 0.12), transparent 36%);
+        content: "";
+        opacity: 0;
+        transform: translate3d(0, 10px, 0);
+        transition:
+          opacity 520ms ease,
+          transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .card-inner {
+        display: grid;
+        grid-template-rows: minmax(150px, auto) minmax(0, 1fr) minmax(112px, auto);
+        padding: 18px;
+        gap: 12px;
+      }
+
+      .card-section {
+        min-width: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        box-shadow: none;
+        transition:
+          background 220ms ease,
+          border-color 220ms ease,
+          backdrop-filter 220ms ease,
+          box-shadow 220ms ease;
+      }
+
+      .title-section {
+        display: grid;
+        align-content: end;
+        gap: 10px;
+        padding: 18px;
+      }
+
+      .content-section {
+        display: grid;
+        align-content: end;
+        padding: 18px;
+      }
+
+      .meta-section {
+        display: grid;
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .eyebrow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        min-width: 0;
+      }
+
+      .chip {
+        display: inline-flex;
+        max-width: 100%;
+        min-height: 26px;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.24);
+        border-radius: 999px;
+        padding: 3px 9px;
+        background: rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .chip.is-warm {
+        border-color: rgba(253, 164, 175, 0.42);
+        background: rgba(253, 164, 175, 0.16);
+      }
+
+      h1 {
+        margin: 0;
+        color: #fff;
+        font-size: calc(29px * var(--text-scale));
+        font-weight: 800;
+        line-height: 1.04;
+        letter-spacing: 0;
+        text-wrap: balance;
+        text-shadow: 0 2px 18px rgba(0, 0, 0, 0.34);
+      }
+
+      .content-section p {
+        margin: 0;
+        color: var(--muted);
+        font-size: calc(15px * var(--text-scale));
+        font-weight: 520;
+        line-height: 1.7;
+        text-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .meta-row,
+      .tag-row {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+      }
+
+      .meta-row {
+        justify-content: space-between;
+        gap: 12px;
+        color: rgba(255, 255, 255, 0.86);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .meta-row span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .tag-row {
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+
+      .tiny-tag {
+        max-width: 100%;
+        border: 1px solid rgba(190, 242, 100, 0.34);
+        border-radius: 999px;
+        padding: 4px 8px;
+        color: rgba(255, 255, 255, 0.82);
+        background: rgba(190, 242, 100, 0.12);
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .post-card[data-variant="full"] .title-section {
+        border-bottom: 1px solid rgba(255, 255, 255, calc(var(--band-alpha) + 0.06));
+      }
+
+      .post-card[data-variant="full"] .meta-section {
+        border-top: 1px solid rgba(255, 255, 255, calc(var(--band-alpha) + 0.06));
+      }
+
+      .post-card[data-variant="gradient"] .card-section {
+        border-color: transparent;
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        box-shadow: none;
+      }
+
+      .post-card[data-variant="gradient"] .card-inner {
+        padding: 24px;
+        gap: 0;
+      }
+
+      .post-card[data-variant="gradient"] .title-section,
+      .post-card[data-variant="gradient"] .content-section,
+      .post-card[data-variant="gradient"] .meta-section {
+        padding: 0;
+      }
+
+      .post-card[data-variant="gradient"] .content-section {
+        align-content: end;
+        padding-bottom: 20px;
+      }
+
+      .post-card[data-variant="lock"] .card-inner {
+        grid-template-rows: minmax(0, 1fr) auto minmax(112px, auto);
+        padding: 30px 24px 24px;
+        gap: 18px;
+      }
+
+      .post-card[data-variant="lock"] .title-section {
+        align-content: center;
+        justify-items: center;
+        gap: 12px;
+        padding: 0;
+        text-align: center;
+      }
+
+      .post-card[data-variant="lock"] .eyebrow {
+        justify-content: center;
+      }
+
+      .post-card[data-variant="lock"] h1 {
+        max-width: 10ch;
+        font-size: calc(37px * var(--text-scale));
+        line-height: 0.98;
+      }
+
+      .post-card[data-variant="lock"] .content-section {
+        padding: 0 10px 2px;
+        text-align: center;
+      }
+
+      .post-card[data-variant="lock"] .meta-section {
+        border-top: 1px solid rgba(255, 255, 255, calc(var(--band-alpha) + 0.08));
+        padding: 16px 0 0;
+      }
+
+      .post-card[data-variant="reader"] .card-inner {
+        grid-template-rows: minmax(224px, auto) minmax(0, 1fr) minmax(118px, auto);
+        padding: 26px 24px 22px;
+        gap: 16px;
+      }
+
+      .post-card[data-variant="reader"] .title-section {
+        align-content: end;
+        border-bottom: 1px solid rgba(255, 255, 255, calc(var(--band-alpha) + 0.08));
+        padding: 0 0 22px;
+      }
+
+      .post-card[data-variant="reader"] h1 {
+        font-size: calc(34px * var(--text-scale));
+      }
+
+      .post-card[data-variant="reader"] .content-section {
+        align-content: center;
+        border-left: 2px solid rgba(125, 211, 252, calc(var(--band-alpha) + 0.22));
+        padding: 0 0 0 18px;
+      }
+
+      .post-card[data-variant="reader"] .content-section p {
+        font-size: calc(16px * var(--text-scale));
+        line-height: 1.82;
+      }
+
+      .post-card[data-variant="reader"] .meta-section {
+        border-top: 1px solid rgba(255, 255, 255, calc(var(--band-alpha) + 0.04));
+        padding: 16px 0 0;
+      }
+
+      .post-card[data-variant="media"] .card-inner {
+        grid-template-rows: minmax(220px, 0.92fr) minmax(0, 1fr) minmax(150px, 0.72fr);
+        padding: 28px 24px 24px;
+        gap: 18px;
+      }
+
+      .post-card[data-variant="media"] .title-section {
+        align-content: end;
+        justify-items: center;
+        padding: 0;
+        text-align: center;
+      }
+
+      .post-card[data-variant="media"] .title-section .eyebrow {
+        display: none;
+      }
+
+      .post-card[data-variant="media"] h1 {
+        max-width: 11ch;
+        font-size: calc(34px * var(--text-scale));
+        line-height: 1;
+        overflow: hidden;
+        overflow-wrap: anywhere;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+      }
+
+      .post-card[data-variant="media"][data-title-fit="auto"][data-title-density="short"]
+        h1,
+      .post-card[data-variant="media"][data-title-fit="auto"][data-title-density="medium"]
+        h1 {
+        max-width: 11ch;
+        font-size: calc(34px * var(--text-scale));
+        -webkit-line-clamp: 4;
+      }
+
+      .post-card[data-variant="media"][data-title-fit="auto"][data-title-density="long"] h1 {
+        max-width: 13ch;
+        font-size: calc(30px * var(--text-scale));
+        -webkit-line-clamp: 5;
+      }
+
+      .post-card[data-variant="media"][data-title-fit="auto"][data-title-density="stress"]
+        h1 {
+        max-width: 15ch;
+        font-size: calc(27px * var(--text-scale));
+        -webkit-line-clamp: 5;
+      }
+
+      .post-card[data-variant="media"][data-title-fit="clamp"] h1 {
+        max-width: 13ch;
+        font-size: calc(30px * var(--text-scale));
+        -webkit-line-clamp: 4;
+      }
+
+      .post-card[data-variant="media"][data-title-fit="raw"] h1 {
+        display: block;
+        max-width: 11ch;
+        overflow: visible;
+        font-size: calc(34px * var(--text-scale));
+      }
+
+      .post-card[data-variant="media"] .content-section {
+        align-content: center;
+        justify-items: center;
+        padding: 0;
+      }
+
+      .post-card[data-variant="media"] .content-section p {
+        width: 100%;
+        max-width: var(--media-copy-width, 26ch);
+        text-align: var(--media-copy-align, center);
+      }
+
+      .post-card[data-variant="media"] .meta-section {
+        display: none;
+      }
+
+      .post-card[data-copy-mode="wide"] {
+        --media-copy-width: 100%;
+        --media-copy-align: left;
+      }
+
+      .post-card[data-variant="timeline"] .card-inner {
+        grid-template-rows: minmax(188px, auto) minmax(0, 1fr) minmax(118px, auto);
+        padding: 26px 24px 22px;
+        gap: 16px;
+      }
+
+      .post-card[data-variant="timeline"] .title-section {
+        align-content: end;
+        padding: 0 0 18px;
+      }
+
+      .post-card[data-variant="timeline"] .content-section {
+        position: relative;
+        align-content: center;
+        padding: 0 0 0 28px;
+      }
+
+      .post-card[data-variant="timeline"] .content-section::before {
+        position: absolute;
+        top: 10px;
+        bottom: 10px;
+        left: 8px;
+        width: 1px;
+        background: linear-gradient(
+          180deg,
+          rgba(125, 211, 252, 0.8),
+          rgba(253, 164, 175, 0.62)
+        );
+        content: "";
+      }
+
+      .post-card[data-variant="timeline"] .content-section::after {
+        position: absolute;
+        top: calc(50% - 6px);
+        left: 3px;
+        width: 11px;
+        height: 11px;
+        border: 2px solid rgba(255, 255, 255, 0.88);
+        border-radius: 999px;
+        background: rgba(125, 211, 252, 0.84);
+        content: "";
+      }
+
+      .post-card[data-variant="timeline"] .meta-section {
+        border-top: 1px solid rgba(255, 255, 255, calc(var(--band-alpha) + 0.04));
+        padding: 16px 0 0;
+      }
+
+      .corner-grid {
+        display: none;
+      }
+
+      .post-card[data-variant="media"] .corner-grid {
+        position: absolute;
+        inset: 24px;
+        z-index: 4;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        pointer-events: auto;
+      }
+
+      .corner-zone {
+        display: grid;
+        max-width: min(148px, 42vw);
+        gap: 5px;
+        pointer-events: none;
+      }
+
+      .corner-zone:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      .corner-zone:nth-child(2) {
+        grid-column: 2;
+        grid-row: 1;
+      }
+
+      .corner-zone:nth-child(3) {
+        grid-column: 1;
+        grid-row: 3;
+        pointer-events: auto;
+      }
+
+      .corner-zone:nth-child(4) {
+        grid-column: 2;
+        grid-row: 3;
+      }
+
+      .corner-zone:nth-child(2),
+      .corner-zone:nth-child(4) {
+        justify-self: end;
+        text-align: right;
+      }
+
+      .corner-zone:nth-child(3),
+      .corner-zone:nth-child(4) {
+        align-self: end;
+      }
+
+      .corner-value,
+      .corner-tag {
+        display: inline-flex;
+        min-height: 26px;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.24);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 11px;
+        font-weight: 800;
+        line-height: 1;
+        white-space: nowrap;
+      }
+
+      .corner-value {
+        justify-self: start;
+        padding: 4px 10px;
+      }
+
+      .corner-zone:nth-child(2) .corner-value,
+      .corner-zone:nth-child(4) .corner-value {
+        justify-self: end;
+      }
+
+      .corner-value.is-type {
+        border-color: rgba(125, 211, 252, 0.52);
+        background: rgba(125, 211, 252, 0.16);
+      }
+
+      .corner-value.is-category {
+        border-color: rgba(190, 242, 100, 0.42);
+        background: rgba(190, 242, 100, 0.13);
+      }
+
+      .corner-value.is-series {
+        max-width: 148px;
+        overflow: hidden;
+        border-color: rgba(253, 164, 175, 0.42);
+        background: rgba(253, 164, 175, 0.14);
+        text-overflow: ellipsis;
+      }
+
+      .corner-tags {
+        display: flex;
+        width: fit-content;
+        max-width: 150px;
+        flex-direction: column-reverse;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 5px;
+        pointer-events: auto;
+      }
+
+      .corner-tag {
+        max-width: 92px;
+        padding: 4px 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transform: translate3d(0, 0, 0);
+        transition:
+          border-color 180ms ease,
+          background 180ms ease,
+          opacity 180ms ease,
+          transform 180ms ease;
+      }
+
+      .corner-zone:nth-child(3) .corner-tag:nth-child(n + 4) {
+        display: none;
+      }
+
+      .corner-tags:hover .corner-tag:nth-child(n + 4),
+      .corner-zone:nth-child(3):hover .corner-tag:nth-child(n + 4),
+      .post-card:hover .corner-zone:nth-child(3) .corner-tag:nth-child(n + 4) {
+        display: inline-flex;
+        animation: tag-reveal 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      .card-date {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: rgba(255, 255, 255, 0.64);
+        font-size: 11px;
+        font-variant-numeric: tabular-nums;
+        font-weight: 750;
+        line-height: 1;
+        pointer-events: none;
+        text-align: center;
+        text-shadow: 0 1px 8px rgba(3, 7, 18, 0.66);
+        white-space: nowrap;
+      }
+
+      .post-card[data-variant="glass"] .card-section {
+        border-width: 1px;
+        border-style: solid;
+        border-radius: calc(var(--card-radius) - 10px);
+        border-color: rgba(255, 255, 255, 0.18);
+        background:
+          linear-gradient(
+            135deg,
+            rgba(255, 255, 255, calc(var(--band-alpha) + 0.1)),
+            rgba(255, 255, 255, calc(var(--band-alpha) * 0.35))
+          ),
+          rgba(9, 16, 28, calc(var(--band-alpha) + 0.08));
+        box-shadow:
+          0 1px 0 rgba(255, 255, 255, 0.2) inset,
+          0 18px 34px rgba(3, 7, 18, 0.18);
+      }
+
+      .post-card[data-variant="paper"] .card-section {
+        border-width: 1px;
+        border-style: solid;
+        border-radius: calc(var(--card-radius) - 10px);
+        border-color: rgba(255, 255, 255, 0.16);
+        background:
+          linear-gradient(
+            180deg,
+            rgba(248, 250, 252, calc(var(--band-alpha) + 0.2)),
+            rgba(248, 250, 252, calc(var(--band-alpha) + 0.05))
+          ),
+          rgba(15, 23, 42, calc(var(--band-alpha) * 0.38));
+        backdrop-filter: blur(calc(var(--blur) * 0.62));
+        -webkit-backdrop-filter: blur(calc(var(--blur) * 0.62));
+      }
+
+      .post-card.no-dividers .card-section {
+        border-color: transparent;
+      }
+
+      .post-card.no-dividers[data-variant="full"] .title-section,
+      .post-card.no-dividers[data-variant="full"] .meta-section {
+        border-color: transparent;
+      }
+
+      .post-card.no-motion .card-media {
+        transform: none;
+      }
+
+      .post-card:not(.no-motion):hover .card-media {
+        filter: saturate(1.12) contrast(1.02);
+        transform: scale(1.04) translate3d(0, 0, 0);
+      }
+
+      .post-card:not(.no-motion):hover .card-shade::after {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+
+      @keyframes tag-reveal {
+        from {
+          opacity: 0;
+          transform: translate3d(0, 10px, 0) scale(0.96);
+        }
+
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+      }
+
+      .controls {
+        display: grid;
+        gap: 18px;
+        border: 1px solid var(--page-panel-border);
+        border-radius: 8px;
+        padding: 18px;
+        background: var(--page-panel);
+        box-shadow: 0 26px 60px rgba(0, 0, 0, 0.26);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+      }
+
+      .controls h2 {
+        margin: 0;
+        color: #fff;
+        font-size: 18px;
+        line-height: 1.2;
+        letter-spacing: 0;
+      }
+
+      .control-group {
+        display: grid;
+        gap: 10px;
+      }
+
+      .control-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 750;
+      }
+
+      .control-value {
+        color: var(--quiet);
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+      }
+
+      .segmented {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .segmented button,
+      .toggle-row button {
+        min-height: 38px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 8px;
+        padding: 0 10px;
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.74);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 760;
+        line-height: 1;
+        transition:
+          background 160ms ease,
+          border-color 160ms ease,
+          color 160ms ease;
+      }
+
+      .segmented button.is-active,
+      .toggle-row button.is-active {
+        border-color: rgba(125, 211, 252, 0.6);
+        background: rgba(125, 211, 252, 0.2);
+        color: #fff;
+      }
+
+      .slider {
+        width: 100%;
+        accent-color: var(--accent);
+      }
+
+      select {
+        min-height: 40px;
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 8px;
+        padding: 0 10px;
+        background: rgba(3, 7, 18, 0.5);
+        color: #fff;
+      }
+
+      .toggle-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .mock-metrics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .mock-metric {
+        min-width: 0;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        padding: 9px 10px;
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .mock-metric span,
+      .mock-metric strong {
+        display: block;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .mock-metric span {
+        color: var(--quiet);
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .mock-metric strong {
+        margin-top: 4px;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 12px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      @media (max-width: 860px) {
+        .demo-shell {
+          grid-template-columns: 1fr;
+          align-items: start;
+          padding-top: 24px;
+          padding-bottom: 24px;
+        }
+
+        .stage {
+          min-height: auto;
+        }
+
+        .rail-preview {
+          width: min(100%, 620px);
+          gap: 18px;
+        }
+
+        .rail-ghost-card {
+          display: none;
+        }
+
+        .post-card {
+          width: min(360px, 88vw);
+        }
+      }
+
+      @media (max-height: 760px) and (min-width: 861px) {
+        .demo-shell {
+          align-items: start;
+          padding-top: 24px;
+          padding-bottom: 24px;
+        }
+
+        .stage {
+          min-height: auto;
+        }
+
+        .rail-preview {
+          padding: 0;
+        }
+
+        .rail-ghost-card {
+          flex-basis: 220px;
+        }
+
+        .post-card {
+          width: 330px;
+        }
+
+        .controls {
+          gap: 12px;
+          padding: 14px;
+        }
+
+        .controls h2 {
+          font-size: 16px;
+        }
+
+        .control-group {
+          gap: 7px;
+        }
+
+        .segmented button,
+        .toggle-row button,
+        select {
+          min-height: 34px;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .demo-shell {
+          width: min(100vw - 24px, 380px);
+        }
+
+        .card-inner {
+          padding: 14px;
+          gap: 10px;
+        }
+
+        .title-section,
+        .content-section,
+        .meta-section {
+          padding: 14px;
+        }
+
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="demo-shell">
+      <section class="stage" aria-label="Post card preview">
+        <div class="rail-preview" aria-label="Post card rail preview">
+          <div class="rail-ghost-card" aria-hidden="true"></div>
+          <article
+            class="post-card"
+            data-copy-mode="center"
+            data-title-density="medium"
+            data-title-fit="auto"
+            data-variant="media"
+            id="card"
+          >
+          <img
+            class="card-media"
+            id="card-image"
+            src="https://ghost.solitudera.com/content/images/2026/01/91719981_p0.jpg"
+            alt=""
+          />
+          <div class="card-shade" aria-hidden="true"></div>
+          <div class="card-inner">
+            <div class="corner-grid" aria-label="Ghost tag groups">
+              <div class="corner-zone" aria-label="Post type">
+                <span class="corner-value is-type">Article</span>
+              </div>
+              <div class="corner-zone" aria-label="Post series">
+                <span class="corner-value is-series">Home Server</span>
+              </div>
+              <div class="corner-zone" aria-label="General tags">
+                <span class="corner-tags">
+                  <span class="corner-tag">DevOps</span>
+                  <span class="corner-tag">Self-host</span>
+                  <span class="corner-tag">Backup</span>
+                  <span class="corner-tag">Media</span>
+                  <span class="corner-tag">Storage</span>
+                  <span class="corner-tag">Monitor</span>
+                </span>
+              </div>
+              <div class="corner-zone" aria-label="Post category">
+                <span class="corner-value is-category">Tech</span>
+              </div>
+              <time class="card-date" datetime="2026-06-06">2026-06-06</time>
+            </div>
+
+            <header class="card-section title-section">
+              <div class="eyebrow">
+                <span class="chip">Featured</span>
+                <span class="chip is-warm">Design</span>
+              </div>
+              <h1 id="mock-title">Building a Reliable Home Server Dashboard</h1>
+            </header>
+
+            <section class="card-section content-section">
+              <p id="mock-excerpt">
+                A compact preview that keeps enough context for the post while leaving the
+                image and corner metadata visible in a dense card wall.
+              </p>
+            </section>
+
+            <footer class="card-section meta-section">
+              <div class="meta-row">
+                <span>2026-06-06</span>
+                <span>5 min read</span>
+              </div>
+              <div class="tag-row">
+                <span class="tiny-tag">post-view</span>
+                <span class="tiny-tag">card</span>
+                <span class="tiny-tag">responsive</span>
+              </div>
+            </footer>
+          </div>
+          </article>
+          <div class="rail-ghost-card" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <aside class="controls" aria-label="Card controls">
+        <h2>Card Demo</h2>
+
+        <div class="control-group">
+          <div class="control-label">
+            Language
+            <span class="control-value" id="mock-lang-value">English</span>
+          </div>
+          <div class="segmented mock-language-controls" role="group" aria-label="Mock language">
+            <button type="button" class="is-active" data-mock-lang="en">English</button>
+            <button type="button" data-mock-lang="zh">Chinese</button>
+            <button type="button" data-mock-lang="ja">Japanese</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-label">
+            Title Mock
+            <span class="control-value" id="mock-title-value">Medium</span>
+          </div>
+          <div class="segmented mock-title-controls" role="group" aria-label="Mock title length">
+            <button type="button" data-mock-title="short">Short</button>
+            <button type="button" class="is-active" data-mock-title="medium">Medium</button>
+            <button type="button" data-mock-title="long">Long</button>
+            <button type="button" data-mock-title="stress">Stress</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-label">
+            Preview Mock
+            <span class="control-value" id="mock-excerpt-value">Medium</span>
+          </div>
+          <div class="segmented mock-excerpt-controls" role="group" aria-label="Mock preview length">
+            <button type="button" data-mock-excerpt="short">Short</button>
+            <button type="button" class="is-active" data-mock-excerpt="medium">Medium</button>
+            <button type="button" data-mock-excerpt="long">Long</button>
+            <button type="button" data-mock-excerpt="stress">Stress</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-label">Mock Metrics</div>
+          <div class="mock-metrics" aria-live="polite">
+            <div class="mock-metric">
+              <span>Title</span>
+              <strong id="title-metric">0 chars / 0 lines</strong>
+            </div>
+            <div class="mock-metric">
+              <span>Preview</span>
+              <strong id="excerpt-metric">0 chars / 0 lines</strong>
+            </div>
+            <div class="mock-metric">
+              <span>Fit</span>
+              <strong id="fit-metric">checking</strong>
+            </div>
+            <div class="mock-metric">
+              <span>Limit</span>
+              <strong id="limit-metric">checking</strong>
+            </div>
+          </div>
+        </div>
+
+        <label class="control-group">
+          <span class="control-label">
+            Image
+            <span class="control-value" id="image-value">1</span>
+          </span>
+          <select id="image-select">
+            <option value="https://ghost.solitudera.com/content/images/2026/01/91719981_p0.jpg">
+              Image 1
+            </option>
+            <option value="https://ghost.solitudera.com/content/images/2026/01/82937235_p0.jpg">
+              Image 2
+            </option>
+            <option value="https://ghost.solitudera.com/content/images/2026/01/77734148_p0.jpg">
+              Image 3
+            </option>
+          </select>
+        </label>
+      </aside>
+    </main>
+
+    <script>
+      const card = document.querySelector("#card");
+      const image = document.querySelector("#card-image");
+      const mockTitle = document.querySelector("#mock-title");
+      const mockExcerpt = document.querySelector("#mock-excerpt");
+      const mockLanguageButtons = Array.from(
+        document.querySelectorAll(".mock-language-controls [data-mock-lang]"),
+      );
+      const mockTitleButtons = Array.from(
+        document.querySelectorAll(".mock-title-controls [data-mock-title]"),
+      );
+      const mockExcerptButtons = Array.from(
+        document.querySelectorAll(".mock-excerpt-controls [data-mock-excerpt]"),
+      );
+      const imageSelect = document.querySelector("#image-select");
+      const mockLangValue = document.querySelector("#mock-lang-value");
+      const mockTitleValue = document.querySelector("#mock-title-value");
+      const mockExcerptValue = document.querySelector("#mock-excerpt-value");
+      const titleMetric = document.querySelector("#title-metric");
+      const excerptMetric = document.querySelector("#excerpt-metric");
+      const fitMetric = document.querySelector("#fit-metric");
+      const limitMetric = document.querySelector("#limit-metric");
+
+      const PREVIEW_LIMITS = {
+        en: 265,
+        zh: 145,
+        ja: 145,
+      };
+
+      const contentMocks = {
+        en: {
+          label: "English",
+          lang: "en",
+          titles: {
+            short: "Home Server Notes",
+            medium: "Building a Reliable Home Server Dashboard",
+            long: "Building a Reliable Home Server Dashboard for Storage, Media, and Automation",
+            stress:
+              "Building a Reliable Home Server Dashboard for Storage, Media, Automation, Backups, Power Usage, and Daily Maintenance",
+          },
+          excerpts: {
+            short: "A compact preview for a dense card wall.",
+            medium:
+              "A compact preview that keeps enough context for the post while leaving the image and corner metadata visible in a dense card wall.",
+            long:
+              "A compact preview that explains the main setup choices, the monitoring surface, and the tradeoffs behind keeping storage, media, automation, and backups visible from one home dashboard.",
+            stress:
+              "A compact preview that explains the main setup choices, monitoring surface, service grouping, backup status, storage pressure, automation health, and daily maintenance tradeoffs without turning the card into a full article excerpt.",
+          },
+          boundary:
+            "A compact preview that explains the main setup choices, monitoring surface, service grouping, backup status, storage pressure, automation health, power usage, media indexing, and daily maintenance tradeoffs while keeping enough room for the title and four corner metadata zones in a dense card wall.",
+        },
+        zh: {
+          label: "Chinese",
+          lang: "zh-Hans",
+          titles: {
+            short: "家庭服务器笔记",
+            medium: "一次家庭服务器仪表盘重构记录",
+            long: "一次围绕存储、媒体库、自动化和备份监控的家庭服务器仪表盘重构记录",
+            stress:
+              "一次围绕存储、媒体库、自动化、备份监控、电源管理和日常维护的家庭服务器仪表盘重构记录",
+          },
+          excerpts: {
+            short: "用于密集卡片墙的简短正文预览。",
+            medium:
+              "这段预览保留文章的核心上下文，同时让背景图、四角标签和中部标题仍然有足够的视觉空间。",
+            long:
+              "这段预览说明了主要配置、监控入口和取舍：怎样把存储、媒体库、自动化、备份状态集中到一个家庭服务器仪表盘里，同时不让卡片变得拥挤。",
+            stress:
+              "这段预览覆盖主要配置、服务分组、存储压力、媒体库状态、自动化健康度、备份结果、电源管理和日常维护，但仍然需要被控制在卡片中段，不能挤压四角标签或标题层级。",
+          },
+          boundary:
+            "这段预览覆盖主要配置、服务分组、存储压力、媒体库状态、自动化健康度、备份结果、电源管理、告警入口和日常维护，同时需要留出标题区和四角标签的空间，适合用来测试密集卡片墙里的正文显示边界。",
+        },
+        ja: {
+          label: "Japanese",
+          lang: "ja",
+          titles: {
+            short: "ホームサーバーメモ",
+            medium: "ホームサーバーダッシュボード再設計の記録",
+            long:
+              "ストレージ、メディア、自動化、バックアップ監視を整理するホームサーバーダッシュボード再設計の記録",
+            stress:
+              "ストレージ、メディア、自動化、バックアップ監視、電源管理、日常メンテナンスまで整理するホームサーバーダッシュボード再設計の記録",
+          },
+          excerpts: {
+            short: "密集したカード表示向けの短い本文プレビュー。",
+            medium:
+              "記事の文脈を残しつつ、背景画像、四隅のタグ、中央タイトルの余白を保つための本文プレビューです。",
+            long:
+              "主な設定、監視画面、運用上の判断を説明しながら、ストレージ、メディア、自動化、バックアップ状態を一つのホームサーバーダッシュボードで把握できるようにします。",
+            stress:
+              "主な設定、サービス分類、ストレージ容量、メディア管理、自動化の状態、バックアップ結果、電源管理、日常メンテナンスまで触れますが、カード中央のプレビューとして破綻しない長さを探ります。",
+          },
+          boundary:
+            "主な設定、サービス分類、ストレージ容量、メディア管理、自動化の状態、バックアップ結果、電源管理、通知導線、日常メンテナンスまで触れながら、タイトル領域と四隅のタグを残せる本文プレビューの限界を探ります。",
+        },
+      };
+
+      const mockState = {
+        lang: "en",
+        title: "medium",
+        excerpt: "medium",
+      };
+
+      const labelCase = (value) => value.charAt(0).toUpperCase() + value.slice(1);
+
+      const countCharacters = (value) => Array.from(value).length;
+
+      const renderedLineCount = (element) => {
+        const style = getComputedStyle(element);
+        const lineHeight = Number.parseFloat(style.lineHeight);
+        const fontSize = Number.parseFloat(style.fontSize);
+        const measuredLineHeight = Number.isFinite(lineHeight) ? lineHeight : fontSize * 1.2;
+        return Math.max(1, Math.round(element.getBoundingClientRect().height / measuredLineHeight));
+      };
+
+      const getBoundaryText = (lang) => {
+        const text = contentMocks[lang].boundary;
+        return `${text} ${text}`;
+      };
+
+      const getPreviewLimit = (lang) => PREVIEW_LIMITS[lang];
+
+      const truncatePreview = (value, lang) =>
+        Array.from(value).slice(0, getPreviewLimit(lang)).join("").trim();
+
+      const getTitleDensity = (length) => {
+        if (mockState.lang !== "en") {
+          if (length > 50) return "stress";
+          if (length > 32) return "long";
+          if (length > 18) return "medium";
+          return "short";
+        }
+
+        if (length > 90) return "stress";
+        if (length > 58) return "long";
+        if (length > 28) return "medium";
+        return "short";
+      };
+
+      const getExcerptFitState = () => {
+        const section = mockExcerpt.closest(".content-section");
+        const sectionRect = section.getBoundingClientRect();
+        const excerptRect = mockExcerpt.getBoundingClientRect();
+        const style = getComputedStyle(mockExcerpt);
+        const lineHeight = Number.parseFloat(style.lineHeight);
+        const fontSize = Number.parseFloat(style.fontSize);
+        const measuredLineHeight = Number.isFinite(lineHeight) ? lineHeight : fontSize * 1.2;
+        const maxLines = Math.max(1, Math.floor(sectionRect.height / measuredLineHeight));
+        const lines = renderedLineCount(mockExcerpt);
+
+        return {
+          fits: excerptRect.height <= sectionRect.height + 1,
+          lines,
+          maxLines,
+        };
+      };
+
+      const updateMockMetrics = () => {
+        const fit = getExcerptFitState();
+        const limit = getPreviewLimit(mockState.lang);
+
+        titleMetric.textContent = `${countCharacters(mockTitle.textContent)} chars / ${renderedLineCount(
+          mockTitle,
+        )} lines`;
+        excerptMetric.textContent = `${countCharacters(
+          mockExcerpt.textContent,
+        )} chars / ${renderedLineCount(mockExcerpt)} lines`;
+        fitMetric.textContent = fit.fits
+          ? `fits ${fit.lines}/${fit.maxLines} lines`
+          : `over ${fit.lines}/${fit.maxLines} lines`;
+        limitMetric.textContent = `${limit} chars`;
+      };
+
+      const updateButtonGroup = (buttons, attr, activeValue) => {
+        buttons.forEach((button) => {
+          button.classList.toggle("is-active", button.dataset[attr] === activeValue);
+        });
+      };
+
+      const syncMockContent = () => {
+        const mock = contentMocks[mockState.lang];
+        const excerptSource =
+          mockState.excerpt === "stress"
+            ? getBoundaryText(mockState.lang)
+            : mock.excerpts[mockState.excerpt];
+
+        mockTitle.textContent = mock.titles[mockState.title];
+        mockExcerpt.textContent = truncatePreview(excerptSource, mockState.lang);
+        card.lang = mock.lang;
+        card.dataset.titleDensity = getTitleDensity(countCharacters(mockTitle.textContent));
+        card.dataset.titleFit = "auto";
+        mockLangValue.textContent = mock.label;
+        mockTitleValue.textContent = labelCase(mockState.title);
+        mockExcerptValue.textContent = `${labelCase(mockState.excerpt)} / ${getPreviewLimit(
+          mockState.lang,
+        )}`;
+        updateButtonGroup(mockLanguageButtons, "mockLang", mockState.lang);
+        updateButtonGroup(mockTitleButtons, "mockTitle", mockState.title);
+        updateButtonGroup(mockExcerptButtons, "mockExcerpt", mockState.excerpt);
+        requestAnimationFrame(updateMockMetrics);
+      };
+
+      mockLanguageButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          mockState.lang = button.dataset.mockLang;
+          syncMockContent();
+        });
+      });
+
+      mockTitleButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          mockState.title = button.dataset.mockTitle;
+          syncMockContent();
+        });
+      });
+
+      mockExcerptButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          mockState.excerpt = button.dataset.mockExcerpt;
+          syncMockContent();
+        });
+      });
+
+      imageSelect.addEventListener("change", () => {
+        image.src = imageSelect.value;
+        document.querySelector("#image-value").textContent = String(
+          imageSelect.selectedIndex + 1,
+        );
+      });
+
+      window.addEventListener("resize", updateMockMetrics);
+      syncMockContent();
+    </script>
+  </body>
+</html>

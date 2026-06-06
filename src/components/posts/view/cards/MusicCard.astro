@@ -1,32 +1,14 @@
 ---
 import type { Post } from '@api/ghost/types';
+import { DEFAULT_LOCALE, type Locale } from '@lib/i18n';
 import BaseCard from './BaseCard.astro';
 
 interface Props {
     post: Post;
+    locale?: Locale;
 }
 
-const { post } = Astro.props;
+const { post, locale = DEFAULT_LOCALE } = Astro.props;
 ---
 
-<BaseCard post={post} typeIcon="🎵">
-    <div slot="decoration" class="flex items-center justify-center py-6">
-        <div class="music-icon text-6xl opacity-80">🎧</div>
-    </div>
-</BaseCard>
-
-<style>
-    .music-icon {
-        animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-        0%,
-        100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.1);
-        }
-    }
-</style>
+<BaseCard post={post} typeIcon="🎵" locale={locale} />

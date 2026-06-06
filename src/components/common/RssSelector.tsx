@@ -1,40 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { cn } from '@components/common/lib/utils';
-
-// 支持的语言列表
-const LOCALES = ['zh', 'ja', 'en'] as const;
-type Locale = (typeof LOCALES)[number];
-
-// 语言名称映射
-const LOCALE_NAMES: Record<Locale, string> = {
-    zh: '中文',
-    ja: '日本語',
-    en: 'English',
-};
-
-// 语言标志（使用 emoji）
-const LOCALE_FLAGS: Record<Locale, string> = {
-    zh: '🇨🇳',
-    ja: '🇯🇵',
-    en: '🇺🇸',
-};
-
-// 多语言文本
-const UI_TEXTS = {
-    allLanguages: {
-        zh: '全部语言',
-        ja: 'すべての言語',
-        en: 'All Languages',
-    },
-    current: {
-        zh: '当前',
-        ja: '現在',
-        en: 'Current',
-    },
-} as const;
-
-// 默认语言
-const DEFAULT_LOCALE: Locale = 'zh';
+import {
+    DEFAULT_LOCALE,
+    getUIText,
+    isLocale,
+    LOCALE_FLAGS,
+    LOCALE_NAMES,
+    LOCALES,
+    type Locale,
+} from '@lib/i18n';
 
 /**
  * 从当前 URL 中提取语言代码
@@ -45,8 +19,8 @@ function getCurrentLocale(): Locale {
     const pathParts = window.location.pathname.split('/').filter(Boolean);
     const firstPart = pathParts[0];
 
-    if (firstPart && LOCALES.includes(firstPart as Locale)) {
-        return firstPart as Locale;
+    if (isLocale(firstPart)) {
+        return firstPart;
     }
 
     return DEFAULT_LOCALE;
@@ -65,9 +39,11 @@ interface RssSelectorProps {
     className?: string;
     /** 是否显示文字标签 */
     showLabel?: boolean;
+    /** 固定显示文案的语言；未传时跟随当前页面语言 */
+    textLocale?: Locale;
 }
 
-export default function RssSelector({ className, showLabel = true }: RssSelectorProps) {
+export default function RssSelector({ className, showLabel = true, textLocale }: RssSelectorProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [currentLocale, setCurrentLocale] = useState<Locale>(DEFAULT_LOCALE);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -100,8 +76,10 @@ export default function RssSelector({ className, showLabel = true }: RssSelector
     };
 
     // 获取多语言文本
-    const allLanguagesText = UI_TEXTS.allLanguages[currentLocale];
-    const currentText = UI_TEXTS.current[currentLocale];
+    const displayLocale = textLocale ?? currentLocale;
+    const allLanguagesText = getUIText('rss', 'allLanguages', displayLocale);
+    const currentText = getUIText('rss', 'current', displayLocale);
+    const rssLabel = getUIText('rss', 'label', displayLocale);
 
     // 生成 RSS 选项列表
     const rssOptions: RssOption[] = [
@@ -136,11 +114,11 @@ export default function RssSelector({ className, showLabel = true }: RssSelector
                     'text-xs font-medium whitespace-nowrap md:text-sm lg:text-base',
                     'dock-nav-link'
                 )}
-                aria-label="订阅 RSS"
+                aria-label={rssLabel}
                 aria-expanded={isOpen}
                 aria-haspopup="listbox"
             >
-                {showLabel && 'RSS'}
+                {showLabel && rssLabel}
             </button>
 
             {/* 下拉菜单 - 往上出现 */}

@@ -1,12 +1,14 @@
 ---
 import type { Post } from '@api/ghost/types';
+import { DEFAULT_LOCALE, type Locale } from '@lib/i18n';
 import BaseCard from './BaseCard.astro';
 
 interface Props {
     post: Post;
+    locale?: Locale;
 }
 
-const { post } = Astro.props;
+const { post, locale = DEFAULT_LOCALE } = Astro.props;
 ---
 
-<BaseCard post={post} typeIcon="📝" />
+<BaseCard post={post} typeIcon="📝" locale={locale} />
