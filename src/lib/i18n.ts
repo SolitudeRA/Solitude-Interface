@@ -290,8 +290,8 @@ export function getFallbackMessage(requestedLocale: Locale, displayedLocale: Loc
     const messages: Record<Locale, Record<Locale, string>> = {
         zh: {
             zh: '',
-            ja: '该文章暂无日文版本，已显示中文版',
-            en: '该文章暂无英文版本，已显示中文版',
+            ja: '该文章暂无中文版本，已显示日文版',
+            en: '该文章暂无中文版本，已显示英文版',
         },
         ja: {
             zh: 'この記事の日本語版はまだありません。中国語版を表示しています。',

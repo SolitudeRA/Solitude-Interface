@@ -5,26 +5,26 @@
 
 @layer components {
     .solitude-article-meta {
-        height: 400px;
+        height: clamp(23rem, 50svh, 25rem);
         position: relative;
         overflow: hidden;
     }
 
     @media (min-width: 640px) {
         .solitude-article-meta {
-            height: 550px;
+            height: clamp(28rem, 54svh, 34rem);
         }
     }
 
     @media (min-width: 768px) {
         .solitude-article-meta {
-            height: 700px;
+            height: clamp(31rem, 56svh, 38rem);
         }
     }
 
     @media (min-width: 1024px) {
         .solitude-article-meta {
-            height: 900px;
+            height: clamp(34rem, 60svh, 45rem);
         }
     }
 

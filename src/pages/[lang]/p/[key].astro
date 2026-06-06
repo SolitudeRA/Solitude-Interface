@@ -1,11 +1,16 @@
 ---
-import { listAllGroupKeys, getPostWithFallback, getVariantsByGroup } from '@api/ghost/posts';
+import {
+    listAllGroupKeys,
+    getPostWithFallback,
+    getVariantsByGroup,
+    listAllPosts,
+} from '@api/ghost/posts';
 import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
 import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
 import SiteDock from '@components/layout/dock/SiteDock.astro';
 import PostContent from '@components/posts/detail/PostContent.astro';
-import PostLanguageSwitcher from '@components/i18n/PostLanguageSwitcher.astro';
+import PostSeriesNavigation from '@components/posts/detail/PostSeriesNavigation.astro';
 import FallbackNotice from '@components/i18n/FallbackNotice.astro';
 import {
     LOCALES,
@@ -14,6 +19,9 @@ import {
     LOCALE_HTML_LANG,
     generateAlternateLinks,
     getFallbackMessage,
+    extractLocaleFromTags,
+    extractI18nKey,
+    buildPostPath,
 } from '@lib/i18n';
 import { env } from '@api/config/env';
 
@@ -54,6 +62,62 @@ if (!post) {
 const variants = await getVariantsByGroup(key);
 const availableLocales = LOCALES.filter((l) => variants[l] !== null);
 
+const allPosts = await listAllPosts();
+
+function getVisibleSeriesName(value: string | null | undefined): string | null {
+    const normalized = value?.trim();
+
+    if (!normalized || normalized.toLowerCase() === 'default') {
+        return null;
+    }
+
+    return normalized;
+}
+
+function inferSeriesNameFromTitle(title: string): string | null {
+    const normalized = title.trim().replace(/\s+/g, ' ');
+    const match = normalized.match(/^(.+?)\s*[#＃]\s*\d+\b/);
+    const inferred = match?.[1]?.trim();
+
+    return inferred && inferred.length >= 4 ? inferred : null;
+}
+
+function getSeriesName(candidate: { post_series: string; title: string }): string | null {
+    return getVisibleSeriesName(candidate.post_series) ?? inferSeriesNameFromTitle(candidate.title);
+}
+
+const currentSeriesName = getSeriesName(post);
+const seriesPosts = currentSeriesName
+    ? allPosts
+          .filter(
+              (candidate) =>
+                  getSeriesName(candidate) === currentSeriesName &&
+                  extractLocaleFromTags(candidate.tags) === displayedLocale &&
+                  extractI18nKey(candidate.tags)
+          )
+          .sort((a, b) => new Date(a.published_at).getTime() - new Date(b.published_at).getTime())
+    : [];
+const currentSeriesIndex = seriesPosts.findIndex((candidate) => candidate.id === post.id);
+const previousSeriesPost =
+    currentSeriesIndex > 0 ? (seriesPosts[currentSeriesIndex - 1] ?? null) : null;
+const nextSeriesPost =
+    currentSeriesIndex >= 0 ? (seriesPosts[currentSeriesIndex + 1] ?? null) : null;
+
+function toSeriesNavItem(candidate: (typeof seriesPosts)[number] | null) {
+    if (!candidate) return null;
+
+    const groupKey = extractI18nKey(candidate.tags);
+
+    return {
+        title: candidate.title,
+        href: groupKey ? buildPostPath(locale, groupKey) : candidate.url.pathname,
+        published_at: candidate.published_at,
+    };
+}
+
+const previousSeriesNavItem = toSeriesNavItem(previousSeriesPost);
+const nextSeriesNavItem = toSeriesNavItem(nextSeriesPost);
+
 // 生成 SEO 链接
 const alternateLinks = generateAlternateLinks(env.site.url, `/p/${key}`, availableLocales);
 const canonicalUrl = `${env.site.url}/${displayedLocale}/p/${key}`;
@@ -75,13 +139,17 @@ const fallbackMessage = isFallback ? getFallbackMessage(locale, displayedLocale)
         siteSubTitle={siteDescription}
         homeUrl={`/${locale}`}
         isFixed={true}
+        availableLocales={availableLocales}
+        displayLocale={displayedLocale}
     />
 
-    {isFallback && fallbackMessage && <FallbackNotice message={fallbackMessage} />}
-
-    <div class="container mx-auto mt-20 px-4">
-        <PostLanguageSwitcher currentLocale={locale} i18nKey={key} variants={variants} />
-    </div>
+    {
+        isFallback && fallbackMessage && (
+            <div class="post-detail-controls">
+                <FallbackNotice message={fallbackMessage} />
+            </div>
+        )
+    }
 
     <PostContent
         title={post.title}
@@ -92,5 +160,37 @@ const fallbackMessage = isFallback ? getFallbackMessage(locale, displayedLocale)
         html={post.html}
     />
 
+    <PostSeriesNavigation
+        seriesName={currentSeriesName ?? post.post_series}
+        currentIndex={Math.max(currentSeriesIndex, 0)}
+        total={seriesPosts.length}
+        locale={displayedLocale}
+        previousPost={previousSeriesNavItem}
+        nextPost={nextSeriesNavItem}
+    />
+
     <SiteDock isFixed={true} layout="home" lang={locale} />
 </BaseLayout>
+
+<style>
+    .post-detail-controls {
+        display: grid;
+        width: min(96rem, calc(100% - 2rem));
+        margin: 0 auto;
+        padding-top: calc(12svh + 0.75rem);
+        gap: 1rem;
+    }
+
+    @media (min-width: 640px) {
+        .post-detail-controls {
+            padding-top: calc(13svh + 1rem);
+        }
+    }
+
+    @media (min-width: 768px) {
+        .post-detail-controls {
+            width: min(96rem, calc(100% - 3rem));
+            padding-top: calc(14svh + 1rem);
+        }
+    }
+</style>

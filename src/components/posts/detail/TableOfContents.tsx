@@ -119,6 +119,7 @@ export default function TableOfContents({
                     <path d="M4 6h16M4 12h16M4 18h12" />
                 </svg>
                 <span>目录</span>
+                <span className="toc-count">{headings.length}</span>
             </div>
             <ul className="toc-list">
                 {headings.map((heading) => (
@@ -128,7 +129,13 @@ export default function TableOfContents({
                             activeId === heading.id ? 'toc-active' : ''
                         }`}
                     >
-                        <button onClick={() => handleClick(heading.id)} className="toc-link">
+                        <button
+                            onClick={() => handleClick(heading.id)}
+                            className="toc-link"
+                            aria-current={activeId === heading.id ? 'true' : undefined}
+                            title={heading.text}
+                            type="button"
+                        >
                             {heading.text}
                         </button>
                     </li>

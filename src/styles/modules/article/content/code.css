@@ -47,6 +47,82 @@
         line-height: 1.6;
     }
 
+    .solitude-article-content .code-block-shell {
+        width: 100%;
+        margin: 1.25rem 0;
+        overflow: hidden;
+        border: 1px solid var(--article-content-pre-border);
+        border-radius: 12px;
+        background: var(--article-content-pre-bg);
+        box-shadow: 0 16px 44px rgba(0, 0, 0, 0.08);
+    }
+
+    .solitude-article-content .code-block-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        min-height: 2.5rem;
+        padding: 0.55rem 0.75rem;
+        border-bottom: 1px solid var(--article-content-pre-border);
+        background: color-mix(in oklch, var(--article-content-pre-bg) 78%, transparent);
+    }
+
+    .solitude-article-content .code-block-language {
+        overflow: hidden;
+        color: var(--article-content-h6);
+        font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .solitude-article-content .code-block-actions {
+        display: inline-flex;
+        flex-shrink: 0;
+        gap: 0.4rem;
+    }
+
+    .solitude-article-content .code-block-action {
+        min-height: 1.7rem;
+        border: 1px solid var(--article-content-pre-border);
+        border-radius: 999px;
+        background: var(--article-content-code-bg);
+        color: var(--article-content-text);
+        padding: 0.25rem 0.65rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        line-height: 1;
+        transition:
+            border-color 160ms ease,
+            filter 160ms ease;
+    }
+
+    .solitude-article-content .code-block-action:hover {
+        filter: brightness(1.06);
+    }
+
+    .solitude-article-content .code-block-shell pre,
+    .solitude-article-content .code-block-shell pre.shiki {
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .solitude-article-content .code-block-shell.is-wrapped pre,
+    .solitude-article-content .code-block-shell.is-wrapped pre.shiki {
+        white-space: pre-wrap;
+    }
+
+    .solitude-article-content .code-block-shell.is-wrapped code,
+    .solitude-article-content .code-block-shell.is-wrapped pre.shiki code {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
     /* Shiki 双主题 - 亮色 */
     .solitude-article-content pre.shiki,
     .solitude-article-content pre.shiki span {
@@ -89,6 +165,12 @@
             font-size: 0.9rem;
             line-height: 1.65;
         }
+
+        .solitude-article-content .code-block-shell {
+            width: min(calc(100vw - 3rem), 58rem);
+            margin: 1.5rem 50%;
+            transform: translateX(-50%);
+        }
     }
 
     /* 1024px (lg) */
@@ -118,6 +200,11 @@
         .solitude-article-content pre.shiki code {
             font-size: 0.95rem;
             line-height: 1.7;
+        }
+
+        .solitude-article-content .code-block-shell {
+            margin-top: 1.75rem;
+            margin-bottom: 1.75rem;
         }
     }
 }

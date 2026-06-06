@@ -9,7 +9,7 @@ const { message } = Astro.props;
 {
     message && (
         <div
-            class="mx-4 mt-20 border-l-4 border-amber-500 bg-amber-50 px-4 py-3 text-amber-700 dark:bg-amber-900/30 dark:text-amber-200"
+            class="fallback-notice border-l-4 border-amber-500 bg-amber-50 px-4 py-3 text-amber-700 shadow-sm backdrop-blur-sm dark:bg-amber-900/30 dark:text-amber-200"
             role="alert"
         >
             <div class="flex items-center">
@@ -30,3 +30,9 @@ const { message } = Astro.props;
         </div>
     )
 }
+
+<style>
+    .fallback-notice {
+        border-radius: 0 0.75rem 0.75rem 0;
+    }
+</style>
