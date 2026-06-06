@@ -7,114 +7,99 @@ import MusicCard from './cards/MusicCard.astro';
 import VideoCard from './cards/VideoCard.astro';
 import GalleryCard from './cards/GalleryCard.astro';
 import PostViewScrollContainer from './PostViewScrollContainer';
+import { DEFAULT_LOCALE, getUIText, type Locale } from '@lib/i18n';
 
 interface Props {
     posts: Post[];
+    locale?: Locale;
 }
 
-const { posts } = Astro.props;
+const { posts, locale = DEFAULT_LOCALE } = Astro.props;
 
 // 提取所有文章的发布日期
 const postDates = posts.map((post) => post.published_at);
+const noPostsText = getUIText('home', 'noPosts', locale);
 ---
 
-<PostViewScrollContainer client:idle postDates={postDates}>
-    {
-        posts.map((post) => {
-            const PostCardComponent = (() => {
-                switch (post.post_type) {
-                    case PostType.DEFAULT:
-                        return DefaultCard;
-                    case PostType.ARTICLE:
-                        return ArticleCard;
-                    case PostType.MUSIC:
-                        return MusicCard;
-                    case PostType.VIDEO:
-                        return VideoCard;
-                    case PostType.GALLERY:
-                        return GalleryCard;
-                    default:
-                        return DefaultCard;
-                }
-            })();
+{
+    posts.length > 0 ? (
+        <PostViewScrollContainer client:idle postDates={postDates}>
+            {posts.map((post) => {
+                const PostCardComponent = (() => {
+                    switch (post.post_type) {
+                        case PostType.DEFAULT:
+                            return DefaultCard;
+                        case PostType.ARTICLE:
+                            return ArticleCard;
+                        case PostType.MUSIC:
+                            return MusicCard;
+                        case PostType.VIDEO:
+                            return VideoCard;
+                        case PostType.GALLERY:
+                            return GalleryCard;
+                        default:
+                            return DefaultCard;
+                    }
+                })();
 
-            return (
-                <a
-                    href={post.url.toString()}
-                    class="post-card-wrapper flex shrink-0 items-center justify-center transition-all duration-300 ease-out hover:z-10 hover:scale-[1.02]"
-                >
-                    <PostCardComponent post={post} />
-                </a>
-            );
-        })
-    }
-</PostViewScrollContainer>
+                return (
+                    <a
+                        href={post.url.toString()}
+                        class="post-card-wrapper flex shrink-0 items-center justify-center rounded-[35px] transition-all duration-300 ease-out hover:z-10 hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:outline-none"
+                        role="listitem"
+                        aria-label={post.title}
+                    >
+                        <PostCardComponent post={post} locale={locale} />
+                    </a>
+                );
+            })}
+        </PostViewScrollContainer>
+    ) : (
+        <section class="post-view-empty flex h-[75svh] min-h-[420px] items-center justify-center px-6">
+            <p class="rounded-lg border border-[var(--border)] bg-[var(--background)]/70 px-5 py-3 text-sm font-medium text-[var(--muted-foreground)] shadow-sm backdrop-blur-sm">
+                {noPostsText}
+            </p>
+        </section>
+    )
+}
 
 <style>
     .post-card-wrapper {
-        width: 298px; /* 302 - 4 */
-        height: 594px;
+        --post-card-height: clamp(500px, min(72svh, calc(100svh - 220px)), 780px);
+        --post-card-width: clamp(250px, calc(var(--post-card-height) / 1.98), 394px);
+
+        width: var(--post-card-width);
+        height: var(--post-card-height);
     }
 
-    /* 触摸设备基础优化 (手机、平板) */
     @media (pointer: coarse) {
         .post-card-wrapper {
-            width: 260px;
-            height: 520px;
+            --post-card-height: clamp(430px, min(68svh, 560px), 560px);
+            --post-card-width: clamp(240px, calc(var(--post-card-height) / 1.98), 320px);
         }
     }
 
-    /* 大屏触摸设备 (iPad 横屏、iPad Pro 等) */
-    @media (pointer: coarse) and (min-width: 1024px) {
+    @media (pointer: fine) and (max-height: 780px) {
         .post-card-wrapper {
-            width: 300px;
-            height: 590px;
-        }
-    }
-
-    /* 桌面端大屏 (非触摸设备) */
-    @media (pointer: fine) and (min-width: 1440px) {
-        .post-card-wrapper {
-            width: 342px; /* 346 - 4 */
-            height: 673px;
+            --post-card-height: clamp(460px, calc(100svh - 220px), 560px);
+            --post-card-width: clamp(240px, calc(var(--post-card-height) / 1.98), 320px);
         }
     }
 
     @media (pointer: fine) and (min-width: 1920px) {
         .post-card-wrapper {
-            width: 385px; /* 389 - 4 */
-            height: 766px;
+            --post-card-height: clamp(620px, min(72svh, calc(100svh - 220px)), 820px);
+            --post-card-width: clamp(300px, calc(var(--post-card-height) / 1.98), 428px);
         }
     }
 
-    @media (pointer: fine) and (min-width: 2560px) {
+    @media (prefers-reduced-motion: reduce) {
         .post-card-wrapper {
-            width: 428px; /* 432 - 4 */
-            height: 880px;
-        }
-    }
-
-    /* 兼容性回退：保留原有大屏断点（针对不支持 pointer 查询的浏览器） */
-    @supports not (selector(:has(*))) {
-        @media (min-width: 1440px) {
-            .post-card-wrapper {
-                width: 342px;
-                height: 673px;
-            }
+            transition: none;
         }
 
-        @media (min-width: 1920px) {
-            .post-card-wrapper {
-                width: 385px;
-                height: 766px;
-            }
-        }
-
-        @media (min-width: 2560px) {
-            .post-card-wrapper {
-                width: 428px;
-                height: 880px;
-            }
+        .post-card-wrapper:hover {
+            transform: none;
         }
     }
 </style>

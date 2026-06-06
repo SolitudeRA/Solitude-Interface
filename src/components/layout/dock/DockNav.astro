@@ -15,6 +15,12 @@ const postsLink = buildLocalePath(lang, 'post-view');
 const aboutLink = buildLocalePath(lang, 'about');
 const contactLink = '/contact'; // Contact页面不需要多语言支持
 const privacyLink = buildLocalePath(lang, 'privacy-policy');
+
+const homeLabel = 'Home';
+const postsLabel = 'Posts';
+const aboutLabel = 'About';
+const contactLabel = 'Contact';
+const privacyLabel = 'Privacy';
 ---
 
 <!-- 移动端汉堡菜单 - 小于768px -->
@@ -37,21 +43,21 @@ const privacyLink = buildLocalePath(lang, 'privacy-policy');
             <a
                 href={homeLink}
                 class="dock-nav-link text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
-                >Home</a
+                >{homeLabel}</a
             >
         </div>
         <div class="dock-nav-item">
             <a
                 href={postsLink}
                 class="dock-nav-link text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
-                >Posts</a
+                >{postsLabel}</a
             >
         </div>
         <div class="dock-nav-item">
             <a
                 href={aboutLink}
                 class="dock-nav-link text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
-                >About</a
+                >{aboutLabel}</a
             >
         </div>
         <!-- Contact - md 时为右侧，lg+ 时为普通 -->
@@ -59,19 +65,19 @@ const privacyLink = buildLocalePath(lang, 'privacy-policy');
             <a
                 href={contactLink}
                 class="dock-nav-link text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
-                >Contact</a
+                >{contactLabel}</a
             >
         </div>
         <!-- RSS 选择器 - lg 时为右侧，xl 时为普通 -->
         <div class="dock-nav-item dock-nav-item-right-lg hidden lg:flex">
-            <RssSelector client:load showLabel={true} />
+            <RssSelector client:load showLabel={true} textLocale="en" />
         </div>
         <!-- Privacy Policy 仅在大屏显示，xl+ 为右侧 -->
         <div class="dock-nav-item-right hidden xl:flex">
             <a
                 href={privacyLink}
                 class="dock-nav-link text-xs font-medium whitespace-nowrap md:text-sm lg:text-base"
-                >Privacy</a
+                >{privacyLabel}</a
             >
         </div>
     </div>

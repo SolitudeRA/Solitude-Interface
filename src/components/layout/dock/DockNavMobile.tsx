@@ -2,39 +2,16 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { cn } from '@components/common/lib/utils';
 import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
 import { ChevronDown } from 'lucide-react';
-
-// 支持的语言列表
-const LOCALES = ['zh', 'ja', 'en'] as const;
-type Locale = (typeof LOCALES)[number];
-const DEFAULT_LOCALE: Locale = 'zh';
-
-// 语言名称映射
-const LOCALE_NAMES: Record<Locale, string> = {
-    zh: '中文',
-    ja: '日本語',
-    en: 'English',
-};
-
-// 语言标志（使用 emoji）
-const LOCALE_FLAGS: Record<Locale, string> = {
-    zh: '🇨🇳',
-    ja: '🇯🇵',
-    en: '🇺🇸',
-};
-
-// 多语言文本
-const UI_TEXTS = {
-    allLanguages: {
-        zh: '全部语言',
-        ja: 'すべての言語',
-        en: 'All Languages',
-    },
-    current: {
-        zh: '当前',
-        ja: '現在',
-        en: 'Current',
-    },
-} as const;
+import {
+    buildLocalePath,
+    DEFAULT_LOCALE,
+    getUIText,
+    isLocale,
+    LOCALE_FLAGS,
+    LOCALE_NAMES,
+    LOCALES,
+    type Locale,
+} from '@lib/i18n';
 
 /**
  * 从当前 URL 中提取语言代码
@@ -45,19 +22,11 @@ function getCurrentLocale(): Locale {
     const pathParts = window.location.pathname.split('/').filter(Boolean);
     const firstPart = pathParts[0];
 
-    if (firstPart && LOCALES.includes(firstPart as Locale)) {
-        return firstPart as Locale;
+    if (isLocale(firstPart)) {
+        return firstPart;
     }
 
     return DEFAULT_LOCALE;
-}
-
-/**
- * 构建多语言路径
- */
-function buildLocalePath(locale: Locale, path: string = ''): string {
-    const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
-    return `/${locale}/${normalizedPath}`.replace(/\/+$/, '') || `/${locale}`;
 }
 
 interface NavItem {
@@ -94,9 +63,9 @@ export default function DockNavMobile() {
         setCurrentLocale(getCurrentLocale());
     }, []);
 
-    // 获取多语言文本
-    const allLanguagesText = UI_TEXTS.allLanguages[currentLocale];
-    const currentText = UI_TEXTS.current[currentLocale];
+    // Dock 导航显示文本固定为英文，链接仍跟随当前页面语言。
+    const allLanguagesText = getUIText('rss', 'allLanguages', 'en');
+    const currentText = getUIText('rss', 'current', 'en');
 
     // RSS 选项列表
     const rssOptions: RssOption[] = useMemo(
@@ -203,13 +172,14 @@ export default function DockNavMobile() {
             </button>
 
             {/* 遮罩层 */}
-            <div
+            <button
+                type="button"
                 className={cn(
                     'dock-overlay fixed inset-0 z-40 transition-opacity duration-300',
                     isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
                 )}
                 onClick={closeMenu}
-                aria-hidden="true"
+                aria-label="Close navigation menu"
             />
 
             {/* 菜单面板 */}

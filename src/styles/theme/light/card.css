@@ -33,4 +33,17 @@
     --post-view-card-title: oklch(0.18 0.025 264.665);
     --post-view-card-excerpt: oklch(0.28 0.02 264.665);
     --post-view-card-meta: oklch(0.4 0.015 264.665);
+
+    /* 图片卡片文字可读面板 */
+    --card-readable-panel-bg: oklch(0.98 0.003 264.665 / 0.76);
+    --card-readable-panel-border: oklch(1 0 0 / 0.52);
+    --card-readable-panel-shadow: oklch(0.28 0.04 264 / 0.2);
+    --card-readable-panel-title: oklch(0.16 0.025 264.665);
+    --card-readable-panel-body: oklch(0.3 0.02 264.665);
+    --card-readable-panel-text-shadow: oklch(1 0 0 / 0.3);
+
+    /* 图片缺失时的卡片背景 */
+    --card-image-fallback-start: oklch(0.88 0.035 220);
+    --card-image-fallback-end: oklch(0.78 0.045 275);
+    --card-image-fallback-highlight: oklch(0.72 0.14 35 / 0.24);
 }

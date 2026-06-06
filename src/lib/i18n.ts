@@ -31,6 +31,12 @@ export const LOCALE_NAMES: Record<Locale, string> = {
     en: 'English',
 };
 
+export const LOCALE_FLAGS: Record<Locale, string> = {
+    zh: '🇨🇳',
+    ja: '🇯🇵',
+    en: '🇺🇸',
+};
+
 /**
  * 语言 HTML lang 属性映射
  */
@@ -54,6 +60,65 @@ export const UI_TEXTS = {
             zh: '探索更多内容',
             ja: 'もっと探索する',
             en: 'Explore more content',
+        },
+        noPosts: {
+            zh: '暂无文章',
+            ja: '記事はまだありません',
+            en: 'No posts yet',
+        },
+    },
+    nav: {
+        home: {
+            zh: '首页',
+            ja: 'ホーム',
+            en: 'Home',
+        },
+        posts: {
+            zh: '文章',
+            ja: '記事',
+            en: 'Posts',
+        },
+        about: {
+            zh: '关于',
+            ja: 'プロフィール',
+            en: 'About',
+        },
+        aboutMe: {
+            zh: '关于我',
+            ja: 'プロフィール',
+            en: 'About Me',
+        },
+        contact: {
+            zh: '联系',
+            ja: '連絡先',
+            en: 'Contact',
+        },
+        privacy: {
+            zh: '隐私',
+            ja: 'プライバシー',
+            en: 'Privacy',
+        },
+        privacyPolicy: {
+            zh: '隐私政策',
+            ja: 'プライバシーポリシー',
+            en: 'Privacy Policy',
+        },
+    },
+    rss: {
+        label: {
+            zh: 'RSS',
+            ja: 'RSS',
+            en: 'RSS',
+        },
+        allLanguages: {
+            zh: '全部语言',
+            ja: 'すべての言語',
+            en: 'All Languages',
+        },
+        current: {
+            zh: '当前',
+            ja: '現在',
+            en: 'Current',
         },
     },
 } as const;

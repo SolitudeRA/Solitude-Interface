@@ -1,45 +1,14 @@
 ---
 import type { Post } from '@api/ghost/types';
+import { DEFAULT_LOCALE, type Locale } from '@lib/i18n';
 import BaseCard from './BaseCard.astro';
 
 interface Props {
     post: Post;
+    locale?: Locale;
 }
 
-const { post } = Astro.props;
+const { post, locale = DEFAULT_LOCALE } = Astro.props;
 ---
 
-<BaseCard post={post} typeIcon="🖼️">
-    <div slot="decoration" class="flex items-center justify-center py-6">
-        <div class="gallery-grid grid grid-cols-3 gap-2 opacity-80">
-            <div class="gallery-cell h-8 w-8 rounded"></div>
-            <div class="gallery-cell h-8 w-8 rounded"></div>
-            <div class="gallery-cell h-8 w-8 rounded"></div>
-            <div class="gallery-cell h-8 w-8 rounded"></div>
-            <div class="gallery-cell h-8 w-8 rounded"></div>
-            <div class="gallery-cell h-8 w-8 rounded"></div>
-        </div>
-    </div>
-</BaseCard>
-
-<style>
-    .gallery-cell {
-        background: var(--post-view-card-border);
-        backdrop-filter: blur(4px);
-    }
-
-    .gallery-grid {
-        animation: fadeInScale 0.5s ease-out;
-    }
-
-    @keyframes fadeInScale {
-        from {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-        to {
-            opacity: 0.8;
-            transform: scale(1);
-        }
-    }
-</style>
+<BaseCard post={post} typeIcon="🖼️" locale={locale} />

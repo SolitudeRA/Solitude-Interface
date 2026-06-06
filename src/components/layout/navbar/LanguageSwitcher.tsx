@@ -3,27 +3,14 @@ import { Globe, ChevronDown, Check } from 'lucide-react';
 import { cn } from '@components/common/lib/utils';
 import { useAtomValue } from 'jotai';
 import { themeSwitchAtom } from '@stores/themeAtom';
-
-// 支持的语言列表
-const LOCALES = ['zh', 'ja', 'en'] as const;
-type Locale = (typeof LOCALES)[number];
-
-// 语言名称映射
-const LOCALE_NAMES: Record<Locale, string> = {
-    zh: '中文',
-    ja: '日本語',
-    en: 'English',
-};
-
-// 语言标志（使用 emoji）
-const LOCALE_FLAGS: Record<Locale, string> = {
-    zh: '🇨🇳',
-    ja: '🇯🇵',
-    en: '🇺🇸',
-};
-
-// 默认语言
-const DEFAULT_LOCALE: Locale = 'zh';
+import {
+    DEFAULT_LOCALE,
+    isLocale,
+    LOCALE_FLAGS,
+    LOCALE_NAMES,
+    LOCALES,
+    type Locale,
+} from '@lib/i18n';
 
 /**
  * 从当前 URL 中提取语言代码
@@ -34,8 +21,8 @@ function getCurrentLocale(): Locale {
     const pathParts = window.location.pathname.split('/').filter(Boolean);
     const firstPart = pathParts[0];
 
-    if (firstPart && LOCALES.includes(firstPart as Locale)) {
-        return firstPart as Locale;
+    if (isLocale(firstPart)) {
+        return firstPart;
     }
 
     return DEFAULT_LOCALE;
@@ -51,7 +38,7 @@ function buildLanguageUrl(targetLocale: Locale): string {
     const pathParts = currentPath.split('/').filter(Boolean);
 
     // 检查第一个路径部分是否是语言代码
-    if (pathParts.length > 0 && LOCALES.includes(pathParts[0] as Locale)) {
+    if (pathParts.length > 0 && isLocale(pathParts[0])) {
         // 替换语言代码
         pathParts[0] = targetLocale;
         return '/' + pathParts.join('/');

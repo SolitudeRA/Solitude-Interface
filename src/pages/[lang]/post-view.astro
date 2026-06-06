@@ -60,7 +60,7 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
         siteSubTitle={siteDescription}
         homeUrl={`/${locale}`}
     />
-    <PostViewContainer posts={posts} />
+    <PostViewContainer posts={posts} locale={locale} />
     <Dock isFixed={true}>
         <!-- Timeline 在移动端隐藏 -->
         <div class="hidden lg:block">
@@ -87,6 +87,8 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
         const scrollContainer = document.querySelector('.post-view-scroll-container');
 
         if (scrollContainer) {
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
             // 计算滚动距离
             const getScrollDistance = () => {
                 const card = scrollContainer.querySelector('.post-card-wrapper');
@@ -115,7 +117,7 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
 
                     container.scrollBy({
                         left: direction * scrollDistance,
-                        behavior: 'smooth',
+                        behavior: prefersReducedMotion.matches ? 'auto' : 'smooth',
                     });
                 }
             };
