@@ -10,6 +10,9 @@ const imageDomains = extractDomains(process.env.GHOST_URL, process.env.IMAGE_HOS
 // https://astro.build/config
 export default defineConfig({
     site: process.env.SITE_URL,
+    devToolbar: {
+        enabled: false,
+    },
 
     env: {
         schema: {
