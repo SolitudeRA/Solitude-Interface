@@ -95,6 +95,9 @@ jobs:
       - name: Format check (prettier)
         run: pnpm format:check
 
+      - name: Lint (eslint)
+        run: pnpm lint
+
   # ============================================
   # Test job: Run unit tests with Vitest
   # ============================================
@@ -129,12 +132,45 @@ jobs:
         run: pnpm test:run
 
   # ============================================
+  # Typecheck job: Validate Astro and TypeScript
+  # ============================================
+  typecheck:
+    name: 🔎 Typecheck
+    runs-on: ubuntu-latest
+    needs: setup
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Restore dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            node_modules
+            .astro
+          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          fail-on-cache-miss: true
+
+      - name: Typecheck (astro check)
+        run: pnpm typecheck
+
+  # ============================================
   # Build job: Build the project
   # ============================================
   build:
     name: 🏗️ Build
     runs-on: ubuntu-latest
-    needs: [lint, test]
+    needs: [lint, test, typecheck]
     timeout-minutes: 15
 
     steps:
@@ -169,4 +205,5 @@ jobs:
           echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| Lint | ✅ |" >> $GITHUB_STEP_SUMMARY
           echo "| Test | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| Typecheck | ✅ |" >> $GITHUB_STEP_SUMMARY
           echo "| Build | ✅ |" >> $GITHUB_STEP_SUMMARY

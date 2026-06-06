@@ -172,6 +172,20 @@ export function buildPostPath(locale: Locale, key: string): string {
 }
 
 /**
+ * 根据 Ghost 文章标签构建前端文章路径。
+ * 缺少 i18n 分组标签时回退到旧的 /posts/:id 路由，保留兼容性。
+ */
+export function buildPostPathFromTags(postId: string, tags: PostTag[] | undefined): string {
+    const i18nKey = extractI18nKey(tags);
+    if (!i18nKey) {
+        return `/posts/${postId}`;
+    }
+
+    const locale = extractLocaleFromTags(tags) ?? DEFAULT_LOCALE;
+    return buildPostPath(locale, i18nKey);
+}
+
+/**
  * 生成 hreflang alternate links 数据
  */
 export interface AlternateLink {

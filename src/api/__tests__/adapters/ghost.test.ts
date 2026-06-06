@@ -30,9 +30,19 @@ describe('Ghost Adapters', () => {
                 slug: 'typescript',
                 name: 'TypeScript',
             },
+            {
+                id: '6',
+                slug: 'hash-lang-en',
+                name: '#lang-en',
+            },
+            {
+                id: '7',
+                slug: 'hash-i18n-test-post',
+                name: '#i18n-test-post',
+            },
         ];
 
-        it('should correctly convert Post URL to frontend route', () => {
+        it('should correctly convert Post URL to localized frontend route', () => {
             const mockPost: Post = {
                 id: 'test-post-123',
                 title: 'Test Post',
@@ -43,6 +53,27 @@ describe('Ghost Adapters', () => {
                 excerpt: 'Test excerpt',
                 html: '<p>Test content</p>',
                 tags: mockTags,
+                post_type: '',
+                post_category: '',
+                post_series: '',
+            };
+
+            const adapted = adaptGhostPost(mockPost);
+
+            expect(adapted.url.toString()).toBe('https://test-site.example.com/en/p/test-post');
+        });
+
+        it('should use legacy post URL when i18n tag does not exist', () => {
+            const mockPost: Post = {
+                id: 'test-post-123',
+                title: 'Test Post',
+                url: new URL('https://ghost.example.com/test-post'),
+                feature_image: new URL('https://ghost.example.com/image.jpg'),
+                published_at: '2024-01-01',
+                comment_id: 'comment-123',
+                excerpt: 'Test excerpt',
+                html: '<p>Test content</p>',
+                tags: mockTags.filter((tag) => !tag.slug.startsWith('hash-')),
                 post_type: '',
                 post_category: '',
                 post_series: '',

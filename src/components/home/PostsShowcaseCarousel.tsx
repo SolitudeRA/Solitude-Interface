@@ -430,8 +430,8 @@ export default function PostsShowcaseCarousel({
     return (
         <div
             className={cn('relative w-full', className)}
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
+            onPointerEnter={() => setIsHovering(true)}
+            onPointerLeave={() => setIsHovering(false)}
         >
             {/* 左侧渐隐遮罩 - 柔化边界 */}
             <AnimatePresence>

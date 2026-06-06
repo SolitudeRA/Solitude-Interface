@@ -243,8 +243,8 @@ export default function PostViewScrollContainer({
     return (
         <div
             className={cn('post-view-scroll-wrapper relative flex w-full flex-col', className)}
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
+            onPointerEnter={() => setIsHovering(true)}
+            onPointerLeave={() => setIsHovering(false)}
         >
             {/* 滚动区域容器 */}
             <div className="relative h-[75vh]">

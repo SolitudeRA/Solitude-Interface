@@ -274,7 +274,7 @@ export default function DockTimelineContainer({
 
     // 处理鼠标移动，计算最近的刻度索引
     const handleMouseMove = useCallback(
-        (e: React.MouseEvent<HTMLDivElement>) => {
+        (e: React.PointerEvent<HTMLDivElement>) => {
             const container = containerRef.current;
             if (!container) return;
 
@@ -302,37 +302,6 @@ export default function DockTimelineContainer({
         setHoverIndex(null);
     }, []);
 
-    // 处理点击刻度行容器（包括gap区域）
-    const handleTickRowClick = useCallback(
-        (e: React.MouseEvent<HTMLDivElement>) => {
-            const container = containerRef.current;
-            if (!container) return;
-
-            const rect = container.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-
-            // 刻度总宽度
-            const tickWidth = 4 + TICK_GAP;
-            // 计算偏移后的鼠标位置对应的刻度索引
-            const totalWidth = ticksData.length * tickWidth;
-            const startX = (rect.width - totalWidth) / 2 + offsetX;
-            const relativeX = mouseX - startX;
-            const index = Math.round(relativeX / tickWidth);
-
-            if (index >= 0 && index < ticksData.length) {
-                const tick = ticksData[index];
-                if (tick) {
-                    if (tick.type === 'main' && tick.postIndex !== undefined) {
-                        handleScrollToPost(tick.postIndex);
-                    } else if (tick.type === 'sub' && tick.nextPostIndex !== undefined) {
-                        handleScrollToPost(tick.nextPostIndex);
-                    }
-                }
-            }
-        },
-        [ticksData, offsetX, handleScrollToPost]
-    );
-
     // 根据与hover位置的距离计算刻度的放大比例
     const getTickScale = useCallback(
         (tickIndex: number) => {
@@ -357,8 +326,8 @@ export default function DockTimelineContainer({
         <div
             ref={containerRef}
             className="flex h-full w-[90%] flex-col items-center justify-center gap-1"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
+            onPointerMove={handleMouseMove}
+            onPointerLeave={handleMouseLeave}
         >
             {/* 刻度行 - 所有刻度水平中线对齐，偏移使活动刻度居中 */}
             <div
@@ -368,7 +337,6 @@ export default function DockTimelineContainer({
                     transform: `translateX(${offsetX}px)`,
                     transition: 'transform 500ms cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
-                onClick={handleTickRowClick}
             >
                 {ticksData.map((tick, index) => {
                     const scale = getTickScale(index);

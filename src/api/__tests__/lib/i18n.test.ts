@@ -11,6 +11,7 @@ import {
     extractI18nKey,
     buildLocalePath,
     buildPostPath,
+    buildPostPathFromTags,
     generateAlternateLinks,
     getFallbackMessage,
     LOCALE_HTML_LANG,
@@ -179,6 +180,37 @@ describe('i18n utilities', () => {
             expect(buildPostPath('zh', 'intro-to-solitude')).toBe('/zh/p/intro-to-solitude');
             expect(buildPostPath('ja', 'ghost-headless')).toBe('/ja/p/ghost-headless');
             expect(buildPostPath('en', 'test')).toBe('/en/p/test');
+        });
+    });
+
+    describe('buildPostPathFromTags', () => {
+        const createTag = (slug: string): PostTag => ({
+            id: 'tag-id',
+            slug,
+            name: 'Tag Name',
+        });
+
+        it('should build localized post path from i18n and locale tags', () => {
+            const tags = [
+                createTag('hash-lang-ja'),
+                createTag('hash-i18n-intro-to-solitude'),
+                createTag('category-tech'),
+            ];
+
+            expect(buildPostPathFromTags('post-id', tags)).toBe('/ja/p/intro-to-solitude');
+        });
+
+        it('should fallback to default locale when i18n tag exists without locale tag', () => {
+            const tags = [createTag('hash-i18n-intro-to-solitude')];
+
+            expect(buildPostPathFromTags('post-id', tags)).toBe('/zh/p/intro-to-solitude');
+        });
+
+        it('should fallback to legacy post path without i18n tag', () => {
+            const tags = [createTag('category-tech')];
+
+            expect(buildPostPathFromTags('post-id', tags)).toBe('/posts/post-id');
+            expect(buildPostPathFromTags('post-id', undefined)).toBe('/posts/post-id');
         });
     });
 
