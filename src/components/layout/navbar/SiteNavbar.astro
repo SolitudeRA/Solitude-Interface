@@ -2,6 +2,7 @@
 import SmartNavbar from './SmartNavbar.tsx';
 import NavbarBrand from './NavbarBrand.astro';
 import NavbarUtility from './NavbarUtility.astro';
+import type { Locale } from '@lib/i18n';
 
 interface Props {
     logoUrl: string;
@@ -9,9 +10,19 @@ interface Props {
     siteSubTitle: string;
     homeUrl?: string;
     isFixed?: boolean;
+    availableLocales?: readonly Locale[] | undefined;
+    displayLocale?: Locale | undefined;
 }
 
-const { logoUrl, siteTitle, siteSubTitle, homeUrl = '/', isFixed = false } = Astro.props;
+const {
+    logoUrl,
+    siteTitle,
+    siteSubTitle,
+    homeUrl = '/',
+    isFixed = false,
+    availableLocales,
+    displayLocale,
+} = Astro.props;
 ---
 
 <SmartNavbar isFixed={isFixed} client:load>
@@ -21,5 +32,5 @@ const { logoUrl, siteTitle, siteSubTitle, homeUrl = '/', isFixed = false } = Ast
         siteSubTitle={siteSubTitle}
         homeUrl={homeUrl}
     />
-    <NavbarUtility />
+    <NavbarUtility availableLocales={availableLocales} displayLocale={displayLocale} />
 </SmartNavbar>

@@ -1,0 +1,230 @@
+---
+import type { Locale } from '@lib/i18n';
+
+interface SeriesNavItem {
+    title: string;
+    href: string;
+    published_at: string;
+}
+
+interface Props {
+    seriesName: string;
+    currentIndex: number;
+    total: number;
+    locale: Locale;
+    previousPost?: SeriesNavItem | null;
+    nextPost?: SeriesNavItem | null;
+}
+
+const { seriesName, currentIndex, total, locale, previousPost, nextPost } = Astro.props;
+
+const labels: Record<
+    Locale,
+    {
+        series: string;
+        position: string;
+        previous: string;
+        next: string;
+    }
+> = {
+    zh: {
+        series: '系列阅读',
+        position: '当前进度',
+        previous: '上一篇',
+        next: '下一篇',
+    },
+    ja: {
+        series: 'シリーズ',
+        position: '現在位置',
+        previous: '前の記事',
+        next: '次の記事',
+    },
+    en: {
+        series: 'Series',
+        position: 'Progress',
+        previous: 'Previous',
+        next: 'Next',
+    },
+};
+
+const copy = labels[locale];
+
+function formatDate(value: string): string {
+    return new Date(value).toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+    });
+}
+---
+
+{
+    total > 1 && (
+        <nav class="post-series-nav" aria-label={copy.series}>
+            <div class="post-series-header">
+                <div>
+                    <p class="post-series-kicker">{copy.series}</p>
+                    <h2>{seriesName}</h2>
+                </div>
+                <p class="post-series-progress">
+                    {copy.position} {currentIndex + 1}/{total}
+                </p>
+            </div>
+
+            <div class="post-series-grid">
+                {previousPost && (
+                    <a class="post-series-card" href={previousPost.href} rel="prev">
+                        <span class="post-series-card-label">{copy.previous}</span>
+                        <strong>{previousPost.title}</strong>
+                        <time datetime={previousPost.published_at}>
+                            {formatDate(previousPost.published_at)}
+                        </time>
+                    </a>
+                )}
+
+                {nextPost && (
+                    <a class="post-series-card is-next" href={nextPost.href} rel="next">
+                        <span class="post-series-card-label">{copy.next}</span>
+                        <strong>{nextPost.title}</strong>
+                        <time datetime={nextPost.published_at}>
+                            {formatDate(nextPost.published_at)}
+                        </time>
+                    </a>
+                )}
+            </div>
+        </nav>
+    )
+}
+
+<style>
+    .post-series-nav {
+        width: min(100%, 52rem);
+        margin: 0 auto;
+        padding: 0 1rem calc(9rem + env(safe-area-inset-bottom));
+    }
+
+    .post-series-header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        border-top: 1px solid var(--article-content-table-border);
+        padding-top: 1.5rem;
+    }
+
+    .post-series-kicker,
+    .post-series-progress {
+        margin: 0;
+        color: var(--article-content-h6);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .post-series-header h2 {
+        margin: 0.25rem 0 0;
+        color: var(--article-content-h2);
+        font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+        font-weight: 800;
+        line-height: 1.2;
+    }
+
+    .post-series-progress {
+        flex-shrink: 0;
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+        text-transform: none;
+    }
+
+    .post-series-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.9rem;
+    }
+
+    .post-series-card {
+        display: grid;
+        min-height: 9rem;
+        align-content: space-between;
+        gap: 0.75rem;
+        border: 1px solid var(--article-content-table-border);
+        border-radius: 14px;
+        background:
+            linear-gradient(135deg, var(--article-content-code-bg), transparent),
+            var(--article-content-pre-bg);
+        padding: 1rem;
+        text-decoration: none;
+        transition:
+            border-color 180ms ease,
+            filter 180ms ease,
+            transform 180ms ease;
+    }
+
+    .post-series-card:hover {
+        filter: brightness(1.04);
+        transform: translateY(-2px);
+    }
+
+    .post-series-card-label {
+        color: var(--article-content-link);
+        font-size: 0.8rem;
+        font-weight: 800;
+    }
+
+    .post-series-card strong {
+        display: -webkit-box;
+        overflow: hidden;
+        color: var(--article-content-h3);
+        font-size: 1rem;
+        line-height: 1.35;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+    }
+
+    .post-series-card time {
+        color: var(--article-content-h6);
+        font-size: 0.78rem;
+        font-variant-numeric: tabular-nums;
+    }
+
+    @media (min-width: 768px) {
+        .post-series-nav {
+            padding-right: 2.25rem;
+            padding-left: 2.25rem;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .post-series-nav {
+            padding-right: 3rem;
+            padding-left: 3rem;
+        }
+    }
+
+    @media (max-width: 639px) {
+        .post-series-header {
+            display: grid;
+            align-items: start;
+        }
+
+        .post-series-progress {
+            text-align: left;
+        }
+
+        .post-series-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .post-series-card {
+            transition: none;
+        }
+
+        .post-series-card:hover {
+            transform: none;
+        }
+    }
+</style>

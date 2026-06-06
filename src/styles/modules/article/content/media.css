@@ -29,10 +29,13 @@
         .solitude-article-content img {
             border-radius: 10px;
             margin: 1.25rem auto;
+            max-width: min(calc(100vw - 3rem), 58rem);
         }
 
         .solitude-article-content figure {
-            margin: 1.5rem 0;
+            width: min(calc(100vw - 3rem), 58rem);
+            margin: 1.5rem 50%;
+            transform: translateX(-50%);
         }
 
         .solitude-article-content figcaption {

@@ -25,6 +25,18 @@
         word-spacing: 0.05em;
     }
 
+    html:lang(zh) .solitude-article-content p,
+    html:lang(ja) .solitude-article-content p {
+        line-height: 1.78;
+        letter-spacing: 0.012em;
+        word-spacing: normal;
+    }
+
+    html:lang(en) .solitude-article-content p {
+        letter-spacing: 0;
+        word-spacing: 0.03em;
+    }
+
     .solitude-article-content strong {
         color: var(--article-content-strong);
         font-weight: 600;
@@ -43,6 +55,11 @@
             margin-top: 0.875rem;
             margin-bottom: 0.875rem;
         }
+
+        html:lang(zh) .solitude-article-content p,
+        html:lang(ja) .solitude-article-content p {
+            line-height: 1.8;
+        }
     }
 
     /* 1024px (lg) */
@@ -52,6 +69,11 @@
             line-height: 1.75;
             margin-top: 1rem;
             margin-bottom: 1rem;
+        }
+
+        html:lang(zh) .solitude-article-content p,
+        html:lang(ja) .solitude-article-content p {
+            line-height: 1.82;
         }
     }
 }

@@ -1,6 +1,14 @@
 ---
 import ThemeSwitch from './ThemeSwitch';
 import LanguageSwitcher from './LanguageSwitcher';
+import type { Locale } from '@lib/i18n';
+
+interface Props {
+    availableLocales?: readonly Locale[] | undefined;
+    displayLocale?: Locale | undefined;
+}
+
+const { availableLocales, displayLocale } = Astro.props;
 ---
 
 <div
@@ -11,5 +19,9 @@ import LanguageSwitcher from './LanguageSwitcher';
     ]}
 >
     <ThemeSwitch client:visible />
-    <LanguageSwitcher client:visible />
+    <LanguageSwitcher
+        availableLocales={availableLocales}
+        displayLocale={displayLocale}
+        client:visible
+    />
 </div>

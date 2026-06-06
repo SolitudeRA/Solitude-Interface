@@ -1,6 +1,8 @@
 ---
 import PostHeader from './PostHeader.astro';
 import TableOfContents from './TableOfContents.tsx';
+import ReadingProgress from './ReadingProgress.tsx';
+import CodeBlockEnhancer from './CodeBlockEnhancer.tsx';
 import type { PostTag } from '@api/ghost/types';
 import { sanitizeHtml, containsSuspiciousContent } from '@api/utils/sanitize';
 import { highlightCodeBlocks } from '@api/utils/codeHighlight';
@@ -31,6 +33,8 @@ const highlightedHtml = await highlightCodeBlocks(sanitizedHtml);
 ---
 
 <div class="solitude-article-container grid grid-cols-1 lg:grid-cols-12">
+    <ReadingProgress client:idle />
+
     <!-- 左侧 TOC 区域 - 在移动端和平板隐藏 -->
     <div class="solitude-article-rail hidden lg:col-span-2 lg:flex">
         <div class="toc-wrapper w-full">
@@ -39,9 +43,7 @@ const highlightedHtml = await highlightCodeBlocks(sanitizedHtml);
     </div>
 
     <!-- 中间文章主体 - 移动端全宽，桌面端占8列 -->
-    <div
-        class="solitude-article-body col-span-1 pb-[100px] md:pb-[150px] lg:col-span-8 lg:pb-[200px]"
-    >
+    <div class="solitude-article-body col-span-1 pb-16 md:pb-24 lg:col-span-8 lg:pb-32">
         <div class="solitude-article-meta">
             <PostHeader
                 title={title}
@@ -52,6 +54,7 @@ const highlightedHtml = await highlightCodeBlocks(sanitizedHtml);
         </div>
         <div>
             <div class="solitude-article-content" set:html={highlightedHtml} />
+            <CodeBlockEnhancer client:idle />
         </div>
     </div>
 
@@ -86,5 +89,16 @@ const highlightedHtml = await highlightCodeBlocks(sanitizedHtml);
             var(--post-view-card-overlay-end) 100%
         );
         pointer-events: none;
+    }
+
+    @media (max-width: 767px) {
+        .solitude-article-body {
+            padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+        }
+
+        .solitude-article-content {
+            padding-top: clamp(10rem, 20svh, 12rem);
+            padding-bottom: calc(3rem + env(safe-area-inset-bottom));
+        }
     }
 </style>
