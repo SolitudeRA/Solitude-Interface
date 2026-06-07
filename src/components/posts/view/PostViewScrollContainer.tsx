@@ -150,7 +150,7 @@ export default function PostViewScrollContainer({
                             transition={{ duration: prefersReducedMotion ? 0 : 0.25 }}
                             className={cn(
                                 'pointer-events-none absolute top-0 left-0 z-10',
-                                'h-full w-32'
+                                'h-full w-20 sm:w-24 lg:w-28'
                             )}
                             style={{
                                 background:
@@ -171,7 +171,7 @@ export default function PostViewScrollContainer({
                             transition={{ duration: prefersReducedMotion ? 0 : 0.25 }}
                             className={cn(
                                 'pointer-events-none absolute top-0 right-0 z-10',
-                                'h-full w-32'
+                                'h-full w-20 sm:w-24 lg:w-28'
                             )}
                             style={{
                                 background:

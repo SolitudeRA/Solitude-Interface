@@ -25,4 +25,77 @@
     --page-bullet-1: oklch(0.7 0.16 320);
     --page-bullet-2: oklch(0.72 0.14 280);
     --page-bullet-3: oklch(0.75 0.12 240);
+
+    /* 页面玻璃表面 */
+    --page-surface-bg: oklch(0.18 0.0001 271 / 0.78);
+    --page-surface-bg-hover: oklch(0.2 0.01 271 / 0.86);
+    --page-surface-border: oklch(0.6 0.15 280 / 0.13);
+    --page-surface-border-hover: oklch(0.65 0.16 280 / 0.24);
+    --page-surface-shadow: oklch(0 0 0 / 0.22);
+    --page-surface-shadow-hover: oklch(0 0 0 / 0.3);
+
+    /* 静态页 Hero */
+    --page-hero-overlay-start: oklch(23.503% 0.00003 271.152 / 0.3);
+    --page-hero-overlay-mid: oklch(23.503% 0.00003 271.152 / 0.65);
+    --page-hero-overlay-end: oklch(23.503% 0.00003 271.152);
+    --page-hero-title-shadow: 0 4px 20px var(--post-view-card-shadow);
+    --page-hero-badge-bg: var(--article-content-code-bg);
+    --page-hero-badge-border: var(--article-content-pre-border);
+    --page-hero-meta: var(--text-content-primary);
+
+    /* Contact / privacy accent */
+    --info-page-accent-start: oklch(0.78 0.13 300);
+    --info-page-accent-mid: oklch(0.78 0.11 168);
+    --info-page-accent-end: oklch(0.82 0.13 82);
+    --info-page-link: oklch(0.8 0.12 300);
+    --info-page-link-hover: oklch(0.82 0.1 166);
+    --info-page-link-bg: linear-gradient(
+        135deg,
+        oklch(0.2 0.012 271 / 0.86) 0%,
+        oklch(0.31 0.05 300 / 0.56) 52%,
+        oklch(0.27 0.045 166 / 0.5) 100%
+    );
+    --info-page-link-bg-hover: linear-gradient(
+        135deg,
+        oklch(0.22 0.014 271 / 0.92) 0%,
+        oklch(0.34 0.06 300 / 0.62) 45%,
+        oklch(0.3 0.055 166 / 0.58) 100%
+    );
+    --info-page-link-border: oklch(0.78 0.13 300 / 0.22);
+    --info-page-link-border-hover: oklch(0.78 0.11 168 / 0.36);
+    --info-page-link-shadow: oklch(0 0 0 / 0.24);
+    --info-page-link-shadow-hover: oklch(0.78 0.11 168 / 0.16);
+    --info-page-icon: oklch(0.8 0.12 300);
+    --info-page-icon-alt: oklch(0.78 0.11 168);
+    --info-page-icon-bg: linear-gradient(
+        135deg,
+        oklch(0.78 0.13 300 / 0.16),
+        oklch(0.78 0.11 168 / 0.12)
+    );
+    --info-page-icon-border: oklch(0.78 0.13 300 / 0.2);
+    --info-page-surface-border-hover: oklch(0.78 0.11 168 / 0.28);
+    --info-page-surface-shadow-hover: oklch(0.78 0.11 168 / 0.14);
+    --info-page-card-icon-bg: linear-gradient(
+        135deg,
+        oklch(0.78 0.13 300 / 0.17),
+        oklch(0.82 0.13 82 / 0.13)
+    );
+    --info-page-card-icon-border: oklch(0.82 0.13 82 / 0.22);
+    --info-page-card-icon: oklch(0.82 0.12 300);
+    --info-page-bullet-1: oklch(0.78 0.13 300);
+    --info-page-bullet-2: oklch(0.78 0.11 168);
+    --info-page-bullet-3: oklch(0.82 0.13 82);
+    --info-page-github-icon-bg: color-mix(
+        in oklch,
+        var(--article-content-pre-bg) 70%,
+        oklch(0.96 0.01 250 / 0.16)
+    );
+    --info-page-github-icon: oklch(0.92 0.012 250);
+    --info-page-twitter-icon-bg: linear-gradient(
+        135deg,
+        oklch(0.78 0.13 300 / 0.17),
+        oklch(0.78 0.11 168 / 0.12)
+    );
+    --info-page-twitter-icon: oklch(0.82 0.12 300);
+    --info-page-arrow-hover: oklch(0.82 0.1 166);
 }

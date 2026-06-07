@@ -10,4 +10,11 @@
     --toc-link-hover: oklch(0.9 0.005 264.665);
     --toc-link-active: oklch(0.72 0.14 280);
     --toc-link-active-bg: oklch(0.72 0.14 280 / 0.1);
+    --toc-shadow: oklch(0 0 0 / 0.22);
+    --toc-mobile-shadow: oklch(0 0 0 / 0.32);
+    --toc-progress-start: oklch(0.72 0.14 220);
+    --toc-progress-mid: oklch(0.74 0.14 280);
+    --toc-progress-end: oklch(0.74 0.14 45);
+    --toc-progress-shadow: oklch(0.72 0.14 220 / 0.42);
+    --toc-backdrop-bg: rgba(2, 6, 23, 0.42);
 }

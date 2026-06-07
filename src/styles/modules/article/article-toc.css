@@ -20,7 +20,7 @@
         border-radius: 14px;
         padding: 1rem;
         box-shadow:
-            0 18px 42px rgba(0, 0, 0, 0.12),
+            0 18px 42px var(--toc-shadow),
             0 1px 0 rgba(255, 255, 255, 0.08) inset;
     }
 
@@ -149,8 +149,13 @@
         display: block;
         height: 100%;
         transform-origin: left center;
-        background: linear-gradient(90deg, #38bdf8, #a78bfa, #f59e0b);
-        box-shadow: 0 0 18px rgba(56, 189, 248, 0.42);
+        background: linear-gradient(
+            90deg,
+            var(--toc-progress-start),
+            var(--toc-progress-mid),
+            var(--toc-progress-end)
+        );
+        box-shadow: 0 0 18px var(--toc-progress-shadow);
         transition: transform 120ms linear;
     }
 
@@ -168,7 +173,7 @@
         border-radius: 999px;
         background: var(--toc-container-bg);
         color: var(--toc-header);
-        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 18px 42px var(--toc-mobile-shadow);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         font-size: 0.875rem;
@@ -187,7 +192,7 @@
         position: absolute;
         inset: 0;
         border: 0;
-        background: rgba(2, 6, 23, 0.42);
+        background: var(--toc-backdrop-bg);
     }
 
     .mobile-toc-sheet {
@@ -198,7 +203,7 @@
         border: 1px solid var(--toc-border);
         border-radius: 22px 22px 0 0;
         background: var(--toc-container-bg);
-        box-shadow: 0 -24px 72px rgba(0, 0, 0, 0.32);
+        box-shadow: 0 -24px 72px var(--toc-mobile-shadow);
         backdrop-filter: blur(18px);
         -webkit-backdrop-filter: blur(18px);
     }

@@ -435,10 +435,13 @@ const l = lists[locale];
         padding: 0.375rem 0.875rem;
         font-size: 0.875rem;
         font-weight: 500;
-        background: var(--accent);
-        color: var(--chart-1);
+        background: var(--page-hero-badge-bg);
+        color: var(--page-badge-text);
         border-radius: 9999px;
-        border: 1px solid var(--border);
+        border: 1px solid var(--page-hero-badge-border);
+        box-shadow: 0 12px 28px var(--page-surface-shadow);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
     }
 
     .policy-date {
@@ -476,7 +479,7 @@ const l = lists[locale];
         margin-bottom: 1.25rem;
         color: var(--foreground);
         padding-bottom: 0.625rem;
-        border-bottom: 2px solid var(--chart-1);
+        border-bottom: 2px solid var(--info-page-accent-start);
         display: inline-block;
     }
 
@@ -488,7 +491,7 @@ const l = lists[locale];
     }
 
     .policy-subsection {
-        border-left: 3px solid var(--border);
+        border-left: 3px solid var(--info-page-accent-start);
         padding-left: 1.5rem;
     }
 
@@ -513,8 +516,12 @@ const l = lists[locale];
         height: 1.75rem;
         font-size: 0.875rem;
         font-weight: 600;
-        background: var(--chart-1);
-        color: var(--background);
+        background: linear-gradient(
+            135deg,
+            var(--info-page-bullet-1) 0%,
+            var(--info-page-bullet-2) 100%
+        );
+        color: oklch(0.985 0.006 250);
         border-radius: 50%;
         flex-shrink: 0;
     }
@@ -550,21 +557,33 @@ const l = lists[locale];
         top: 0.625rem;
         width: 0.5rem;
         height: 0.5rem;
-        background: var(--chart-1);
+        background: var(--info-page-bullet-2);
         border-radius: 50%;
+    }
+
+    .policy-list li:nth-child(3n + 1)::before {
+        background: var(--info-page-bullet-1);
+    }
+
+    .policy-list li:nth-child(3n + 2)::before {
+        background: var(--info-page-bullet-2);
+    }
+
+    .policy-list li:nth-child(3n)::before {
+        background: var(--info-page-bullet-3);
     }
 
     /* 链接样式 */
     .policy-link {
-        color: var(--chart-1);
+        color: var(--info-page-link);
         text-decoration: none;
-        border-bottom: 1px solid var(--border);
+        border-bottom: 1px solid var(--info-page-link);
         transition: all 0.2s ease;
     }
 
     .policy-link:hover {
-        color: var(--ring);
-        border-bottom-color: var(--ring);
+        color: var(--info-page-link-hover);
+        border-bottom-color: var(--info-page-link-hover);
     }
 
     /* 卡片 */
@@ -582,16 +601,20 @@ const l = lists[locale];
 
     .policy-card {
         padding: 1.5rem;
-        background: var(--card);
+        background: var(--page-surface-bg);
         border-radius: 12px;
-        border: 1px solid var(--border);
+        border: 1px solid var(--page-surface-border);
         transition: all 0.2s ease;
+        box-shadow: 0 14px 34px var(--page-surface-shadow);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
     }
 
     .policy-card:hover {
         transform: translateY(-2px);
-        border-color: var(--ring);
-        box-shadow: 0 8px 24px var(--post-view-card-shadow);
+        background: var(--page-surface-bg-hover);
+        border-color: var(--info-page-surface-border-hover);
+        box-shadow: 0 18px 42px var(--info-page-surface-shadow-hover);
     }
 
     .policy-card-icon {
@@ -600,9 +623,10 @@ const l = lists[locale];
         justify-content: center;
         width: 2.5rem;
         height: 2.5rem;
-        background: var(--accent);
-        color: var(--chart-1);
+        background: var(--info-page-card-icon-bg);
+        color: var(--info-page-card-icon);
         border-radius: 0.5rem;
+        border: 1px solid var(--info-page-card-icon-border);
         margin-bottom: 0.75rem;
     }
 
@@ -626,33 +650,42 @@ const l = lists[locale];
         align-items: center;
         gap: 0.75rem;
         padding: 1rem 1.5rem;
-        background: var(--accent);
+        background: var(--page-surface-bg);
         border-radius: 12px;
-        border: 1px solid var(--border);
+        border: 1px solid var(--page-surface-border);
         transition: all 0.2s ease;
+        box-shadow: 0 14px 34px var(--page-surface-shadow);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
     }
 
     .policy-contact:hover {
-        border-color: var(--ring);
-        box-shadow: 0 4px 12px var(--post-view-card-shadow);
+        border-color: var(--info-page-surface-border-hover);
+        box-shadow: 0 18px 42px var(--info-page-surface-shadow-hover);
     }
 
     .contact-icon {
-        width: 1.5rem;
-        height: 1.5rem;
-        color: var(--chart-1);
+        width: 2rem;
+        height: 2rem;
+        padding: 0.38rem;
+        color: var(--info-page-icon);
+        background: var(--info-page-icon-bg);
+        border: 1px solid var(--info-page-icon-border);
+        border-radius: 0.55rem;
+        box-sizing: border-box;
+        flex-shrink: 0;
     }
 
     .contact-link {
         font-size: 1.125rem;
         font-weight: 500;
-        color: var(--foreground);
+        color: var(--info-page-link);
         text-decoration: none;
         transition: color 0.2s ease;
     }
 
     .contact-link:hover {
-        color: var(--chart-1);
+        color: var(--info-page-link-hover);
     }
 
     /* 页脚 */
@@ -676,7 +709,7 @@ const l = lists[locale];
 
     :global(.dark) .policy-heading {
         color: var(--foreground);
-        border-bottom-color: var(--page-decorator-start);
+        border-bottom-color: var(--info-page-accent-start);
     }
 
     :global(.dark) .policy-subheading {
@@ -684,18 +717,22 @@ const l = lists[locale];
     }
 
     :global(.dark) .policy-number {
-        background: linear-gradient(135deg, var(--page-bullet-1) 0%, var(--page-bullet-2) 100%);
+        background: linear-gradient(
+            135deg,
+            var(--info-page-bullet-1) 0%,
+            var(--info-page-bullet-2) 100%
+        );
         color: oklch(0.15 0.02 264.665);
     }
 
     :global(.dark) .policy-link {
-        color: var(--page-link);
-        border-bottom-color: var(--page-link);
+        color: var(--info-page-link);
+        border-bottom-color: var(--info-page-link);
     }
 
     :global(.dark) .policy-link:hover {
-        color: var(--page-link-hover);
-        border-bottom-color: var(--page-link-hover);
+        color: var(--info-page-link-hover);
+        border-bottom-color: var(--info-page-link-hover);
     }
 
     :global(.dark) .policy-list li {
@@ -703,23 +740,23 @@ const l = lists[locale];
     }
 
     :global(.dark) .policy-list li::before {
-        background: var(--page-bullet-2);
+        background: var(--info-page-bullet-2);
     }
 
     :global(.dark) .policy-list li:nth-child(3n + 1)::before {
-        background: var(--page-bullet-1);
+        background: var(--info-page-bullet-1);
     }
 
     :global(.dark) .policy-list li:nth-child(3n + 2)::before {
-        background: var(--page-bullet-2);
+        background: var(--info-page-bullet-2);
     }
 
     :global(.dark) .policy-list li:nth-child(3n)::before {
-        background: var(--page-bullet-3);
+        background: var(--info-page-bullet-3);
     }
 
     :global(.dark) .policy-subsection {
-        border-left-color: var(--page-decorator-start);
+        border-left-color: var(--info-page-accent-start);
     }
 
     :global(.dark) .policy-card {
@@ -728,8 +765,9 @@ const l = lists[locale];
     }
 
     :global(.dark) .policy-card-icon {
-        background: var(--article-content-code-bg);
-        color: var(--page-icon);
+        background: var(--info-page-card-icon-bg);
+        color: var(--info-page-card-icon);
+        border-color: var(--info-page-card-icon-border);
     }
 
     :global(.dark) .policy-card-title {
@@ -741,8 +779,8 @@ const l = lists[locale];
     }
 
     :global(.dark) .policy-card:hover {
-        border-color: var(--article-header-tag-border);
-        box-shadow: 0 8px 24px oklch(0.75 0.15 45 / 0.15);
+        border-color: var(--info-page-surface-border-hover);
+        box-shadow: 0 8px 24px var(--info-page-surface-shadow-hover);
     }
 
     :global(.dark) .policy-contact {
@@ -751,20 +789,22 @@ const l = lists[locale];
     }
 
     :global(.dark) .contact-icon {
-        color: var(--page-icon);
+        color: var(--info-page-icon);
+        background: var(--info-page-icon-bg);
+        border-color: var(--info-page-icon-border);
     }
 
     :global(.dark) .contact-link {
-        color: var(--foreground);
+        color: var(--info-page-link);
     }
 
     :global(.dark) .contact-link:hover {
-        color: var(--page-link);
+        color: var(--info-page-link-hover);
     }
 
     :global(.dark) .policy-contact:hover {
-        border-color: var(--article-header-tag-border);
-        box-shadow: 0 4px 12px oklch(0.75 0.15 45 / 0.15);
+        border-color: var(--info-page-surface-border-hover);
+        box-shadow: 0 4px 12px var(--info-page-surface-shadow-hover);
     }
 
     :global(.dark) .policy-footer {

@@ -1,8 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Globe, ChevronDown, Check } from 'lucide-react';
 import { cn } from '@components/common/lib/utils';
-import { useAtomValue } from 'jotai';
-import { themeSwitchAtom } from '@stores/themeAtom';
 import {
     DEFAULT_LOCALE,
     isLocale,
@@ -60,8 +58,6 @@ export default function LanguageSwitcher({
     const [isOpen, setIsOpen] = useState(false);
     const [currentLocale, setCurrentLocale] = useState<Locale>(displayLocale ?? DEFAULT_LOCALE);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const theme = useAtomValue(themeSwitchAtom);
-    const isLightMode = theme === 'light';
     const visibleLocales =
         availableLocales?.length && availableLocales.every(isLocale) ? availableLocales : LOCALES;
     const activeLocale = displayLocale ?? currentLocale;
@@ -114,12 +110,9 @@ export default function LanguageSwitcher({
                     'flex items-center gap-1.5 px-3 py-1.5',
                     'rounded-full',
                     'border transition-all duration-300',
-                    'shadow-md hover:shadow-lg',
-                    'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-                    // 主题适配样式
-                    isLightMode
-                        ? 'hover:bg-amber-150 border-amber-300 bg-amber-100 text-amber-800'
-                        : 'border-neutral-700 bg-neutral-900 text-neutral-200 hover:bg-neutral-800'
+                    'border-[var(--top-control-border)] bg-[var(--top-control-bg)] text-[var(--top-control-text)]',
+                    'shadow-[0_8px_24px_var(--top-control-shadow)] hover:bg-[var(--top-control-bg-hover)] hover:shadow-[0_10px_28px_var(--top-control-shadow-hover)]',
+                    'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
                 )}
                 aria-label="切换语言"
                 aria-expanded={canSwitchLocale ? isOpen : false}
@@ -148,13 +141,10 @@ export default function LanguageSwitcher({
                         'min-w-[140px]',
                         'rounded-2xl',
                         'border backdrop-blur-md',
-                        'shadow-lg',
+                        'border-[var(--top-control-menu-border)] bg-[var(--top-control-menu-bg)]',
+                        'shadow-[0_18px_42px_var(--top-control-menu-shadow)]',
                         'py-1.5',
-                        'animate-in fade-in-0 zoom-in-95 duration-150',
-                        // 主题适配样式
-                        isLightMode
-                            ? 'border-amber-200 bg-amber-50/95 shadow-amber-200/30'
-                            : 'border-neutral-700 bg-neutral-900/95 shadow-black/30'
+                        'animate-in fade-in-0 zoom-in-95 duration-150'
                     )}
                     role="listbox"
                     aria-label="选择语言"
@@ -170,14 +160,9 @@ export default function LanguageSwitcher({
                                     'flex w-full items-center gap-2.5 px-3 py-2',
                                     'text-left text-sm',
                                     'transition-colors duration-150',
-                                    // 主题适配样式
                                     isSelected
-                                        ? isLightMode
-                                            ? 'bg-amber-200/50 text-amber-900'
-                                            : 'bg-neutral-700/50 text-neutral-100'
-                                        : isLightMode
-                                          ? 'text-amber-800 hover:bg-amber-100/50'
-                                          : 'text-neutral-300 hover:bg-neutral-800/50'
+                                        ? 'bg-[var(--top-control-menu-item-active-bg)] text-[var(--top-control-menu-item-active-text)]'
+                                        : 'text-[var(--top-control-menu-item-text)] hover:bg-[var(--top-control-menu-item-hover-bg)]'
                                 )}
                                 role="option"
                                 aria-selected={isSelected}
@@ -187,12 +172,7 @@ export default function LanguageSwitcher({
                                 </span>
                                 <span className="flex-1 font-medium">{LOCALE_NAMES[locale]}</span>
                                 {isSelected && (
-                                    <Check
-                                        className={cn(
-                                            'h-4 w-4',
-                                            isLightMode ? 'text-amber-700' : 'text-neutral-300'
-                                        )}
-                                    />
+                                    <Check className="h-4 w-4 text-[var(--top-control-accent)]" />
                                 )}
                             </button>
                         );
