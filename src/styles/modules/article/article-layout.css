@@ -24,11 +24,19 @@
     /* 侧边栏样式 */
     .solitude-article-rail {
         background-color: var(--article-rail-bg);
+        border-inline: 1px solid var(--article-rail-border);
+        box-shadow: 0 24px 70px var(--article-rail-shadow);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         opacity: 1;
     }
 
     /* 文章主体区域 */
     .solitude-article-body {
         background-color: var(--article-body-bg);
+        border-inline: 1px solid var(--article-body-border);
+        box-shadow: 0 24px 70px var(--article-body-shadow);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     }
 }

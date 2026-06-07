@@ -3,11 +3,18 @@
  */
 
 :root {
-    --toc-container-bg: oklch(0.96 0.005 264.665 / 0.9);
-    --toc-border: oklch(0.85 0.01 264.665);
+    --toc-container-bg: oklch(0.985 0.006 250 / 0.78);
+    --toc-border: oklch(0.68 0.045 235 / 0.28);
     --toc-header: oklch(0.15 0.025 264.665);
     --toc-link: oklch(0.45 0.015 264.665);
     --toc-link-hover: oklch(0.28 0.02 264.665);
-    --toc-link-active: oklch(0.45 0.2 264.376);
-    --toc-link-active-bg: oklch(0.45 0.2 264.376 / 0.1);
+    --toc-link-active: oklch(0.5 0.14 236);
+    --toc-link-active-bg: oklch(0.5 0.14 236 / 0.11);
+    --toc-shadow: oklch(0.3 0.035 250 / 0.14);
+    --toc-mobile-shadow: oklch(0.24 0.035 250 / 0.24);
+    --toc-progress-start: oklch(0.68 0.14 220);
+    --toc-progress-mid: oklch(0.64 0.15 275);
+    --toc-progress-end: oklch(0.7 0.13 160);
+    --toc-progress-shadow: oklch(0.62 0.14 220 / 0.32);
+    --toc-backdrop-bg: oklch(0.18 0.035 250 / 0.32);
 }

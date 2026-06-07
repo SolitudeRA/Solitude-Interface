@@ -13,6 +13,8 @@
     --dock-button-bg: oklch(0.2 0.03 264.665 / 0.95);
     --dock-button-shadow: oklch(0 0 0 / 0.25);
     --dock-button-ring: oklch(0.6 0.15 280);
+    --dock-social-icon-color: oklch(0.96 0.003 247.839);
+    --dock-social-border: oklch(1 0 0 / 0.1);
 
     /* 遮罩层 */
     --dock-overlay-bg: oklch(0 0 0 / 0.6);

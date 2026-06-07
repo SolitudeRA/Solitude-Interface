@@ -25,7 +25,7 @@
 
     /* 柔和色 */
     --muted: oklch(0.967 0.003 264.542);
-    --muted-foreground: oklch(89.745% 0.00724 268.586);
+    --muted-foreground: oklch(0.43 0.018 264.665);
 
     /* 强调色 */
     --accent: oklch(0.967 0.003 264.542);

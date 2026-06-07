@@ -118,14 +118,14 @@ function ShowcaseCard({
                 'aspect-[4/3] w-[15rem] cursor-pointer sm:w-[17rem] md:w-[19rem] lg:w-[21rem]',
 
                 // media-card material
-                'border border-white/20 dark:border-white/20',
-                'ring-1 ring-white/10 ring-inset',
-                'bg-slate-950/25',
-                'shadow-xl shadow-black/25',
+                'border border-[var(--home-showcase-card-border)]',
+                'bg-[var(--home-showcase-card-bg)]',
+                'ring-1 ring-[var(--home-showcase-card-ring)] ring-inset',
+                'shadow-[0_18px_34px_var(--home-showcase-card-shadow)]',
 
                 // motion / interaction
                 CARD_VISUAL_TRANSITION_CLASS,
-                'hover:border-white/30 hover:shadow-2xl hover:shadow-black/30',
+                'hover:border-[var(--home-showcase-card-border-hover)] hover:shadow-[0_24px_44px_var(--home-showcase-card-shadow-hover)]',
 
                 // accessibility
                 'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
@@ -168,16 +168,7 @@ function ShowcaseCard({
             <div
                 className="pointer-events-none absolute inset-0 -z-20"
                 style={{
-                    background: `
-                        linear-gradient(rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0.48)),
-                        linear-gradient(
-                            180deg,
-                            rgba(5, 8, 15, 0.12) 0%,
-                            transparent 30%,
-                            transparent 48%,
-                            rgba(5, 8, 15, 0.3) 100%
-                        )
-                    `,
+                    background: 'var(--home-showcase-media-overlay)',
                 }}
             />
 
@@ -187,11 +178,11 @@ function ShowcaseCard({
                     CARD_GLOW_TRANSITION_CLASS
                 )}
             >
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_16%,rgba(255,255,255,0.16),transparent_34%),linear-gradient(160deg,rgba(125,211,252,0.13),transparent_38%)]" />
-                <div className="absolute inset-0 ring-1 ring-white/15 ring-inset" />
+                <div className="absolute inset-0 bg-[var(--home-showcase-glow)]" />
+                <div className="absolute inset-0 ring-1 ring-[var(--home-showcase-card-ring)] ring-inset" />
             </div>
 
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[66%] bg-gradient-to-t from-black/75 via-black/40 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[66%] bg-[var(--home-showcase-title-gradient)]" />
 
             {/* 标签只保留文章类型和分类 */}
             <div
@@ -292,10 +283,11 @@ function ViewMoreCard({
                 'w-[15rem] sm:w-[17rem] md:w-[19rem] lg:w-[21rem]',
                 'aspect-[4/3] cursor-pointer',
                 'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-                'border border-white/20 bg-slate-950/25 shadow-xl shadow-black/25',
-                'ring-1 ring-white/10 ring-inset',
+                'border border-[var(--home-showcase-card-border)] bg-[var(--home-showcase-card-bg)]',
+                'ring-1 ring-[var(--home-showcase-card-ring)] ring-inset',
+                'shadow-[0_18px_34px_var(--home-showcase-card-shadow)]',
                 CARD_VISUAL_TRANSITION_CLASS,
-                'hover:border-white/30 hover:shadow-2xl hover:shadow-black/30'
+                'hover:border-[var(--home-showcase-card-border-hover)] hover:shadow-[0_24px_44px_var(--home-showcase-card-shadow-hover)]'
             )}
             initial={false}
             animate={{
@@ -322,15 +314,7 @@ function ViewMoreCard({
             <div
                 className="pointer-events-none absolute inset-0 -z-20"
                 style={{
-                    background: `
-                        linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)),
-                        linear-gradient(
-                            180deg,
-                            rgba(5, 8, 15, 0.08) 0%,
-                            transparent 36%,
-                            rgba(5, 8, 15, 0.28) 100%
-                        )
-                    `,
+                    background: 'var(--home-showcase-more-overlay)',
                 }}
             />
 
@@ -340,19 +324,19 @@ function ViewMoreCard({
                     CARD_GLOW_TRANSITION_CLASS
                 )}
             >
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.18),transparent_35%),linear-gradient(160deg,rgba(125,211,252,0.16),transparent_40%)]" />
-                <div className="absolute inset-0 ring-1 ring-white/15 ring-inset" />
+                <div className="absolute inset-0 bg-[var(--home-showcase-more-glow)]" />
+                <div className="absolute inset-0 ring-1 ring-[var(--home-showcase-card-ring)] ring-inset" />
             </div>
 
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[66%] bg-gradient-to-t from-black/75 via-black/40 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[66%] bg-[var(--home-showcase-title-gradient)]" />
 
             <div className="absolute inset-0 z-20 flex items-center justify-center">
                 <div
                     className={cn(
                         'flex h-14 w-14 items-center justify-center rounded-full',
-                        'border border-white/25 bg-white/[0.14] shadow-lg shadow-black/20 backdrop-blur-md',
+                        'border border-[var(--home-showcase-control-border)] bg-[var(--home-showcase-control-bg)] shadow-[0_10px_28px_var(--home-showcase-control-shadow)] backdrop-blur-md',
                         'transition-[background,transform] duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)]',
-                        'group-hover:scale-105 group-hover:bg-white/20'
+                        'group-hover:scale-105 group-hover:bg-[var(--home-showcase-control-bg-hover)]'
                     )}
                 >
                     <ArrowRight className="h-7 w-7 text-white transition-transform duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5" />

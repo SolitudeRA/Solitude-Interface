@@ -54,7 +54,7 @@
         border: 1px solid var(--article-content-pre-border);
         border-radius: 12px;
         background: var(--article-content-pre-bg);
-        box-shadow: 0 16px 44px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 16px 44px var(--article-content-block-shadow);
     }
 
     .solitude-article-content .code-block-toolbar {

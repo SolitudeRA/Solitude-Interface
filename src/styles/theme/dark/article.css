@@ -41,6 +41,7 @@
     /* 文章内容 - 代码块 */
     --article-content-pre-bg: oklch(0.15 0.005 271);
     --article-content-pre-border: oklch(0.6 0.15 280 / 0.15);
+    --article-content-block-shadow: oklch(0 0 0 / 0.28);
 
     /* 文章内容 - 引用块 */
     --article-content-blockquote-bg: oklch(0.65 0.18 300 / 0.1);
@@ -53,5 +54,9 @@
 
     /* 文章布局 */
     --article-body-bg: oklch(23.503% 0.00003 271.152);
+    --article-body-border: oklch(1 0 0 / 0.04);
+    --article-body-shadow: oklch(0 0 0 / 0.2);
     --article-rail-bg: oklch(0.18 0.0001 271);
+    --article-rail-border: oklch(1 0 0 / 0.04);
+    --article-rail-shadow: oklch(0 0 0 / 0.16);
 }

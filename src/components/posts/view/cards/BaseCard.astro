@@ -145,8 +145,8 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
 <style>
     .base-card {
         --corner-inset: clamp(16px, 5.8cqw, 24px);
-        --corner-pill-bg: rgba(255, 255, 255, 0.1);
-        --corner-pill-border: rgba(255, 255, 255, 0.24);
+        --corner-pill-bg: var(--post-view-media-card-pill-bg, rgba(255, 255, 255, 0.1));
+        --corner-pill-border: var(--post-view-media-card-pill-border, rgba(255, 255, 255, 0.24));
 
         container-type: inline-size;
         position: relative;
@@ -154,12 +154,14 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
         height: 100%;
         width: 100%;
         overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid var(--post-view-media-card-border, rgba(255, 255, 255, 0.2));
         border-radius: 35px;
-        background: #0f172a;
-        box-shadow:
+        background: var(--post-view-media-card-bg, #0f172a);
+        box-shadow: var(
+            --post-view-media-card-shadow,
             0 34px 80px rgba(0, 0, 0, 0.38),
-            0 1px 0 rgba(255, 255, 255, 0.22) inset;
+            0 1px 0 rgba(255, 255, 255, 0.22) inset
+        );
         transition:
             border-color 360ms ease,
             box-shadow 360ms ease;
@@ -168,17 +170,21 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
     :global(.post-card-wrapper:hover) .base-card,
     :global(.post-card-wrapper:focus-visible) .base-card,
     .base-card:hover {
-        border-color: rgba(255, 255, 255, 0.32);
-        box-shadow:
+        border-color: var(--post-view-media-card-border-hover, rgba(255, 255, 255, 0.32));
+        box-shadow: var(
+            --post-view-media-card-shadow-hover,
             0 38px 84px rgba(0, 0, 0, 0.42),
-            0 1px 0 rgba(255, 255, 255, 0.26) inset;
+            0 1px 0 rgba(255, 255, 255, 0.26) inset
+        );
     }
 
     :global(.post-card-wrapper:active) .base-card {
-        border-color: rgba(255, 255, 255, 0.26);
-        box-shadow:
+        border-color: var(--post-view-media-card-border-active, rgba(255, 255, 255, 0.26));
+        box-shadow: var(
+            --post-view-media-card-shadow-active,
             0 30px 72px rgba(0, 0, 0, 0.38),
-            0 1px 0 rgba(255, 255, 255, 0.22) inset;
+            0 1px 0 rgba(255, 255, 255, 0.22) inset
+        );
     }
 
     .base-card-media,
@@ -193,7 +199,7 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
         height: 100%;
         width: 100%;
         object-fit: cover;
-        filter: saturate(1.05) contrast(0.98);
+        filter: var(--post-view-media-card-filter, saturate(1.05) contrast(0.98));
         transform: scale(1.025) translate3d(0, 0, 0);
         transition:
             transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -216,24 +222,14 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
 
     .base-card-shade {
         z-index: 1;
-        background:
-            linear-gradient(rgba(0, 0, 0, 0.54), rgba(0, 0, 0, 0.54)),
-            linear-gradient(
-                180deg,
-                rgba(5, 8, 15, 0.16) 0%,
-                transparent 34%,
-                transparent 58%,
-                rgba(5, 8, 15, 0.2) 100%
-            );
+        background: var(--post-view-media-card-shade);
         pointer-events: none;
     }
 
     .base-card-shade::after {
         position: absolute;
         inset: 0;
-        background:
-            radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.14), transparent 34%),
-            linear-gradient(160deg, rgba(125, 211, 252, 0.12), transparent 36%);
+        background: var(--post-view-media-card-glow);
         content: '';
         opacity: 0;
         transform: translate3d(0, 10px, 0);
@@ -245,7 +241,7 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
     :global(.post-card-wrapper:hover) .base-card-media,
     :global(.post-card-wrapper:focus-visible) .base-card-media,
     .base-card:hover .base-card-media {
-        filter: saturate(1.12) contrast(1.02);
+        filter: var(--post-view-media-card-filter-hover, saturate(1.12) contrast(1.02));
         transform: scale(1.04) translate3d(0, 0, 0);
     }
 
@@ -313,7 +309,7 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
         border: 1px solid var(--corner-pill-border);
         border-radius: 999px;
         background: var(--corner-pill-bg);
-        color: rgba(255, 255, 255, 0.9);
+        color: var(--post-view-media-card-pill-text, rgba(255, 255, 255, 0.9));
         font-size: clamp(0.625rem, 2.8cqw, 0.6875rem);
         font-weight: 800;
         line-height: 1;
@@ -409,13 +405,13 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
         max-width: 11ch;
         margin: 0;
         overflow: hidden;
-        color: #fff;
+        color: var(--post-view-media-card-title, #fff);
         font-size: clamp(1.5rem, 8.6cqw, 2.125rem);
         font-weight: 880;
         letter-spacing: 0;
         line-height: 1.1;
         text-align: center;
-        text-shadow: 0 2px 14px rgba(3, 7, 18, 0.82);
+        text-shadow: var(--post-view-media-card-title-shadow, 0 2px 14px rgba(3, 7, 18, 0.82));
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 4;
     }
@@ -446,12 +442,12 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
         max-width: 26ch;
         margin: 0;
         overflow: hidden;
-        color: rgba(255, 255, 255, 0.86);
+        color: var(--post-view-media-card-excerpt, rgba(255, 255, 255, 0.86));
         font-size: clamp(0.875rem, 3.8cqw, 1.05rem);
         font-weight: 520;
         line-height: 1.55;
         text-align: center;
-        text-shadow: 0 2px 10px rgba(3, 7, 18, 0.72);
+        text-shadow: var(--post-view-media-card-copy-shadow, 0 2px 10px rgba(3, 7, 18, 0.72));
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 10;
     }
@@ -465,13 +461,13 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
         position: absolute;
         bottom: clamp(0px, 1cqw, 2px);
         left: 50%;
-        color: rgba(255, 255, 255, 0.64);
+        color: var(--post-view-media-card-date, rgba(255, 255, 255, 0.64));
         font-size: clamp(0.625rem, 2.8cqw, 0.6875rem);
         font-variant-numeric: tabular-nums;
         font-weight: 750;
         line-height: 1;
         text-align: center;
-        text-shadow: 0 1px 8px rgba(3, 7, 18, 0.66);
+        text-shadow: var(--post-view-media-card-copy-shadow, 0 1px 8px rgba(3, 7, 18, 0.66));
         transform: translateX(-50%);
         white-space: nowrap;
     }

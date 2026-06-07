@@ -33,30 +33,29 @@ export default function ThemeSwitch() {
             onCheckedChange={handleThemeChange}
             className={cn(
                 'peer inline-flex h-8 w-14 shrink-0 cursor-pointer items-center rounded-full',
-                'border-border border transition-all duration-300',
-                'shadow-md hover:shadow-lg',
-                'data-[state=checked]:bg-amber-100 data-[state=unchecked]:bg-neutral-900',
-                'data-[state=checked]:border-amber-300 data-[state=unchecked]:border-neutral-700',
+                'border transition-all duration-300',
+                'border-[var(--top-control-border)] bg-[var(--top-control-bg)] text-[var(--top-control-text)]',
+                'shadow-[0_8px_24px_var(--top-control-shadow)] hover:bg-[var(--top-control-bg-hover)] hover:shadow-[0_10px_28px_var(--top-control-shadow-hover)]',
                 'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
             )}
         >
             <SwitchPrimitive.Thumb
                 className={cn(
                     'pointer-events-none flex h-6 w-6 items-center justify-center rounded-full',
-                    'shadow-lg transition-all duration-300',
+                    'transition-all duration-300',
                     'data-[state=checked]:translate-x-7 data-[state=unchecked]:translate-x-1',
-                    'data-[state=checked]:bg-amber-400 data-[state=unchecked]:bg-neutral-600',
-                    'data-[state=checked]:shadow-amber-300/50 data-[state=unchecked]:shadow-black/50'
+                    'bg-[var(--top-control-thumb-bg)] text-[var(--top-control-thumb-text)]',
+                    'shadow-[0_6px_18px_var(--top-control-thumb-shadow)]'
                 )}
             >
                 {isLightMode ? (
                     <Sun
-                        className="h-4 w-4 text-amber-800 transition-transform duration-300"
+                        className="h-4 w-4 text-current transition-transform duration-300"
                         strokeWidth={2.5}
                     />
                 ) : (
                     <Moon
-                        className="h-4 w-4 text-slate-200 transition-transform duration-300"
+                        className="h-4 w-4 text-current transition-transform duration-300"
                         strokeWidth={2.5}
                     />
                 )}

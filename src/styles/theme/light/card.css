@@ -4,14 +4,55 @@
 
 :root {
     /* 网站背景遮罩 - 上浅下深渐变 + 暗角 */
-    --site-bg-overlay-top: rgba(240, 240, 242, 0.45);
-    --site-bg-overlay-bottom: rgba(180, 180, 185, 0.72);
-    --site-bg-vignette: rgba(100, 100, 105, 0.12);
+    --site-bg-overlay-top: rgba(248, 249, 252, 0.2);
+    --site-bg-overlay-bottom: rgba(176, 184, 196, 0.46);
+    --site-bg-vignette: rgba(74, 84, 100, 0.16);
 
     /* 首页文章卡片覆盖层渐变 */
     --home-card-overlay-start: oklch(0.98 0 0 / 0.55);
     --home-card-overlay-mid: oklch(0.96 0 0 / 0.5);
     --home-card-overlay-end: oklch(0.94 0 0 / 0.45);
+
+    /* 首页横向图片卡片 */
+    --home-showcase-card-bg: oklch(0.16 0.032 264 / 0.18);
+    --home-showcase-card-border: oklch(1 0 0 / 0.26);
+    --home-showcase-card-border-hover: oklch(0.9 0.06 225 / 0.52);
+    --home-showcase-card-ring: oklch(1 0 0 / 0.14);
+    --home-showcase-card-shadow: oklch(0.27 0.035 250 / 0.18);
+    --home-showcase-card-shadow-hover: oklch(0.28 0.045 240 / 0.24);
+    --home-showcase-media-overlay:
+        linear-gradient(rgba(4, 7, 12, 0.34), rgba(4, 7, 12, 0.34)),
+        linear-gradient(
+            180deg,
+            rgba(248, 250, 255, 0.1) 0%,
+            transparent 30%,
+            transparent 48%,
+            rgba(4, 7, 12, 0.28) 100%
+        );
+    --home-showcase-more-overlay:
+        linear-gradient(rgba(4, 7, 12, 0.3), rgba(4, 7, 12, 0.3)),
+        linear-gradient(
+            180deg,
+            rgba(248, 250, 255, 0.08) 0%,
+            transparent 36%,
+            rgba(4, 7, 12, 0.25) 100%
+        );
+    --home-showcase-title-gradient: linear-gradient(
+        to top,
+        rgba(4, 7, 12, 0.78),
+        rgba(4, 7, 12, 0.4),
+        transparent
+    );
+    --home-showcase-glow:
+        radial-gradient(circle at 50% 16%, rgba(255, 255, 255, 0.22), transparent 34%),
+        linear-gradient(160deg, rgba(125, 211, 252, 0.14), transparent 38%);
+    --home-showcase-more-glow:
+        radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.24), transparent 35%),
+        linear-gradient(160deg, rgba(125, 211, 252, 0.18), transparent 40%);
+    --home-showcase-control-bg: oklch(1 0 0 / 0.16);
+    --home-showcase-control-bg-hover: oklch(1 0 0 / 0.22);
+    --home-showcase-control-border: oklch(1 0 0 / 0.32);
+    --home-showcase-control-shadow: oklch(0.18 0.03 250 / 0.18);
 
     /* Post View 卡片覆盖层渐变 */
     --post-view-card-overlay-start: oklch(0.98 0 0 / 0.78);
@@ -19,8 +60,8 @@
     --post-view-card-overlay-end: oklch(0.94 0 0 / 0.68);
 
     /* Post View 滚动遮罩 */
-    --post-view-scroll-mask-start: oklch(0.99 0.003 264.665);
-    --post-view-scroll-mask-end: oklch(0.99 0.003 264.665 / 0);
+    --post-view-scroll-mask-start: oklch(0.88 0.008 250 / 0.46);
+    --post-view-scroll-mask-end: oklch(0.88 0.008 250 / 0);
 
     /* Post View 卡片阴影 */
     --post-view-card-shadow: oklch(0.35 0.05 264.376 / 0.22);
@@ -28,6 +69,44 @@
 
     /* Post View 卡片边框 */
     --post-view-card-border: oklch(0.75 0.015 264.665 / 0.35);
+
+    /* Post View 媒体卡外壳 - 亮色主题 */
+    --post-view-media-card-bg: oklch(0.16 0.035 252);
+    --post-view-media-card-border: oklch(1 0 0 / 0.34);
+    --post-view-media-card-border-hover: oklch(0.82 0.1 225 / 0.62);
+    --post-view-media-card-border-active: oklch(0.76 0.08 235 / 0.5);
+    --post-view-media-card-shadow:
+        0 28px 72px oklch(0.24 0.035 250 / 0.28), 0 10px 32px oklch(0.6 0.12 220 / 0.08),
+        0 1px 0 oklch(1 0 0 / 0.24) inset;
+    --post-view-media-card-shadow-hover:
+        0 34px 82px oklch(0.22 0.04 250 / 0.31), 0 14px 38px oklch(0.62 0.13 220 / 0.12),
+        0 1px 0 oklch(1 0 0 / 0.3) inset;
+    --post-view-media-card-shadow-active:
+        0 24px 66px oklch(0.24 0.035 250 / 0.26), 0 8px 26px oklch(0.6 0.12 220 / 0.08),
+        0 1px 0 oklch(1 0 0 / 0.22) inset;
+    --post-view-media-card-filter: saturate(1.03) contrast(0.96) brightness(1.03);
+    --post-view-media-card-filter-hover: saturate(1.12) contrast(1.01) brightness(1.04);
+    --post-view-media-card-shade:
+        linear-gradient(rgba(5, 8, 15, 0.46), rgba(5, 8, 15, 0.46)),
+        linear-gradient(
+            180deg,
+            rgba(248, 250, 255, 0.08) 0%,
+            transparent 30%,
+            transparent 56%,
+            rgba(5, 8, 15, 0.22) 100%
+        );
+    --post-view-media-card-glow:
+        radial-gradient(circle at 50% 16%, oklch(1 0 0 / 0.1), transparent 34%),
+        linear-gradient(155deg, oklch(0.72 0.16 220 / 0.1), transparent 42%),
+        linear-gradient(205deg, oklch(0.72 0.13 285 / 0.05), transparent 46%);
+    --post-view-media-card-pill-bg: oklch(0.16 0.035 252 / 0.38);
+    --post-view-media-card-pill-border: oklch(0.88 0.08 220 / 0.42);
+    --post-view-media-card-pill-text: oklch(0.98 0.004 250);
+    --post-view-media-card-title: oklch(0.99 0.003 250);
+    --post-view-media-card-excerpt: oklch(0.94 0.012 250);
+    --post-view-media-card-date: oklch(0.86 0.02 250);
+    --post-view-media-card-title-shadow: 0 2px 16px oklch(0.04 0.02 250 / 0.82);
+    --post-view-media-card-copy-shadow: 0 2px 12px oklch(0.04 0.02 250 / 0.72);
 
     /* Post View 卡片文字 */
     --post-view-card-title: oklch(0.18 0.025 264.665);

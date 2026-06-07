@@ -13,6 +13,42 @@
     --home-card-overlay-mid: oklch(0.18 0.035 264.665 / 0.4);
     --home-card-overlay-end: oklch(0.22 0.04 264.665 / 0.35);
 
+    /* 首页横向图片卡片 */
+    --home-showcase-card-bg: oklch(0.13 0.028 261.692 / 0.25);
+    --home-showcase-card-border: oklch(1 0 0 / 0.2);
+    --home-showcase-card-border-hover: oklch(1 0 0 / 0.3);
+    --home-showcase-card-ring: oklch(1 0 0 / 0.1);
+    --home-showcase-card-shadow: oklch(0 0 0 / 0.25);
+    --home-showcase-card-shadow-hover: oklch(0 0 0 / 0.3);
+    --home-showcase-media-overlay:
+        linear-gradient(rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0.48)),
+        linear-gradient(
+            180deg,
+            rgba(5, 8, 15, 0.12) 0%,
+            transparent 30%,
+            transparent 48%,
+            rgba(5, 8, 15, 0.3) 100%
+        );
+    --home-showcase-more-overlay:
+        linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)),
+        linear-gradient(180deg, rgba(5, 8, 15, 0.08) 0%, transparent 36%, rgba(5, 8, 15, 0.28) 100%);
+    --home-showcase-title-gradient: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.75),
+        rgba(0, 0, 0, 0.4),
+        transparent
+    );
+    --home-showcase-glow:
+        radial-gradient(circle at 50% 16%, rgba(255, 255, 255, 0.16), transparent 34%),
+        linear-gradient(160deg, rgba(125, 211, 252, 0.13), transparent 38%);
+    --home-showcase-more-glow:
+        radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.18), transparent 35%),
+        linear-gradient(160deg, rgba(125, 211, 252, 0.16), transparent 40%);
+    --home-showcase-control-bg: oklch(1 0 0 / 0.14);
+    --home-showcase-control-bg-hover: oklch(1 0 0 / 0.2);
+    --home-showcase-control-border: oklch(1 0 0 / 0.25);
+    --home-showcase-control-shadow: oklch(0 0 0 / 0.2);
+
     /* Post View 卡片覆盖层渐变 */
     --post-view-card-overlay-start: oklch(0.12 0.025 264.665 / 0.65);
     --post-view-card-overlay-mid: oklch(0.18 0.035 264.665 / 0.55);
@@ -28,6 +64,40 @@
 
     /* Post View 卡片边框 */
     --post-view-card-border: oklch(0.5 0.15 264.665 / 0.25);
+
+    /* Post View 媒体卡外壳 - 暗色主题 */
+    --post-view-media-card-bg: #0f172a;
+    --post-view-media-card-border: rgba(255, 255, 255, 0.2);
+    --post-view-media-card-border-hover: rgba(255, 255, 255, 0.32);
+    --post-view-media-card-border-active: rgba(255, 255, 255, 0.26);
+    --post-view-media-card-shadow:
+        0 34px 80px rgba(0, 0, 0, 0.38), 0 1px 0 rgba(255, 255, 255, 0.22) inset;
+    --post-view-media-card-shadow-hover:
+        0 38px 84px rgba(0, 0, 0, 0.42), 0 1px 0 rgba(255, 255, 255, 0.26) inset;
+    --post-view-media-card-shadow-active:
+        0 30px 72px rgba(0, 0, 0, 0.38), 0 1px 0 rgba(255, 255, 255, 0.22) inset;
+    --post-view-media-card-filter: saturate(1.05) contrast(0.98);
+    --post-view-media-card-filter-hover: saturate(1.12) contrast(1.02);
+    --post-view-media-card-shade:
+        linear-gradient(rgba(0, 0, 0, 0.54), rgba(0, 0, 0, 0.54)),
+        linear-gradient(
+            180deg,
+            rgba(5, 8, 15, 0.16) 0%,
+            transparent 34%,
+            transparent 58%,
+            rgba(5, 8, 15, 0.2) 100%
+        );
+    --post-view-media-card-glow:
+        radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.14), transparent 34%),
+        linear-gradient(160deg, rgba(125, 211, 252, 0.12), transparent 36%);
+    --post-view-media-card-pill-bg: rgba(255, 255, 255, 0.1);
+    --post-view-media-card-pill-border: rgba(255, 255, 255, 0.24);
+    --post-view-media-card-pill-text: rgba(255, 255, 255, 0.9);
+    --post-view-media-card-title: #fff;
+    --post-view-media-card-excerpt: rgba(255, 255, 255, 0.86);
+    --post-view-media-card-date: rgba(255, 255, 255, 0.64);
+    --post-view-media-card-title-shadow: 0 2px 14px rgba(3, 7, 18, 0.82);
+    --post-view-media-card-copy-shadow: 0 2px 10px rgba(3, 7, 18, 0.72);
 
     /* Post View 卡片文字 */
     --post-view-card-title: oklch(0.98 0.005 264.665);

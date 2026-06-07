@@ -6,4 +6,22 @@
     --navbar-scrolled-bg: oklch(0.1 0.02 264.665 / 0.85);
     --navbar-scrolled-border: oklch(0.98 0.005 264.665 / 0.05);
     --navbar-scrolled-shadow: oklch(0 0 0 / 0.2);
+
+    --top-control-bg: oklch(0.16 0.025 264.665 / 0.86);
+    --top-control-bg-hover: oklch(0.22 0.03 264.665 / 0.92);
+    --top-control-border: oklch(1 0 0 / 0.12);
+    --top-control-text: oklch(0.93 0.006 264.531);
+    --top-control-shadow: oklch(0 0 0 / 0.22);
+    --top-control-shadow-hover: oklch(0 0 0 / 0.3);
+    --top-control-thumb-bg: oklch(0.28 0.035 264.665);
+    --top-control-thumb-text: oklch(0.9 0.01 264.531);
+    --top-control-thumb-shadow: oklch(0 0 0 / 0.34);
+    --top-control-accent: oklch(0.78 0.12 225);
+    --top-control-menu-bg: oklch(0.16 0.025 264.665 / 0.95);
+    --top-control-menu-border: oklch(1 0 0 / 0.12);
+    --top-control-menu-shadow: oklch(0 0 0 / 0.32);
+    --top-control-menu-item-text: oklch(0.86 0.01 264.531);
+    --top-control-menu-item-hover-bg: oklch(0.24 0.03 264.665 / 0.72);
+    --top-control-menu-item-active-bg: oklch(0.3 0.04 235 / 0.72);
+    --top-control-menu-item-active-text: oklch(0.96 0.006 264.531);
 }

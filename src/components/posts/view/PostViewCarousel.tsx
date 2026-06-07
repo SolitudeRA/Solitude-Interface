@@ -273,15 +273,16 @@ export default function PostViewCarousel({ posts, className }: PostViewCarouselP
                 {canScrollLeft && (
                     <motion.div
                         initial={prefersReducedMotion ? false : { opacity: 0 }}
-                        animate={{ opacity: 0.9 }}
+                        animate={{ opacity: 0.65 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
                         className={cn(
                             'pointer-events-none absolute top-0 left-0 z-10',
-                            'h-full w-32',
-                            'from-background via-background/40 bg-gradient-to-r to-transparent'
+                            'h-full w-20 sm:w-24 lg:w-28'
                         )}
                         style={{
+                            background:
+                                'linear-gradient(to right, var(--post-view-scroll-mask-start) 0%, var(--post-view-scroll-mask-end) 100%)',
                             maskImage:
                                 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
                             WebkitMaskImage:
@@ -296,15 +297,16 @@ export default function PostViewCarousel({ posts, className }: PostViewCarouselP
                 {canScrollRight && (
                     <motion.div
                         initial={prefersReducedMotion ? false : { opacity: 0 }}
-                        animate={{ opacity: 0.9 }}
+                        animate={{ opacity: 0.65 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
                         className={cn(
                             'pointer-events-none absolute top-0 right-0 z-10',
-                            'h-full w-32',
-                            'from-background via-background/40 bg-gradient-to-l to-transparent'
+                            'h-full w-20 sm:w-24 lg:w-28'
                         )}
                         style={{
+                            background:
+                                'linear-gradient(to left, var(--post-view-scroll-mask-start) 0%, var(--post-view-scroll-mask-end) 100%)',
                             maskImage:
                                 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',
                             WebkitMaskImage:

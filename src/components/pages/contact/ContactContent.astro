@@ -155,9 +155,16 @@
     }
 
     .section-icon {
-        width: 1.5rem;
-        height: 1.5rem;
-        color: var(--chart-1);
+        width: 1.85rem;
+        height: 1.85rem;
+        padding: 0.35rem;
+        color: var(--info-page-icon);
+        background: var(--info-page-icon-bg);
+        border: 1px solid var(--info-page-icon-border);
+        border-radius: 0.55rem;
+        box-shadow: 0 10px 24px var(--page-surface-shadow);
+        box-sizing: border-box;
+        flex-shrink: 0;
     }
 
     .contact-text {
@@ -167,19 +174,24 @@
     }
 
     .contact-link {
-        color: var(--chart-1);
+        color: var(--info-page-link);
         text-decoration: none;
         transition: all 0.2s ease;
         padding: 0.5rem 1rem;
-        background: var(--accent);
+        background: var(--info-page-link-bg);
         border-radius: 0.5rem;
-        border: 1px solid var(--border);
+        border: 1px solid var(--info-page-link-border);
         display: inline-block;
+        box-shadow: 0 12px 28px var(--info-page-link-shadow);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
     }
 
     .contact-link:hover {
-        background: var(--secondary);
-        border-color: var(--ring);
+        color: var(--info-page-link-hover);
+        background: var(--info-page-link-bg-hover);
+        border-color: var(--info-page-link-border-hover);
+        box-shadow: 0 16px 34px var(--info-page-link-shadow-hover);
     }
 
     .social-links {
@@ -193,16 +205,20 @@
         align-items: center;
         gap: 1rem;
         padding: 1rem 1.25rem;
-        background: var(--card);
-        border: 1px solid var(--border);
+        background: var(--page-surface-bg);
+        border: 1px solid var(--page-surface-border);
         border-radius: 0.75rem;
         text-decoration: none;
         transition: all 0.2s ease;
+        box-shadow: 0 14px 34px var(--page-surface-shadow);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
     }
 
     .social-card:hover {
-        background: var(--accent);
-        border-color: var(--ring);
+        background: var(--page-surface-bg-hover);
+        border-color: var(--info-page-surface-border-hover);
+        box-shadow: 0 18px 42px var(--info-page-surface-shadow-hover);
         transform: translateX(4px);
     }
 
@@ -217,13 +233,13 @@
     }
 
     .social-icon-wrapper.github {
-        background: var(--muted);
-        color: var(--foreground);
+        background: var(--info-page-github-icon-bg);
+        color: var(--info-page-github-icon);
     }
 
     .social-icon-wrapper.twitter {
-        background: rgba(29, 161, 242, 0.15);
-        color: #1da1f2;
+        background: var(--info-page-twitter-icon-bg);
+        color: var(--info-page-twitter-icon);
     }
 
     .social-icon {
@@ -256,7 +272,7 @@
     }
 
     .social-card:hover .arrow-icon {
-        color: var(--chart-1);
+        color: var(--info-page-arrow-hover);
         transform: translateX(4px);
     }
 
@@ -284,7 +300,9 @@
     }
 
     :global(.dark) .section-icon {
-        color: var(--page-icon);
+        color: var(--info-page-icon);
+        background: var(--info-page-icon-bg);
+        border-color: var(--info-page-icon-border);
     }
 
     :global(.dark) .contact-text {
@@ -292,15 +310,15 @@
     }
 
     :global(.dark) .contact-link {
-        color: var(--page-link);
-        background: var(--article-content-code-bg);
-        border-color: var(--article-content-pre-border);
+        color: var(--info-page-link);
+        background: var(--info-page-link-bg);
+        border-color: var(--info-page-link-border);
     }
 
     :global(.dark) .contact-link:hover {
-        color: var(--page-link-hover);
-        background: var(--article-header-tag-bg);
-        border-color: var(--article-header-tag-border);
+        color: var(--info-page-link-hover);
+        background: var(--info-page-link-bg-hover);
+        border-color: var(--info-page-link-border-hover);
     }
 
     :global(.dark) .social-card {
@@ -309,7 +327,7 @@
     }
 
     :global(.dark) .social-card:hover {
-        border-color: var(--article-header-tag-border);
+        border-color: var(--info-page-surface-border-hover);
         background: var(--article-content-code-bg);
     }
 
@@ -326,14 +344,16 @@
     }
 
     :global(.dark) .social-card:hover .arrow-icon {
-        color: var(--page-icon);
+        color: var(--info-page-arrow-hover);
     }
 
     :global(.dark) .social-icon-wrapper.github {
-        background: var(--article-content-pre-bg);
+        background: var(--info-page-github-icon-bg);
+        color: var(--info-page-github-icon);
     }
 
     :global(.dark) .social-icon-wrapper.twitter {
-        background: rgba(29, 161, 242, 0.2);
+        background: var(--info-page-twitter-icon-bg);
+        color: var(--info-page-twitter-icon);
     }
 </style>

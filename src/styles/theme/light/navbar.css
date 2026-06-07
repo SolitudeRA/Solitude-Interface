@@ -6,4 +6,22 @@
     --navbar-scrolled-bg: oklch(0.96 0.005 264.665 / 0.85);
     --navbar-scrolled-border: oklch(0.5 0.01 264.665 / 0.1);
     --navbar-scrolled-shadow: oklch(0.3 0.02 264.665 / 0.15);
+
+    --top-control-bg: oklch(0.985 0.006 250 / 0.74);
+    --top-control-bg-hover: oklch(0.99 0.004 250 / 0.9);
+    --top-control-border: oklch(0.68 0.045 235 / 0.42);
+    --top-control-text: oklch(0.25 0.04 250);
+    --top-control-shadow: oklch(0.34 0.04 250 / 0.14);
+    --top-control-shadow-hover: oklch(0.34 0.04 250 / 0.2);
+    --top-control-thumb-bg: oklch(0.92 0.09 92);
+    --top-control-thumb-text: oklch(0.38 0.13 68);
+    --top-control-thumb-shadow: oklch(0.42 0.06 85 / 0.22);
+    --top-control-accent: oklch(0.5 0.14 225);
+    --top-control-menu-bg: oklch(0.985 0.006 250 / 0.92);
+    --top-control-menu-border: oklch(0.68 0.045 235 / 0.34);
+    --top-control-menu-shadow: oklch(0.3 0.035 250 / 0.18);
+    --top-control-menu-item-text: oklch(0.3 0.04 250);
+    --top-control-menu-item-hover-bg: oklch(0.92 0.018 240 / 0.7);
+    --top-control-menu-item-active-bg: oklch(0.88 0.04 225 / 0.7);
+    --top-control-menu-item-active-text: oklch(0.24 0.08 235);
 }

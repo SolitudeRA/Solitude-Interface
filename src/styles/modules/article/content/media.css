@@ -9,7 +9,7 @@
         border-radius: 8px;
         margin: 1rem auto;
         display: block;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 12px 34px var(--article-content-block-shadow);
     }
 
     .solitude-article-content figure {

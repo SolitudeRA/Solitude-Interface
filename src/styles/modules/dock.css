@@ -704,6 +704,19 @@
         --tw-ring-color: var(--dock-button-ring);
     }
 
+    .dock-social-inline {
+        color: var(--dock-social-icon-color);
+        background: var(--dock-button-bg);
+        border: 1px solid var(--dock-social-border);
+        box-shadow: 0 4px 20px var(--dock-button-shadow);
+        @apply flex items-center justify-center rounded-full backdrop-blur-md transition-all duration-300;
+    }
+
+    .dock-social-inline:hover {
+        background: var(--dock-menu-item-hover-bg);
+        @apply scale-110;
+    }
+
     /* ===== 遮罩层 ===== */
     .dock-overlay {
         background: var(--dock-overlay-bg);

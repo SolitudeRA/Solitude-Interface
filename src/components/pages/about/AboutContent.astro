@@ -526,13 +526,23 @@ const t = i18n[locale];
 
     /* 爱好卡片 */
     .hobby-card {
-        background: var(--card);
-        border: 1px solid var(--border);
+        background: var(--page-surface-bg);
+        border: 1px solid var(--page-surface-border);
         border-radius: 1rem;
         padding: 1.5rem;
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 16px 36px var(--page-surface-shadow);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+    }
+
+    .hobby-card:hover {
+        background: var(--page-surface-bg-hover);
+        border-color: var(--page-surface-border-hover);
+        box-shadow: 0 22px 48px var(--page-surface-shadow-hover);
+        transform: translateY(-2px);
     }
 
     .hobby-card::before {
@@ -587,10 +597,10 @@ const t = i18n[locale];
     }
 
     .detail-block {
-        background: var(--background);
+        background: color-mix(in oklch, var(--page-surface-bg) 76%, var(--background));
         border-radius: 0.75rem;
         padding: 1rem;
-        border: 1px solid var(--border);
+        border: 1px solid var(--page-surface-border);
     }
 
     .detail-block.highlight {
@@ -687,7 +697,7 @@ const t = i18n[locale];
     }
 
     :global(.dark) .hobby-card {
-        background: rgba(255, 255, 255, 0.02);
+        background: var(--page-surface-bg);
     }
 
     :global(.dark) .detail-block {
