@@ -37,6 +37,36 @@ function getTagPillClass(tone: 'type' | 'category'): string {
     return cn(base, tones[tone]);
 }
 
+const CARD_MOTION_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+const CARD_SETTLE_TRANSITION = {
+    duration: 0.34,
+    ease: CARD_MOTION_EASE,
+};
+
+const CARD_HOVER_TRANSITION = {
+    duration: 0.24,
+    ease: CARD_MOTION_EASE,
+};
+
+const CARD_HOVER_TARGET = {
+    scale: 1.016,
+    y: -2,
+    opacity: 1,
+    transition: CARD_HOVER_TRANSITION,
+};
+
+const CARD_FOCUS_TARGET = CARD_HOVER_TARGET;
+
+const CARD_VISUAL_TRANSITION_CLASS =
+    'transition-[border-color,box-shadow] duration-[360ms] ease-[cubic-bezier(0.22,1,0.36,1)]';
+
+const CARD_MEDIA_TRANSITION_CLASS =
+    'scale-[1.02] transition-transform duration-[620ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform group-hover:scale-[1.045]';
+
+const CARD_GLOW_TRANSITION_CLASS =
+    'scale-[0.985] transition-[opacity,transform] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-100 group-hover:opacity-100';
+
 interface PostsShowcaseCarouselProps {
     posts: FeaturedPost[];
     className?: string;
@@ -94,38 +124,21 @@ function ShowcaseCard({
                 'shadow-xl shadow-black/25',
 
                 // motion / interaction
-                'transition-[opacity,border-color,box-shadow] duration-300 ease-out',
+                CARD_VISUAL_TRANSITION_CLASS,
                 'hover:border-white/30 hover:shadow-2xl hover:shadow-black/30',
 
                 // accessibility
                 'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
             )}
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
+            initial={false}
             animate={{
-                opacity: isOtherHovered ? 0.66 : 1,
+                opacity: isOtherHovered ? 0.84 : 1,
                 y: 0,
-                scale: prefersReducedMotion ? 1 : isOtherHovered ? 0.985 : 1,
+                scale: 1,
             }}
-            transition={
-                prefersReducedMotion
-                    ? { duration: 0 }
-                    : {
-                          duration: 0.22,
-                          delay: index * 0.05,
-                          ease: 'easeOut',
-                      }
-            }
-            whileHover={
-                prefersReducedMotion
-                    ? { opacity: 1 }
-                    : {
-                          scale: 1.025,
-                          y: -5,
-                          opacity: 1,
-                          transition: { duration: 0.16, ease: [0.22, 1, 0.36, 1] },
-                      }
-            }
-            whileFocus={prefersReducedMotion ? { opacity: 1 } : { scale: 1.025, y: -5, opacity: 1 }}
+            transition={prefersReducedMotion ? { duration: 0 } : CARD_SETTLE_TRANSITION}
+            whileHover={prefersReducedMotion ? { opacity: 1 } : CARD_HOVER_TARGET}
+            whileFocus={prefersReducedMotion ? { opacity: 1 } : CARD_FOCUS_TARGET}
             onPointerEnter={() => onHover(index)}
             onPointerLeave={() => onHover(null)}
             onFocus={() => onHover(index)}
@@ -142,8 +155,7 @@ function ShowcaseCard({
                         decoding="async"
                         className={cn(
                             'h-full w-full object-cover object-center',
-                            'scale-[1.025] transition-[filter,transform] duration-700 will-change-transform',
-                            'group-hover:scale-[1.055] group-hover:contrast-[1.02] group-hover:saturate-[1.12]',
+                            CARD_MEDIA_TRANSITION_CLASS,
                             'motion-reduce:transform-none motion-reduce:transition-none'
                         )}
                     />
@@ -169,7 +181,12 @@ function ShowcaseCard({
                 }}
             />
 
-            <div className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-[opacity,transform] duration-500 ease-out group-hover:opacity-100">
+            <div
+                className={cn(
+                    'pointer-events-none absolute inset-0 -z-10 opacity-0',
+                    CARD_GLOW_TRANSITION_CLASS
+                )}
+            >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_16%,rgba(255,255,255,0.16),transparent_34%),linear-gradient(160deg,rgba(125,211,252,0.13),transparent_38%)]" />
                 <div className="absolute inset-0 ring-1 ring-white/15 ring-inset" />
             </div>
@@ -277,41 +294,29 @@ function ViewMoreCard({
                 'focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
                 'border border-white/20 bg-slate-950/25 shadow-xl shadow-black/25',
                 'ring-1 ring-white/10 ring-inset',
-                'transition-[opacity,border-color,box-shadow] duration-300 ease-out',
+                CARD_VISUAL_TRANSITION_CLASS,
                 'hover:border-white/30 hover:shadow-2xl hover:shadow-black/30'
             )}
-            initial={prefersReducedMotion ? false : { opacity: 0, x: 50 }}
+            initial={false}
             animate={{
-                opacity: isOtherHovered ? 0.66 : 1,
+                opacity: isOtherHovered ? 0.84 : 1,
                 x: 0,
-                scale: prefersReducedMotion ? 1 : isOtherHovered ? 0.985 : 1,
+                scale: 1,
             }}
-            transition={
-                prefersReducedMotion
-                    ? { duration: 0 }
-                    : {
-                          duration: 0.15,
-                          delay: index * 0.05,
-                          ease: 'easeOut',
-                      }
-            }
-            whileHover={
-                prefersReducedMotion
-                    ? { opacity: 1 }
-                    : {
-                          scale: 1.025,
-                          y: -5,
-                          opacity: 1,
-                          transition: { duration: 0.16, ease: [0.22, 1, 0.36, 1] },
-                      }
-            }
-            whileFocus={prefersReducedMotion ? { opacity: 1 } : { scale: 1.025, y: -5, opacity: 1 }}
+            transition={prefersReducedMotion ? { duration: 0 } : CARD_SETTLE_TRANSITION}
+            whileHover={prefersReducedMotion ? { opacity: 1 } : CARD_HOVER_TARGET}
+            whileFocus={prefersReducedMotion ? { opacity: 1 } : CARD_FOCUS_TARGET}
             onPointerEnter={() => onHover(index)}
             onPointerLeave={() => onHover(null)}
             aria-label={viewAllText}
         >
             <div className="absolute inset-0 -z-30 overflow-hidden">
-                <div className="h-full w-full scale-[1.025] bg-[radial-gradient(circle_at_28%_18%,var(--card-image-fallback-highlight),transparent_34%),linear-gradient(135deg,var(--card-image-fallback-start),var(--card-image-fallback-end))] transition-transform duration-700 group-hover:scale-[1.055]" />
+                <div
+                    className={cn(
+                        'h-full w-full bg-[radial-gradient(circle_at_28%_18%,var(--card-image-fallback-highlight),transparent_34%),linear-gradient(135deg,var(--card-image-fallback-start),var(--card-image-fallback-end))]',
+                        CARD_MEDIA_TRANSITION_CLASS
+                    )}
+                />
             </div>
 
             <div
@@ -329,7 +334,12 @@ function ViewMoreCard({
                 }}
             />
 
-            <div className="pointer-events-none absolute inset-0 -z-10 opacity-80 transition-opacity duration-500 group-hover:opacity-100">
+            <div
+                className={cn(
+                    'pointer-events-none absolute inset-0 -z-10 opacity-80',
+                    CARD_GLOW_TRANSITION_CLASS
+                )}
+            >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.18),transparent_35%),linear-gradient(160deg,rgba(125,211,252,0.16),transparent_40%)]" />
                 <div className="absolute inset-0 ring-1 ring-white/15 ring-inset" />
             </div>
@@ -341,11 +351,11 @@ function ViewMoreCard({
                     className={cn(
                         'flex h-14 w-14 items-center justify-center rounded-full',
                         'border border-white/25 bg-white/[0.14] shadow-lg shadow-black/20 backdrop-blur-md',
-                        'transition-[background,transform] duration-300 ease-out',
+                        'transition-[background,transform] duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)]',
                         'group-hover:scale-105 group-hover:bg-white/20'
                     )}
                 >
-                    <ArrowRight className="h-7 w-7 text-white transition-transform duration-300 group-hover:translate-x-0.5" />
+                    <ArrowRight className="h-7 w-7 text-white transition-transform duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5" />
                 </div>
             </div>
 
