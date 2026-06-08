@@ -64,12 +64,13 @@ function getTitleDensity(
 }
 
 const previewText = truncatePreview(post.excerpt, PREVIEW_LIMITS[locale]);
-const titleDensity = getTitleDensity(post.title, locale);
 const publishedDate = post.published_at?.split('T')[0] ?? '';
 
 const typeLabel = isVisibleTag(post.post_type) ? titleCaseTag(post.post_type) : '';
 const categoryLabel = isVisibleTag(post.post_category) ? titleCaseTag(post.post_category) : '';
 const seriesLabel = isVisibleTag(post.post_series) ? post.post_series.trim() : '';
+const seriesNumber = seriesLabel ? (post.post_series_number ?? '') : '';
+const titleDensity = getTitleDensity(post.title, locale);
 const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
 ---
 
@@ -99,7 +100,16 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
             {typeLabel && <span class="corner-value is-type">{typeLabel}</span>}
         </div>
         <div class="corner-zone" aria-label="Post series">
-            {seriesLabel && <span class="corner-value is-series">{seriesLabel}</span>}
+            {
+                (seriesLabel || seriesNumber) && (
+                    <span class="corner-series">
+                        {seriesLabel && <span class="corner-value is-series">{seriesLabel}</span>}
+                        {seriesNumber && (
+                            <span class="corner-value is-series-number">{seriesNumber}</span>
+                        )}
+                    </span>
+                )
+            }
         </div>
         <div class="corner-zone" aria-label="General tags">
             {
@@ -258,7 +268,8 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
         z-index: 4;
         display: grid;
         grid-template-rows: auto 1fr auto;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-columns: auto minmax(0, 1fr);
+        column-gap: 8px;
         pointer-events: none;
     }
 
@@ -277,6 +288,10 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
     .corner-zone:nth-child(2) {
         grid-column: 2;
         grid-row: 1;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        justify-items: end;
     }
 
     .corner-zone:nth-child(3) {
@@ -317,6 +332,17 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
         white-space: nowrap;
     }
 
+    .corner-series {
+        display: inline-flex;
+        width: fit-content;
+        max-width: 100%;
+        min-width: 0;
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 5px;
+    }
+
     .corner-value {
         justify-self: start;
         max-width: 148px;
@@ -336,8 +362,17 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
     }
 
     .corner-value.is-series {
+        min-width: 0;
+        max-width: none;
+        flex: 1 1 auto;
         border-color: rgba(253, 164, 175, 0.42);
         background: rgba(253, 164, 175, 0.14);
+    }
+
+    .corner-value.is-series-number {
+        flex: 0 0 auto;
+        border-color: rgba(196, 181, 253, 0.48);
+        background: rgba(196, 181, 253, 0.16);
     }
 
     .corner-value.is-category {

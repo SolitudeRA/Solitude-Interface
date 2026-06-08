@@ -15,6 +15,7 @@ export interface Post extends BasePost {
     post_type: string;
     post_category: string;
     post_series: string;
+    post_series_number?: string;
     post_general_tags?: string[];
 }
 
@@ -22,6 +23,7 @@ export interface FeaturedPost extends BasePost {
     post_type: string;
     post_category: string;
     post_series: string;
+    post_series_number?: string;
     post_general_tags?: string[];
 }
 

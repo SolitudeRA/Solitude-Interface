@@ -159,6 +159,68 @@ describe('Ghost Adapters', () => {
             expect(adapted.post_series).toBe('Web Development Series');
         });
 
+        it('should extract the series number from a numbered series tag slug', () => {
+            const mockPost: FeaturedPost = {
+                id: 'test-post',
+                title: 'Smart Home Platform',
+                url: new URL('https://ghost.example.com/test'),
+                feature_image: new URL('https://ghost.example.com/image.jpg'),
+                published_at: '2024-01-01',
+                tags: [
+                    ...mockTags.filter((tag) => !tag.slug.startsWith('series-')),
+                    {
+                        id: '8',
+                        slug: 'series-homeserver-8',
+                        name: 'Homeserver Series',
+                    },
+                ],
+                post_type: '',
+                post_category: '',
+                post_series: '',
+            };
+
+            const adapted = adaptGhostPost(mockPost);
+
+            expect(adapted.post_series_number).toBe('#8');
+        });
+
+        it('should not extract a series number from an unnumbered series tag slug', () => {
+            const mockPost: FeaturedPost = {
+                id: 'test-post',
+                title: '#8 Smart Home Platform',
+                url: new URL('https://ghost.example.com/test'),
+                feature_image: new URL('https://ghost.example.com/image.jpg'),
+                published_at: '2024-01-01',
+                tags: mockTags,
+                post_type: '',
+                post_category: '',
+                post_series: '',
+            };
+
+            const adapted = adaptGhostPost(mockPost);
+
+            expect(adapted.post_series).toBe('Web Development Series');
+            expect(adapted.post_series_number).toBe('');
+        });
+
+        it('should not extract a series number when the post has no series tag', () => {
+            const mockPost: FeaturedPost = {
+                id: 'test-post',
+                title: '#8 Not A Series Post',
+                url: new URL('https://ghost.example.com/test'),
+                feature_image: new URL('https://ghost.example.com/image.jpg'),
+                published_at: '2024-01-01',
+                tags: mockTags.filter((tag) => !tag.slug.startsWith('series-')),
+                post_type: '',
+                post_category: '',
+                post_series: '',
+            };
+
+            const adapted = adaptGhostPost(mockPost);
+
+            expect(adapted.post_series_number).toBe('');
+        });
+
         it('should filter out tags with special prefixes and keep only general tags', () => {
             const mockPost: FeaturedPost = {
                 id: 'test-post',
@@ -198,6 +260,7 @@ describe('Ghost Adapters', () => {
             expect(adapted.post_type).toBe('default');
             expect(adapted.post_category).toBe('default');
             expect(adapted.post_series).toBe('default');
+            expect(adapted.post_series_number).toBe('');
         });
 
         it('should use default values when tags is undefined', () => {
