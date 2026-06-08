@@ -1,7 +1,6 @@
 ---
 import DockNav from '@components/layout/dock/DockNav.astro';
 import DockSocial from '@components/layout/dock/DockSocial.astro';
-import DockTimeline from '@components/layout/dock/timeline/DockTimeline.astro';
 import Dock from '@components/layout/dock/Dock.astro';
 import PostViewContainer from '@components/posts/view/PostViewContainer.astro';
 import { listAllPosts } from '@api/ghost/posts';
@@ -62,10 +61,7 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
     />
     <PostViewContainer posts={posts} locale={locale} />
     <Dock isFixed={true}>
-        <!-- Timeline 在移动端隐藏 -->
-        <div class="hidden lg:block">
-            <DockTimeline posts={posts} />
-        </div>
+        <div class="hidden md:block" aria-hidden="true"></div>
         <DockNav lang={locale} />
         <DockSocial lang={locale} />
     </Dock>

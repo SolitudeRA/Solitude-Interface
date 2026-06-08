@@ -20,6 +20,11 @@ const LAYOUT_CONFIG = {
     fallbackCardWidth: 300,
 };
 
+function areNumberArraysEqual(a: number[], b: number[]) {
+    if (a.length !== b.length) return false;
+    return a.every((value, index) => value === b[index]);
+}
+
 export default function PostViewScrollContainer({
     children,
     postDates = [],
@@ -60,13 +65,27 @@ export default function PostViewScrollContainer({
                 }
             });
 
-            setPostViewState((prev) => ({
-                ...prev,
-                totalPosts: cards.length,
-                visibleIndices,
-                activeIndex: cards.length > 0 ? closestIndex : 0,
-                postDates: postDates.length > 0 ? postDates : prev.postDates,
-            }));
+            setPostViewState((prev) => {
+                const nextPostDates = postDates.length > 0 ? postDates : prev.postDates;
+                const nextActiveIndex = cards.length > 0 ? closestIndex : 0;
+
+                if (
+                    prev.totalPosts === cards.length &&
+                    prev.activeIndex === nextActiveIndex &&
+                    prev.postDates === nextPostDates &&
+                    areNumberArraysEqual(prev.visibleIndices, visibleIndices)
+                ) {
+                    return prev;
+                }
+
+                return {
+                    ...prev,
+                    totalPosts: cards.length,
+                    visibleIndices,
+                    activeIndex: nextActiveIndex,
+                    postDates: nextPostDates,
+                };
+            });
         },
         [postDates, setPostViewState]
     );
@@ -251,7 +270,14 @@ export default function PostViewScrollContainer({
                 </div>
             </div>
 
-            <PostViewPagination onScrollToPost={scrollToPost} />
+            <PostViewPagination
+                onScrollToPost={scrollToPost}
+                className={cn(
+                    'lg:fixed lg:bottom-0 lg:left-0 lg:z-[60]',
+                    'lg:min-h-[10vh] lg:w-1/3 lg:items-center lg:pt-0 lg:pb-4',
+                    '3xl:px-16 lg:px-8 xl:px-10 2xl:px-12'
+                )}
+            />
         </div>
     );
 }
