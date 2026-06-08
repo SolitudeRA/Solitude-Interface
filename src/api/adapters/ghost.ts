@@ -16,6 +16,7 @@ interface TagInfo {
     post_type: string;
     post_category: string;
     post_series: string;
+    post_series_number: string;
     post_general_tags: string[];
 }
 
@@ -42,6 +43,7 @@ function extractTagInfo(tags: PostTag[] | undefined): TagInfo {
         post_type: DEFAULT_TAG_VALUE,
         post_category: DEFAULT_TAG_VALUE,
         post_series: DEFAULT_TAG_VALUE,
+        post_series_number: '',
         post_general_tags: [],
     };
 
@@ -56,10 +58,16 @@ function extractTagInfo(tags: PostTag[] | undefined): TagInfo {
             result.post_category = slug.replace(TAG_PREFIXES.CATEGORY, '');
         } else if (slug.startsWith(TAG_PREFIXES.SERIES)) {
             result.post_series = name;
+            result.post_series_number = extractSeriesNumberFromSlug(slug);
         } else if (!slug.startsWith(TAG_PREFIXES.HASH)) {
             result.post_general_tags.push(name);
         }
     }
 
     return result;
+}
+
+function extractSeriesNumberFromSlug(slug: string): string {
+    const match = slug.match(/-(\d+)$/);
+    return match ? `#${match[1]}` : '';
 }

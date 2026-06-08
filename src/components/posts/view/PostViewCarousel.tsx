@@ -49,6 +49,8 @@ function PostCard({ post, index, isOtherHovered, onHover, prefersReducedMotion }
     // 分类
     const category = post.post_category || null;
     const typeIcon = getPostTypeIcon(post.post_type);
+    const seriesLabel = post.post_series && post.post_series !== 'default' ? post.post_series : '';
+    const seriesNumber = seriesLabel ? post.post_series_number || '' : '';
 
     return (
         <motion.a
@@ -121,7 +123,7 @@ function PostCard({ post, index, isOtherHovered, onHover, prefersReducedMotion }
             {/* 内容区域 */}
             <div className="absolute inset-0 flex flex-col p-5">
                 {/* 顶部：类型和系列标签 */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between gap-3">
                     <Chip
                         variant="flat"
                         colorScheme="primary"
@@ -129,14 +131,27 @@ function PostCard({ post, index, isOtherHovered, onHover, prefersReducedMotion }
                     >
                         {typeIcon} {post.post_type}
                     </Chip>
-                    {post.post_series && (
-                        <Chip
-                            variant="flat"
-                            colorScheme="secondary"
-                            className="bg-white/20 backdrop-blur-sm"
-                        >
-                            {post.post_series}
-                        </Chip>
+                    {(seriesLabel || seriesNumber) && (
+                        <div className="flex max-w-[calc(100%-5.5rem)] min-w-0 flex-nowrap justify-end gap-1.5">
+                            {seriesLabel && (
+                                <Chip
+                                    variant="flat"
+                                    colorScheme="secondary"
+                                    className="min-w-0 truncate bg-white/20 backdrop-blur-sm"
+                                >
+                                    {seriesLabel}
+                                </Chip>
+                            )}
+                            {seriesNumber && (
+                                <Chip
+                                    variant="flat"
+                                    colorScheme="primary"
+                                    className="shrink-0 bg-white/20 backdrop-blur-sm"
+                                >
+                                    {seriesNumber}
+                                </Chip>
+                            )}
+                        </div>
                     )}
                 </div>
 
