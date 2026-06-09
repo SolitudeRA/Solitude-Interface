@@ -66,9 +66,21 @@ function getTitleDensity(
 const previewText = truncatePreview(post.excerpt, PREVIEW_LIMITS[locale]);
 const publishedDate = post.published_at?.split('T')[0] ?? '';
 
-const typeLabel = isVisibleTag(post.post_type) ? titleCaseTag(post.post_type) : '';
-const categoryLabel = isVisibleTag(post.post_category) ? titleCaseTag(post.post_category) : '';
-const seriesLabel = isVisibleTag(post.post_series) ? post.post_series.trim() : '';
+const typeLabel = isVisibleTag(post.post_type_label)
+    ? post.post_type_label.trim()
+    : isVisibleTag(post.post_type)
+      ? titleCaseTag(post.post_type)
+      : '';
+const categoryLabel = isVisibleTag(post.post_category_label)
+    ? post.post_category_label.trim()
+    : isVisibleTag(post.post_category)
+      ? titleCaseTag(post.post_category)
+      : '';
+const seriesLabel = isVisibleTag(post.post_series_label)
+    ? post.post_series_label.trim()
+    : isVisibleTag(post.post_series)
+      ? post.post_series.trim()
+      : '';
 const seriesNumber = seriesLabel ? (post.post_series_number ?? '') : '';
 const titleDensity = getTitleDensity(post.title, locale);
 const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);

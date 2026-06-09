@@ -47,9 +47,15 @@ function PostCard({ post, index, isOtherHovered, onHover, prefersReducedMotion }
     }, [post.post_general_tags]);
 
     // 分类
-    const category = post.post_category || null;
+    const category = post.post_category_label || post.post_category || null;
     const typeIcon = getPostTypeIcon(post.post_type);
-    const seriesLabel = post.post_series && post.post_series !== 'default' ? post.post_series : '';
+    const typeLabel = post.post_type_label || post.post_type;
+    const seriesLabel =
+        post.post_series_label && post.post_series_label !== 'default'
+            ? post.post_series_label
+            : post.post_series && post.post_series !== 'default'
+              ? post.post_series
+              : '';
     const seriesNumber = seriesLabel ? post.post_series_number || '' : '';
 
     return (
@@ -129,7 +135,7 @@ function PostCard({ post, index, isOtherHovered, onHover, prefersReducedMotion }
                         colorScheme="primary"
                         className="bg-white/20 backdrop-blur-sm"
                     >
-                        {typeIcon} {post.post_type}
+                        {typeIcon} {typeLabel}
                     </Chip>
                     {(seriesLabel || seriesNumber) && (
                         <div className="flex max-w-[calc(100%-5.5rem)] min-w-0 flex-nowrap justify-end gap-1.5">

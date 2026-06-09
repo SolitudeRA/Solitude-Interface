@@ -1,6 +1,13 @@
 import { env } from '@api/config/env';
 import type { FeaturedPost, Post, PostTag } from '@api/ghost/types';
-import { buildPostPathFromPost, extractI18nKeyFromPost } from '@lib/i18n';
+import {
+    buildPostPathFromPost,
+    DEFAULT_LOCALE,
+    extractI18nKeyFromPost,
+    extractLocaleFromPost,
+    type Locale,
+} from '@lib/i18n';
+import { getTagLabel, localizeTag, localizeTags, type TagRegistry } from '@lib/tagRegistry';
 
 const TAG_PREFIXES = {
     TYPE: 'type-',
@@ -14,20 +21,36 @@ const DEFAULT_TAG_VALUE = 'default';
 // 标签信息接口
 interface TagInfo {
     post_type: string;
+    post_type_label: string;
     post_category: string;
+    post_category_label: string;
     post_series: string;
+    post_series_slug: string;
+    post_series_label: string;
     post_series_number: string;
     post_general_tags: string[];
+    post_general_tag_slugs: string[];
 }
 
-export function adaptGhostPost<T extends Post | FeaturedPost>(post: T): T {
-    const tagInfo = extractTagInfo(post.tags);
+interface AdaptGhostPostOptions {
+    tagRegistry?: TagRegistry;
+    locale?: Locale;
+}
+
+export function adaptGhostPost<T extends Post | FeaturedPost>(
+    post: T,
+    options: AdaptGhostPostOptions = {}
+): T {
+    const locale = options.locale ?? extractLocaleFromPost(post) ?? DEFAULT_LOCALE;
+    const tagInfo = extractTagInfo(post.tags, locale, options.tagRegistry);
     const seriesNumber = extractSeriesNumberFromPost(post, tagInfo.post_series_number);
 
     return {
         ...post,
         url: convertPostToFrontendUrl(post),
         feature_image: post.feature_image,
+        primary_tag: localizeTag(post.primary_tag, locale, options.tagRegistry),
+        tags: localizeTags(post.tags, locale, options.tagRegistry),
         ...tagInfo,
         post_series_number: seriesNumber,
     };
@@ -40,29 +63,44 @@ function convertPostToFrontendUrl(post: Pick<Post | FeaturedPost, 'id' | 'slug' 
 /**
  * 从标签数组中提取所有标签信息
  */
-function extractTagInfo(tags: PostTag[] | undefined): TagInfo {
+function extractTagInfo(
+    tags: PostTag[] | undefined,
+    locale: Locale,
+    tagRegistry: TagRegistry = {}
+): TagInfo {
     const result: TagInfo = {
         post_type: DEFAULT_TAG_VALUE,
+        post_type_label: DEFAULT_TAG_VALUE,
         post_category: DEFAULT_TAG_VALUE,
+        post_category_label: DEFAULT_TAG_VALUE,
         post_series: DEFAULT_TAG_VALUE,
+        post_series_slug: '',
+        post_series_label: DEFAULT_TAG_VALUE,
         post_series_number: '',
         post_general_tags: [],
+        post_general_tag_slugs: [],
     };
 
     if (!tags?.length) return result;
 
     for (const tag of tags) {
         const { slug, name } = tag;
+        const label = getTagLabel(slug, locale, name, tagRegistry);
 
         if (slug.startsWith(TAG_PREFIXES.TYPE)) {
             result.post_type = slug.replace(TAG_PREFIXES.TYPE, '');
+            result.post_type_label = label;
         } else if (slug.startsWith(TAG_PREFIXES.CATEGORY)) {
             result.post_category = slug.replace(TAG_PREFIXES.CATEGORY, '');
+            result.post_category_label = label;
         } else if (slug.startsWith(TAG_PREFIXES.SERIES)) {
-            result.post_series = name;
+            result.post_series = label;
+            result.post_series_slug = slug;
+            result.post_series_label = label;
             result.post_series_number = extractSeriesNumberFromSlug(slug);
         } else if (!slug.startsWith(TAG_PREFIXES.HASH)) {
-            result.post_general_tags.push(name);
+            result.post_general_tags.push(label);
+            result.post_general_tag_slugs.push(slug);
         }
     }
 
