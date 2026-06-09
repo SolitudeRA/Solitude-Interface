@@ -1,6 +1,6 @@
 import { env } from '@api/config/env';
 import type { FeaturedPost, Post, PostTag } from '@api/ghost/types';
-import { buildPostPathFromTags } from '@lib/i18n';
+import { buildPostPathFromPost, extractI18nKeyFromPost } from '@lib/i18n';
 
 const TAG_PREFIXES = {
     TYPE: 'type-',
@@ -22,17 +22,19 @@ interface TagInfo {
 
 export function adaptGhostPost<T extends Post | FeaturedPost>(post: T): T {
     const tagInfo = extractTagInfo(post.tags);
+    const seriesNumber = extractSeriesNumberFromPost(post, tagInfo.post_series_number);
 
     return {
         ...post,
-        url: convertPostToFrontendUrl(post.id, post.tags),
+        url: convertPostToFrontendUrl(post),
         feature_image: post.feature_image,
         ...tagInfo,
+        post_series_number: seriesNumber,
     };
 }
 
-function convertPostToFrontendUrl(id: string, tags: PostTag[] | undefined): URL {
-    return new URL(buildPostPathFromTags(id, tags), env.site.url);
+function convertPostToFrontendUrl(post: Pick<Post | FeaturedPost, 'id' | 'slug' | 'tags'>): URL {
+    return new URL(buildPostPathFromPost(post), env.site.url);
 }
 
 /**
@@ -70,4 +72,49 @@ function extractTagInfo(tags: PostTag[] | undefined): TagInfo {
 function extractSeriesNumberFromSlug(slug: string): string {
     const match = slug.match(/-(\d+)$/);
     return match ? `#${match[1]}` : '';
+}
+
+function extractSeriesNumberFromPost<T extends Post | FeaturedPost>(
+    post: T,
+    fallbackSeriesNumber: string
+): string {
+    const seriesKey = extractSeriesKey(post.tags);
+    if (!seriesKey) {
+        return '';
+    }
+
+    const postKey = extractI18nKeyFromPost(post);
+    const seriesNumber = extractSeriesNumberFromPostKey(postKey, seriesKey);
+
+    return seriesNumber || fallbackSeriesNumber;
+}
+
+function extractSeriesKey(tags: PostTag[] | undefined): string {
+    const seriesTag = tags?.find((tag) => tag.slug.startsWith(TAG_PREFIXES.SERIES));
+    if (!seriesTag) {
+        return '';
+    }
+
+    const seriesSlug = seriesTag.slug.replace(TAG_PREFIXES.SERIES, '');
+    return seriesSlug.replace(/-\d+$/, '');
+}
+
+function extractSeriesNumberFromPostKey(
+    postKey: string | null | undefined,
+    seriesKey: string
+): string {
+    if (!postKey || !seriesKey) {
+        return '';
+    }
+
+    const escapedSeriesKey = escapeRegExp(seriesKey);
+    const match =
+        postKey.match(new RegExp(`^${escapedSeriesKey}-(\\d+)$`)) ??
+        postKey.match(new RegExp(`^${escapedSeriesKey}(\\d+)$`));
+
+    return match?.[1] ? `#${match[1]}` : '';
+}
+
+function escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

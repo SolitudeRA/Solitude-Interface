@@ -8,8 +8,8 @@ import {
     LOCALES,
     DEFAULT_LOCALE,
     localeToLangTag,
-    extractI18nKey,
-    extractLocaleFromTags,
+    extractI18nKeyFromPost,
+    extractLocaleFromPost,
 } from '@lib/i18n';
 
 const MAX_GHOST_PAGE_SIZE = 100;
@@ -59,8 +59,8 @@ async function getPostIndexByGroup(): Promise<PostIndexByGroup> {
     const index: PostIndexByGroup = new Map();
 
     for (const post of posts) {
-        const key = extractI18nKey(post.tags);
-        const locale = extractLocaleFromTags(post.tags);
+        const key = extractI18nKeyFromPost(post);
+        const locale = extractLocaleFromPost(post);
 
         if (!key || !locale) {
             continue;
@@ -77,7 +77,7 @@ async function getPostIndexByGroup(): Promise<PostIndexByGroup> {
 
 export async function getHighlightPosts(
     limit: number = 12,
-    fields: string = 'id,title,url,feature_image,primary_tag,published_at',
+    fields: string = 'id,slug,title,url,feature_image,primary_tag,published_at',
     include: string = 'tags'
 ): Promise<FeaturedPost[]> {
     const cacheKey = `featured_posts:${limit}:${fields}:${include}`;

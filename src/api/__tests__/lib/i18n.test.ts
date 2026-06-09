@@ -7,11 +7,17 @@ import {
     i18nKeyToTag,
     extractLocaleFromTagSlug,
     extractI18nKeyFromTagSlug,
+    extractPostSlugIdentity,
     extractLocaleFromTags,
+    extractLocaleFromPostSlug,
+    extractLocaleFromPost,
     extractI18nKey,
+    extractI18nKeyFromPostSlug,
+    extractI18nKeyFromPost,
     buildLocalePath,
     buildPostPath,
     buildPostPathFromTags,
+    buildPostPathFromPost,
     generateAlternateLinks,
     getFallbackMessage,
     LOCALE_HTML_LANG,
@@ -109,6 +115,41 @@ describe('i18n utilities', () => {
             expect(extractI18nKeyFromTagSlug('hash-lang-zh')).toBe(null);
             expect(extractI18nKeyFromTagSlug('i18n-test')).toBe(null);
             expect(extractI18nKeyFromTagSlug('')).toBe(null);
+        });
+    });
+
+    describe('post slug identity helpers', () => {
+        const createTag = (slug: string): PostTag => ({
+            id: 'tag-id',
+            slug,
+            name: 'Tag Name',
+        });
+
+        it('should extract locale and i18n key from locale-prefixed Ghost post slug', () => {
+            expect(extractPostSlugIdentity('ja-homeserver-8')).toEqual({
+                locale: 'ja',
+                i18nKey: 'homeserver-8',
+            });
+            expect(extractLocaleFromPostSlug('en-blog-project')).toBe('en');
+            expect(extractI18nKeyFromPostSlug('zh-recipe-gukbap')).toBe('recipe-gukbap');
+        });
+
+        it('should return null for slugs without a valid locale prefix', () => {
+            expect(extractPostSlugIdentity('homeserver-8')).toBe(null);
+            expect(extractPostSlugIdentity('fr-homeserver-8')).toBe(null);
+            expect(extractPostSlugIdentity('ja')).toBe(null);
+            expect(extractPostSlugIdentity(undefined)).toBe(null);
+        });
+
+        it('should prefer lang tags for locale and post slug for i18n key', () => {
+            const post = {
+                id: 'post-id',
+                slug: 'ja-homeserver-8',
+                tags: [createTag('hash-lang-zh'), createTag('hash-i18n-old-key')],
+            };
+
+            expect(extractLocaleFromPost(post)).toBe('zh');
+            expect(extractI18nKeyFromPost(post)).toBe('homeserver-8');
         });
     });
 
@@ -211,6 +252,54 @@ describe('i18n utilities', () => {
 
             expect(buildPostPathFromTags('post-id', tags)).toBe('/posts/post-id');
             expect(buildPostPathFromTags('post-id', undefined)).toBe('/posts/post-id');
+        });
+    });
+
+    describe('buildPostPathFromPost', () => {
+        const createTag = (slug: string): PostTag => ({
+            id: 'tag-id',
+            slug,
+            name: 'Tag Name',
+        });
+
+        it('should build localized post path from Ghost post slug identity', () => {
+            expect(
+                buildPostPathFromPost({
+                    id: 'post-id',
+                    slug: 'ja-homeserver-8',
+                    tags: [createTag('hash-lang-ja'), createTag('hash-i18n-legacy-key')],
+                })
+            ).toBe('/ja/p/homeserver-8');
+        });
+
+        it('should use locale from slug when lang tag is absent', () => {
+            expect(
+                buildPostPathFromPost({
+                    id: 'post-id',
+                    slug: 'en-blog-project',
+                    tags: [],
+                })
+            ).toBe('/en/p/blog-project');
+        });
+
+        it('should fallback to legacy i18n tags when slug has no post identity', () => {
+            expect(
+                buildPostPathFromPost({
+                    id: 'post-id',
+                    slug: 'ghost-generated-slug',
+                    tags: [createTag('hash-lang-ja'), createTag('hash-i18n-intro-to-solitude')],
+                })
+            ).toBe('/ja/p/intro-to-solitude');
+        });
+
+        it('should fallback to legacy post path without slug identity or i18n tag', () => {
+            expect(
+                buildPostPathFromPost({
+                    id: 'post-id',
+                    slug: 'ghost-generated-slug',
+                    tags: [createTag('category-tech')],
+                })
+            ).toBe('/posts/post-id');
         });
     });
 

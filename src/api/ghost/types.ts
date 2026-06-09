@@ -1,5 +1,6 @@
 export interface BasePost {
     id: string;
+    slug?: string;
     title: string;
     url: URL;
     feature_image: URL;

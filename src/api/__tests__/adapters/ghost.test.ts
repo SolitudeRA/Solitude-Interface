@@ -45,6 +45,29 @@ describe('Ghost Adapters', () => {
         it('should correctly convert Post URL to localized frontend route', () => {
             const mockPost: Post = {
                 id: 'test-post-123',
+                slug: 'ja-slug-key',
+                title: 'Test Post',
+                url: new URL('https://ghost.example.com/test-post'),
+                feature_image: new URL('https://ghost.example.com/image.jpg'),
+                published_at: '2024-01-01',
+                comment_id: 'comment-123',
+                excerpt: 'Test excerpt',
+                html: '<p>Test content</p>',
+                tags: mockTags,
+                post_type: '',
+                post_category: '',
+                post_series: '',
+            };
+
+            const adapted = adaptGhostPost(mockPost);
+
+            expect(adapted.url.toString()).toBe('https://test-site.example.com/en/p/slug-key');
+        });
+
+        it('should fallback to legacy i18n tag route when post slug has no locale prefix', () => {
+            const mockPost: Post = {
+                id: 'test-post-123',
+                slug: 'ghost-generated-slug',
                 title: 'Test Post',
                 url: new URL('https://ghost.example.com/test-post'),
                 feature_image: new URL('https://ghost.example.com/image.jpg'),
@@ -159,7 +182,33 @@ describe('Ghost Adapters', () => {
             expect(adapted.post_series).toBe('Web Development Series');
         });
 
-        it('should extract the series number from a numbered series tag slug', () => {
+        it('should extract the series number from the post slug when using an unnumbered series tag', () => {
+            const mockPost: FeaturedPost = {
+                id: 'test-post',
+                slug: 'ja-homeserver-8',
+                title: 'Smart Home Platform',
+                url: new URL('https://ghost.example.com/test'),
+                feature_image: new URL('https://ghost.example.com/image.jpg'),
+                published_at: '2024-01-01',
+                tags: [
+                    ...mockTags.filter((tag) => !tag.slug.startsWith('series-')),
+                    {
+                        id: '8',
+                        slug: 'series-homeserver',
+                        name: 'Homeserver Series',
+                    },
+                ],
+                post_type: '',
+                post_category: '',
+                post_series: '',
+            };
+
+            const adapted = adaptGhostPost(mockPost);
+
+            expect(adapted.post_series_number).toBe('#8');
+        });
+
+        it('should fallback to a legacy numbered series tag slug', () => {
             const mockPost: FeaturedPost = {
                 id: 'test-post',
                 title: 'Smart Home Platform',

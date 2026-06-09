@@ -6,7 +6,7 @@ import BaseLayout from '@layouts/base/BaseLayout.astro';
 import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
 import SiteDock from '@components/layout/dock/SiteDock.astro';
 import PostContent from '@components/posts/detail/PostContent.astro';
-import { DEFAULT_LOCALE, extractLocaleFromTags } from '@lib/i18n';
+import { DEFAULT_LOCALE, extractLocaleFromPost } from '@lib/i18n';
 
 interface Props {
     post: Post;
@@ -36,7 +36,7 @@ export async function getStaticPaths() {
 
 const { post, redirectTo } = Astro.props;
 
-const locale = extractLocaleFromTags(post.tags) ?? DEFAULT_LOCALE;
+const locale = extractLocaleFromPost(post) ?? DEFAULT_LOCALE;
 ---
 
 {
