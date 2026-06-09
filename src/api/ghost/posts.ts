@@ -3,6 +3,7 @@ import { adaptGhostPost } from '@api/adapters/ghost';
 import type { FeaturedPost, Post } from '@api/ghost/types';
 import { handleApiError } from '@api/utils/errorHandlers';
 import { getCache, setCache } from '@api/utils/cache';
+import { getTagRegistry } from '@api/ghost/tagRegistry';
 import {
     type Locale,
     LOCALES,
@@ -34,8 +35,10 @@ function createEmptyVariants(): Record<Locale, Post | null> {
     };
 }
 
-function adaptPosts<T extends Post | FeaturedPost>(posts: T[] | undefined): T[] {
-    return (posts || []).map((post) => adaptGhostPost(post));
+async function adaptPosts<T extends Post | FeaturedPost>(posts: T[] | undefined): Promise<T[]> {
+    const tagRegistry = await getTagRegistry();
+
+    return (posts || []).map((post) => adaptGhostPost(post, { tagRegistry }));
 }
 
 async function fetchPostsPage(page: number, limit: number): Promise<GhostPostsResponse> {
@@ -92,7 +95,7 @@ export async function getHighlightPosts(
             params: { limit, fields, include },
         });
 
-        const adaptedPosts = adaptPosts(response.posts);
+        const adaptedPosts = await adaptPosts(response.posts);
 
         setCache(cacheKey, adaptedPosts);
 
@@ -132,7 +135,7 @@ export async function listPostsByLocale(
         });
 
         const posts = response.posts || [];
-        const adaptedPosts = posts.map((post) => adaptGhostPost(post));
+        const adaptedPosts = await adaptPosts(posts);
 
         setCache(cacheKey, adaptedPosts);
 
@@ -294,7 +297,7 @@ export async function getPosts(include: string = 'tags'): Promise<Post[]> {
             params: { include },
         });
 
-        const adaptedPosts = adaptPosts(response.posts);
+        const adaptedPosts = await adaptPosts(response.posts);
 
         setCache(cacheKey, adaptedPosts);
 
@@ -323,7 +326,7 @@ export async function listAllPosts(
     try {
         if (page !== undefined) {
             const response = await fetchPostsPage(page, limit);
-            const pagePosts = adaptPosts(response.posts);
+            const pagePosts = await adaptPosts(response.posts);
 
             setCache(cacheKey, pagePosts);
             return pagePosts;
@@ -335,7 +338,7 @@ export async function listAllPosts(
 
         do {
             const response = await fetchPostsPage(currentPage, limit);
-            allPosts.push(...adaptPosts(response.posts));
+            allPosts.push(...(await adaptPosts(response.posts)));
 
             totalPages = response.meta?.pagination?.pages ?? 1;
             currentPage++;

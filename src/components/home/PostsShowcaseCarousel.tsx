@@ -105,8 +105,16 @@ function ShowcaseCard({
     const hasImage = post.feature_image && post.feature_image.toString().length > 0;
     const titleDensity = getHomeTitleDensity(post.title);
     const publishedDate = getPublishedDate(post.published_at);
-    const typeLabel = isVisibleTag(post.post_type) ? titleCaseTag(post.post_type) : '';
-    const categoryLabel = isVisibleTag(post.post_category) ? titleCaseTag(post.post_category) : '';
+    const typeLabel = isVisibleTag(post.post_type_label)
+        ? post.post_type_label
+        : isVisibleTag(post.post_type)
+          ? titleCaseTag(post.post_type)
+          : '';
+    const categoryLabel = isVisibleTag(post.post_category_label)
+        ? post.post_category_label
+        : isVisibleTag(post.post_category)
+          ? titleCaseTag(post.post_category)
+          : '';
 
     return (
         <motion.a

@@ -6,6 +6,9 @@ import type { FeaturedPost, Post, PostTag } from '@api/ghost/types';
 
 // Mock dependencies
 vi.mock('@api/clients/ghost');
+vi.mock('@api/ghost/tagRegistry', () => ({
+    getTagRegistry: vi.fn().mockResolvedValue({}),
+}));
 vi.mock('@api/utils/cache', () => ({
     getCache: vi.fn(),
     setCache: vi.fn(),

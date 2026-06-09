@@ -182,6 +182,82 @@ describe('Ghost Adapters', () => {
             expect(adapted.post_series).toBe('Web Development Series');
         });
 
+        it('should localize tag labels from a registry while keeping raw tag identity fields', () => {
+            const mockPost: FeaturedPost = {
+                id: 'test-post',
+                slug: 'zh-registry-test',
+                title: 'Test',
+                url: new URL('https://ghost.example.com/test'),
+                feature_image: new URL('https://ghost.example.com/image.jpg'),
+                published_at: '2024-01-01',
+                tags: [
+                    {
+                        id: '1',
+                        slug: 'type-article',
+                        name: 'Article',
+                    },
+                    {
+                        id: '2',
+                        slug: 'category-tech',
+                        name: 'Technology',
+                    },
+                    {
+                        id: '3',
+                        slug: 'series-homeserver',
+                        name: 'Homeserver Series',
+                    },
+                    {
+                        id: '4',
+                        slug: 'topic-nextcloud',
+                        name: 'Nextcloud',
+                    },
+                    {
+                        id: '5',
+                        slug: 'hash-lang-zh',
+                        name: '#lang-zh',
+                    },
+                ],
+                post_type: '',
+                post_category: '',
+                post_series: '',
+            };
+
+            const adapted = adaptGhostPost(mockPost, {
+                tagRegistry: {
+                    'type-article': {
+                        kind: 'type',
+                        label: { zh: '文章', ja: '記事', en: 'Article' },
+                    },
+                    'category-tech': {
+                        kind: 'category',
+                        label: { zh: '技术', ja: '技術', en: 'Tech' },
+                    },
+                    'series-homeserver': {
+                        kind: 'series',
+                        label: {
+                            zh: '家用服务器完整构建指南',
+                            ja: 'ホームサーバー完全構築ガイド',
+                            en: 'Homeserver Complete Build Guide',
+                        },
+                    },
+                    'topic-nextcloud': {
+                        kind: 'topic',
+                        label: { zh: 'Nextcloud', ja: 'Nextcloud', en: 'Nextcloud' },
+                    },
+                },
+            });
+
+            expect(adapted.post_type).toBe('article');
+            expect(adapted.post_type_label).toBe('文章');
+            expect(adapted.post_category).toBe('tech');
+            expect(adapted.post_category_label).toBe('技术');
+            expect(adapted.post_series_slug).toBe('series-homeserver');
+            expect(adapted.post_series).toBe('家用服务器完整构建指南');
+            expect(adapted.post_general_tags).toEqual(['Nextcloud']);
+            expect(adapted.post_general_tag_slugs).toEqual(['topic-nextcloud']);
+            expect(adapted.tags?.find((tag) => tag.slug === 'type-article')?.name).toBe('文章');
+        });
+
         it('should extract the series number from the post slug when using an unnumbered series tag', () => {
             const mockPost: FeaturedPost = {
                 id: 'test-post',
