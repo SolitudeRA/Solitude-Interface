@@ -85,7 +85,7 @@ describe('Posts API Integration Tests', () => {
 
             // 验证缓存已设置
             const cacheKey =
-                'featured_posts:5:id,title,url,feature_image,primary_tag,published_at:tags';
+                'featured_posts:5:id,slug,title,url,feature_image,primary_tag,published_at:tags';
             const cached = getCache(cacheKey);
             expect(cached).not.toBeUndefined();
             expect(cached).toEqual(posts1);

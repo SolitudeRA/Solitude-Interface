@@ -185,6 +185,35 @@ export function extractI18nKeyFromTagSlug(slug: string): string | null {
     return slug.replace(I18N_TAG_PREFIX, '');
 }
 
+export interface PostIdentitySource {
+    slug?: string | null;
+    tags?: PostTag[];
+}
+
+export interface PostSlugIdentity {
+    locale: Locale;
+    i18nKey: string;
+}
+
+/**
+ * 从 Ghost post slug 中提取文章身份。
+ * 新约定：ja-homeserver-8 -> locale=ja, i18nKey=homeserver-8
+ */
+export function extractPostSlugIdentity(slug: string | null | undefined): PostSlugIdentity | null {
+    const normalizedSlug = slug?.trim().toLowerCase();
+    if (!normalizedSlug) {
+        return null;
+    }
+
+    const [localeCandidate, ...keyParts] = normalizedSlug.split('-');
+    if (!isLocale(localeCandidate) || keyParts.length === 0) {
+        return null;
+    }
+
+    const i18nKey = keyParts.join('-');
+    return i18nKey ? { locale: localeCandidate, i18nKey } : null;
+}
+
 /**
  * 从文章的 tags 数组中提取语言代码
  */
@@ -204,6 +233,13 @@ export function extractLocaleFromTags(tags: PostTag[] | undefined): Locale | nul
 }
 
 /**
+ * 从 Ghost post slug 中提取语言代码。
+ */
+export function extractLocaleFromPostSlug(slug: string | null | undefined): Locale | null {
+    return extractPostSlugIdentity(slug)?.locale ?? null;
+}
+
+/**
  * 从文章的 tags 数组中提取翻译组 key
  */
 export function extractI18nKey(tags: PostTag[] | undefined): string | null {
@@ -219,6 +255,27 @@ export function extractI18nKey(tags: PostTag[] | undefined): string | null {
     }
 
     return null;
+}
+
+/**
+ * 从 Ghost post slug 中提取跨语言文章 key。
+ */
+export function extractI18nKeyFromPostSlug(slug: string | null | undefined): string | null {
+    return extractPostSlugIdentity(slug)?.i18nKey ?? null;
+}
+
+/**
+ * 获取文章语言。语言 tag 仍是主来源，slug 里的语言只作为 fallback。
+ */
+export function extractLocaleFromPost(post: PostIdentitySource): Locale | null {
+    return extractLocaleFromTags(post.tags) ?? extractLocaleFromPostSlug(post.slug);
+}
+
+/**
+ * 获取跨语言文章 key。新格式优先从 Ghost slug 解析，旧 #i18n-* tag 作为兼容 fallback。
+ */
+export function extractI18nKeyFromPost(post: PostIdentitySource): string | null {
+    return extractI18nKeyFromPostSlug(post.slug) ?? extractI18nKey(post.tags);
 }
 
 /**
@@ -247,6 +304,20 @@ export function buildPostPathFromTags(postId: string, tags: PostTag[] | undefine
     }
 
     const locale = extractLocaleFromTags(tags) ?? DEFAULT_LOCALE;
+    return buildPostPath(locale, i18nKey);
+}
+
+/**
+ * 根据 Ghost post slug 和标签构建前端文章路径。
+ * 新格式优先从 slug 读取跨语言文章 key，旧 #i18n-* tag 作为 fallback。
+ */
+export function buildPostPathFromPost(post: { id: string } & PostIdentitySource): string {
+    const i18nKey = extractI18nKeyFromPost(post);
+    if (!i18nKey) {
+        return `/posts/${post.id}`;
+    }
+
+    const locale = extractLocaleFromPost(post) ?? DEFAULT_LOCALE;
     return buildPostPath(locale, i18nKey);
 }
 
@@ -332,18 +403,17 @@ export interface LocalizedPost<T extends { tags?: PostTag[]; published_at: strin
  * @param currentLocale 当前语言
  * @returns 过滤后的文章列表（带有 fallback 标记）
  */
-export function filterPostsByLocale<T extends { tags?: PostTag[]; published_at: string }>(
-    posts: T[],
-    currentLocale: Locale
-): LocalizedPost<T>[] {
+export function filterPostsByLocale<
+    T extends { slug?: string | null; tags?: PostTag[]; published_at: string },
+>(posts: T[], currentLocale: Locale): LocalizedPost<T>[] {
     // 按 i18n key 分组文章
     const i18nGroups = new Map<string, T[]>();
     const standalonePostsCurrentLocale: T[] = [];
     const standalonePostsNoLocale: T[] = [];
 
     for (const post of posts) {
-        const i18nKey = extractI18nKey(post.tags);
-        const postLocale = extractLocaleFromTags(post.tags);
+        const i18nKey = extractI18nKeyFromPost(post);
+        const postLocale = extractLocaleFromPost(post);
 
         if (i18nKey) {
             // 有 i18n key 的文章，按 key 分组
@@ -368,7 +438,7 @@ export function filterPostsByLocale<T extends { tags?: PostTag[]; published_at: 
     for (const [i18nKey, groupPosts] of i18nGroups) {
         // 先找当前语言版本
         const currentLocalePost = groupPosts.find(
-            (p) => extractLocaleFromTags(p.tags) === currentLocale
+            (p) => extractLocaleFromPost(p) === currentLocale
         );
 
         if (currentLocalePost) {
@@ -387,7 +457,7 @@ export function filterPostsByLocale<T extends { tags?: PostTag[]; published_at: 
             if (fallbackPost) {
                 result.push({
                     post: fallbackPost,
-                    locale: extractLocaleFromTags(fallbackPost.tags),
+                    locale: extractLocaleFromPost(fallbackPost),
                     i18nKey,
                     isFallback: true,
                 });

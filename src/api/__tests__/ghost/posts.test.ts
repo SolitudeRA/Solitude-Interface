@@ -87,7 +87,7 @@ describe('Posts API', () => {
                 endpoint: '/posts/',
                 params: {
                     limit: 12,
-                    fields: 'id,title,url,feature_image,primary_tag,published_at',
+                    fields: 'id,slug,title,url,feature_image,primary_tag,published_at',
                     include: 'tags',
                 },
             });
@@ -153,7 +153,7 @@ describe('Posts API', () => {
             await getHighlightPosts(10);
 
             expect(cache.setCache).toHaveBeenCalledWith(
-                'featured_posts:10:id,title,url,feature_image,primary_tag,published_at:tags',
+                'featured_posts:10:id,slug,title,url,feature_image,primary_tag,published_at:tags',
                 expect.any(Array)
             );
         });

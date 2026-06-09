@@ -3,7 +3,7 @@ import type { APIContext } from 'astro';
 import { listAllPosts } from '@api/ghost/posts';
 import { getSiteInformation } from '@api/ghost/settings';
 import type { Post } from '@api/ghost/types';
-import { extractI18nKey, extractLocaleFromTags, DEFAULT_LOCALE } from '@lib/i18n';
+import { extractI18nKeyFromPost, extractLocaleFromPost, DEFAULT_LOCALE } from '@lib/i18n';
 import { SITE_URL } from 'astro:env/server';
 
 /**
@@ -31,8 +31,8 @@ export async function GET(context: APIContext) {
         site: siteUrl,
         items: posts.map((post: Post) => {
             // 提取文章的语言和 i18n key
-            const postLocale = extractLocaleFromTags(post.tags) || DEFAULT_LOCALE;
-            const i18nKey = extractI18nKey(post.tags);
+            const postLocale = extractLocaleFromPost(post) || DEFAULT_LOCALE;
+            const i18nKey = extractI18nKeyFromPost(post);
             // 使用 i18n key 或者从 URL 提取 slug
             const postSlug = i18nKey || post.url.toString().split('/').filter(Boolean).pop();
             const postPath = `/${postLocale}/p/${postSlug}`;

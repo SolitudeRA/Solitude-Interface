@@ -10,6 +10,10 @@ interface Props {
 
 const { title, primary_tag, tags, published_at } = Astro.props;
 const publishDate = new Date(published_at);
+const SYSTEM_TAG_PREFIXES = ['hash-', 'type-', 'category-', 'series-'];
+const visibleTags = (tags ?? []).filter(
+    (tag) => !SYSTEM_TAG_PREFIXES.some((prefix) => tag.slug.startsWith(prefix))
+);
 ---
 
 <div
@@ -63,16 +67,13 @@ const publishDate = new Date(published_at);
 
     <!-- 其他标签 -->
     {
-        tags && tags.length > 0 && (
+        visibleTags.length > 0 && (
             <div class="mt-3 flex flex-wrap justify-center gap-1.5 sm:mt-4 sm:gap-2 md:mt-5">
-                {tags
-                    .filter((tag) => !tag.slug.startsWith('hash-'))
-                    .slice(0, 5)
-                    .map((tag) => (
-                        <span class="tag-item rounded-md px-2 py-0.5 text-xs sm:px-3 sm:py-1 sm:text-sm">
-                            #{tag.name}
-                        </span>
-                    ))}
+                {visibleTags.slice(0, 5).map((tag) => (
+                    <span class="tag-item rounded-md px-2 py-0.5 text-xs sm:px-3 sm:py-1 sm:text-sm">
+                        #{tag.name}
+                    </span>
+                ))}
             </div>
         )
     }
