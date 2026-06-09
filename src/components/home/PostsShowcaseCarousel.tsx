@@ -385,7 +385,7 @@ export default function PostsShowcaseCarousel({
         itemSelector: '.showcase-card',
         itemGap: 16,
         fallbackItemWidth: 304,
-        requireHover: true,
+        requireHover: false,
         dependencyKey: `${posts.length}:${showMoreButton}`,
     });
 

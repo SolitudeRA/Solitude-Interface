@@ -1,5 +1,5 @@
 ---
-import { getHighlightPosts } from '@api/ghost/posts';
+import { listAllPosts } from '@api/ghost/posts';
 import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
 import IndexLayout from '@layouts/IndexLayout.astro';
@@ -30,8 +30,8 @@ const locale = lang as Locale;
 const htmlLang = LOCALE_HTML_LANG[locale];
 
 const { siteTitle, siteDescription, logoUrl, coverImageUrl } = await initializeSiteData();
-// 获取最近文章用于首页展示（不按语言筛选）
-const posts = await getHighlightPosts(12);
+// 获取完整候选集后再按语言和 i18n key 去重，避免三语版本挤占首页卡片数量。
+const posts = await listAllPosts({ limit: 100 });
 
 // 生成 hreflang 链接
 const alternateLinks = generateAlternateLinks(env.site.url, '', LOCALES);
