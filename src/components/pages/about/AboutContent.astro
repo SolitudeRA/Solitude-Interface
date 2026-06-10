@@ -79,7 +79,12 @@ const i18n = {
         gamingDesc:
             'FPS/TPS、ARPG、CRPG、MOBA、音游、卡牌... 什么品类都玩，擅长FPS，最爱Counter-Strike',
         hardwareSpec: '主力机配置',
-        hardwareDesc: 'AMD 5900X | 32GB RAM | ASUS Strix RTX 4080 | ASUS B550-A Gaming',
+        hardwareSpecs: [
+            { label: 'GPU', value: 'ASUS Strix RTX 4080', featured: true },
+            { label: 'CPU', value: 'AMD 5900X' },
+            { label: '内存', value: '32GB RAM' },
+            { label: '主板', value: 'ASUS B550-A Gaming' },
+        ],
         peripheral: '外设',
         mouse: '鼠标',
         mouseDetail: 'Razer DeathAdder V3 Pro & Razer DeadAdder V2 Pro (backup)',
@@ -111,7 +116,12 @@ const i18n = {
         gamingDesc:
             'FPS/TPS、ARPG、CRPG、MOBA、音ゲー、カード系…ジャンルは何でも遊びます。得意なのはFPSで、いちばん好きなのはCounter-Strike',
         hardwareSpec: 'メインPCスペック',
-        hardwareDesc: 'AMD 5900X | 32GB RAM | ASUS Strix RTX 4080 | ASUS B550-A Gaming',
+        hardwareSpecs: [
+            { label: 'GPU', value: 'ASUS Strix RTX 4080', featured: true },
+            { label: 'CPU', value: 'AMD 5900X' },
+            { label: 'メモリ', value: '32GB RAM' },
+            { label: 'マザー', value: 'ASUS B550-A Gaming' },
+        ],
         peripheral: '周辺機器',
         mouse: 'マウス',
         mouseDetail: 'Razer DeathAdder V3 Pro & Razer DeathAdder V2 Pro（予備）',
@@ -145,7 +155,12 @@ const i18n = {
         gamingDesc:
             "I play pretty much every genre—FPS/TPS, ARPG, CRPG, MOBA, rhythm games, card games, etc. I'm best at FPS, and my all-time favorite is Counter-Strike.",
         hardwareSpec: 'Main PC Specs',
-        hardwareDesc: 'AMD 5900X | 32GB RAM | ASUS Strix RTX 4080 | ASUS B550-A Gaming',
+        hardwareSpecs: [
+            { label: 'GPU', value: 'ASUS Strix RTX 4080', featured: true },
+            { label: 'CPU', value: 'AMD 5900X' },
+            { label: 'Memory', value: '32GB RAM' },
+            { label: 'Motherboard', value: 'ASUS B550-A Gaming' },
+        ],
         peripheral: 'Peripherals',
         mouse: 'Mouse',
         mouseDetail: 'Razer DeathAdder V3 Pro & Razer DeathAdder V2 Pro (backup)',
@@ -402,24 +417,29 @@ const techGroups: TechGroup[] = [
 
                 <SteamSnapshot locale={locale} />
 
-                <div class="hobby-details">
+                <div class="hobby-details gaming-setup-grid">
                     <!-- 主机配置 -->
-                    <div class="hobby-detail-row">
+                    <div class="hobby-detail-row gaming-setup-panel">
                         <div class="detail-header">
                             <span class="detail-icon">🖥️</span>
                             <span class="detail-label">{t.hardwareSpec}</span>
                         </div>
                         <div class="spec-list" aria-label={t.hardwareSpec}>
                             {
-                                t.hardwareDesc
-                                    .split('|')
-                                    .map((spec) => <span class="spec-chip">{spec.trim()}</span>)
+                                t.hardwareSpecs.map((spec) => (
+                                    <span
+                                        class={`spec-chip${spec.featured ? ' spec-chip--featured' : ''}`}
+                                    >
+                                        <span class="spec-chip-label">{spec.label}</span>
+                                        <span class="spec-chip-value">{spec.value}</span>
+                                    </span>
+                                ))
                             }
                         </div>
                     </div>
 
                     <!-- 外设 -->
-                    <div class="hobby-detail-row">
+                    <div class="hobby-detail-row gaming-setup-panel">
                         <div class="detail-header">
                             <span class="detail-icon">⌨️</span>
                             <span class="detail-label">{t.peripheral}</span>
@@ -874,8 +894,47 @@ const techGroups: TechGroup[] = [
     }
 
     .hobby-card-gaming {
-        --hobby-accent-primary: #10b981;
-        --hobby-accent-secondary: #3b82f6;
+        --hobby-accent-primary: #66c0f4;
+        --hobby-accent-secondary: #a78bfa;
+        background:
+            radial-gradient(
+                circle at 0 0,
+                color-mix(in oklch, var(--hobby-accent-secondary) 18%, transparent),
+                transparent 30%
+            ),
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--hobby-accent-primary) 12%, transparent),
+                transparent 58%
+            ),
+            var(--page-surface-bg);
+        border-color: color-mix(
+            in oklch,
+            var(--hobby-accent-primary) 24%,
+            var(--page-surface-border)
+        );
+    }
+
+    .hobby-card-gaming:hover {
+        background:
+            radial-gradient(
+                circle at 0 0,
+                color-mix(in oklch, var(--hobby-accent-secondary) 18%, transparent),
+                transparent 30%
+            ),
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--hobby-accent-primary) 12%, transparent),
+                transparent 58%
+            ),
+            var(--page-surface-bg);
+        border-color: color-mix(
+            in oklch,
+            var(--hobby-accent-primary) 24%,
+            var(--page-surface-border)
+        );
+        box-shadow: 0 16px 36px var(--page-surface-shadow);
+        transform: none;
     }
 
     .hobby-card-music {
@@ -926,6 +985,39 @@ const techGroups: TechGroup[] = [
         text-wrap: pretty;
     }
 
+    .hobby-card-gaming .hobby-card-header {
+        margin-bottom: 1rem;
+        padding: 0.125rem 0 1rem;
+        border-bottom-color: color-mix(
+            in oklch,
+            var(--hobby-accent-primary) 20%,
+            var(--page-surface-border)
+        );
+    }
+
+    .hobby-card-gaming .hobby-icon {
+        color: color-mix(in oklch, var(--hobby-accent-primary) 86%, white);
+        background:
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--hobby-accent-primary) 18%, transparent),
+                color-mix(in oklch, var(--hobby-accent-secondary) 12%, transparent)
+            ),
+            color-mix(in oklch, var(--page-surface-bg) 78%, transparent);
+        border-color: color-mix(in oklch, var(--hobby-accent-primary) 38%, transparent);
+        box-shadow: 0 10px 24px color-mix(in oklch, var(--hobby-accent-primary) 12%, transparent);
+    }
+
+    .hobby-card-gaming .hobby-title {
+        font-size: 1.25rem;
+        letter-spacing: 0;
+    }
+
+    .hobby-card-gaming .hobby-description {
+        max-width: 62rem;
+        color: color-mix(in oklch, var(--text-content-primary) 88%, var(--foreground));
+    }
+
     /* 详情区块 */
     .hobby-details {
         display: flex;
@@ -954,6 +1046,48 @@ const techGroups: TechGroup[] = [
     .hobby-detail-row--highlight {
         border-left: 3px solid color-mix(in oklch, var(--hobby-accent-primary) 72%, transparent);
         padding-left: 0.75rem;
+    }
+
+    .gaming-setup-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+        margin-top: 0.875rem;
+    }
+
+    .gaming-setup-panel,
+    .gaming-setup-panel:first-child,
+    .gaming-setup-panel:last-child {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        align-content: start;
+        min-width: 0;
+        padding: 0.875rem;
+        background:
+            linear-gradient(
+                145deg,
+                color-mix(in oklch, var(--hobby-accent-primary) 8%, transparent),
+                transparent 66%
+            ),
+            color-mix(in oklch, var(--page-surface-bg) 76%, black);
+        border: 1px solid
+            color-mix(in oklch, var(--hobby-accent-primary) 18%, var(--page-surface-border));
+        border-radius: 0.5rem;
+    }
+
+    .hobby-card-gaming .detail-header {
+        gap: 0.625rem;
+    }
+
+    .hobby-card-gaming .detail-icon {
+        color: color-mix(in oklch, var(--hobby-accent-primary) 84%, white);
+        background: color-mix(in oklch, var(--hobby-accent-primary) 12%, transparent);
+        border: 1px solid color-mix(in oklch, var(--hobby-accent-primary) 24%, transparent);
+    }
+
+    .hobby-card-gaming .detail-label {
+        color: color-mix(in oklch, var(--text-content-secondary) 78%, var(--hobby-accent-primary));
     }
 
     .detail-header {
@@ -1004,6 +1138,12 @@ const techGroups: TechGroup[] = [
         min-width: 0;
     }
 
+    .hobby-card-gaming .spec-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+
     .spec-chip,
     .gear-chip {
         display: inline-flex;
@@ -1022,6 +1162,62 @@ const techGroups: TechGroup[] = [
         white-space: normal;
     }
 
+    .hobby-card-gaming .spec-chip {
+        display: grid;
+        align-content: center;
+        gap: 0.25rem;
+        min-height: 4.125rem;
+        padding: 0.625rem 0.6875rem;
+        background:
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--hobby-accent-primary) 9%, transparent),
+                color-mix(in oklch, var(--hobby-accent-secondary) 6%, transparent)
+            ),
+            color-mix(in oklch, var(--page-surface-bg) 84%, white);
+        border-color: color-mix(in oklch, var(--hobby-accent-primary) 24%, transparent);
+    }
+
+    .hobby-card-gaming .spec-chip--featured {
+        grid-column: 1 / -1;
+        min-height: 4.625rem;
+        background:
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--hobby-accent-primary) 15%, transparent),
+                color-mix(in oklch, var(--hobby-accent-secondary) 10%, transparent)
+            ),
+            color-mix(in oklch, var(--page-surface-bg) 82%, white);
+        border-color: color-mix(in oklch, var(--hobby-accent-primary) 34%, transparent);
+    }
+
+    .hobby-card-gaming .spec-chip:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .spec-chip-label {
+        color: color-mix(in oklch, var(--text-content-secondary) 78%, var(--hobby-accent-primary));
+        font-size: 0.625rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .spec-chip-value {
+        display: block;
+        min-width: 0;
+        color: var(--foreground);
+        font-size: 0.8125rem;
+        font-weight: 750;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+    }
+
+    .spec-chip--featured .spec-chip-value {
+        font-size: 0.9375rem;
+    }
+
     /* 外设列表 */
     .peripheral-list {
         display: flex;
@@ -1035,6 +1231,25 @@ const techGroups: TechGroup[] = [
         grid-template-columns: minmax(4.75rem, 0.26fr) 1fr;
         gap: 0.75rem;
         align-items: baseline;
+    }
+
+    .hobby-card-gaming .peripheral-list {
+        gap: 0.375rem;
+    }
+
+    .hobby-card-gaming .peripheral-item {
+        grid-template-columns: minmax(5.25rem, 0.28fr) minmax(0, 1fr);
+        gap: 0.625rem;
+        min-width: 0;
+        padding: 0.5rem 0.625rem;
+        background: color-mix(in oklch, var(--page-surface-bg) 76%, black);
+        border: 1px solid
+            color-mix(in oklch, var(--hobby-accent-secondary) 14%, var(--page-surface-border));
+        border-radius: 0.375rem;
+    }
+
+    .hobby-card-gaming .peripheral-type {
+        color: color-mix(in oklch, var(--text-content-secondary) 80%, var(--hobby-accent-primary));
     }
 
     .peripheral-type {
@@ -1131,9 +1346,27 @@ const techGroups: TechGroup[] = [
             padding-left: 0.625rem;
         }
 
+        .gaming-setup-grid {
+            grid-template-columns: 1fr;
+            gap: 0.625rem;
+            margin-top: 0.75rem;
+        }
+
+        .gaming-setup-panel,
+        .gaming-setup-panel:first-child,
+        .gaming-setup-panel:last-child {
+            padding: 0.75rem;
+        }
+
         .peripheral-item {
             grid-template-columns: 1fr;
             gap: 0.125rem;
+        }
+
+        .hobby-card-gaming .peripheral-item {
+            grid-template-columns: 1fr;
+            gap: 0.1875rem;
+            padding: 0.5rem;
         }
     }
 
@@ -1162,6 +1395,36 @@ const techGroups: TechGroup[] = [
             var(--page-surface-bg-hover);
     }
 
+    :global(.dark) .hobby-card-gaming {
+        background:
+            radial-gradient(
+                circle at 0 0,
+                color-mix(in oklch, var(--hobby-accent-secondary) 18%, transparent),
+                transparent 30%
+            ),
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--hobby-accent-primary) 10%, transparent),
+                transparent 58%
+            ),
+            var(--page-surface-bg);
+    }
+
+    :global(.dark) .hobby-card-gaming:hover {
+        background:
+            radial-gradient(
+                circle at 0 0,
+                color-mix(in oklch, var(--hobby-accent-secondary) 18%, transparent),
+                transparent 30%
+            ),
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--hobby-accent-primary) 10%, transparent),
+                transparent 58%
+            ),
+            var(--page-surface-bg);
+    }
+
     :global(.dark) .overview-project-link {
         background: color-mix(in oklch, #000 82%, var(--page-accent));
         border-color: color-mix(in oklch, var(--page-accent) 18%, transparent);
@@ -1171,6 +1434,34 @@ const techGroups: TechGroup[] = [
     :global(.dark) .gear-chip {
         background: color-mix(in oklch, #000 82%, var(--hobby-accent-primary));
         border-color: color-mix(in oklch, var(--hobby-accent-primary) 22%, transparent);
+    }
+
+    :global(.dark) .gaming-setup-panel {
+        background:
+            linear-gradient(
+                145deg,
+                color-mix(in oklch, var(--hobby-accent-primary) 7%, transparent),
+                transparent 66%
+            ),
+            color-mix(in oklch, #000 84%, var(--hobby-accent-secondary));
+        border-color: color-mix(in oklch, var(--hobby-accent-primary) 18%, transparent);
+    }
+
+    :global(.dark) .hobby-card-gaming .spec-chip,
+    :global(.dark) .hobby-card-gaming .peripheral-item {
+        background: color-mix(in oklch, #000 86%, var(--hobby-accent-primary));
+        border-color: color-mix(in oklch, var(--hobby-accent-primary) 18%, transparent);
+    }
+
+    :global(.dark) .hobby-card-gaming .spec-chip--featured {
+        background:
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--hobby-accent-primary) 11%, transparent),
+                color-mix(in oklch, var(--hobby-accent-secondary) 8%, transparent)
+            ),
+            color-mix(in oklch, #000 84%, var(--hobby-accent-secondary));
+        border-color: color-mix(in oklch, var(--hobby-accent-primary) 28%, transparent);
     }
 
     :global(.dark) .tech-badge {
