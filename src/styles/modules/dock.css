@@ -717,6 +717,26 @@
         @apply scale-110;
     }
 
+    @media (min-width: 1536px) {
+        [data-dock-root].dock--social-collapsed [data-dock-social-full] {
+            display: none !important;
+        }
+
+        [data-dock-root].dock--social-collapsed [data-dock-social-compact] {
+            display: flex !important;
+        }
+
+        [data-dock-root].dock--measuring-social [data-dock-social-full] {
+            display: flex !important;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        [data-dock-root].dock--measuring-social [data-dock-social-compact] {
+            display: none !important;
+        }
+    }
+
     /* ===== 遮罩层 ===== */
     .dock-overlay {
         background: var(--dock-overlay-bg);
