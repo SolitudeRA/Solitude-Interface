@@ -35,15 +35,15 @@ const { siteTitle, siteDescription, logoUrl, coverImageUrl } = await initializeS
 const i18n = {
     zh: {
         title: 'About Me',
-        subtitle: '开发者 · 玩家 · 内容创作者',
+        heroFacts: ['开发者', '玩家', '内容创作者'],
     },
     ja: {
         title: 'プロフィール',
-        subtitle: '開発者 · ゲーマー · コンテンツクリエイター',
+        heroFacts: ['開発者', 'ゲーマー', 'コンテンツクリエイター'],
     },
     en: {
         title: 'About Me',
-        subtitle: 'Developer · Gamer · Content Creator',
+        heroFacts: ['Developer', 'Gamer', 'Content Creator'],
     },
 };
 
@@ -70,11 +70,12 @@ const canonicalUrl = `${env.site.url}/${locale}/about`;
     />
 
     <PageHero
+        variant="profile"
         title={t.title}
         backgroundImage={coverImageUrl?.toString()}
         badgeText="SolitudeRA"
         badgeIcon={true}
-        subtitle={t.subtitle}
+        facts={t.heroFacts}
     >
         <svg
             slot="badge-icon"
@@ -101,12 +102,17 @@ const canonicalUrl = `${env.site.url}/${locale}/about`;
 
 <style>
     .about-page {
-        background-color: var(--article-body-bg);
         position: relative;
+        background: linear-gradient(
+            180deg,
+            var(--background) 0,
+            var(--article-body-bg) 16rem,
+            var(--article-body-bg) 100%
+        );
     }
 
     .about-content-wrapper {
-        padding-top: 3rem;
-        padding-bottom: 3rem;
+        padding-top: clamp(1.5rem, 4svh, 2.75rem);
+        padding-bottom: max(6rem, 12svh);
     }
 </style>

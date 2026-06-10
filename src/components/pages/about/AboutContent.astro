@@ -4,6 +4,58 @@
  * 支持多语言
  */
 import type { Locale } from '@lib/i18n';
+import type { IconType } from 'react-icons';
+import {
+    SiAmazonwebservices,
+    SiAnaconda,
+    SiAstro,
+    SiBootstrap,
+    SiClaude,
+    SiCloudflare,
+    SiCplusplus,
+    SiCss3,
+    SiDocker,
+    SiFigma,
+    SiGit,
+    SiGithubactions,
+    SiGithubcopilot,
+    SiGo,
+    SiGooglechrome,
+    SiGooglecloud,
+    SiGooglegemini,
+    SiGrafana,
+    SiHtml5,
+    SiJavascript,
+    SiJenkins,
+    SiJetbrains,
+    SiJira,
+    SiKotlin,
+    SiLess,
+    SiLinux,
+    SiMendeley,
+    SiMongodb,
+    SiMysql,
+    SiNeo4J,
+    SiNginx,
+    SiNodedotjs,
+    SiNotion,
+    SiNpm,
+    SiOllama,
+    SiOpenai,
+    SiOpenjdk,
+    SiPhp,
+    SiPython,
+    SiPytorch,
+    SiReact,
+    SiRedis,
+    SiRust,
+    SiSass,
+    SiSlack,
+    SiSpring,
+    SiTailwindcss,
+    SiTensorflow,
+    SiTypescript,
+} from 'react-icons/si';
 
 interface Props {
     locale?: Locale;
@@ -15,9 +67,12 @@ const { locale = 'zh' } = Astro.props;
 const i18n = {
     zh: {
         atAGlance: 'At a Glance',
+        profile: '简介',
         intro: '非典型二次元理工科男，自闭死宅，爱吃，爱听歌，爱打游戏',
         spokenLanguages: 'Spoken Languages',
         languages: '中文（母语） / 日语（JLPT N1） / 英语（CEFR B2）',
+        focus: '关注方向',
+        focusValue: 'Web 开发 / 后端 / Home Server / 内容创作',
         techStack: 'Tech Stack',
         hobbies: 'Hobbies',
         gaming: '游戏',
@@ -45,9 +100,12 @@ const i18n = {
     },
     ja: {
         atAGlance: 'ひと目でわかる',
+        profile: '概要',
         intro: '理系オタク。食べるのが好きで、音楽を聴くのもゲームをするのも好き。',
         spokenLanguages: '言語',
         languages: '中国語（母語） / 日本語（JLPT N1） / 英語（CEFR B2）',
+        focus: 'フォーカス',
+        focusValue: 'Web 開発 / バックエンド / ホームサーバー / コンテンツ',
         techStack: '技術スタック',
         hobbies: '趣味',
         gaming: 'ゲーム',
@@ -77,9 +135,12 @@ const i18n = {
     },
     en: {
         atAGlance: 'At a Glance',
+        profile: 'Profile',
         intro: 'A not-so-typical nerdy otaku (STEM guy). Socially awkward, homebody, loves food, music, and gaming.',
         spokenLanguages: 'Spoken Languages',
         languages: 'Chinese (Native) / Japanese (JLPT N1) / English (CEFR B2)',
+        focus: 'Focus',
+        focusValue: 'Web development / backend / home servers / content',
         techStack: 'Tech Stack',
         hobbies: 'Hobbies',
         gaming: 'Gaming',
@@ -108,222 +169,198 @@ const i18n = {
 };
 
 const t = i18n[locale];
+
+type TechItem = {
+    name: string;
+    icon?: IconType;
+    color: string;
+    fallback?: string;
+    muted?: boolean;
+};
+
+type TechGroup = {
+    marker: string;
+    title: string;
+    accent: string;
+    featured?: boolean;
+    items: TechItem[];
+};
+
+const techGroups: TechGroup[] = [
+    {
+        marker: 'WEB',
+        title: 'Product & Web',
+        accent: '#06b6d4',
+        items: [
+            { name: 'TypeScript', icon: SiTypescript, color: '#3178c6' },
+            { name: 'JavaScript', icon: SiJavascript, color: '#f7df1e' },
+            { name: 'React', icon: SiReact, color: '#61dafb' },
+            { name: 'Astro', icon: SiAstro, color: '#ff5d01' },
+            { name: 'Tailwind CSS', icon: SiTailwindcss, color: '#06b6d4' },
+            { name: 'HTML5', icon: SiHtml5, color: '#e34f26' },
+            { name: 'CSS3', icon: SiCss3, color: '#1572b6' },
+            { name: 'Sass', icon: SiSass, color: '#cc6699', muted: true },
+            { name: 'Less', icon: SiLess, color: '#1d365d', muted: true },
+            { name: 'Bootstrap', icon: SiBootstrap, color: '#7952b3', muted: true },
+            { name: 'Chrome Extension', icon: SiGooglechrome, color: '#4285f4', muted: true },
+            { name: 'npm', icon: SiNpm, color: '#cb3837', muted: true },
+        ],
+    },
+    {
+        marker: 'AI',
+        title: 'AI & Agentic Workflow',
+        accent: '#8b5cf6',
+        featured: true,
+        items: [
+            { name: 'OpenAI Codex', icon: SiOpenai, color: '#10a37f' },
+            { name: 'Claude Code', icon: SiClaude, color: '#d97757' },
+            { name: 'GitHub Copilot', icon: SiGithubcopilot, color: '#ffffff' },
+            { name: 'Cursor', color: '#ffffff', fallback: 'C' },
+            { name: 'Gemini', icon: SiGooglegemini, color: '#8e75b2' },
+            { name: 'Ollama', icon: SiOllama, color: '#ffffff' },
+            { name: 'PyTorch', icon: SiPytorch, color: '#ee4c2c', muted: true },
+            { name: 'TensorFlow', icon: SiTensorflow, color: '#ff6f00', muted: true },
+            { name: 'Anaconda', icon: SiAnaconda, color: '#44a833', muted: true },
+        ],
+    },
+    {
+        marker: 'API',
+        title: 'Backend & Services',
+        accent: '#f59e0b',
+        items: [
+            { name: 'Java', icon: SiOpenjdk, color: '#ed8b00' },
+            { name: 'Kotlin', icon: SiKotlin, color: '#7f52ff' },
+            { name: 'Spring Framework', icon: SiSpring, color: '#6db33f' },
+            { name: 'Node.js', icon: SiNodedotjs, color: '#5fa04e' },
+            { name: 'Python', icon: SiPython, color: '#3776ab' },
+            { name: 'Go', icon: SiGo, color: '#00add8' },
+            { name: 'PHP', icon: SiPhp, color: '#777bb4', muted: true },
+            { name: 'Rust', icon: SiRust, color: '#ffffff', muted: true },
+            { name: 'C++', icon: SiCplusplus, color: '#00599c', muted: true },
+        ],
+    },
+    {
+        marker: 'DATA',
+        title: 'Data & Storage',
+        accent: '#22c55e',
+        items: [
+            { name: 'MySQL', icon: SiMysql, color: '#4479a1' },
+            { name: 'Redis', icon: SiRedis, color: '#dc382d' },
+            { name: 'MongoDB', icon: SiMongodb, color: '#47a248' },
+            { name: 'Neo4j', icon: SiNeo4J, color: '#4581c3' },
+        ],
+    },
+    {
+        marker: 'OPS',
+        title: 'Infrastructure & Cloud',
+        accent: '#3b82f6',
+        items: [
+            { name: 'Linux', icon: SiLinux, color: '#fcc624' },
+            { name: 'Docker', icon: SiDocker, color: '#2496ed' },
+            { name: 'Nginx', icon: SiNginx, color: '#009639' },
+            { name: 'Cloudflare', icon: SiCloudflare, color: '#f38020' },
+            { name: 'AWS', icon: SiAmazonwebservices, color: '#ff9900', muted: true },
+            { name: 'GCP', icon: SiGooglecloud, color: '#4285f4', muted: true },
+        ],
+    },
+    {
+        marker: 'FLOW',
+        title: 'Engineering Workflow',
+        accent: '#ec4899',
+        items: [
+            { name: 'Git', icon: SiGit, color: '#f05032' },
+            { name: 'GitHub Actions', icon: SiGithubactions, color: '#2088ff' },
+            { name: 'Jenkins', icon: SiJenkins, color: '#d24939' },
+            { name: 'Grafana', icon: SiGrafana, color: '#f46800' },
+            { name: 'JetBrains', icon: SiJetbrains, color: '#ffffff' },
+            { name: 'Figma', icon: SiFigma, color: '#f24e1e' },
+            { name: 'Jira', icon: SiJira, color: '#0052cc', muted: true },
+            { name: 'Notion', icon: SiNotion, color: '#ffffff', muted: true },
+            { name: 'Slack', icon: SiSlack, color: '#e01e5a', muted: true },
+            { name: 'Mendeley', icon: SiMendeley, color: '#9d1620', muted: true },
+        ],
+    },
+];
 ---
 
 <div class="about-content">
-    <!-- 个人简介 -->
-    <section class="about-section animate-fade-in" style="--delay: 0">
+    <!-- 概览 -->
+    <section class="about-section about-overview animate-fade-in" style="--delay: 0">
         <div class="section-header">
             <span class="section-badge">👤</span>
             <h2 class="section-title">{t.atAGlance}</h2>
         </div>
-        <p class="intro-text">{t.intro}</p>
-    </section>
 
-    <!-- 语言能力 -->
-    <section class="about-section animate-fade-in" style="--delay: 1">
-        <div class="section-header">
-            <span class="section-badge">🌐</span>
-            <h2 class="section-title">{t.spokenLanguages}</h2>
+        <div class="overview-grid">
+            <article class="overview-card overview-card-primary">
+                <span class="overview-label">{t.profile}</span>
+                <p class="overview-value">{t.intro}</p>
+            </article>
+
+            <article class="overview-card">
+                <span class="overview-label">{t.spokenLanguages}</span>
+                <p class="overview-value">{t.languages}</p>
+            </article>
+
+            <article class="overview-card">
+                <span class="overview-label">{t.focus}</span>
+                <p class="overview-value">{t.focusValue}</p>
+            </article>
         </div>
-        <p class="language-inline">{t.languages}</p>
     </section>
 
     <!-- 技术栈 -->
-    <section class="about-section animate-fade-in" style="--delay: 2">
+    <section class="about-section animate-fade-in" style="--delay: 1">
         <div class="section-header">
             <span class="section-badge">⚒️</span>
             <h2 class="section-title">{t.techStack}</h2>
         </div>
 
-        <!-- 后端语言 -->
-        <div class="tech-group">
-            <h3 class="tech-group-title">Programming Languages</h3>
-            <div class="tech-badges">
-                <img
-                    alt="Java"
-                    src="https://img.shields.io/badge/Java-black?style=flat&logo=openjdk&logoColor=ED8B00"
-                />
-                <img
-                    alt="Kotlin"
-                    src="https://img.shields.io/badge/-Kotlin-000000?style=flat&logo=kotlin"
-                />
-                <img
-                    alt="JavaScript"
-                    src="https://img.shields.io/badge/-JavaScript-000000?style=flat&logo=javascript"
-                />
-                <img
-                    alt="TypeScript"
-                    src="https://img.shields.io/badge/-TypeScript-000000?style=flat&logo=typescript"
-                />
-                <img
-                    alt="Python"
-                    src="https://img.shields.io/badge/-Python-000000?style=flat&logo=python"
-                />
-                <img alt="PHP" src="https://img.shields.io/badge/-PHP-000000?style=flat&logo=php" />
-                <img alt="Go" src="https://img.shields.io/badge/-Go-000000?style=flat&logo=go" />
-                <img
-                    alt="Rust"
-                    src="https://img.shields.io/badge/-Rust-000000?style=flat&logo=rust"
-                />
-                <img
-                    alt="C++"
-                    src="https://img.shields.io/badge/-C++-000000?style=flat&logo=c%2B%2B"
-                />
-                <img
-                    alt="HTML5"
-                    src="https://img.shields.io/badge/-HTML5-000000?style=flat&logo=html5"
-                />
-                <img
-                    alt="CSS3"
-                    src="https://img.shields.io/badge/-CSS3-000000?style=flat&logo=css3"
-                />
-                <img
-                    alt="Sass"
-                    src="https://img.shields.io/badge/-Sass-000000?style=flat&logo=sass"
-                />
-                <img
-                    alt="Less"
-                    src="https://img.shields.io/badge/-Less-000000?style=flat&logo=less"
-                />
-            </div>
-        </div>
+        <div class="tech-grid">
+            {
+                techGroups.map((group) => (
+                    <article
+                        class:list={['tech-card', group.featured && 'tech-card--featured']}
+                        style={`--tech-accent: ${group.accent};`}
+                    >
+                        <div class="tech-card-header">
+                            <span class="tech-card-marker">{group.marker}</span>
+                            <h3 class="tech-card-title">{group.title}</h3>
+                        </div>
 
-        <!-- 前端 -->
-        <div class="tech-group">
-            <h3 class="tech-group-title">Framework & Techs</h3>
-            <div class="tech-badges">
-                <img
-                    alt="Spring Framework"
-                    src="https://img.shields.io/badge/-Spring_Framework-000000?style=flat&logo=spring"
-                />
-                <img
-                    alt="React"
-                    src="https://img.shields.io/badge/-React-000000?style=flat&logo=react"
-                />
-                <img
-                    alt="Astro"
-                    src="https://img.shields.io/badge/-Astro-000000?style=flat&logo=astro"
-                />
-                <img
-                    alt="Bootstrap"
-                    src="https://img.shields.io/badge/-Bootstrap-000000?style=flat&logo=bootstrap"
-                />
-                <img
-                    alt="Tailwind CSS"
-                    src="https://img.shields.io/badge/-Tailwind_CSS-000000?style=flat&logo=tailwindcss"
-                />
-                <img
-                    alt="Chrome Extension"
-                    src="https://img.shields.io/badge/-Chrome_Extension-000000?style=flat&logo=googlechrome"
-                />
-                <img
-                    alt="Nginx"
-                    src="https://img.shields.io/badge/-Nginx-000000?style=flat&logo=nginx"
-                />
-                <img
-                    alt="Node.js"
-                    src="https://img.shields.io/badge/-Node.js-000000?style=flat&logo=nodedotjs"
-                />
-                <img
-                    alt="MySQL"
-                    src="https://img.shields.io/badge/-MySQL-000000?style=flat&logo=mysql"
-                />
-                <img
-                    alt="MongoDB"
-                    src="https://img.shields.io/badge/-MongoDB-000000?style=flat&logo=mongodb"
-                />
-                <img
-                    alt="Neo4j"
-                    src="https://img.shields.io/badge/-Neo4j-000000?style=flat&logo=neo4j"
-                />
-                <img
-                    alt="Redis"
-                    src="https://img.shields.io/badge/-Redis-000000?style=flat&logo=redis"
-                />
-                <img
-                    alt="Docker"
-                    src="https://img.shields.io/badge/-Docker-000000?style=flat&logo=docker"
-                />
-                <img
-                    alt="PyTorch"
-                    src="https://img.shields.io/badge/-PyTorch-000000?style=flat&logo=pytorch"
-                />
-                <img
-                    alt="TensorFlow"
-                    src="https://img.shields.io/badge/-TensorFlow-000000?style=flat&logo=tensorflow"
-                />
-                <img
-                    alt="Anaconda"
-                    src="https://img.shields.io/badge/-Anaconda-000000?style=flat&logo=anaconda"
-                />
-                <img
-                    alt="Linux"
-                    src="https://img.shields.io/badge/-Linux-000000?style=flat&logo=linux"
-                />
-                <img
-                    alt="CloudFlare"
-                    src="https://img.shields.io/badge/-CloudFlare-000000?style=flat&logo=CloudFlare"
-                />
-                <img
-                    alt="AWS"
-                    src="https://img.shields.io/badge/-AWS-000000?style=flat&logo=amazonwebservices"
-                />
-                <img
-                    alt="GCP"
-                    src="https://img.shields.io/badge/-GCP-000000?style=flat&logo=googlecloud"
-                />
-            </div>
-        </div>
+                        <div class="tech-badges">
+                            {group.items.map((tech) => {
+                                const Icon = tech.icon;
 
-        <!-- 工具 -->
-        <div class="tech-group">
-            <h3 class="tech-group-title">Tools</h3>
-            <div class="tech-badges">
-                <img alt="npm" src="https://img.shields.io/badge/-npm-000000?style=flat&logo=npm" />
-                <img
-                    alt="Grafana"
-                    src="https://img.shields.io/badge/-Grafana-000000?style=flat&logo=grafana"
-                />
-                <img alt="Git" src="https://img.shields.io/badge/-Git-000000?style=flat&logo=git" />
-                <img
-                    alt="Jira"
-                    src="https://img.shields.io/badge/-Jira-000000?style=flat&logo=jira"
-                />
-                <img
-                    alt="Jenkins"
-                    src="https://img.shields.io/badge/-Jenkins-000000?style=flat&logo=jenkins"
-                />
-                <img
-                    alt="GitHub Actions"
-                    src="https://img.shields.io/badge/-GitHub_Actions-000000?style=flat&logo=githubactions"
-                />
-                <img
-                    alt="Jetbrains"
-                    src="https://img.shields.io/badge/-Jetbrains-000000?style=flat&logo=jetbrains"
-                />
-                <img
-                    alt="Figma"
-                    src="https://img.shields.io/badge/-Figma-000000?style=flat&logo=figma"
-                />
-                <img
-                    alt="Notion"
-                    src="https://img.shields.io/badge/-Notion-000000?style=flat&logo=notion"
-                />
-                <img
-                    alt="Mendeley"
-                    src="https://img.shields.io/badge/-Mendeley-000000?style=flat&logo=mendeley"
-                />
-                <img
-                    alt="Slack"
-                    src="https://img.shields.io/badge/-Slack-000000?style=flat&logo=slack"
-                />
-            </div>
+                                return (
+                                    <span
+                                        class:list={[
+                                            'tech-badge',
+                                            tech.muted && 'tech-badge--muted',
+                                        ]}
+                                        style={`--tech-color: ${tech.color};`}
+                                        aria-label={tech.name}
+                                    >
+                                        {Icon ? (
+                                            <Icon className="tech-badge-icon" aria-hidden="true" />
+                                        ) : (
+                                            <span class="tech-badge-fallback" aria-hidden="true">
+                                                {tech.fallback}
+                                            </span>
+                                        )}
+                                        <span>{tech.name}</span>
+                                    </span>
+                                );
+                            })}
+                        </div>
+                    </article>
+                ))
+            }
         </div>
     </section>
 
     <!-- 兴趣爱好 -->
-    <section class="about-section animate-fade-in" style="--delay: 3">
+    <section class="about-section animate-fade-in" style="--delay: 2">
         <div class="section-header">
             <span class="section-badge">❤️</span>
             <h2 class="section-title">{t.hobbies}</h2>
@@ -418,8 +455,8 @@ const t = i18n[locale];
     .about-content {
         display: flex;
         flex-direction: column;
-        gap: 2.5rem;
-        padding: 1.5rem 0;
+        gap: 2.25rem;
+        padding: 1rem 0;
     }
 
     .about-section {
@@ -466,49 +503,198 @@ const t = i18n[locale];
         line-height: 1.75rem;
     }
 
-    /* ===== 个人简介 ===== */
-    .intro-text {
-        font-size: 1rem;
-        line-height: 1.8;
-        color: var(--text-content-primary);
-        margin: 0;
+    /* ===== 概览 ===== */
+    .overview-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.875rem;
     }
 
-    /* ===== 语言能力 ===== */
-    .language-inline {
-        font-size: 1rem;
+    .overview-card {
+        position: relative;
+        overflow: hidden;
+        padding: 1rem;
+        background: var(--page-surface-bg);
+        border: 1px solid var(--page-surface-border);
+        border-radius: 0.5rem;
+        box-shadow: 0 14px 30px var(--page-surface-shadow);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+    }
+
+    .overview-card-primary {
+        background:
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--page-accent) 16%, transparent),
+                transparent 58%
+            ),
+            var(--page-surface-bg);
+    }
+
+    .overview-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, var(--page-decorator-start), var(--page-decorator-end));
+        opacity: 0.78;
+    }
+
+    .overview-label {
+        display: block;
+        margin-bottom: 0.45rem;
+        color: var(--text-content-secondary);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        line-height: 1.2;
+        text-transform: uppercase;
+    }
+
+    .overview-value {
         color: var(--text-content-primary);
+        font-size: 0.9375rem;
+        line-height: 1.75;
         margin: 0;
+        text-wrap: pretty;
     }
 
     /* ===== 技术栈 ===== */
-    .tech-group {
-        margin-bottom: 1.25rem;
+    .tech-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.875rem;
+        margin-top: 1.25rem;
     }
 
-    .tech-group:last-child {
-        margin-bottom: 0;
+    .tech-card {
+        position: relative;
+        overflow: hidden;
+        min-width: 0;
+        padding: 1rem;
+        background:
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--tech-accent) 10%, transparent),
+                transparent 54%
+            ),
+            var(--page-surface-bg);
+        border: 1px solid var(--page-surface-border);
+        border-radius: 0.5rem;
+        box-shadow: 0 14px 30px var(--page-surface-shadow);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
     }
 
-    .tech-group-title {
-        font-size: 0.8125rem;
-        font-weight: 500;
-        color: var(--text-content-secondary);
-        margin: 0 0 0.625rem 0;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+    .tech-card--featured {
+        background:
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--tech-accent) 18%, transparent),
+                transparent 62%
+            ),
+            var(--page-surface-bg);
+        border-color: color-mix(in oklch, var(--tech-accent) 42%, var(--page-surface-border));
+    }
+
+    .tech-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--tech-accent), transparent);
+        opacity: 0.88;
+    }
+
+    .tech-card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .tech-card-marker {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 1.625rem;
+        color: color-mix(in oklch, var(--tech-accent) 86%, white);
+        background: color-mix(in oklch, var(--tech-accent) 18%, transparent);
+        border: 1px solid color-mix(in oklch, var(--tech-accent) 36%, transparent);
+        border-radius: 0.375rem;
+        font-size: 0.625rem;
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: 0;
+        flex-shrink: 0;
+    }
+
+    .tech-card-title {
+        margin: 0;
+        color: var(--foreground);
+        font-size: 0.9375rem;
+        font-weight: 700;
+        line-height: 1.3;
+        letter-spacing: 0;
+        min-width: 0;
     }
 
     .tech-badges {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: 0.4375rem;
         align-items: center;
     }
 
-    .tech-badges img {
-        height: 1.5rem;
+    .tech-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3125rem;
+        min-width: 0;
+        height: 1.625rem;
+        padding: 0 0.5625rem;
+        color: rgba(255, 255, 255, 0.95);
+        background: color-mix(in oklch, #000 88%, var(--tech-color));
+        border: 1px solid color-mix(in oklch, var(--tech-color) 26%, transparent);
         border-radius: 0.25rem;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .tech-badge--muted {
+        color: rgba(255, 255, 255, 0.82);
+        background: color-mix(in oklch, #000 94%, var(--tech-color));
+        border-color: rgba(255, 255, 255, 0.08);
+        opacity: 0.9;
+    }
+
+    .tech-badge-icon {
+        width: 0.875rem;
+        height: 0.875rem;
+        color: var(--tech-color);
+        flex-shrink: 0;
+    }
+
+    .tech-badge-fallback {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 0.875rem;
+        height: 0.875rem;
+        color: #050505;
+        background: var(--tech-color);
+        border-radius: 0.1875rem;
+        font-size: 0.5625rem;
+        font-weight: 900;
+        line-height: 1;
     }
 
     /* ===== 兴趣爱好 - 新设计 ===== */
@@ -519,6 +705,21 @@ const t = i18n[locale];
     }
 
     @media (min-width: 768px) {
+        .overview-grid {
+            grid-template-columns: 1.2fr 1fr;
+        }
+
+        .overview-card-primary {
+            grid-row: span 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .tech-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
         .hobbies-grid {
             grid-template-columns: repeat(2, 1fr);
         }
@@ -674,8 +875,47 @@ const t = i18n[locale];
 
     /* ===== 响应式 ===== */
     @media (max-width: 640px) {
-        .tech-badges img {
-            height: 1.25rem;
+        .about-content {
+            gap: 2rem;
+        }
+
+        .overview-card {
+            padding: 0.875rem 1rem;
+        }
+
+        .tech-card {
+            padding: 0.875rem;
+        }
+
+        .tech-card-header {
+            gap: 0.625rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .tech-card-marker {
+            width: 2.375rem;
+            height: 1.5rem;
+            font-size: 0.5625rem;
+        }
+
+        .tech-card-title {
+            font-size: 0.875rem;
+        }
+
+        .tech-badges {
+            gap: 0.375rem;
+        }
+
+        .tech-badge {
+            height: 1.375rem;
+            padding: 0 0.4375rem;
+            font-size: 0.625rem;
+        }
+
+        .tech-badge-icon,
+        .tech-badge-fallback {
+            width: 0.75rem;
+            height: 0.75rem;
         }
 
         .hobby-card {

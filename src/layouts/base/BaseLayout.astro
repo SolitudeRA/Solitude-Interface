@@ -116,6 +116,7 @@ const coverImageUrlStr = coverImageUrl ? `url(${coverImageUrl.toString()})` : 'n
     // 安全地解析主题设置，验证值的有效性
     function getValidTheme(stored) {
         if (!stored) return 'dark';
+        if (stored === 'dark' || stored === 'light') return stored;
         try {
             const parsed = JSON.parse(stored);
             // 只接受有效的主题值
