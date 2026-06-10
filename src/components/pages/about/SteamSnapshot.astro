@@ -1,0 +1,696 @@
+---
+import type { Locale } from '@lib/i18n';
+import { SiSteam } from 'react-icons/si';
+
+interface Props {
+    locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const steamProfile = {
+    name: 'SolitudeRA',
+    profileUrl: 'https://steamcommunity.com/id/SolitudeRA/',
+    avatarUrl:
+        'https://avatars.fastly.steamstatic.com/dec0e15094afa58d5f7fc6935d6795fec3c6a890_full.jpg',
+    avatarFrameUrl:
+        'https://shared.fastly.steamstatic.com/community_assets/images/items/1263950/175875a819256fdeb4a2f4bf1b124afba6c3e2e3.png',
+    avatarFrameStaticUrl:
+        'https://shared.fastly.steamstatic.com/community_assets/images/items/1263950/89dcb4ff7bcd5dfbfc40dd488910503f1afc9c6b.png',
+    profileBackgroundUrl:
+        'https://shared.fastly.steamstatic.com/community_assets/images/items/386480/119a5e4828facc5f55a992cb27d4a4b25dd57241.jpg',
+    location: 'Tokyo, Japan',
+    memberSince: '2014',
+    level: '61',
+    games: '326',
+    badges: '42',
+    reviews: '10',
+    friends: '213',
+    dlc: '740',
+    recentHours: '37.3h',
+    favoriteGame: {
+        name: 'Counter-Strike 2',
+        appUrl: 'https://steamcommunity.com/app/730',
+        coverUrl:
+            'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/942c04efaa5bc87afb6f2a97dbf17ac614c8a84d/capsule_184x69.jpg?t=1780435263',
+        hours: '2,173h',
+        achievements: '1 / 1',
+    },
+    recentGames: [
+        {
+            name: 'Delta Force',
+            appUrl: 'https://steamcommunity.com/app/2507950',
+            iconUrl:
+                'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2507950/capsule_184x69.jpg',
+            hours: '487h',
+        },
+        {
+            name: 'Unrailed!',
+            appUrl: 'https://steamcommunity.com/app/1016920',
+            iconUrl:
+                'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1016920/capsule_184x69.jpg',
+            hours: '0h',
+        },
+        {
+            name: 'DJMAX RESPECT V',
+            appUrl: 'https://steamcommunity.com/app/960170',
+            iconUrl:
+                'https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/960170/capsule_184x69.jpg',
+            hours: '61h',
+        },
+    ],
+};
+
+const steamI18n = {
+    zh: {
+        publicProfile: '公开资料',
+        favorite: '最爱',
+        achievements: '成就',
+        recentActivity: '最近游玩',
+        pastTwoWeeks: '过去 2 周',
+        level: '等级',
+        games: '游戏',
+        badges: '徽章',
+        reviews: '评测',
+        since: '加入于',
+        friends: '好友',
+        dlc: 'DLC',
+        statsLabel: 'Steam 资料统计',
+        metaLabel: 'Steam 附加信息',
+        favoriteGameLabel: '最爱的 Steam 游戏',
+        recentGamesLabel: '最近游玩的 Steam 游戏',
+        avatarAlt: `${steamProfile.name} 的 Steam 头像`,
+        openProfileAria: `在 Steam 打开 ${steamProfile.name} 的个人资料`,
+        openGameAria: (gameName: string) => `在 Steam 打开 ${gameName}`,
+        coverAlt: (gameName: string) => `${gameName} 封面`,
+    },
+    ja: {
+        publicProfile: '公開プロフィール',
+        favorite: 'お気に入り',
+        achievements: '実績',
+        recentActivity: '最近のプレイ',
+        pastTwoWeeks: '過去2週間',
+        level: 'レベル',
+        games: 'ゲーム',
+        badges: 'バッジ',
+        reviews: 'レビュー',
+        since: '開始',
+        friends: 'フレンド',
+        dlc: 'DLC',
+        statsLabel: 'Steamプロフィール統計',
+        metaLabel: 'Steam追加情報',
+        favoriteGameLabel: 'お気に入りのSteamゲーム',
+        recentGamesLabel: '最近プレイしたSteamゲーム',
+        avatarAlt: `${steamProfile.name} のSteamアバター`,
+        openProfileAria: `${steamProfile.name} のSteamプロフィールを開く`,
+        openGameAria: (gameName: string) => `Steamで${gameName}を開く`,
+        coverAlt: (gameName: string) => `${gameName} カバー`,
+    },
+    en: {
+        publicProfile: 'Public profile',
+        favorite: 'Favorite',
+        achievements: 'achievements',
+        recentActivity: 'Recent Activity',
+        pastTwoWeeks: 'past 2 weeks',
+        level: 'Level',
+        games: 'Games',
+        badges: 'Badges',
+        reviews: 'Reviews',
+        since: 'Since',
+        friends: 'friends',
+        dlc: 'DLC',
+        statsLabel: 'Steam profile stats',
+        metaLabel: 'Additional Steam metadata',
+        favoriteGameLabel: 'Favorite Steam game',
+        recentGamesLabel: 'Recent Steam games',
+        avatarAlt: `${steamProfile.name} Steam avatar`,
+        openProfileAria: `Open ${steamProfile.name} on Steam`,
+        openGameAria: (gameName: string) => `Open ${gameName} on Steam`,
+        coverAlt: (gameName: string) => `${gameName} cover`,
+    },
+} satisfies Record<Locale, Record<string, unknown>>;
+
+const labels = steamI18n[locale] as (typeof steamI18n)['zh'];
+---
+
+<div
+    class="steam-card steam-card-snapshot"
+    data-snapshot-style="identity"
+    style={`--steam-profile-bg: url('${steamProfile.profileBackgroundUrl}');`}
+>
+    <div class="steam-profile">
+        <div class="steam-avatar">
+            <span class="steam-avatar-core">
+                <img src={steamProfile.avatarUrl} alt={labels.avatarAlt} loading="lazy" />
+            </span>
+            <picture class="steam-avatar-frame" aria-hidden="true">
+                <source
+                    media="(prefers-reduced-motion: reduce)"
+                    srcset={steamProfile.avatarFrameStaticUrl}
+                />
+                <img src={steamProfile.avatarFrameUrl} alt="" loading="lazy" />
+            </picture>
+        </div>
+
+        <div class="steam-profile-copy">
+            <strong>{steamProfile.name}</strong>
+            <span class="steam-status">
+                <span class="steam-status-dot" aria-hidden="true"></span>
+                {labels.publicProfile} / {steamProfile.location}
+            </span>
+        </div>
+
+        <a
+            class="steam-cta"
+            href={steamProfile.profileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={labels.openProfileAria}
+            title={labels.openProfileAria}
+        >
+            <SiSteam className="steam-cta-icon" aria-hidden="true" />
+        </a>
+    </div>
+
+    <div class="steam-snapshot-body">
+        <section class="steam-featured-game" aria-label={labels.favoriteGameLabel}>
+            <a
+                class="steam-featured-cover"
+                href={steamProfile.favoriteGame.appUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={labels.openGameAria(steamProfile.favoriteGame.name)}
+            >
+                <img
+                    src={steamProfile.favoriteGame.coverUrl}
+                    alt={labels.coverAlt(steamProfile.favoriteGame.name)}
+                    loading="lazy"
+                />
+            </a>
+            <div class="steam-featured-copy">
+                <span>{labels.favorite}</span>
+                <strong>{steamProfile.favoriteGame.name}</strong>
+                <em>
+                    {steamProfile.favoriteGame.hours} / {steamProfile.favoriteGame.achievements}
+                    {labels.achievements}
+                </em>
+            </div>
+        </section>
+
+        <section class="steam-recent-panel" aria-label={labels.recentGamesLabel}>
+            <div>
+                <span class="steam-label">{labels.recentActivity}</span>
+                <strong>{steamProfile.recentHours}</strong>
+                <em>{labels.pastTwoWeeks}</em>
+            </div>
+            <div class="steam-recent-list">
+                {
+                    steamProfile.recentGames.map((game) => (
+                        <a
+                            class="steam-recent-game"
+                            href={game.appUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={labels.openGameAria(game.name)}
+                        >
+                            <img
+                                class="steam-recent-icon"
+                                src={game.iconUrl}
+                                alt=""
+                                loading="lazy"
+                            />
+                            <span class="steam-recent-game-copy">
+                                <strong>{game.name}</strong>
+                                <em>{game.hours}</em>
+                            </span>
+                        </a>
+                    ))
+                }
+            </div>
+        </section>
+    </div>
+
+    <div class="steam-stat-grid" aria-label={labels.statsLabel}>
+        <div>
+            <span>{labels.level}</span>
+            <strong>{steamProfile.level}</strong>
+        </div>
+        <div>
+            <span>{labels.games}</span>
+            <strong>{steamProfile.games}</strong>
+        </div>
+        <div>
+            <span>{labels.badges}</span>
+            <strong>{steamProfile.badges}</strong>
+        </div>
+        <div>
+            <span>{labels.reviews}</span>
+            <strong>{steamProfile.reviews}</strong>
+        </div>
+    </div>
+
+    <div class="steam-meta-strip" aria-label={labels.metaLabel}>
+        <span>{labels.since} {steamProfile.memberSince}</span>
+        <span>{steamProfile.friends} {labels.friends}</span>
+        <span>{steamProfile.dlc} {labels.dlc}</span>
+    </div>
+</div>
+
+<style>
+    .steam-card {
+        --steam-brand-blue: #66c0f4;
+        --snapshot-accent: #a78bfa;
+        --snapshot-accent-strong: #7c3aed;
+        --steam-card-padding: 1.25rem;
+        --steam-avatar-frame-outset: 0.92rem;
+        position: relative;
+        overflow: hidden;
+        min-width: 0;
+        margin-bottom: 0.875rem;
+        padding: calc(var(--steam-card-padding) + var(--steam-avatar-frame-outset))
+            var(--steam-card-padding) var(--steam-card-padding);
+        color: var(--text-content-primary);
+        background:
+            radial-gradient(
+                circle at 0 0,
+                color-mix(in oklch, var(--snapshot-accent) 28%, transparent),
+                transparent 34%
+            ),
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--snapshot-accent) 12%, transparent),
+                transparent 58%
+            ),
+            color-mix(in oklch, var(--page-surface-bg) 82%, #171a21);
+        border: 1px solid
+            color-mix(in oklch, var(--snapshot-accent) 30%, var(--page-surface-border));
+        border-radius: 0.5rem;
+    }
+
+    .steam-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(90deg, color-mix(in oklch, #000 68%, transparent), transparent 72%),
+            var(--steam-profile-bg);
+        background-position: center;
+        background-size: cover;
+        opacity: 0.22;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+    }
+
+    .steam-profile {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 1.75rem;
+        align-items: center;
+    }
+
+    .steam-avatar {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 5.22rem;
+        height: 5.22rem;
+        margin-left: var(--steam-avatar-frame-outset);
+        overflow: visible;
+    }
+
+    .steam-avatar-core {
+        position: absolute;
+        inset: 0.41rem;
+        z-index: 1;
+        display: block;
+        overflow: hidden;
+        background: linear-gradient(135deg, #171a21, var(--snapshot-accent));
+        border: 1px solid color-mix(in oklch, var(--snapshot-accent) 42%, transparent);
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 24px color-mix(in oklch, var(--snapshot-accent) 18%, transparent);
+    }
+
+    .steam-avatar-core img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .steam-avatar-frame {
+        position: absolute;
+        inset: -0.92rem;
+        z-index: 2;
+        display: block;
+        pointer-events: none;
+    }
+
+    .steam-avatar-frame img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .steam-profile-copy {
+        display: grid;
+        align-content: center;
+        gap: 0.3125rem;
+        min-width: 0;
+    }
+
+    .steam-label,
+    .steam-status,
+    .steam-featured-game span,
+    .steam-recent-panel em,
+    .steam-stat-grid span,
+    .steam-meta-strip {
+        color: var(--text-content-secondary);
+        font-size: 0.6875rem;
+        font-style: normal;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .steam-profile-copy strong {
+        color: var(--foreground);
+        font-size: 1.375rem;
+        line-height: 1.05;
+        overflow-wrap: anywhere;
+    }
+
+    .steam-status {
+        display: inline-flex;
+        gap: 0.375rem;
+        align-items: center;
+        min-width: 0;
+        font-size: 0.75rem;
+        line-height: 1.25;
+        letter-spacing: 0.035em;
+        overflow-wrap: anywhere;
+    }
+
+    .steam-status-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        background: var(--snapshot-accent);
+        border-radius: 999px;
+        box-shadow: 0 0 0 4px color-mix(in oklch, var(--snapshot-accent) 14%, transparent);
+        flex-shrink: 0;
+    }
+
+    .steam-cta {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        justify-self: end;
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-right: var(--steam-avatar-frame-outset);
+        color: color-mix(in oklch, var(--steam-brand-blue) 86%, white);
+        background:
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--steam-brand-blue) 18%, transparent),
+                color-mix(in oklch, var(--page-surface-bg) 74%, transparent)
+            ),
+            color-mix(in oklch, var(--page-surface-bg) 58%, transparent);
+        border: 1px solid
+            color-mix(in oklch, var(--steam-brand-blue) 34%, var(--page-surface-border));
+        border-radius: 0.625rem;
+        box-shadow:
+            0 10px 24px color-mix(in oklch, var(--steam-brand-blue) 14%, transparent),
+            inset 0 1px 0 color-mix(in oklch, white 18%, transparent);
+        backdrop-filter: blur(10px);
+        font-size: 0.75rem;
+        font-weight: 800;
+        line-height: 1;
+        text-decoration: none;
+        transition:
+            color 0.16s ease,
+            background 0.16s ease,
+            border-color 0.16s ease,
+            transform 0.16s ease;
+    }
+
+    .steam-cta:hover {
+        color: white;
+        background:
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--steam-brand-blue) 30%, transparent),
+                color-mix(in oklch, var(--page-surface-bg) 60%, transparent)
+            ),
+            color-mix(in oklch, var(--steam-brand-blue) 16%, var(--page-surface-bg));
+        border-color: color-mix(in oklch, var(--steam-brand-blue) 52%, var(--page-surface-border));
+        transform: translateY(-1px);
+    }
+
+    .steam-cta:focus-visible {
+        outline: 2px solid color-mix(in oklch, var(--steam-brand-blue) 72%, white);
+        outline-offset: 3px;
+    }
+
+    .steam-cta-icon {
+        width: 1.375rem;
+        height: 1.375rem;
+        flex-shrink: 0;
+    }
+
+    .steam-snapshot-body {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(13rem, 0.95fr);
+        gap: 0.625rem;
+        margin-top: calc(0.875rem + var(--steam-avatar-frame-outset));
+    }
+
+    .steam-featured-game,
+    .steam-recent-panel,
+    .steam-stat-grid div {
+        background: color-mix(in oklch, var(--page-surface-bg) 74%, black);
+        border: 1px solid
+            color-mix(in oklch, var(--snapshot-accent) 18%, var(--page-surface-border));
+        border-radius: 0.375rem;
+    }
+
+    .steam-featured-game {
+        display: grid;
+        gap: 0.625rem;
+        align-content: start;
+        min-width: 0;
+        padding: 0.625rem;
+        background:
+            linear-gradient(
+                145deg,
+                color-mix(in oklch, var(--steam-brand-blue) 7%, transparent),
+                transparent 64%
+            ),
+            color-mix(in oklch, var(--page-surface-bg) 76%, black);
+        border-color: color-mix(in oklch, var(--steam-brand-blue) 20%, var(--page-surface-border));
+    }
+
+    .steam-featured-cover {
+        display: block;
+        min-width: 0;
+        overflow: hidden;
+        background: color-mix(in oklch, var(--snapshot-accent) 10%, transparent);
+        border: 1px solid color-mix(in oklch, var(--snapshot-accent) 22%, transparent);
+        border-radius: 0.3125rem;
+        aspect-ratio: 184 / 69;
+    }
+
+    .steam-featured-cover img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .steam-featured-copy {
+        display: grid;
+        gap: 0.25rem;
+        min-width: 0;
+    }
+
+    .steam-featured-game strong {
+        color: var(--foreground);
+        font-size: 1rem;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+    }
+
+    .steam-featured-game em {
+        color: var(--text-content-secondary);
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+    .steam-recent-panel {
+        --steam-recent-icon-width: 5rem;
+        --steam-recent-icon-height: 1.875rem;
+        display: grid;
+        gap: 0.625rem;
+        min-width: 0;
+        padding: 0.75rem;
+        background:
+            linear-gradient(
+                145deg,
+                color-mix(in oklch, var(--snapshot-accent) 8%, transparent),
+                transparent 62%
+            ),
+            color-mix(in oklch, var(--page-surface-bg) 74%, black);
+    }
+
+    .steam-recent-panel > div:first-child {
+        display: grid;
+        gap: 0.125rem;
+    }
+
+    .steam-recent-panel strong {
+        color: var(--foreground);
+        font-size: 1.125rem;
+        line-height: 1.1;
+    }
+
+    .steam-recent-list {
+        display: grid;
+        gap: 0.45rem;
+    }
+
+    .steam-recent-game {
+        display: grid;
+        grid-template-columns: var(--steam-recent-icon-width) minmax(0, 1fr);
+        gap: 0.75rem;
+        align-items: center;
+        min-width: 0;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .steam-recent-icon {
+        display: block;
+        width: var(--steam-recent-icon-width);
+        height: var(--steam-recent-icon-height);
+        object-fit: cover;
+        background: color-mix(in oklch, var(--snapshot-accent) 10%, transparent);
+        border: 1px solid color-mix(in oklch, var(--snapshot-accent) 20%, transparent);
+        border-radius: 0.3125rem;
+    }
+
+    .steam-recent-game-copy {
+        display: grid;
+        gap: 0.125rem;
+        min-width: 0;
+    }
+
+    .steam-recent-list strong {
+        font-size: 0.8125rem;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+    }
+
+    .steam-recent-list em {
+        color: var(--text-content-secondary);
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+
+    .steam-stat-grid {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.5rem;
+        margin-top: 0.625rem;
+    }
+
+    .steam-stat-grid div {
+        display: grid;
+        gap: 0.25rem;
+        min-width: 0;
+        padding: 0.625rem;
+        background:
+            linear-gradient(145deg, color-mix(in oklch, white 4%, transparent), transparent 66%),
+            color-mix(in oklch, var(--page-surface-bg) 76%, black);
+    }
+
+    .steam-stat-grid strong {
+        color: var(--foreground);
+        font-size: 0.875rem;
+        overflow-wrap: anywhere;
+    }
+
+    .steam-meta-strip {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.375rem;
+        align-items: center;
+        margin-top: 0.625rem;
+    }
+
+    .steam-meta-strip span {
+        display: inline-flex;
+        min-height: 1.5rem;
+        align-items: center;
+        padding: 0.25rem 0.5rem;
+        background: color-mix(in oklch, var(--steam-brand-blue) 8%, transparent);
+        border: 1px solid color-mix(in oklch, var(--steam-brand-blue) 18%, transparent);
+        border-radius: 0.25rem;
+    }
+
+    :global(.dark) .steam-card {
+        background:
+            radial-gradient(
+                circle at 0 0,
+                color-mix(in oklch, var(--snapshot-accent) 20%, transparent),
+                transparent 34%
+            ),
+            linear-gradient(
+                135deg,
+                color-mix(in oklch, var(--snapshot-accent) 10%, transparent),
+                transparent 56%
+            ),
+            color-mix(in oklch, #000 84%, var(--snapshot-accent));
+    }
+
+    @media (max-width: 640px) {
+        .steam-card {
+            --steam-card-padding: 1rem;
+        }
+
+        .steam-recent-panel {
+            --steam-recent-icon-width: 4.5rem;
+            --steam-recent-icon-height: 1.6875rem;
+        }
+
+        .steam-profile,
+        .steam-snapshot-body {
+            grid-template-columns: 1fr;
+        }
+
+        .steam-profile {
+            gap: 0.875rem;
+        }
+
+        .steam-cta {
+            justify-self: start;
+            margin-right: 0;
+        }
+
+        .steam-stat-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+</style>
