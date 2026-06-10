@@ -331,12 +331,14 @@ const techGroups: TechGroup[] = [
                         <div class="tech-badges">
                             {group.items.map((tech) => {
                                 const Icon = tech.icon;
+                                const usesLightLogo = tech.color.toLowerCase() === '#ffffff';
 
                                 return (
                                     <span
                                         class:list={[
                                             'tech-badge',
                                             tech.muted && 'tech-badge--muted',
+                                            usesLightLogo && 'tech-badge--light-logo',
                                         ]}
                                         style={`--tech-color: ${tech.color};`}
                                         aria-label={tech.name}
@@ -653,16 +655,26 @@ const techGroups: TechGroup[] = [
     }
 
     .tech-badge {
+        --tech-badge-bg: color-mix(in oklch, var(--page-surface-bg) 86%, white);
+        --tech-badge-border: color-mix(in oklch, var(--page-surface-border) 78%, transparent);
+        --tech-badge-text: color-mix(in oklch, var(--text-content-primary) 88%, black);
+        --tech-badge-icon-color: var(--tech-color);
+        --tech-badge-icon-bg: transparent;
+        --tech-badge-fallback-bg: color-mix(in oklch, var(--tech-color) 78%, white);
+        --tech-badge-fallback-text: oklch(0.985 0.006 250);
         display: inline-flex;
         align-items: center;
         gap: 0.3125rem;
         min-width: 0;
         height: 1.625rem;
         padding: 0 0.5625rem;
-        color: rgba(255, 255, 255, 0.95);
-        background: color-mix(in oklch, #000 88%, var(--tech-color));
-        border: 1px solid color-mix(in oklch, var(--tech-color) 26%, transparent);
+        color: var(--tech-badge-text);
+        background: var(--tech-badge-bg);
+        border: 1px solid var(--tech-badge-border);
         border-radius: 0.25rem;
+        box-shadow:
+            0 1px 0 oklch(1 0 0 / 0.46) inset,
+            0 8px 18px oklch(0.36 0.035 250 / 0.08);
         font-size: 0.6875rem;
         font-weight: 700;
         line-height: 1;
@@ -670,16 +682,26 @@ const techGroups: TechGroup[] = [
     }
 
     .tech-badge--muted {
-        color: rgba(255, 255, 255, 0.82);
-        background: color-mix(in oklch, #000 94%, var(--tech-color));
-        border-color: rgba(255, 255, 255, 0.08);
-        opacity: 0.9;
+        --tech-badge-bg: color-mix(in oklch, var(--page-surface-bg) 78%, white);
+        --tech-badge-border: color-mix(in oklch, var(--page-surface-border) 58%, transparent);
+        --tech-badge-text: var(--text-content-secondary);
+        --tech-badge-icon-color: var(--tech-color);
+        opacity: 0.94;
+    }
+
+    .tech-badge--light-logo {
+        --tech-badge-icon-bg: oklch(0.2 0.026 260);
+        --tech-badge-fallback-bg: oklch(0.2 0.026 260);
+        --tech-badge-fallback-text: oklch(0.98 0.006 250);
     }
 
     .tech-badge-icon {
-        width: 0.875rem;
-        height: 0.875rem;
-        color: var(--tech-color);
+        width: 1rem;
+        height: 1rem;
+        padding: 0.125rem;
+        color: var(--tech-badge-icon-color);
+        background: var(--tech-badge-icon-bg);
+        border-radius: 0.1875rem;
         flex-shrink: 0;
     }
 
@@ -689,8 +711,8 @@ const techGroups: TechGroup[] = [
         justify-content: center;
         width: 0.875rem;
         height: 0.875rem;
-        color: #050505;
-        background: var(--tech-color);
+        color: var(--tech-badge-fallback-text);
+        background: var(--tech-badge-fallback-bg);
         border-radius: 0.1875rem;
         font-size: 0.5625rem;
         font-weight: 900;
@@ -943,5 +965,24 @@ const techGroups: TechGroup[] = [
     :global(.dark) .detail-block {
         background: rgba(0, 0, 0, 0.2);
         border-color: var(--article-content-table-border);
+    }
+
+    :global(.dark) .tech-badge {
+        --tech-badge-bg: color-mix(in oklch, #000 88%, var(--tech-color));
+        --tech-badge-border: color-mix(in oklch, var(--tech-color) 26%, transparent);
+        --tech-badge-text: rgba(255, 255, 255, 0.95);
+        --tech-badge-icon-color: var(--tech-color);
+        --tech-badge-icon-bg: transparent;
+        --tech-badge-fallback-bg: var(--tech-color);
+        --tech-badge-fallback-text: #050505;
+        box-shadow: none;
+    }
+
+    :global(.dark) .tech-badge--muted {
+        --tech-badge-bg: color-mix(in oklch, #000 94%, var(--tech-color));
+        --tech-badge-border: rgba(255, 255, 255, 0.08);
+        --tech-badge-text: rgba(255, 255, 255, 0.82);
+        --tech-badge-icon-color: var(--tech-color);
+        opacity: 0.9;
     }
 </style>
