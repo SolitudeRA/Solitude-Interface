@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import type { FeaturedPost } from '@api/ghost/types';
@@ -389,6 +389,17 @@ export default function PostsShowcaseCarousel({
         dependencyKey: `${posts.length}:${showMoreButton}`,
     });
 
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        container.dataset.homeShowcaseHydrated = 'true';
+
+        return () => {
+            delete container.dataset.homeShowcaseHydrated;
+        };
+    }, [containerRef]);
+
     // 空数据不渲染
     if (!posts || posts.length === 0) {
         return null;
@@ -499,6 +510,7 @@ export default function PostsShowcaseCarousel({
             {/* 卡片滚动容器 */}
             <div
                 ref={containerRef}
+                data-home-showcase-scroll
                 onWheel={handleWheel}
                 className={cn(
                     'flex gap-4 overflow-x-auto scroll-smooth',

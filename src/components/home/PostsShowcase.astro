@@ -72,3 +72,67 @@ const noPostsText = getUIText('home', 'noPosts', locale);
         overflow: hidden;
     }
 </style>
+
+<script is:inline>
+    (() => {
+        const selector = '[data-home-showcase-scroll]';
+        const nativeReadyAttribute = 'homeShowcaseNativeScroll';
+        const hydratedAttribute = 'homeShowcaseHydrated';
+
+        const bindHomeShowcaseScroll = () => {
+            document.querySelectorAll(selector).forEach((container) => {
+                if (!(container instanceof HTMLElement)) return;
+                if (container.dataset[nativeReadyAttribute] === 'true') return;
+
+                container.dataset[nativeReadyAttribute] = 'true';
+                const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+                container.addEventListener(
+                    'wheel',
+                    (event) => {
+                        if (container.dataset[hydratedAttribute] === 'true') return;
+
+                        const dominantDelta =
+                            Math.abs(event.deltaX) > Math.abs(event.deltaY)
+                                ? event.deltaX
+                                : event.deltaY;
+                        if (dominantDelta === 0) return;
+
+                        const { scrollLeft, scrollWidth, clientWidth } = container;
+                        const canScroll = scrollWidth > clientWidth;
+                        const atStart = scrollLeft <= 0 && dominantDelta < 0;
+                        const atEnd = scrollLeft >= scrollWidth - clientWidth && dominantDelta > 0;
+
+                        if (!canScroll || atStart || atEnd) return;
+
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        const isHorizontalGesture = Math.abs(event.deltaX) > Math.abs(event.deltaY);
+                        const direction = dominantDelta > 0 ? 1 : -1;
+                        const card = container.querySelector('.showcase-card');
+                        const cardWidth = card?.getBoundingClientRect().width || 304;
+                        const scrollDistance = cardWidth + 16;
+
+                        container.scrollBy({
+                            left: isHorizontalGesture ? event.deltaX : direction * scrollDistance,
+                            behavior:
+                                isHorizontalGesture || reducedMotionQuery.matches
+                                    ? 'auto'
+                                    : 'smooth',
+                        });
+                    },
+                    { passive: false }
+                );
+            });
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', bindHomeShowcaseScroll, { once: true });
+        } else {
+            bindHomeShowcaseScroll();
+        }
+
+        document.addEventListener('astro:page-load', bindHomeShowcaseScroll);
+    })();
+</script>
