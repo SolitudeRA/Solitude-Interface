@@ -7,6 +7,7 @@ const { isFixed = false } = Astro.props;
 ---
 
 <div
+    data-dock-root
     class:list={[
         'min-h-[8vh] w-full items-center md:min-h-[9vh] lg:min-h-[10vh]',
         'pb-3 md:pb-4',
@@ -18,3 +19,83 @@ const { isFixed = false } = Astro.props;
 >
     <slot />
 </div>
+
+<script>
+    const dockWindow = window as Window & {
+        __solitudeDockLayoutGuard?: boolean;
+    };
+
+    if (!dockWindow.__solitudeDockLayoutGuard) {
+        dockWindow.__solitudeDockLayoutGuard = true;
+
+        const COLLAPSED_CLASS = 'dock--social-collapsed';
+        const MEASURING_CLASS = 'dock--measuring-social';
+        const FULL_SOCIAL_BREAKPOINT = 1536;
+        const COLLAPSE_GAP = 32;
+        const EXPAND_GAP = 56;
+
+        let dockLayoutFrame: number | null = null;
+        let dockResizeObserver: ResizeObserver | null = null;
+
+        const measureDockRoot = (root: HTMLElement) => {
+            const nav = root.querySelector<HTMLElement>('[data-dock-nav]');
+            const socialFull = root.querySelector<HTMLElement>('[data-dock-social-full]');
+
+            if (!nav || !socialFull) return;
+
+            if (window.innerWidth < FULL_SOCIAL_BREAKPOINT) {
+                root.classList.remove(COLLAPSED_CLASS);
+                root.classList.remove(MEASURING_CLASS);
+                return;
+            }
+
+            const wasCollapsed = root.classList.contains(COLLAPSED_CLASS);
+
+            if (wasCollapsed) {
+                root.classList.add(MEASURING_CLASS);
+                root.classList.remove(COLLAPSED_CLASS);
+            }
+
+            const navRect = nav.getBoundingClientRect();
+            const socialRect = socialFull.getBoundingClientRect();
+            const safetyGap = socialRect.left - navRect.right;
+            const minGap = wasCollapsed ? EXPAND_GAP : COLLAPSE_GAP;
+
+            root.classList.toggle(COLLAPSED_CLASS, safetyGap < minGap);
+            root.classList.remove(MEASURING_CLASS);
+        };
+
+        const updateDockLayout = () => {
+            dockLayoutFrame = null;
+            document
+                .querySelectorAll<HTMLElement>('[data-dock-root]')
+                .forEach((root) => measureDockRoot(root));
+        };
+
+        const scheduleDockLayout = () => {
+            if (dockLayoutFrame !== null) return;
+            dockLayoutFrame = window.requestAnimationFrame(updateDockLayout);
+        };
+
+        const observeDockRoots = () => {
+            dockResizeObserver?.disconnect();
+            dockResizeObserver = null;
+
+            if ('ResizeObserver' in window) {
+                dockResizeObserver = new ResizeObserver(scheduleDockLayout);
+                document.querySelectorAll('[data-dock-root]').forEach((root) => {
+                    dockResizeObserver?.observe(root);
+                });
+            }
+
+            scheduleDockLayout();
+        };
+
+        observeDockRoots();
+
+        window.addEventListener('resize', scheduleDockLayout, { passive: true });
+        window.addEventListener('orientationchange', scheduleDockLayout, { passive: true });
+        document.addEventListener('astro:after-swap', observeDockRoots);
+        document.fonts?.ready.then(scheduleDockLayout).catch(() => undefined);
+    }
+</script>
