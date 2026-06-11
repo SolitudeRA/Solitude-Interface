@@ -20,9 +20,22 @@ const LAYOUT_CONFIG = {
     fallbackCardWidth: 300,
 };
 
+interface ScrollMetrics {
+    totalPosts: number;
+    itemWidth: number;
+    itemGap: number;
+    stride: number;
+    paddingLeft: number;
+    clientWidth: number;
+}
+
 function areNumberArraysEqual(a: number[], b: number[]) {
     if (a.length !== b.length) return false;
     return a.every((value, index) => value === b[index]);
+}
+
+function clampIndex(index: number, total: number) {
+    return Math.min(Math.max(index, 0), Math.max(total - 1, 0));
 }
 
 export default function PostViewScrollContainer({
@@ -34,43 +47,75 @@ export default function PostViewScrollContainer({
     const scrollToPostRequest = useAtomValue(scrollToPostAtom);
     const setScrollToPostRequest = useSetAtom(scrollToPostAtom);
     const childCount = React.Children.count(children);
+    const scrollMetricsRef = React.useRef<ScrollMetrics | null>(null);
+
+    const getScrollMetrics = useCallback(
+        (container: HTMLDivElement): ScrollMetrics => {
+            const cachedMetrics = scrollMetricsRef.current;
+
+            if (
+                cachedMetrics &&
+                cachedMetrics.totalPosts === childCount &&
+                cachedMetrics.clientWidth === container.clientWidth
+            ) {
+                return cachedMetrics;
+            }
+
+            const card = container.querySelector<HTMLElement>('.post-card-wrapper');
+            const containerStyles = window.getComputedStyle(container);
+            const itemWidth =
+                card?.getBoundingClientRect().width || LAYOUT_CONFIG.fallbackCardWidth;
+            const itemGap = Number.parseFloat(containerStyles.columnGap) || LAYOUT_CONFIG.gap;
+            const paddingLeft = Number.parseFloat(containerStyles.paddingLeft) || 0;
+
+            const nextMetrics = {
+                totalPosts: childCount,
+                itemWidth,
+                itemGap,
+                stride: itemWidth + itemGap,
+                paddingLeft,
+                clientWidth: container.clientWidth,
+            };
+
+            scrollMetricsRef.current = nextMetrics;
+            return nextMetrics;
+        },
+        [childCount]
+    );
 
     const updateVisiblePosts = useCallback(
         (container: HTMLDivElement) => {
-            const cards = container.querySelectorAll('.post-card-wrapper');
-            const containerRect = container.getBoundingClientRect();
-            const containerCenter = containerRect.left + containerRect.width / 2;
-
+            const metrics = getScrollMetrics(container);
             const visibleIndices: number[] = [];
-            let closestIndex = 0;
-            let closestDistance = Infinity;
+            const viewportLeft = container.scrollLeft;
+            const viewportRight = viewportLeft + container.clientWidth;
+            const viewportCenter = viewportLeft + container.clientWidth / 2;
+            const firstCardCenter = metrics.paddingLeft + metrics.itemWidth / 2;
+            const closestIndex =
+                metrics.totalPosts > 0
+                    ? clampIndex(
+                          Math.round((viewportCenter - firstCardCenter) / metrics.stride),
+                          metrics.totalPosts
+                      )
+                    : 0;
 
-            cards.forEach((card, index) => {
-                const cardRect = card.getBoundingClientRect();
-                const cardCenter = cardRect.left + cardRect.width / 2;
-
-                const visibleLeft = Math.max(cardRect.left, containerRect.left);
-                const visibleRight = Math.min(cardRect.right, containerRect.right);
+            for (let index = 0; index < metrics.totalPosts; index += 1) {
+                const cardLeft = metrics.paddingLeft + index * metrics.stride;
+                const cardRight = cardLeft + metrics.itemWidth;
+                const visibleLeft = Math.max(cardLeft, viewportLeft);
+                const visibleRight = Math.min(cardRight, viewportRight);
                 const visibleWidth = Math.max(0, visibleRight - visibleLeft);
-                const visibilityRatio = visibleWidth / cardRect.width;
+                const visibilityRatio = visibleWidth / metrics.itemWidth;
 
-                if (visibilityRatio > 0.3) {
-                    visibleIndices.push(index);
-                }
-
-                const distanceToCenter = Math.abs(cardCenter - containerCenter);
-                if (distanceToCenter < closestDistance) {
-                    closestDistance = distanceToCenter;
-                    closestIndex = index;
-                }
-            });
+                if (visibilityRatio > 0.3) visibleIndices.push(index);
+            }
 
             setPostViewState((prev) => {
                 const nextPostDates = postDates.length > 0 ? postDates : prev.postDates;
-                const nextActiveIndex = cards.length > 0 ? closestIndex : 0;
+                const nextActiveIndex = metrics.totalPosts > 0 ? closestIndex : 0;
 
                 if (
-                    prev.totalPosts === cards.length &&
+                    prev.totalPosts === metrics.totalPosts &&
                     prev.activeIndex === nextActiveIndex &&
                     prev.postDates === nextPostDates &&
                     areNumberArraysEqual(prev.visibleIndices, visibleIndices)
@@ -80,14 +125,14 @@ export default function PostViewScrollContainer({
 
                 return {
                     ...prev,
-                    totalPosts: cards.length,
+                    totalPosts: metrics.totalPosts,
                     visibleIndices,
                     activeIndex: nextActiveIndex,
                     postDates: nextPostDates,
                 };
             });
         },
-        [postDates, setPostViewState]
+        [getScrollMetrics, postDates, setPostViewState]
     );
 
     const {
@@ -140,6 +185,17 @@ export default function PostViewScrollContainer({
             }));
         }
     }, [postDates, setPostViewState]);
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        container.dataset.postViewHydrated = 'true';
+
+        return () => {
+            delete container.dataset.postViewHydrated;
+        };
+    }, [containerRef]);
 
     const scrollToPost = useCallback(
         (index: number) => {
@@ -248,6 +304,7 @@ export default function PostViewScrollContainer({
 
                 <div
                     ref={containerRef}
+                    data-post-view-scroll
                     onWheel={handleWheel}
                     className={cn(
                         'post-view-scroll-container',
