@@ -69,15 +69,15 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
     <script is:inline>
         (() => {
             const selector = '[data-post-view-scroll]';
-            const nativeReadyAttribute = 'postViewNativeScroll';
             const hydratedAttribute = 'postViewHydrated';
+            const boundContainers = new WeakSet();
 
             const bindPostViewScroll = () => {
                 document.querySelectorAll(selector).forEach((container) => {
                     if (!(container instanceof HTMLElement)) return;
-                    if (container.dataset[nativeReadyAttribute] === 'true') return;
+                    if (boundContainers.has(container)) return;
 
-                    container.dataset[nativeReadyAttribute] = 'true';
+                    boundContainers.add(container);
                     const reducedMotionQuery = window.matchMedia(
                         '(prefers-reduced-motion: reduce)'
                     );

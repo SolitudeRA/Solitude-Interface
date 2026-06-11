@@ -6,9 +6,10 @@ import BaseCard from './BaseCard.astro';
 interface Props {
     post: Post;
     locale?: Locale;
+    priority?: boolean;
 }
 
-const { post, locale = DEFAULT_LOCALE } = Astro.props;
+const { post, locale = DEFAULT_LOCALE, priority = false } = Astro.props;
 ---
 
-<BaseCard post={post} typeIcon="📝" locale={locale} />
+<BaseCard post={post} typeIcon="📝" locale={locale} priority={priority} />

@@ -46,16 +46,20 @@ export default function PostViewScrollContainer({
     const setPostViewState = useSetAtom(postViewAtom);
     const scrollToPostRequest = useAtomValue(scrollToPostAtom);
     const setScrollToPostRequest = useSetAtom(scrollToPostAtom);
-    const childCount = React.Children.count(children);
+    const postCountHint = postDates.length || React.Children.count(children);
     const scrollMetricsRef = React.useRef<ScrollMetrics | null>(null);
+    const scrollIdleTimerRef = React.useRef<number | null>(null);
 
     const getScrollMetrics = useCallback(
         (container: HTMLDivElement): ScrollMetrics => {
             const cachedMetrics = scrollMetricsRef.current;
+            const totalPosts =
+                container.querySelectorAll<HTMLElement>('.post-card-wrapper').length ||
+                postCountHint;
 
             if (
                 cachedMetrics &&
-                cachedMetrics.totalPosts === childCount &&
+                cachedMetrics.totalPosts === totalPosts &&
                 cachedMetrics.clientWidth === container.clientWidth
             ) {
                 return cachedMetrics;
@@ -69,7 +73,7 @@ export default function PostViewScrollContainer({
             const paddingLeft = Number.parseFloat(containerStyles.paddingLeft) || 0;
 
             const nextMetrics = {
-                totalPosts: childCount,
+                totalPosts,
                 itemWidth,
                 itemGap,
                 stride: itemWidth + itemGap,
@@ -80,7 +84,7 @@ export default function PostViewScrollContainer({
             scrollMetricsRef.current = nextMetrics;
             return nextMetrics;
         },
-        [childCount]
+        [postCountHint]
     );
 
     const updateVisiblePosts = useCallback(
@@ -135,6 +139,27 @@ export default function PostViewScrollContainer({
         [getScrollMetrics, postDates, setPostViewState]
     );
 
+    const markContainerScrolling = useCallback((container: HTMLDivElement) => {
+        container.dataset.postViewScrolling = 'true';
+
+        if (scrollIdleTimerRef.current !== null) {
+            window.clearTimeout(scrollIdleTimerRef.current);
+        }
+
+        scrollIdleTimerRef.current = window.setTimeout(() => {
+            delete container.dataset.postViewScrolling;
+            scrollIdleTimerRef.current = null;
+        }, 160);
+    }, []);
+
+    const handleScrollUpdate = useCallback(
+        (container: HTMLDivElement) => {
+            markContainerScrolling(container);
+            updateVisiblePosts(container);
+        },
+        [markContainerScrolling, updateVisiblePosts]
+    );
+
     const {
         containerRef,
         canScrollLeft,
@@ -151,8 +176,8 @@ export default function PostViewScrollContainer({
         fallbackItemWidth: LAYOUT_CONFIG.fallbackCardWidth,
         requireHover: false,
         observeMutations: true,
-        onScrollUpdate: updateVisiblePosts,
-        dependencyKey: `${childCount}:${postDates.length}`,
+        onScrollUpdate: handleScrollUpdate,
+        dependencyKey: `${postCountHint}:${postDates.length}`,
     });
 
     const fadeMotion = prefersReducedMotion
@@ -193,7 +218,13 @@ export default function PostViewScrollContainer({
         container.dataset.postViewHydrated = 'true';
 
         return () => {
+            if (scrollIdleTimerRef.current !== null) {
+                window.clearTimeout(scrollIdleTimerRef.current);
+                scrollIdleTimerRef.current = null;
+            }
+
             delete container.dataset.postViewHydrated;
+            delete container.dataset.postViewScrolling;
         };
     }, [containerRef]);
 

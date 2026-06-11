@@ -24,7 +24,7 @@ const noPostsText = getUIText('home', 'noPosts', locale);
 {
     posts.length > 0 ? (
         <PostViewScrollContainer client:idle postDates={postDates}>
-            {posts.map((post) => {
+            {posts.map((post, index) => {
                 const PostCardComponent = (() => {
                     switch (post.post_type) {
                         case PostType.DEFAULT:
@@ -49,7 +49,7 @@ const noPostsText = getUIText('home', 'noPosts', locale);
                         role="listitem"
                         aria-label={post.title}
                     >
-                        <PostCardComponent post={post} locale={locale} />
+                        <PostCardComponent post={post} locale={locale} priority={index < 2} />
                     </a>
                 );
             })}
