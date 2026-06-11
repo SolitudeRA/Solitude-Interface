@@ -99,13 +99,19 @@ export function useHorizontalScroll<T extends HTMLElement = HTMLDivElement>({
             const container = containerRef.current;
             if (!container) return;
 
-            const target = container.querySelectorAll(itemSelector)[index];
+            const target = container.querySelectorAll<HTMLElement>(itemSelector)[index];
             if (!target) return;
 
-            target.scrollIntoView({
+            const containerRect = container.getBoundingClientRect();
+            const targetRect = target.getBoundingClientRect();
+            const targetLeft = targetRect.left - containerRect.left + container.scrollLeft;
+            const centeredLeft = targetLeft - (container.clientWidth - targetRect.width) / 2;
+            const maxScrollLeft = Math.max(container.scrollWidth - container.clientWidth, 0);
+            const left = Math.min(Math.max(centeredLeft, 0), maxScrollLeft);
+
+            container.scrollTo({
+                left,
                 behavior: scrollBehavior,
-                inline: 'center',
-                block: 'nearest',
             });
         },
         [itemSelector, scrollBehavior]

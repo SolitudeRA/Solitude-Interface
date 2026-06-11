@@ -75,6 +75,9 @@ export default defineConfig({
     },
 
     vite: {
+        resolve: {
+            dedupe: ['react', 'react-dom'],
+        },
         // @ts-expect-error - @tailwindcss/vite uses Vite 7.x types, Astro uses Vite 6.x
         plugins: [tailwindcss()],
     },
