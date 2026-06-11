@@ -37,7 +37,8 @@
     /* 静态页 Hero */
     --page-hero-overlay-start: oklch(23.503% 0.00003 271.152 / 0.3);
     --page-hero-overlay-mid: oklch(23.503% 0.00003 271.152 / 0.65);
-    --page-hero-overlay-end: oklch(23.503% 0.00003 271.152);
+    --page-hero-floor: var(--article-body-bg);
+    --page-hero-overlay-end: var(--page-hero-floor);
     --page-hero-title-shadow: 0 4px 20px var(--post-view-card-shadow);
     --page-hero-badge-bg: var(--article-content-code-bg);
     --page-hero-badge-border: var(--article-content-pre-border);
