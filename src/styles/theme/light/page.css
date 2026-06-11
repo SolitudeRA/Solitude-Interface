@@ -37,7 +37,8 @@
     /* 静态页 Hero */
     --page-hero-overlay-start: oklch(0.985 0.006 250 / 0.22);
     --page-hero-overlay-mid: oklch(0.96 0.012 250 / 0.5);
-    --page-hero-overlay-end: var(--background);
+    --page-hero-floor: oklch(0.985 0.006 250);
+    --page-hero-overlay-end: var(--page-hero-floor);
     --page-hero-title-shadow: 0 1px 0 oklch(1 0 0 / 0.55), 0 14px 38px oklch(0.25 0.04 250 / 0.14);
     --page-hero-badge-bg: oklch(0.985 0.006 250 / 0.76);
     --page-hero-badge-border: oklch(0.68 0.045 235 / 0.32);
