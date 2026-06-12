@@ -48,7 +48,10 @@
     }
 
     .solitude-article-content .code-block-shell {
+        box-sizing: border-box;
+        position: relative;
         width: 100%;
+        max-width: 100%;
         margin: 1.25rem 0;
         overflow: hidden;
         border: 1px solid var(--article-content-pre-border);
@@ -95,6 +98,7 @@
         font-size: 0.72rem;
         font-weight: 700;
         line-height: 1;
+        white-space: nowrap;
         transition:
             border-color 160ms ease,
             filter 160ms ease;
@@ -104,12 +108,37 @@
         filter: brightness(1.06);
     }
 
+    .solitude-article-content .code-block-action:focus-visible {
+        outline: 2px solid var(--article-content-link);
+        outline-offset: 2px;
+    }
+
     .solitude-article-content .code-block-shell pre,
     .solitude-article-content .code-block-shell pre.shiki {
         margin: 0;
         border: 0;
         border-radius: 0;
         box-shadow: none;
+    }
+
+    .solitude-article-content .code-block-shell.is-collapsed:not(.is-expanded) pre,
+    .solitude-article-content .code-block-shell.is-collapsed:not(.is-expanded) pre.shiki {
+        max-height: 18.5rem;
+    }
+
+    .solitude-article-content .code-block-shell.is-collapsed:not(.is-expanded)::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 3rem;
+        background: linear-gradient(
+            to bottom,
+            transparent,
+            color-mix(in oklch, var(--article-content-pre-bg) 92%, transparent)
+        );
+        pointer-events: none;
     }
 
     .solitude-article-content .code-block-shell.is-wrapped pre,
@@ -121,6 +150,16 @@
     .solitude-article-content .code-block-shell.is-wrapped pre.shiki code {
         white-space: pre-wrap;
         overflow-wrap: anywhere;
+    }
+
+    .solitude-article-content .code-block-shell.is-terminal pre,
+    .solitude-article-content .code-block-shell.is-terminal pre code {
+        white-space: pre;
+    }
+
+    .solitude-article-content .code-block-shell.is-terminal.is-wrapped pre,
+    .solitude-article-content .code-block-shell.is-terminal.is-wrapped pre code {
+        white-space: pre-wrap;
     }
 
     /* Shiki 双主题 - 亮色 */
@@ -167,9 +206,8 @@
         }
 
         .solitude-article-content .code-block-shell {
-            width: min(calc(100vw - 3rem), 58rem);
-            margin: 1.5rem 50%;
-            transform: translateX(-50%);
+            margin: 1.5rem 0;
+            transform: none;
         }
     }
 

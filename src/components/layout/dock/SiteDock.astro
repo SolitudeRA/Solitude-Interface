@@ -8,12 +8,18 @@ interface Props {
     isFixed?: boolean;
     layout?: 'default' | 'home';
     lang?: Locale;
+    readerMode?: boolean;
 }
 
-const { isFixed = false, layout = 'default', lang = DEFAULT_LOCALE } = Astro.props;
+const {
+    isFixed = false,
+    layout = 'default',
+    lang = DEFAULT_LOCALE,
+    readerMode = false,
+} = Astro.props;
 ---
 
-<Dock isFixed={isFixed}>
+<Dock isFixed={isFixed} readerMode={readerMode}>
     {
         layout === 'home' ? (
             <>

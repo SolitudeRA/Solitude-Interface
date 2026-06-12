@@ -4,7 +4,7 @@
 
 @layer components {
     .solitude-article-content {
-        width: min(100%, 52rem);
+        width: min(100%, var(--article-reader-measure));
         margin-right: auto;
         margin-left: auto;
         padding-top: 2rem;

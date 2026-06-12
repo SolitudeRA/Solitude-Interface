@@ -717,6 +717,20 @@
         @apply scale-110;
     }
 
+    [data-dock-root].dock-reader {
+        min-height: 6.75vh;
+        transition:
+            transform 240ms ease,
+            opacity 240ms ease;
+        will-change: transform;
+    }
+
+    [data-dock-root].dock-reader.dock--reader-hidden {
+        transform: translateY(calc(100% + 1rem));
+        opacity: 0;
+        pointer-events: none;
+    }
+
     @media (min-width: 1536px) {
         [data-dock-root].dock--social-collapsed [data-dock-social-full] {
             display: none !important;

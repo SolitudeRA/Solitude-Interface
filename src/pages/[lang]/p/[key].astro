@@ -139,6 +139,7 @@ const fallbackMessage = isFallback ? getFallbackMessage(locale, displayedLocale)
         siteSubTitle={siteDescription}
         homeUrl={`/${locale}`}
         isFixed={true}
+        readerMode={true}
         availableLocales={availableLocales}
         displayLocale={displayedLocale}
     />
@@ -158,6 +159,7 @@ const fallbackMessage = isFallback ? getFallbackMessage(locale, displayedLocale)
         tags={post.tags}
         published_at={post.published_at}
         html={post.html}
+        locale={displayedLocale}
     />
 
     <PostSeriesNavigation
@@ -169,7 +171,7 @@ const fallbackMessage = isFallback ? getFallbackMessage(locale, displayedLocale)
         nextPost={nextSeriesNavItem}
     />
 
-    <SiteDock isFixed={true} layout="home" lang={locale} />
+    <SiteDock isFixed={true} layout="home" lang={locale} readerMode={true} />
 </BaseLayout>
 
 <style>

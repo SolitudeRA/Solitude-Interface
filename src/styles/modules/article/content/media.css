@@ -4,6 +4,7 @@
 
 @layer components {
     .solitude-article-content img {
+        width: auto;
         max-width: 100%;
         height: auto;
         border-radius: 8px;
@@ -13,6 +14,7 @@
     }
 
     .solitude-article-content figure {
+        max-width: 100%;
         margin: 1.25rem 0;
         text-align: center;
     }
@@ -29,13 +31,13 @@
         .solitude-article-content img {
             border-radius: 10px;
             margin: 1.25rem auto;
-            max-width: min(calc(100vw - 3rem), 58rem);
+            max-width: 100%;
         }
 
         .solitude-article-content figure {
-            width: min(calc(100vw - 3rem), 58rem);
-            margin: 1.5rem 50%;
-            transform: translateX(-50%);
+            width: 100%;
+            margin: 1.5rem 0;
+            transform: none;
         }
 
         .solitude-article-content figcaption {
