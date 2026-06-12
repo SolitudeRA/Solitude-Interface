@@ -48,7 +48,9 @@
     }
 
     .solitude-article-content .code-block-shell {
+        box-sizing: border-box;
         width: 100%;
+        max-width: 100%;
         margin: 1.25rem 0;
         overflow: hidden;
         border: 1px solid var(--article-content-pre-border);
@@ -167,9 +169,8 @@
         }
 
         .solitude-article-content .code-block-shell {
-            width: min(calc(100vw - 3rem), 58rem);
-            margin: 1.5rem 50%;
-            transform: translateX(-50%);
+            margin: 1.5rem 0;
+            transform: none;
         }
     }
 
