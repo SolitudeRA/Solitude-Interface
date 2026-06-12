@@ -1,13 +1,15 @@
 ---
 interface Props {
     isFixed?: boolean;
+    readerMode?: boolean;
 }
 
-const { isFixed = false } = Astro.props;
+const { isFixed = false, readerMode = false } = Astro.props;
 ---
 
 <div
     data-dock-root
+    data-reader-dock={readerMode ? 'true' : undefined}
     class:list={[
         'min-h-[8vh] w-full items-center md:min-h-[9vh] lg:min-h-[10vh]',
         'pb-3 md:pb-4',
@@ -15,6 +17,7 @@ const { isFixed = false } = Astro.props;
         '3xl:px-16 px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12',
         'gap-2 md:gap-3 lg:gap-4',
         isFixed ? 'fixed right-0 bottom-0 left-0 z-50' : '',
+        readerMode ? 'dock-reader' : '',
     ]}
 >
     <slot />
@@ -30,12 +33,15 @@ const { isFixed = false } = Astro.props;
 
         const COLLAPSED_CLASS = 'dock--social-collapsed';
         const MEASURING_CLASS = 'dock--measuring-social';
+        const READER_HIDDEN_CLASS = 'dock--reader-hidden';
         const FULL_SOCIAL_BREAKPOINT = 1536;
         const COLLAPSE_GAP = 32;
         const EXPAND_GAP = 56;
 
         let dockLayoutFrame: number | null = null;
+        let dockVisibilityFrame: number | null = null;
         let dockResizeObserver: ResizeObserver | null = null;
+        let lastReaderScrollY = window.scrollY;
 
         const measureDockRoot = (root: HTMLElement) => {
             const nav = root.querySelector<HTMLElement>('[data-dock-nav]');
@@ -77,6 +83,32 @@ const { isFixed = false } = Astro.props;
             dockLayoutFrame = window.requestAnimationFrame(updateDockLayout);
         };
 
+        const updateReaderDockVisibility = () => {
+            dockVisibilityFrame = null;
+
+            const currentScrollY = window.scrollY;
+            const delta = currentScrollY - lastReaderScrollY;
+            const shouldHide = currentScrollY > 180 && delta > 8;
+            const shouldShow = delta < -8 || currentScrollY < 120;
+
+            document
+                .querySelectorAll<HTMLElement>('[data-dock-root][data-reader-dock="true"]')
+                .forEach((root) => {
+                    if (shouldHide) {
+                        root.classList.add(READER_HIDDEN_CLASS);
+                    } else if (shouldShow) {
+                        root.classList.remove(READER_HIDDEN_CLASS);
+                    }
+                });
+
+            lastReaderScrollY = currentScrollY;
+        };
+
+        const scheduleReaderDockVisibility = () => {
+            if (dockVisibilityFrame !== null) return;
+            dockVisibilityFrame = window.requestAnimationFrame(updateReaderDockVisibility);
+        };
+
         const observeDockRoots = () => {
             dockResizeObserver?.disconnect();
             dockResizeObserver = null;
@@ -95,6 +127,7 @@ const { isFixed = false } = Astro.props;
 
         window.addEventListener('resize', scheduleDockLayout, { passive: true });
         window.addEventListener('orientationchange', scheduleDockLayout, { passive: true });
+        window.addEventListener('scroll', scheduleReaderDockVisibility, { passive: true });
         document.addEventListener('astro:after-swap', observeDockRoots);
         document.fonts?.ready.then(scheduleDockLayout).catch(() => undefined);
     }

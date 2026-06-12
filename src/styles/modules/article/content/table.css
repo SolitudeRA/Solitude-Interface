@@ -3,6 +3,20 @@
  */
 
 @layer components {
+    .solitude-article-content .article-table-scroll {
+        width: 100%;
+        max-width: 100%;
+        margin: 1rem 0;
+        overflow-x: auto;
+        border: 1px solid var(--article-content-table-border);
+        border-radius: 6px;
+    }
+
+    .solitude-article-content .article-table-scroll:focus-visible {
+        outline: 2px solid var(--article-content-link);
+        outline-offset: 3px;
+    }
+
     .solitude-article-content table {
         width: 100%;
         margin: 1rem 0;
@@ -10,6 +24,13 @@
         border-radius: 6px;
         overflow: hidden;
         font-size: 0.875rem;
+    }
+
+    .solitude-article-content .article-table-scroll table {
+        width: max-content;
+        min-width: 100%;
+        margin: 0;
+        border-radius: 0;
     }
 
     .solitude-article-content th {
@@ -45,6 +66,11 @@
 
     /* 768px (md) */
     @media (min-width: 768px) {
+        .solitude-article-content .article-table-scroll {
+            margin: 1.25rem 0;
+            border-radius: 7px;
+        }
+
         .solitude-article-content table {
             margin: 1.25rem 0;
             border-radius: 7px;
@@ -63,6 +89,11 @@
 
     /* 1024px (lg) */
     @media (min-width: 1024px) {
+        .solitude-article-content .article-table-scroll {
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
         .solitude-article-content table {
             margin: 1.5rem 0;
             border-radius: 8px;

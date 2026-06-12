@@ -1,15 +1,18 @@
 ---
 import type { PostTag } from '@api/ghost/types';
+import { DEFAULT_LOCALE, LOCALE_HTML_LANG, type Locale } from '@lib/i18n';
 
 interface Props {
     title: string;
     primary_tag?: PostTag | undefined;
     tags?: PostTag[] | undefined;
     published_at: string;
+    locale?: Locale;
 }
 
-const { title, primary_tag, tags, published_at } = Astro.props;
+const { title, primary_tag, tags, published_at, locale = DEFAULT_LOCALE } = Astro.props;
 const publishDate = new Date(published_at);
+const dateLocale = LOCALE_HTML_LANG[locale];
 const SYSTEM_TAG_PREFIXES = ['hash-', 'type-', 'category-', 'series-'];
 const visibleTags = (tags ?? []).filter(
     (tag) => !SYSTEM_TAG_PREFIXES.some((prefix) => tag.slug.startsWith(prefix))
@@ -56,7 +59,7 @@ const visibleTags = (tags ?? []).filter(
                 ></path>
             </svg>
             {
-                publishDate.toLocaleDateString('zh-CN', {
+                publishDate.toLocaleDateString(dateLocale, {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',

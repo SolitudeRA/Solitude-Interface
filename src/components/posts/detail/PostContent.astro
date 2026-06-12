@@ -6,6 +6,8 @@ import CodeBlockEnhancer from './CodeBlockEnhancer.tsx';
 import type { PostTag } from '@api/ghost/types';
 import { sanitizeHtml, containsSuspiciousContent } from '@api/utils/sanitize';
 import { highlightCodeBlocks } from '@api/utils/codeHighlight';
+import { prepareArticleHtml, type CodeBlockLabels } from '@api/utils/articleHtml';
+import { DEFAULT_LOCALE, type Locale } from '@lib/i18n';
 
 interface Props {
     title: string;
@@ -14,10 +16,99 @@ interface Props {
     tags?: PostTag[] | undefined;
     published_at: string;
     html: string;
+    locale?: Locale;
 }
 
-const { title, feature_image, primary_tag, tags, published_at, html } = Astro.props;
+interface TocLabels {
+    title: string;
+    open: string;
+    close: string;
+    dialog: string;
+    copyLink: string;
+    linkCopied: string;
+    backToTop: string;
+}
+
+const POST_DETAIL_COPY: Record<
+    Locale,
+    { toc: TocLabels; code: CodeBlockLabels; tableRegion: string }
+> = {
+    zh: {
+        toc: {
+            title: '目录',
+            open: '打开目录',
+            close: '关闭目录',
+            dialog: '文章目录',
+            copyLink: '复制当前链接',
+            linkCopied: '已复制链接',
+            backToTop: '回到顶部',
+        },
+        code: {
+            wrap: '换行',
+            scroll: '滚动',
+            copy: '复制',
+            copied: '已复制',
+            failed: '失败',
+            expand: '展开',
+            collapse: '收起',
+        },
+        tableRegion: '可横向滚动的表格',
+    },
+    ja: {
+        toc: {
+            title: '目次',
+            open: '目次を開く',
+            close: '目次を閉じる',
+            dialog: '記事の目次',
+            copyLink: '現在のリンクをコピー',
+            linkCopied: 'リンクをコピー済み',
+            backToTop: '先頭へ戻る',
+        },
+        code: {
+            wrap: '折返し',
+            scroll: 'スクロール',
+            copy: 'コピー',
+            copied: 'コピー済み',
+            failed: '失敗',
+            expand: '展開',
+            collapse: '閉じる',
+        },
+        tableRegion: '横スクロールできる表',
+    },
+    en: {
+        toc: {
+            title: 'Contents',
+            open: 'Open contents',
+            close: 'Close contents',
+            dialog: 'Article contents',
+            copyLink: 'Copy current link',
+            linkCopied: 'Copied link',
+            backToTop: 'Back to top',
+        },
+        code: {
+            wrap: 'Wrap',
+            scroll: 'Scroll',
+            copy: 'Copy',
+            copied: 'Copied',
+            failed: 'Failed',
+            expand: 'Show more',
+            collapse: 'Show less',
+        },
+        tableRegion: 'Scrollable table',
+    },
+};
+
+const {
+    title,
+    feature_image,
+    primary_tag,
+    tags,
+    published_at,
+    html,
+    locale = DEFAULT_LOCALE,
+} = Astro.props;
 const featureImageUrl = feature_image?.toString() || '';
+const copy = POST_DETAIL_COPY[locale];
 
 // 安全：在服务端渲染时净化 HTML 内容
 // 检测可疑内容用于日志监控（开发环境）
@@ -30,36 +121,37 @@ const sanitizedHtml = sanitizeHtml(html);
 
 // 服务端代码高亮 - 在构建时处理所有代码块
 const highlightedHtml = await highlightCodeBlocks(sanitizedHtml);
+const articleHtml = prepareArticleHtml(highlightedHtml, copy.code, copy.tableRegion);
 ---
 
-<div class="solitude-article-container grid grid-cols-1 lg:grid-cols-12">
-    <ReadingProgress client:idle />
+<div class="solitude-article-container grid grid-cols-1 xl:grid-cols-12">
+    <ReadingProgress labels={copy.toc} client:idle />
 
-    <!-- 左侧 TOC 区域 - 在移动端和平板隐藏 -->
-    <div class="solitude-article-rail hidden lg:col-span-2 lg:flex">
-        <div class="toc-wrapper w-full">
-            <TableOfContents client:idle />
-        </div>
-    </div>
+    <div class="solitude-article-rail hidden xl:col-span-2 xl:block"></div>
 
-    <!-- 中间文章主体 - 移动端全宽，桌面端占8列 -->
-    <div class="solitude-article-body col-span-1 pb-16 md:pb-24 lg:col-span-8 lg:pb-32">
+    <!-- 中间文章主体 - 移动端全宽，桌面端占7列 -->
+    <div class="solitude-article-body col-span-1 pb-16 md:pb-24 lg:pb-32 xl:col-span-7">
         <div class="solitude-article-meta">
             <PostHeader
                 title={title}
                 primary_tag={primary_tag}
                 tags={tags}
                 published_at={published_at}
+                locale={locale}
             />
         </div>
         <div>
-            <div class="solitude-article-content" set:html={highlightedHtml} />
-            <CodeBlockEnhancer client:idle />
+            <div class="solitude-article-content" set:html={articleHtml} />
+            <CodeBlockEnhancer labels={copy.code} client:idle />
         </div>
     </div>
 
-    <!-- 右侧空白区域 - 在移动端和平板隐藏 -->
-    <div class="solitude-article-rail hidden lg:col-span-2 lg:block"></div>
+    <!-- 右侧 TOC 区域 - 在移动端和平板隐藏 -->
+    <div class="solitude-article-rail hidden xl:col-span-3 xl:flex">
+        <div class="toc-wrapper w-full">
+            <TableOfContents labels={copy.toc} client:idle />
+        </div>
+    </div>
 </div>
 
 <style

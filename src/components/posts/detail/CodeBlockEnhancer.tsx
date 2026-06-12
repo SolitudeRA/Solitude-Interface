@@ -1,54 +1,58 @@
 import { useEffect } from 'react';
+import { DEFAULT_CODE_BLOCK_LABELS, type CodeBlockLabels } from '@api/utils/articleHtml';
 
-function getLanguage(pre: HTMLPreElement, code: HTMLElement | null): string {
-    const languageFromData = pre.dataset.language || code?.dataset.language;
-    if (languageFromData) return languageFromData;
-
-    const className = `${pre.className} ${code?.className ?? ''}`;
-    const match = className.match(/language-([a-z0-9_+-]+)/i);
-
-    return match?.[1]?.replace(/_/g, ' ') ?? 'code';
+interface CodeBlockEnhancerProps {
+    labels?: CodeBlockLabels;
 }
 
-function createToolbarButton(label: string, className: string): HTMLButtonElement {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = className;
-    button.textContent = label;
-    return button;
-}
-
-export default function CodeBlockEnhancer() {
+export default function CodeBlockEnhancer({
+    labels = DEFAULT_CODE_BLOCK_LABELS,
+}: CodeBlockEnhancerProps) {
     useEffect(() => {
-        const preBlocks = Array.from(
-            document.querySelectorAll<HTMLPreElement>('.solitude-article-content pre')
+        const codeBlockShells = Array.from(
+            document.querySelectorAll<HTMLElement>('.solitude-article-content .code-block-shell')
         );
         const disposers: Array<() => void> = [];
 
-        preBlocks.forEach((pre, index) => {
-            if (pre.closest('.code-block-shell')) return;
+        codeBlockShells.forEach((shell) => {
+            const pre = shell.querySelector<HTMLPreElement>('pre');
+            const wrapButton = shell.querySelector<HTMLButtonElement>('[data-code-wrap]');
+            const copyButton = shell.querySelector<HTMLButtonElement>('[data-code-copy]');
+            const lineToggleButton = shell.querySelector<HTMLButtonElement>(
+                '[data-code-toggle-lines]'
+            );
+            const status = shell.querySelector<HTMLElement>('[data-code-status]');
+            if (!pre || !wrapButton || !copyButton) return;
 
             const code = pre.querySelector<HTMLElement>('code');
-            const shell = document.createElement('div');
-            shell.className = 'code-block-shell';
-            shell.dataset.codeBlock = String(index + 1);
 
-            const toolbar = document.createElement('div');
-            toolbar.className = 'code-block-toolbar';
+            const updateWrapButton = () => {
+                const label = shell.classList.contains('is-wrapped') ? labels.scroll : labels.wrap;
+                wrapButton.textContent = label;
+                wrapButton.setAttribute('aria-label', label);
+                wrapButton.setAttribute('title', label);
+            };
 
-            const label = document.createElement('span');
-            label.className = 'code-block-language';
-            label.textContent = getLanguage(pre, code).toUpperCase();
+            const updateLineToggleButton = () => {
+                if (!lineToggleButton) return;
 
-            const actions = document.createElement('div');
-            actions.className = 'code-block-actions';
+                const isExpanded = shell.classList.contains('is-expanded');
+                const label = isExpanded ? labels.collapse : labels.expand;
+                lineToggleButton.textContent = label;
+                lineToggleButton.setAttribute('aria-label', label);
+                lineToggleButton.setAttribute('title', label);
+                lineToggleButton.setAttribute('aria-expanded', String(isExpanded));
+            };
 
-            const wrapButton = createToolbarButton('Wrap', 'code-block-action');
-            const copyButton = createToolbarButton('Copy', 'code-block-action');
+            updateWrapButton();
+            updateLineToggleButton();
+            copyButton.textContent = labels.copy;
+            copyButton.setAttribute('aria-label', labels.copy);
+            copyButton.setAttribute('title', labels.copy);
 
             const handleWrap = () => {
                 shell.classList.toggle('is-wrapped');
-                wrapButton.textContent = shell.classList.contains('is-wrapped') ? 'Scroll' : 'Wrap';
+                updateWrapButton();
             };
 
             const handleCopy = async () => {
@@ -57,36 +61,57 @@ export default function CodeBlockEnhancer() {
 
                 try {
                     await navigator.clipboard.writeText(text);
-                    copyButton.textContent = 'Copied';
+                    copyButton.textContent = labels.copied;
+                    copyButton.setAttribute('aria-label', labels.copied);
+                    copyButton.setAttribute('title', labels.copied);
+                    if (status) status.textContent = labels.copied;
                     window.setTimeout(() => {
-                        copyButton.textContent = 'Copy';
+                        copyButton.textContent = labels.copy;
+                        copyButton.setAttribute('aria-label', labels.copy);
+                        copyButton.setAttribute('title', labels.copy);
+                        if (status) status.textContent = '';
                     }, 1400);
                 } catch {
-                    copyButton.textContent = 'Failed';
+                    copyButton.textContent = labels.failed;
+                    copyButton.setAttribute('aria-label', labels.failed);
+                    copyButton.setAttribute('title', labels.failed);
+                    if (status) status.textContent = labels.failed;
                     window.setTimeout(() => {
-                        copyButton.textContent = 'Copy';
+                        copyButton.textContent = labels.copy;
+                        copyButton.setAttribute('aria-label', labels.copy);
+                        copyButton.setAttribute('title', labels.copy);
+                        if (status) status.textContent = '';
                     }, 1400);
                 }
             };
 
+            const handleLineToggle = () => {
+                shell.classList.toggle('is-expanded');
+                updateLineToggleButton();
+            };
+
             wrapButton.addEventListener('click', handleWrap);
             copyButton.addEventListener('click', handleCopy);
+            lineToggleButton?.addEventListener('click', handleLineToggle);
             disposers.push(() => {
                 wrapButton.removeEventListener('click', handleWrap);
                 copyButton.removeEventListener('click', handleCopy);
+                lineToggleButton?.removeEventListener('click', handleLineToggle);
             });
-
-            actions.append(wrapButton, copyButton);
-            toolbar.append(label, actions);
-
-            pre.before(shell);
-            shell.append(toolbar, pre);
         });
 
         return () => {
             disposers.forEach((dispose) => dispose());
         };
-    }, []);
+    }, [
+        labels.collapse,
+        labels.copy,
+        labels.copied,
+        labels.expand,
+        labels.failed,
+        labels.scroll,
+        labels.wrap,
+    ]);
 
     return null;
 }

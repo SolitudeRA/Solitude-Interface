@@ -9,7 +9,8 @@
         margin-top: 1.5rem;
         margin-bottom: 0.5rem;
         color: var(--article-content-h1);
-        letter-spacing: -0.02em;
+        scroll-margin-top: clamp(5.5rem, 12svh, 8rem);
+        letter-spacing: 0;
         line-height: 1.25;
     }
 
@@ -19,7 +20,8 @@
         margin-top: 1.5rem;
         margin-bottom: 0.4rem;
         color: var(--article-content-h2);
-        letter-spacing: -0.015em;
+        scroll-margin-top: clamp(5.5rem, 12svh, 8rem);
+        letter-spacing: 0;
         line-height: 1.3;
         padding-bottom: 0.3rem;
         border-bottom: 1px solid var(--article-content-table-border);
@@ -31,7 +33,8 @@
         margin-top: 1.25rem;
         margin-bottom: 0.4rem;
         color: var(--article-content-h3);
-        letter-spacing: -0.01em;
+        scroll-margin-top: clamp(5.5rem, 12svh, 8rem);
+        letter-spacing: 0;
         line-height: 1.35;
     }
 
@@ -41,6 +44,7 @@
         margin-top: 1.25rem;
         margin-bottom: 0.4rem;
         color: var(--article-content-h4);
+        scroll-margin-top: clamp(5.5rem, 12svh, 8rem);
         line-height: 1.4;
     }
 
@@ -50,7 +54,8 @@
         margin-top: 1rem;
         margin-bottom: 0.35rem;
         color: var(--article-content-h5);
-        letter-spacing: 0.01em;
+        scroll-margin-top: clamp(5.5rem, 12svh, 8rem);
+        letter-spacing: 0;
         line-height: 1.45;
     }
 
@@ -60,7 +65,8 @@
         margin-top: 1rem;
         margin-bottom: 0.35rem;
         color: var(--article-content-h6);
-        letter-spacing: 0.02em;
+        scroll-margin-top: clamp(5.5rem, 12svh, 8rem);
+        letter-spacing: 0;
         line-height: 1.5;
         text-transform: uppercase;
     }
