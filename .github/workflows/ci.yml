@@ -60,7 +60,7 @@ jobs:
           path: |
             node_modules
             .astro
-          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
 
   # ============================================
   # Lint job: Format checking with Prettier
@@ -89,7 +89,7 @@ jobs:
           path: |
             node_modules
             .astro
-          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           fail-on-cache-miss: true
 
       - name: Format check (prettier)
@@ -125,7 +125,7 @@ jobs:
           path: |
             node_modules
             .astro
-          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           fail-on-cache-miss: true
 
       - name: Test (vitest run)
@@ -158,7 +158,7 @@ jobs:
           path: |
             node_modules
             .astro
-          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           fail-on-cache-miss: true
 
       - name: Typecheck (astro check)
@@ -191,7 +191,7 @@ jobs:
           path: |
             node_modules
             .astro
-          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           fail-on-cache-miss: true
 
       - name: Build

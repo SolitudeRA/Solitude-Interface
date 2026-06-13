@@ -19,7 +19,7 @@ const aboutUrl = buildLocalePath(lang, '/about');
 >
     <!-- 移动端、平板、小桌面：社交链接汉堡菜单（<1536px） -->
     <div data-dock-social-compact class="flex items-center gap-3 sm:gap-4 2xl:hidden">
-        <DockSocialMobile client:load />
+        <DockSocialMobile client:idle />
         <a href={aboutUrl} class="block transition-transform hover:scale-105">
             <Avatar
                 className="h-10 w-10 shadow-xl sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16"

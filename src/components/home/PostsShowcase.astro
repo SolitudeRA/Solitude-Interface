@@ -36,6 +36,22 @@ const localizedPosts = filterPostsByLocale(featuredPosts || [], locale);
 const filteredPosts = localizedPosts.map((item) => item.post);
 // 限制文章数量为最多8个
 const limitedPosts = filteredPosts.slice(0, MAX_POSTS);
+// 只把卡片实际需要的字段传给岛屿，避免把完整文章正文(html/excerpt 等)序列化进首页水合载荷
+const carouselPosts: FeaturedPost[] = limitedPosts.map((post) => ({
+    id: post.id,
+    title: post.title,
+    url: post.url,
+    feature_image: post.feature_image,
+    published_at: post.published_at,
+    post_type: post.post_type,
+    post_category: post.post_category,
+    post_series: post.post_series,
+    // 可选字段仅在存在时包含（exactOptionalPropertyTypes）
+    ...(post.post_type_label !== undefined && { post_type_label: post.post_type_label }),
+    ...(post.post_category_label !== undefined && {
+        post_category_label: post.post_category_label,
+    }),
+}));
 // 判断是否有更多文章
 const hasMorePosts = filteredPosts.length > MAX_POSTS;
 // 构建多语言文章列表页 URL
@@ -46,14 +62,14 @@ const noPostsText = getUIText('home', 'noPosts', locale);
 <section class:list={['posts-showcase w-full', className]} aria-label="最近文章">
     {
         isLoading ? (
-            <PostsShowcaseSkeleton count={5} client:load />
+            <PostsShowcaseSkeleton count={5} client:visible />
         ) : limitedPosts.length > 0 ? (
             <PostsShowcaseCarousel
-                posts={limitedPosts}
+                posts={carouselPosts}
                 postsPageUrl={postsPageUrl}
                 showMoreButton={hasMorePosts}
                 locale={locale}
-                client:load
+                client:visible
             />
         ) : (
             <div class="flex min-h-[12rem] items-center justify-center px-4">

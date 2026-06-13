@@ -27,7 +27,7 @@ const {
 } = Astro.props;
 ---
 
-<SmartNavbar isFixed={isFixed} readerMode={readerMode} client:load>
+<SmartNavbar isFixed={isFixed} readerMode={readerMode} client:idle>
     <NavbarBrand
         logoImageUrl={logoUrl}
         siteTitle={siteTitle}
