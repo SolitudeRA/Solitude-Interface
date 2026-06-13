@@ -1,16 +1,17 @@
 import { useAtomValue } from 'jotai';
 import { cn } from '@components/common/lib/utils';
 import { postViewAtom } from '@stores/postViewAtom';
-import { computeTimelineLayout, DEFAULT_GEOMETRY } from './paginationGeometry';
+import {
+    computeTimelineLayout,
+    computeMinimapWindow,
+    DEFAULT_GEOMETRY,
+} from './paginationGeometry';
 
 interface PostViewPaginationProps {
     /** 用于滚动到指定文章的回调函数 */
     onScrollToPost: (index: number) => void;
     className?: string;
 }
-
-/** 补零到至少两位(总数 ≥ 100 时自然显示三位) */
-const pad2 = (n: number): string => String(n).padStart(2, '0');
 
 export default function PostViewPagination({ onScrollToPost, className }: PostViewPaginationProps) {
     const { totalPosts, visibleIndices, activeIndex } = useAtomValue(postViewAtom);
@@ -26,24 +27,25 @@ export default function PostViewPagination({ onScrollToPost, className }: PostVi
         visibleIndices,
         DEFAULT_GEOMETRY
     );
+    const minimap = computeMinimapWindow(visibleIndices, totalPosts);
+
+    // sr-only 进度文本:当前可见范围(无可见项时退化为 active 篇)
+    const firstVisible = visibleIndices.length > 0 ? Math.min(...visibleIndices) : activeIndex;
+    const lastVisible = visibleIndices.length > 0 ? Math.max(...visibleIndices) : activeIndex;
 
     return (
         <div
             className={cn(
                 'post-view-pagination',
-                'pvp-cluster group relative h-6 w-full overflow-visible pt-1 lg:h-auto',
+                'pvp-cluster group relative w-full overflow-visible pt-1 lg:h-auto',
                 className
             )}
         >
-            {/* 进度数字(视觉);屏幕阅读器用下方 sr-only 文本 */}
-            <div className="pvp-num" aria-hidden="true">
-                <span className="pvp-num-cur">{pad2(activeIndex + 1)}</span>
-                <span className="pvp-num-sep">/</span>
-                <span className="pvp-num-total">{pad2(totalPosts)}</span>
-            </div>
-            <span className="sr-only">{`第 ${activeIndex + 1} 篇,共 ${totalPosts} 篇`}</span>
+            <span className="sr-only">
+                {`正在浏览第 ${firstVisible + 1} 到 ${lastVisible + 1} 篇,共 ${totalPosts} 篇`}
+            </span>
 
-            {/* 时间线:aura 柔光底 + marker 轨道 */}
+            {/* 时间线(主):aura 柔光底 + marker 轨道 */}
             <div className="pvp-timeline">
                 <div className="pvp-aura" aria-hidden="true" />
                 <div
@@ -71,6 +73,17 @@ export default function PostViewPagination({ onScrollToPost, className }: PostVi
                         />
                     ))}
                 </div>
+            </div>
+
+            {/* minimap 总览底条(辅):当前可见窗口在整体里的位置 + 占比 */}
+            <div className="pvp-minimap" aria-hidden="true">
+                <div
+                    className="pvp-minimap-window"
+                    style={{
+                        left: `${minimap.left.toFixed(2)}%`,
+                        width: `${minimap.width.toFixed(2)}%`,
+                    }}
+                />
             </div>
         </div>
     );
