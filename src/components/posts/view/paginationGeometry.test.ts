@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { smoothstep, markerWidth, markerOpacity, DEFAULT_GEOMETRY } from './paginationGeometry';
+import {
+    smoothstep,
+    markerWidth,
+    markerOpacity,
+    DEFAULT_GEOMETRY,
+    computeTimelineLayout,
+} from './paginationGeometry';
 
 describe('smoothstep', () => {
     it('clamps below edge0 to 0 and above edge1 to 1', () => {
@@ -72,5 +78,48 @@ describe('markerOpacity', () => {
     it('partially fades outer dots (K < d < R)', () => {
         // smoothstep(3, 7, 5) === 0.5 -> 1 * (1 - 0.5) === 0.5
         expect(markerOpacity(5, { visible: true, ...o })).toBeCloseTo(0.5, 5);
+    });
+});
+
+describe('computeTimelineLayout', () => {
+    const p = DEFAULT_GEOMETRY; // gap 16, K 3, J 4 (R = 7)
+    const sumSlotWidth = (layout: ReturnType<typeof computeTimelineLayout>) =>
+        layout.markers.reduce((acc, m) => acc + m.width + (m.inWindow ? p.gap : 0), 0);
+
+    it('marks exactly one active marker', () => {
+        const { markers } = computeTimelineLayout(15, 7, [7], p);
+        expect(markers.filter((m) => m.isActive)).toHaveLength(1);
+        expect(markers[7]!.isActive).toBe(true);
+    });
+
+    it('collapses markers outside the window to width 0 and not in window', () => {
+        const { markers } = computeTimelineLayout(40, 20, [20], p);
+        expect(markers[12]!.inWindow).toBe(false);
+        expect(markers[12]!.width).toBe(0);
+        expect(markers[13]!.inWindow).toBe(true);
+    });
+
+    it('keeps total length constant regardless of post count (active centered)', () => {
+        const small = computeTimelineLayout(15, 7, [7], p);
+        const large = computeTimelineLayout(40, 20, [20], p);
+        expect(sumSlotWidth(large)).toBeCloseTo(sumSlotWidth(small), 5);
+    });
+
+    it('centers the active marker (translateX ≈ 0 when symmetric)', () => {
+        const { translateX } = computeTimelineLayout(15, 7, [7], p);
+        expect(translateX).toBeCloseTo(0, 5);
+    });
+
+    it('shifts the track when active is at the start (no markers to its left)', () => {
+        const { translateX, markers } = computeTimelineLayout(15, 0, [0], p);
+        expect(translateX).toBeGreaterThan(0);
+        expect(markers[0]!.isActive).toBe(true);
+    });
+
+    it('flags visible indices as full opacity inside the window', () => {
+        const { markers } = computeTimelineLayout(15, 7, [6, 7, 8], p);
+        expect(markers[7]!.opacity).toBe(1);
+        expect(markers[6]!.opacity).toBe(1);
+        expect(markers[5]!.opacity).toBeCloseTo(0.5, 5);
     });
 });
