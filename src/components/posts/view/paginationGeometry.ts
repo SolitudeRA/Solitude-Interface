@@ -4,17 +4,17 @@
  */
 
 export interface GeometryParams {
-    /** 近端横杠最大宽度(px) */
+    /** 近端横杠最大宽度(px,distance=0 时) */
     barW: number;
     /** 远端收缩点宽度(px) */
     dotW: number;
-    /** marker 间距(px),marginInline = gap / 2 */
+    /** marker 间距(px),marginInline = gap / 2;由 computeTimelineLayout(Task 3)消费 */
     gap: number;
-    /** smoothstep 上界,控制横杠收成点的快慢 */
+    /** 横杠收成点(width)的完成距离 = smoothstep(0, sharp, d) 的上界;只决定 width 形态,与 K/J 无关 */
     sharp: number;
-    /** active 每侧完整 marker 半径 */
+    /** 窗口「核心区」半径:此范围内的 marker 透明度保持 base、不因距离渐隐(width 仍由 sharp 控制,K 不代表完整宽度) */
     K: number;
-    /** 再外侧渐隐点数量(窗口半径 R = K + J) */
+    /** 核心区之外到窗口边缘的渐隐区宽度;窗口半径 R = K + J,|distance| > R 的 marker 完全收起(width/opacity → 0) */
     J: number;
 }
 

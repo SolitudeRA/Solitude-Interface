@@ -15,6 +15,10 @@ describe('smoothstep', () => {
         expect(smoothstep(3, 3, 2)).toBe(0);
         expect(smoothstep(3, 3, 3)).toBe(1);
     });
+
+    it('returns 1 exactly at edge1', () => {
+        expect(smoothstep(0, 4, 4)).toBe(1);
+    });
 });
 
 describe('markerWidth', () => {
@@ -35,5 +39,12 @@ describe('markerWidth', () => {
 
     it('is symmetric for negative distances', () => {
         expect(markerWidth(-2, p)).toBeCloseTo(markerWidth(2, p), 5);
+    });
+
+    it('threads custom params through (not module constants)', () => {
+        const custom = { barW: 10, dotW: 2, gap: 8, sharp: 2, K: 1, J: 2 };
+        expect(markerWidth(0, custom)).toBeCloseTo(10, 5); // barW
+        expect(markerWidth(2, custom)).toBeCloseTo(2, 5); // smoothstep(0,2,2)=1 -> dotW
+        expect(markerWidth(4, custom)).toBe(0); // > K+J = 3
     });
 });
