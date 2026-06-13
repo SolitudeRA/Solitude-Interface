@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Timeline B · 最终设计预览</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0d1117;
+        --text: #f8fafc;
+        --panel: rgba(17, 24, 39, 0.82);
+        --panel-border: rgba(255, 255, 255, 0.12);
+        --grad: linear-gradient(90deg, #ffd166, #6ee7ff, #8aa2ff, #6ee7ff, #ffd166);
+        --glow-cyan: rgb(110 231 255 / 0.45);
+        --glow-blue: rgb(138 162 255 / 0.28);
+        /* 可调参数 */
+        --bar-w: 30px;
+        --dot-w: 6px;
+        --gap: 14px;
+        --trans: 380ms;
+        --offset-trans: 420ms;
+        --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+      body {
+        background:
+          radial-gradient(1200px 600px at 72% -8%, rgba(110, 231, 255, 0.08), transparent 60%),
+          radial-gradient(900px 500px at 8% 112%, rgba(138, 162, 255, 0.09), transparent 60%),
+          var(--bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ===== 卡片画廊(模拟 post-view) ===== */
+      .gallery {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        gap: 60px;
+        padding: 0 clamp(16px, 12vw, 220px);
+        overflow-x: auto;
+        scrollbar-width: none;
+        scroll-snap-type: x mandatory;
+      }
+      .gallery::-webkit-scrollbar {
+        display: none;
+      }
+      .gallery.no-snap {
+        scroll-snap-type: none;
+      }
+      .card {
+        flex: 0 0 auto;
+        width: clamp(220px, 19vw, 300px);
+        height: min(72svh, 560px);
+        scroll-snap-align: center;
+        border-radius: 28px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 28px 60px rgba(0, 0, 0, 0.46);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 22px;
+      }
+      .card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 38%, rgba(3, 7, 18, 0.72));
+      }
+      .card .idx {
+        position: absolute;
+        top: 16px;
+        left: 18px;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        color: rgba(255, 255, 255, 0.78);
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 999px;
+        padding: 3px 9px;
+        z-index: 2;
+      }
+      .card h3 {
+        position: relative;
+        z-index: 2;
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: 800;
+        text-shadow: 0 2px 12px rgba(3, 7, 18, 0.8);
+      }
+      .card time {
+        position: relative;
+        z-index: 2;
+        margin-top: 8px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      /* ===== 时间线(B 设计) — 固定左下角 ===== */
+      .timeline-fixed {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 60;
+        width: 33vw;
+        min-width: 320px;
+        height: 10vh;
+        min-height: 84px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 clamp(16px, 4vw, 48px);
+        pointer-events: none;
+      }
+      .timeline {
+        position: relative;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: visible;
+        pointer-events: auto;
+      }
+      .aura {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 130%;
+        height: 100px;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        filter: blur(34px);
+        opacity: 0.55;
+        background: radial-gradient(
+          ellipse at 50% 50%,
+          rgb(110 231 255 / 0.16),
+          rgb(138 162 255 / 0.1) 38%,
+          rgb(255 209 102 / 0.045) 60%,
+          transparent 78%
+        );
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+      }
+      .tl-inner {
+        position: relative;
+        display: flex;
+        align-items: center;
+        will-change: transform;
+        transition: transform var(--offset-trans) var(--ease);
+      }
+      .marker {
+        flex: 0 0 auto;
+        height: 6px;
+        margin-inline: calc(var(--gap) / 2);
+        border-radius: 999px;
+        background: color-mix(in oklch, var(--text) 22%, transparent);
+        cursor: pointer;
+        border: 0;
+        padding: 0;
+        transition:
+          width var(--trans) var(--ease),
+          height var(--trans) var(--ease),
+          margin var(--trans) var(--ease),
+          opacity var(--trans) ease,
+          background var(--trans) ease;
+      }
+      .marker.visible {
+        background: color-mix(in oklch, var(--text) 58%, transparent);
+      }
+      .marker:focus-visible {
+        outline: 2px solid #6ee7ff;
+        outline-offset: 3px;
+      }
+      .marker.active {
+        background: var(--grad);
+        background-size: 200% 100%;
+        box-shadow:
+          0 0 10px var(--glow-cyan),
+          0 0 20px var(--glow-blue);
+      }
+      .fx-flow .marker.active {
+        animation: flow 3.2s linear infinite;
+      }
+      .fx-breathe .marker.active {
+        animation:
+          flow 3.2s linear infinite,
+          breathe 2.4s ease-in-out infinite;
+      }
+      .fx-breathe.no-flow .marker.active {
+        animation: breathe 2.4s ease-in-out infinite;
+      }
+      @keyframes flow {
+        from {
+          background-position: 0% 50%;
+        }
+        to {
+          background-position: 200% 50%;
+        }
+      }
+      @keyframes breathe {
+        0%,
+        100% {
+          box-shadow:
+            0 0 8px var(--glow-cyan),
+            0 0 16px var(--glow-blue);
+        }
+        50% {
+          box-shadow:
+            0 0 16px var(--glow-cyan),
+            0 0 30px var(--glow-blue);
+        }
+      }
+      /* 降级 */
+      .reduce .tl-inner,
+      .reduce .marker {
+        transition: none !important;
+      }
+      .reduce .marker.active {
+        animation: none !important;
+      }
+
+      /* ===== 浮动控制面板 ===== */
+      .panel {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        z-index: 80;
+        width: 252px;
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        border-radius: 16px;
+        padding: 14px 16px;
+        backdrop-filter: blur(14px);
+        font-size: 0.82rem;
+      }
+      .panel h2 {
+        margin: 0 0 10px;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+      }
+      .panel .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin: 7px 0;
+        color: rgba(248, 250, 252, 0.78);
+      }
+      .panel input[type="range"] {
+        width: 120px;
+        accent-color: #6ee7ff;
+      }
+      .panel label.chk {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        cursor: pointer;
+      }
+      .panel .val {
+        min-width: 34px;
+        text-align: right;
+        color: var(--text);
+        font-variant-numeric: tabular-nums;
+      }
+      .panel .toggles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 14px;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid var(--panel-border);
+      }
+      .tip {
+        position: fixed;
+        left: 50%;
+        bottom: 14px;
+        transform: translateX(-50%);
+        z-index: 70;
+        color: rgba(248, 250, 252, 0.45);
+        font-size: 0.78rem;
+        pointer-events: none;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="gallery" id="gallery"></div>
+
+    <div class="timeline-fixed">
+      <div class="timeline fx-flow fx-breathe" id="timeline">
+        <div class="aura"></div>
+        <div class="tl-inner" id="tl"></div>
+      </div>
+    </div>
+
+    <div class="tip">← 滚轮 / 触控板 / 拖动 滚动卡片,左下角时间线实时响应 →</div>
+
+    <div class="panel">
+      <h2>时间线 B · 参数</h2>
+      <div class="row">
+        <span>形变锐度</span><input type="range" id="sharp" min="1.5" max="5" step="0.1" value="3.2" /><span
+          class="val"
+          id="vSharp"
+          >3.2</span
+        >
+      </div>
+      <div class="row">
+        <span>横杠宽</span><input type="range" id="barw" min="20" max="44" step="1" value="30" /><span
+          class="val"
+          id="vBarw"
+          >30</span
+        >
+      </div>
+      <div class="row">
+        <span>间距</span><input type="range" id="gap" min="8" max="22" step="1" value="14" /><span
+          class="val"
+          id="vGap"
+          >14</span
+        >
+      </div>
+      <div class="row">
+        <span>过渡 ms</span><input type="range" id="trans" min="200" max="600" step="10" value="380" /><span
+          class="val"
+          id="vTrans"
+          >380</span
+        >
+      </div>
+      <div class="row">
+        <span>横杠半径 K</span><input type="range" id="kbars" min="1" max="6" step="1" value="3" /><span
+          class="val"
+          id="vK"
+          >3</span
+        >
+      </div>
+      <div class="row">
+        <span>外侧点 J</span><input type="range" id="jdots" min="0" max="6" step="1" value="3" /><span
+          class="val"
+          id="vJ"
+          >3</span
+        >
+      </div>
+      <div class="toggles">
+        <label class="chk"><input type="checkbox" id="cFlow" checked /> 流光</label>
+        <label class="chk"><input type="checkbox" id="cBreathe" checked /> 呼吸</label>
+        <label class="chk"><input type="checkbox" id="cSnap" checked /> snap</label>
+        <label class="chk"><input type="checkbox" id="cReduce" /> reduced-motion</label>
+      </div>
+    </div>
+
+    <script>
+      const N = 36;
+      const titles = [
+        "构建智能家居平台",
+        "构建 DevOps 平台",
+        "构建云存储",
+        "构建信息收集系统",
+        "OS 安装与基础设置",
+        "规划与硬件选型",
+        "韩式汤饭(鸡汤底)",
+        "Reboot",
+        "关于生活",
+      ];
+      const dates = [
+        "2025-02-12",
+        "2025-01-04",
+        "2024-12-22",
+        "2024-12-13",
+        "2024-11-25",
+        "2024-11-11",
+        "2024-01-21",
+        "2023-12-21",
+        "2023-08-30",
+      ];
+      const palette = [
+        ["#1e3a8a", "#0ea5e9"],
+        ["#7c2d12", "#f59e0b"],
+        ["#134e4a", "#10b981"],
+        ["#831843", "#fb7185"],
+        ["#1e293b", "#94a3b8"],
+        ["#064e3b", "#34d399"],
+        ["#3b0764", "#c084fc"],
+        ["#0c4a6e", "#38bdf8"],
+        ["#422006", "#fbbf24"],
+      ];
+
+      const gallery = document.getElementById("gallery");
+      const tl = document.getElementById("tl");
+      const timeline = document.getElementById("timeline");
+      const root = document.documentElement;
+
+      let BAR_W = 30,
+        DOT_W = 6,
+        GAP = 14,
+        sharp = 3.2,
+        K = 3, // active 两侧完整横杠半径
+        J = 3; // 再外侧渐隐点数量
+      let markers = [];
+
+      const smoothstep = (e0, e1, x) => {
+        const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0)));
+        return t * t * (3 - 2 * t);
+      };
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const widthForDistance = (d) => lerp(BAR_W, DOT_W, smoothstep(0, sharp, d));
+
+      function buildCards() {
+        gallery.innerHTML = "";
+        for (let i = 0; i < N; i++) {
+          const c = document.createElement("div");
+          c.className = "card";
+          const [a, b] = palette[i % palette.length];
+          c.style.background = `linear-gradient(155deg, ${a}, ${b})`;
+          c.innerHTML = `<span class="idx">#${i + 1}</span><h3>${titles[i % titles.length]}</h3><time>${dates[i % dates.length]}</time>`;
+          gallery.appendChild(c);
+        }
+      }
+      function buildMarkers() {
+        tl.innerHTML = "";
+        markers = [];
+        for (let i = 0; i < N; i++) {
+          const m = document.createElement("button");
+          m.className = "marker";
+          m.setAttribute("aria-label", `跳转到第 ${i + 1} 篇文章`);
+          m.addEventListener("click", () => scrollToIndex(i));
+          tl.appendChild(m);
+          markers.push(m);
+        }
+      }
+
+      function metrics() {
+        const card = gallery.querySelector(".card");
+        const cw = card ? card.getBoundingClientRect().width : 260;
+        const pad = parseFloat(getComputedStyle(gallery).paddingLeft) || 0;
+        const stride = cw + 60;
+        return { cw, pad, stride };
+      }
+      function getProgress() {
+        const { cw, pad, stride } = metrics();
+        const center = gallery.scrollLeft + gallery.clientWidth / 2;
+        const first = pad + cw / 2;
+        return Math.min(Math.max((center - first) / stride, 0), N - 1);
+      }
+      function scrollToIndex(i) {
+        const { cw, pad, stride } = metrics();
+        const target = pad + i * stride + cw / 2 - gallery.clientWidth / 2;
+        gallery.scrollTo({ left: target, behavior: "smooth" });
+      }
+      // 视口内可见性(中心在视口内 → 更亮)
+      function isVisible(i) {
+        const { cw, pad, stride } = metrics();
+        const c = pad + i * stride + cw / 2;
+        return c >= gallery.scrollLeft && c <= gallery.scrollLeft + gallery.clientWidth;
+      }
+
+      function render() {
+        const progress = getProgress();
+        const active = Math.round(progress);
+        const R = K + J; // 窗口半径(每侧显示的 marker 上限)→ 长度恒定
+        const within = (i) => Math.abs(i - active) <= R;
+        // 窗口内按距离 morph 宽度;窗口外收缩到 0(不占位)
+        const widths = [];
+        for (let i = 0; i < N; i++) {
+          const d = Math.abs(i - active);
+          widths.push(d <= R ? widthForDistance(d) : 0);
+        }
+        for (let i = 0; i < N; i++) {
+          const d = Math.abs(i - active);
+          const m = markers[i];
+          const inWin = d <= R;
+          m.style.width = widths[i].toFixed(2) + "px";
+          m.style.marginInline = inWin ? GAP / 2 + "px" : "0px";
+          // 透明度:窗口外=0;窗口内按可见性,外侧点(d>K)渐隐表示"还有更多"
+          let op = 0;
+          if (inWin) {
+            const vis = isVisible(i);
+            const base = vis ? 1 : 0.5;
+            const edgeFade = d <= K ? 1 : 1 - smoothstep(K, R + 0.001, d);
+            op = base * edgeFade;
+          }
+          m.style.opacity = op.toFixed(3);
+          m.classList.toggle("visible", inWin && isVisible(i));
+          m.classList.toggle("active", i === active);
+          m.tabIndex = inWin ? 0 : -1;
+          m.style.pointerEvents = inWin ? "auto" : "none";
+          if (i === active) {
+            m.removeAttribute("aria-label");
+            m.setAttribute("aria-current", "true");
+          } else {
+            m.removeAttribute("aria-current");
+            m.setAttribute("aria-label", `跳转到第 ${i + 1} 篇文章`);
+          }
+        }
+        // 居中偏移:窗口外 width0 margin0 贡献为 0,故整条长度恒定
+        const slot = (i) => widths[i] + (within(i) ? GAP : 0);
+        let total = 0;
+        for (let i = 0; i < N; i++) total += slot(i);
+        let off = 0;
+        for (let i = 0; i < active; i++) off += slot(i);
+        off += (within(active) ? GAP / 2 : 0) + (widths[active] || 0) / 2;
+        tl.style.transform = `translateX(${(total / 2 - off).toFixed(2)}px)`;
+      }
+
+      let raf = null;
+      const schedule = () => {
+        if (raf == null) raf = requestAnimationFrame(() => ((raf = null), render()));
+      };
+      gallery.addEventListener("scroll", schedule, { passive: true });
+      gallery.addEventListener(
+        "wheel",
+        (e) => {
+          if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+            gallery.scrollLeft += e.deltaY;
+            e.preventDefault();
+          }
+        },
+        { passive: false }
+      );
+      window.addEventListener("resize", schedule);
+
+      // 控制面板
+      const bind = (id, valId, fn) => {
+        const el = document.getElementById(id),
+          v = document.getElementById(valId);
+        el.addEventListener("input", () => {
+          v.textContent = el.value;
+          fn(parseFloat(el.value));
+          schedule();
+        });
+      };
+      bind("sharp", "vSharp", (x) => (sharp = x));
+      bind("barw", "vBarw", (x) => {
+        BAR_W = x;
+        root.style.setProperty("--bar-w", x + "px");
+      });
+      bind("gap", "vGap", (x) => {
+        GAP = x;
+        root.style.setProperty("--gap", x + "px");
+      });
+      bind("trans", "vTrans", (x) => {
+        root.style.setProperty("--trans", x + "ms");
+        root.style.setProperty("--offset-trans", x + 40 + "ms");
+      });
+      bind("kbars", "vK", (x) => (K = Math.round(x)));
+      bind("jdots", "vJ", (x) => (J = Math.round(x)));
+      document.getElementById("cFlow").addEventListener("change", (e) => {
+        timeline.classList.toggle("fx-flow", e.target.checked);
+        timeline.classList.toggle("no-flow", !e.target.checked);
+      });
+      document.getElementById("cBreathe").addEventListener("change", (e) => {
+        timeline.classList.toggle("fx-breathe", e.target.checked);
+      });
+      document.getElementById("cSnap").addEventListener("change", (e) => {
+        gallery.classList.toggle("no-snap", !e.target.checked);
+      });
+      document.getElementById("cReduce").addEventListener("change", (e) => {
+        timeline.classList.toggle("reduce", e.target.checked);
+      });
+
+      buildCards();
+      buildMarkers();
+      requestAnimationFrame(() => scrollToIndex(0));
+      setTimeout(schedule, 50);
+    </script>
+  </body>
+</html>

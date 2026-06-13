@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Timeline Redesign Demo — A 连续 vs B 离散</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --page-bg: #0d1117;
+        --panel: rgba(17, 24, 39, 0.72);
+        --panel-border: rgba(255, 255, 255, 0.12);
+        --text: #f8fafc;
+        --muted: rgba(248, 250, 252, 0.66);
+        --quiet: rgba(248, 250, 252, 0.4);
+        /* 项目时间线真实配色 */
+        --grad: linear-gradient(90deg, #ffd166, #6ee7ff, #8aa2ff, #6ee7ff, #ffd166);
+        --glow-cyan: rgb(110 231 255 / 0.45);
+        --glow-blue: rgb(138 162 255 / 0.28);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+      body {
+        background:
+          radial-gradient(1200px 600px at 70% -10%, rgba(110, 231, 255, 0.08), transparent 60%),
+          radial-gradient(900px 500px at 10% 110%, rgba(138, 162, 255, 0.08), transparent 60%),
+          var(--page-bg);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .shell {
+        width: min(1180px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: clamp(20px, 4vw, 44px) 0 96px;
+      }
+      h1 {
+        font-size: clamp(1.2rem, 2.6vw, 1.6rem);
+        font-weight: 800;
+        margin: 0 0 6px;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 0.92rem;
+        margin: 0 0 22px;
+        line-height: 1.5;
+      }
+      .sub b {
+        color: var(--text);
+      }
+
+      /* ---- 卡片轨道 ---- */
+      .track-wrap {
+        position: relative;
+        border: 1px solid var(--panel-border);
+        border-radius: 22px;
+        background: var(--panel);
+        padding: 18px 0;
+        overflow: hidden;
+      }
+      .track {
+        display: flex;
+        gap: 28px;
+        padding: 0 clamp(16px, 22vw, 320px);
+        overflow-x: auto;
+        scrollbar-width: none;
+        scroll-behavior: auto;
+      }
+      .track::-webkit-scrollbar {
+        display: none;
+      }
+      .track.snap {
+        scroll-snap-type: x mandatory;
+      }
+      .track.snap .card {
+        scroll-snap-align: center;
+      }
+      .card {
+        flex: 0 0 auto;
+        width: 150px;
+        height: 200px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      }
+      .edge {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 120px;
+        pointer-events: none;
+        z-index: 2;
+      }
+      .edge.l {
+        left: 0;
+        background: linear-gradient(90deg, var(--panel), transparent);
+      }
+      .edge.r {
+        right: 0;
+        background: linear-gradient(-90deg, var(--panel), transparent);
+      }
+
+      /* ---- 时间线 ---- */
+      .lanes {
+        display: grid;
+        gap: 14px;
+        margin-top: 26px;
+      }
+      .lane {
+        position: relative;
+        border: 1px solid var(--panel-border);
+        border-radius: 18px;
+        background: var(--panel);
+        padding: 26px 18px;
+        overflow: hidden;
+      }
+      .lane-tag {
+        position: absolute;
+        top: 12px;
+        left: 16px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--quiet);
+      }
+      .lane-tag b {
+        color: var(--text);
+      }
+      .timeline {
+        position: relative;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: visible;
+      }
+      .tl-inner {
+        position: relative;
+        display: flex;
+        align-items: center;
+        will-change: transform;
+      }
+      .marker {
+        flex: 0 0 auto;
+        height: 6px;
+        border-radius: 999px;
+        background: color-mix(in oklch, var(--text) 52%, transparent);
+      }
+      /* B 用 CSS 过渡做离散 morph */
+      .lane-b .marker {
+        transition:
+          width 0.38s cubic-bezier(0.22, 0.61, 0.36, 1),
+          height 0.38s cubic-bezier(0.22, 0.61, 0.36, 1),
+          opacity 0.38s ease,
+          background 0.38s ease;
+      }
+      .lane-b .tl-inner {
+        transition: transform 0.42s cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+      /* A 每帧 JS 直接驱动，无过渡 */
+
+      .marker.active {
+        background: var(--grad);
+        background-size: 200% 100%;
+      }
+      .glow .marker.active {
+        animation: flow 3.2s linear infinite;
+        box-shadow:
+          0 0 10px var(--glow-cyan),
+          0 0 20px var(--glow-blue);
+      }
+      .glow .marker.active.breathe {
+        animation:
+          flow 3.2s linear infinite,
+          breathe 2.4s ease-in-out infinite;
+      }
+      @keyframes flow {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 200% 50%;
+        }
+      }
+      @keyframes breathe {
+        0%,
+        100% {
+          box-shadow:
+            0 0 8px var(--glow-cyan),
+            0 0 16px var(--glow-blue);
+        }
+        50% {
+          box-shadow:
+            0 0 16px var(--glow-cyan),
+            0 0 28px var(--glow-blue);
+        }
+      }
+      /* lane 柔光底 */
+      .lane-aura {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 60%;
+        height: 90px;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        border-radius: 999px;
+        filter: blur(36px);
+        opacity: 0.5;
+        background: radial-gradient(
+          ellipse at 50% 50%,
+          rgb(110 231 255 / 0.16),
+          rgb(138 162 255 / 0.1) 38%,
+          transparent 72%
+        );
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+      }
+
+      /* ---- 控制面板 ---- */
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        margin-top: 22px;
+        padding: 14px 18px;
+        border: 1px solid var(--panel-border);
+        border-radius: 16px;
+        background: var(--panel);
+        align-items: center;
+        font-size: 0.85rem;
+      }
+      .controls label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      .controls input[type="range"] {
+        accent-color: #6ee7ff;
+        width: 130px;
+      }
+      .controls .group {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .hint {
+        color: var(--quiet);
+        font-size: 0.8rem;
+        margin-top: 14px;
+        line-height: 1.5;
+      }
+      kbd {
+        font: inherit;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--panel-border);
+        border-radius: 6px;
+        padding: 1px 6px;
+        font-size: 0.78rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <h1>时间线重设计 · 可交互对比</h1>
+      <p class="sub">
+        滚动下面的卡片轨道(鼠标滚轮 / 触控板 / 拖动滚动条),两条时间线会同时响应。<br />
+        <b>A 连续</b>:每帧按浮点滚动进度连续 morph(横杠↔点无缝伸缩、整条丝般平移)。
+        <b>B 离散</b>:按整数 activeIndex 切换,切换时 CSS 过渡 morph(一格格跳)。
+        两条都用<b>统一 marker</b>(取消了原来割裂的省略号点/首尾圆圈),纯几何、不加文字。
+      </p>
+
+      <div class="track-wrap">
+        <div class="edge l"></div>
+        <div class="edge r"></div>
+        <div class="track snap" id="track"></div>
+      </div>
+
+      <div class="lanes glow" id="lanes">
+        <div class="lane lane-a">
+          <span class="lane-tag">方向 <b>A · 连续流动</b> &nbsp;— 推荐</span>
+          <div class="lane-aura"></div>
+          <div class="timeline"><div class="tl-inner" id="tlA"></div></div>
+        </div>
+        <div class="lane lane-b">
+          <span class="lane-tag">方向 <b>B · 离散 morph</b></span>
+          <div class="lane-aura"></div>
+          <div class="timeline"><div class="tl-inner" id="tlB"></div></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="group">
+          <label><input type="checkbox" id="cbGlow" checked /> 流光</label>
+          <label><input type="checkbox" id="cbBreathe" checked /> 呼吸</label>
+          <label><input type="checkbox" id="cbSnap" checked /> 卡片吸附(snap)</label>
+        </div>
+        <div class="group">
+          <label>篇数 <input type="range" id="rgCount" min="4" max="16" value="9" /></label>
+          <label
+            >可视窗 <input type="range" id="rgVisible" min="1" max="5" value="2" step="1"
+          /></label>
+        </div>
+        <div class="group">
+          <label
+            >形变锐度 <input type="range" id="rgSharp" min="1.5" max="5" value="3.2" step="0.1"
+          /></label>
+        </div>
+      </div>
+
+      <p class="hint">
+        提示:关掉 <kbd>snap</kbd> 后自由滚动,A 的"连续跟手"差异最明显;开 <kbd>snap</kbd>
+        更接近线上实际(卡片会吸附居中)。"可视窗"= 视口内大致能看到几张卡(这些 marker 更亮)。
+      </p>
+    </div>
+
+    <script>
+      const BAR_W = 30; // 横杠宽(近)
+      const DOT_W = 6; // 圆点宽(远)
+      const GAP = 14; // marker 间距
+      const STRIDE = BAR_W + GAP;
+
+      const track = document.getElementById("track");
+      const tlA = document.getElementById("tlA");
+      const tlB = document.getElementById("tlB");
+      const lanes = document.getElementById("lanes");
+
+      const cardPalette = [
+        ["#1e3a8a", "#0ea5e9"],
+        ["#7c2d12", "#f59e0b"],
+        ["#134e4a", "#10b981"],
+        ["#4c1d95", "#a78bfa"],
+        ["#831843", "#fb7185"],
+        ["#1e293b", "#94a3b8"],
+        ["#064e3b", "#34d399"],
+        ["#3b0764", "#c084fc"],
+        ["#7f1d1d", "#f87171"],
+        ["#0c4a6e", "#38bdf8"],
+        ["#422006", "#fbbf24"],
+        ["#14532d", "#4ade80"],
+        ["#581c87", "#d8b4fe"],
+        ["#7c2d12", "#fdba74"],
+        ["#0f766e", "#5eead4"],
+        ["#9f1239", "#fda4af"],
+      ];
+
+      let N = 9;
+      let visibleHalf = 2;
+      let sharp = 3.2;
+      let markersA = [];
+      let markersB = [];
+
+      const smoothstep = (e0, e1, x) => {
+        const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0)));
+        return t * t * (3 - 2 * t);
+      };
+      const lerp = (a, b, t) => a + (b - a) * t;
+
+      function buildCards() {
+        track.innerHTML = "";
+        for (let i = 0; i < N; i++) {
+          const c = document.createElement("div");
+          c.className = "card";
+          const [a, b] = cardPalette[i % cardPalette.length];
+          c.style.background = `linear-gradient(150deg, ${a}, ${b})`;
+          c.textContent = i + 1;
+          track.appendChild(c);
+        }
+      }
+
+      function buildTimelines() {
+        tlA.innerHTML = "";
+        tlB.innerHTML = "";
+        markersA = [];
+        markersB = [];
+        for (let i = 0; i < N; i++) {
+          const ma = document.createElement("span");
+          ma.className = "marker";
+          ma.style.marginInline = GAP / 2 + "px";
+          tlA.appendChild(ma);
+          markersA.push(ma);
+
+          const mb = document.createElement("span");
+          mb.className = "marker";
+          mb.style.marginInline = GAP / 2 + "px";
+          tlB.appendChild(mb);
+          markersB.push(mb);
+        }
+      }
+
+      // 计算浮点滚动进度(中心对应的浮点 index)
+      function getProgress() {
+        const card = track.querySelector(".card");
+        if (!card) return 0;
+        const cw = card.getBoundingClientRect().width;
+        const padLeft = parseFloat(getComputedStyle(track).paddingLeft) || 0;
+        const stride = cw + 28; // gap 28
+        const center = track.scrollLeft + track.clientWidth / 2;
+        const firstCenter = padLeft + cw / 2;
+        const p = (center - firstCenter) / stride;
+        return Math.min(Math.max(p, 0), N - 1);
+      }
+
+      // 形态:距离 d -> 宽度(横杠->点)
+      function widthForDistance(d) {
+        const t = smoothstep(0.0, sharp, d); // 0近 1远
+        return lerp(BAR_W, DOT_W, t);
+      }
+      // 距离 -> 不透明度(可视窗内亮,窗外渐暗)
+      function opacityForDistance(d) {
+        if (d <= visibleHalf) return 1;
+        return lerp(1, 0.16, smoothstep(visibleHalf, visibleHalf + 3.2, d));
+      }
+
+      // A:连续 —— 每帧按浮点 progress 直接设宽度/偏移/高亮
+      function renderA(progress) {
+        const center = (N - 1) / 2;
+        let widths = [];
+        for (let i = 0; i < N; i++) widths.push(widthForDistance(Math.abs(i - progress)));
+        // 整条偏移:让 progress 居中
+        let offset = 0;
+        for (let i = 0; i < N; i++) {
+          if (i < progress) {
+            const frac = Math.min(1, progress - i);
+            offset -= (widths[i] + GAP) * frac;
+          }
+        }
+        offset += (track ? 0 : 0);
+        // 用中心基准:把第 progress 个 marker 对齐中线
+        // 简化:相对中心 marker 累计
+        // 重新计算更稳的居中偏移
+        let centerOffset = 0;
+        const ip = Math.floor(progress);
+        const frac = progress - ip;
+        for (let i = 0; i < ip; i++) centerOffset += widths[i] + GAP;
+        centerOffset += (widths[ip] || 0) / 2 + frac * ((widths[ip] || 0) / 2 + GAP / 2);
+        // 容器总宽度的一半 - centerOffset => 让该点居中
+        let total = 0;
+        for (let i = 0; i < N; i++) total += widths[i] + GAP;
+        const tx = total / 2 - centerOffset;
+
+        for (let i = 0; i < N; i++) {
+          const d = Math.abs(i - progress);
+          const m = markersA[i];
+          m.style.width = widths[i].toFixed(2) + "px";
+          m.style.opacity = opacityForDistance(d).toFixed(3);
+          const isActive = d < 0.55;
+          m.classList.toggle("active", isActive);
+          m.classList.toggle("breathe", isActive && breatheOn);
+        }
+        tlA.style.transform = `translateX(${tx.toFixed(2)}px)`;
+      }
+
+      // B:离散 —— 按 round(progress) 决定整数距离,靠 CSS 过渡 morph
+      let lastActiveB = -1;
+      function renderB(progress) {
+        const active = Math.round(progress);
+        // 每个 marker 宽度按整数距离
+        let widths = [];
+        for (let i = 0; i < N; i++) widths.push(widthForDistance(Math.abs(i - active)));
+        for (let i = 0; i < N; i++) {
+          const d = Math.abs(i - active);
+          const m = markersB[i];
+          m.style.width = widths[i].toFixed(2) + "px";
+          m.style.opacity = opacityForDistance(d).toFixed(3);
+          const isActive = i === active;
+          m.classList.toggle("active", isActive);
+          m.classList.toggle("breathe", isActive && breatheOn);
+        }
+        // 整条偏移:把 active marker 居中(整数步进,CSS 过渡)
+        let total = 0;
+        for (let i = 0; i < N; i++) total += widths[i] + GAP;
+        let centerOffset = 0;
+        for (let i = 0; i < active; i++) centerOffset += widths[i] + GAP;
+        centerOffset += (widths[active] || 0) / 2;
+        const tx = total / 2 - centerOffset;
+        tlB.style.transform = `translateX(${tx.toFixed(2)}px)`;
+        lastActiveB = active;
+      }
+
+      let breatheOn = true;
+      let rafId = null;
+      function frame() {
+        rafId = null;
+        const p = getProgress();
+        renderA(p);
+        renderB(p);
+      }
+      function schedule() {
+        if (rafId == null) rafId = requestAnimationFrame(frame);
+      }
+
+      track.addEventListener("scroll", schedule, { passive: true });
+      // 滚轮横向滚动(轨道本身 overflow-x,通常滚轮即可;补充垂直->横向)
+      track.addEventListener(
+        "wheel",
+        (e) => {
+          if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+            track.scrollLeft += e.deltaY;
+            e.preventDefault();
+          }
+        },
+        { passive: false }
+      );
+      window.addEventListener("resize", schedule);
+
+      // 控制面板
+      document.getElementById("cbGlow").addEventListener("change", (e) => {
+        lanes.classList.toggle("glow", e.target.checked);
+      });
+      document.getElementById("cbBreathe").addEventListener("change", (e) => {
+        breatheOn = e.target.checked;
+        schedule();
+      });
+      document.getElementById("cbSnap").addEventListener("change", (e) => {
+        track.classList.toggle("snap", e.target.checked);
+      });
+      document.getElementById("rgCount").addEventListener("input", (e) => {
+        N = +e.target.value;
+        buildCards();
+        buildTimelines();
+        schedule();
+      });
+      document.getElementById("rgVisible").addEventListener("input", (e) => {
+        visibleHalf = +e.target.value;
+        schedule();
+      });
+      document.getElementById("rgSharp").addEventListener("input", (e) => {
+        sharp = +e.target.value;
+        schedule();
+      });
+
+      // init
+      buildCards();
+      buildTimelines();
+      requestAnimationFrame(() => {
+        // 初始滚到第 1 张居中
+        schedule();
+      });
+    </script>
+  </body>
+</html>
