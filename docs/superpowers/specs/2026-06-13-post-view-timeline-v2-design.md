@@ -79,4 +79,4 @@ root 从"时间线居中"改为 cluster:
 
 ## 6. 参考
 
-- 可交互原型:`public/design-demos/timeline-v2.html`(进度数字 + pop + 响应式 + 可调参)。合入后移除(实现计划里定)。
+- 设计阶段曾用可交互原型 `timeline-v2.html` 对齐数字 / 动效 / 响应式与参数,合入后已移除(见 git 历史)。
