@@ -272,6 +272,21 @@ pnpm dev
 | “Astro入門ガイド”（日文）            | `#lang-ja`, `#i18n-astro-guide`, `type-article`, `category-tech` |
 | “Getting Started with Astro”（英文） | `#lang-en`, `#i18n-astro-guide`, `type-article`, `category-tech` |
 
+### 文章 slug 命名约定（保留前缀）
+
+除内部标签外，系统还支持直接从 **Ghost post slug** 派生文章身份，约定为 `{locale}-{key}`：
+
+| Post slug         | 解析结果                                                          |
+| ----------------- | ----------------------------------------------------------------- |
+| `ja-homeserver-8` | locale = `ja`，翻译组 key = `homeserver-8` → `/ja/p/homeserver-8` |
+| `en-blog-project` | locale = `en`，翻译组 key = `blog-project` → `/en/p/blog-project` |
+
+> ⚠️ **`zh-` / `ja-` / `en-` 是保留的 slug 前缀。** 任何以合法语言代码加连字符开头的 slug，都会被当作该语言的多语言文章来解析（即使没有 `#lang-*` / `#i18n-*` 标签）。
+>
+> 因此**不要给普通（非多语言）文章起 `zh-…` / `ja-…` / `en-…` 这样的 slug**，否则它会被误并入翻译组、生成错误的 `/{locale}/p/{key}` 路由与 hreflang。普通文章请使用不以语言代码开头的 slug。
+>
+> 当文章同时带 `#lang-*` 标签时：**语言**以标签为准、slug 前缀仅作回退；**翻译组 key** 则优先取自 slug，`#i18n-*` 标签作为回退。
+
 ### 回退（Fallback）行为
 
 - 若某语言版本不存在，则展示默认语言（中文）

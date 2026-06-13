@@ -197,7 +197,12 @@ export interface PostSlugIdentity {
 
 /**
  * 从 Ghost post slug 中提取文章身份。
- * 新约定：ja-homeserver-8 -> locale=ja, i18nKey=homeserver-8
+ * 约定：`{locale}-{key}`，例如 ja-homeserver-8 -> locale=ja, i18nKey=homeserver-8。
+ *
+ * ⚠️ 取舍（有意设计）：`zh-` / `ja-` / `en-` 是**保留 slug 前缀**。任何以合法语言代码加连字符
+ * 开头的 slug 都会被解析为该语言的多语言文章——即使它没有 #lang-* / #i18n-* 标签。因此普通
+ * （非多语言）文章不应使用以语言代码开头的 slug，否则会被误并入翻译组、生成错误的
+ * /{locale}/p/{key} 路由。该保留命名空间约定见 docs/i18n/README，并由 i18n.test.ts 钉住。
  */
 export function extractPostSlugIdentity(slug: string | null | undefined): PostSlugIdentity | null {
     const normalizedSlug = slug?.trim().toLowerCase();
