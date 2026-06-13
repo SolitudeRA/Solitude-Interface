@@ -37,7 +37,7 @@ export default function PostViewPagination({ onScrollToPost, className }: PostVi
         <div
             className={cn(
                 'post-view-pagination',
-                'pvp-cluster group relative w-full overflow-visible pt-1 lg:h-auto',
+                'pvp-cluster group relative w-full overflow-visible pt-1',
                 className
             )}
         >
