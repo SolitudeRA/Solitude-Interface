@@ -14,7 +14,8 @@ interface PostViewPaginationProps {
 }
 
 export default function PostViewPagination({ onScrollToPost, className }: PostViewPaginationProps) {
-    const { totalPosts, visibleIndices, activeIndex } = useAtomValue(postViewAtom);
+    const { totalPosts, visibleIndices, activeIndex, scrollLeft, scrollWidth, clientWidth } =
+        useAtomValue(postViewAtom);
 
     // 没有文章则不渲染
     if (totalPosts === 0) {
@@ -27,7 +28,8 @@ export default function PostViewPagination({ onScrollToPost, className }: PostVi
         visibleIndices,
         DEFAULT_GEOMETRY
     );
-    const minimap = computeMinimapWindow(visibleIndices, totalPosts);
+    // minimap 为 scrollbar thumb:宽度=视口/内容比例(恒定),位置=滚动进度
+    const minimap = computeMinimapWindow(scrollLeft, scrollWidth, clientWidth);
 
     // sr-only 进度文本:当前可见范围(无可见项时退化为 active 篇)
     const firstVisible = visibleIndices.length > 0 ? Math.min(...visibleIndices) : activeIndex;

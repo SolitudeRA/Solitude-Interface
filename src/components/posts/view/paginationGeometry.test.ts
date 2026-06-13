@@ -125,53 +125,47 @@ describe('computeTimelineLayout', () => {
     });
 });
 
-describe('computeMinimapWindow', () => {
-    it('returns zero window when there are no posts or none visible', () => {
-        expect(computeMinimapWindow([], 0)).toEqual({ left: 0, width: 0 });
-        expect(computeMinimapWindow([], 36)).toEqual({ left: 0, width: 0 });
+describe('computeMinimapWindow (scrollbar thumb)', () => {
+    it('returns a zero window when there is no scrollable content', () => {
+        expect(computeMinimapWindow(0, 0, 0)).toEqual({ left: 0, width: 0 });
+        expect(computeMinimapWindow(0, 0, 500)).toEqual({ left: 0, width: 0 });
+        expect(computeMinimapWindow(0, 1000, 0)).toEqual({ left: 0, width: 0 });
     });
 
-    it('maps the visible range to left/width percentages', () => {
-        expect(computeMinimapWindow([0, 1, 2], 36)).toEqual({
-            left: 0,
-            width: (3 / 36) * 100,
-        });
+    it('fills the whole track when content fits the viewport', () => {
+        expect(computeMinimapWindow(0, 800, 800)).toEqual({ left: 0, width: 100 });
+        expect(computeMinimapWindow(0, 800, 1000)).toEqual({ left: 0, width: 100 });
     });
 
-    it('positions a mid-collection window', () => {
-        expect(computeMinimapWindow([10, 11, 12], 36)).toEqual({
-            left: (10 / 36) * 100,
-            width: (3 / 36) * 100,
-        });
+    it('sizes the thumb by viewport / content ratio, stable across scroll positions', () => {
+        // 视口占内容一半 -> 50% 宽,且不随 scrollLeft 改变(解决“长度拖动”)
+        expect(computeMinimapWindow(0, 1000, 500).width).toBe(50);
+        expect(computeMinimapWindow(250, 1000, 500).width).toBe(50);
+        expect(computeMinimapWindow(500, 1000, 500).width).toBe(50);
     });
 
-    it('handles a single visible post', () => {
-        expect(computeMinimapWindow([5], 10)).toEqual({ left: 50, width: 10 });
+    it('positions the thumb by scroll progress', () => {
+        expect(computeMinimapWindow(0, 1000, 500)).toEqual({ left: 0, width: 50 });
+        expect(computeMinimapWindow(250, 1000, 500)).toEqual({ left: 25, width: 50 });
     });
 
-    it('clamps to the ends (first and last post)', () => {
-        expect(computeMinimapWindow([0], 12)).toEqual({ left: 0, width: (1 / 12) * 100 });
-        expect(computeMinimapWindow([35], 36)).toEqual({
-            left: (35 / 36) * 100,
-            width: (1 / 36) * 100,
-        });
-    });
-
-    it('uses min/max so unordered indices still work', () => {
-        expect(computeMinimapWindow([12, 10, 11], 36)).toEqual({
-            left: (10 / 36) * 100,
-            width: (3 / 36) * 100,
-        });
-    });
-
-    it('spans the full track when every post is visible (left + width = 100)', () => {
-        const w = computeMinimapWindow([0, 1, 2], 3);
-        expect(w).toEqual({ left: 0, width: 100 });
+    it('keeps the thumb flush to the right edge at max scroll (left + width = 100)', () => {
+        const w = computeMinimapWindow(500, 1000, 500); // maxScroll = 1000 - 500
+        expect(w).toEqual({ left: 50, width: 50 });
         expect(w.left + w.width).toBe(100);
     });
 
-    it('keeps the last-index window flush to the right edge (left + width = 100)', () => {
-        const w = computeMinimapWindow([35], 36);
-        expect(w.left + w.width).toBeCloseTo(100, 10);
+    it('clamps overscroll so the thumb never leaves the track', () => {
+        // 负向回弹
+        expect(computeMinimapWindow(-80, 1000, 500).left).toBe(0);
+        // 超过最大滚动(rubber-band)
+        const over = computeMinimapWindow(900, 1000, 500); // maxLeft = 100 - 50
+        expect(over.left).toBe(50);
+        expect(over.left + over.width).toBe(100);
+    });
+
+    it('produces a short thumb for long content', () => {
+        // 视口占内容 1/5 -> 20% 宽(内容越多,滑块越短)
+        expect(computeMinimapWindow(0, 2500, 500).width).toBe(20);
     });
 });

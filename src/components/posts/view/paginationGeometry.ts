@@ -90,19 +90,31 @@ export interface MinimapWindow {
 }
 
 /**
- * minimap 总览底条上的高亮段 = 当前可见窗口在整体里的位置与占比。
- * left = min(visible)/total,width = (max−min+1)/total(均为百分比)。
+ * minimap 总览滑块(scrollbar thumb 式)。
+ * width = 视口占内容的比例(clientWidth/scrollWidth),与可见卡片数解耦,故滚动时长度恒定不抖;
+ * left = 滚动进度(scrollLeft/scrollWidth),夹紧到 [0, 100−width] 以吃掉 rubber-band 过冲。
+ * 内容未超出视口时返回满轨;无可滚内容时返回空窗口。
+ *
+ * @param scrollLeft  容器当前水平滚动量(px)
+ * @param scrollWidth 容器内容总宽(px)
+ * @param clientWidth 容器可视宽(px)
  */
-export function computeMinimapWindow(visibleIndices: number[], totalPosts: number): MinimapWindow {
-    if (totalPosts <= 0 || visibleIndices.length === 0) {
+export function computeMinimapWindow(
+    scrollLeft: number,
+    scrollWidth: number,
+    clientWidth: number
+): MinimapWindow {
+    if (scrollWidth <= 0 || clientWidth <= 0) {
         return { left: 0, width: 0 };
     }
-    const first = Math.min(...visibleIndices);
-    const last = Math.max(...visibleIndices);
-    return {
-        left: (first / totalPosts) * 100,
-        width: ((last - first + 1) / totalPosts) * 100,
-    };
+    if (clientWidth >= scrollWidth) {
+        return { left: 0, width: 100 };
+    }
+    const width = (clientWidth / scrollWidth) * 100;
+    const maxLeft = 100 - width;
+    const rawLeft = (scrollLeft / scrollWidth) * 100;
+    const left = Math.min(Math.max(rawLeft, 0), maxLeft);
+    return { left, width };
 }
 
 /**
