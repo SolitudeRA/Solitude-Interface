@@ -1,7 +1,11 @@
 import type { PostTag } from '@api/ghost/types';
 
 /**
- * 支持的语言列表
+ * 支持的语言列表。
+ *
+ * ⚠️ 数组顺序是 load-bearing：getPostWithFallback 在请求语言与默认语言(zh)都缺失时，
+ * 按此顺序选取「任意可用变体」(故 zh 缺失时 ja 优先于 en)。这里是语言集合的单一真源；
+ * astro.config.mjs 的 i18n.locales 仅用于路由前缀，但两处的语言集合必须保持一致。
  */
 export const LOCALES = ['zh', 'ja', 'en'] as const;
 

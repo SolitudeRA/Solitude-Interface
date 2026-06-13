@@ -60,7 +60,9 @@ export default defineConfig({
     },
 
     i18n: {
-        locales: ['zh', 'en', 'ja'],
+        // 语言集合的单一真源是 src/lib/i18n.ts 的 LOCALES；此处顺序仅用于路由前缀、
+        // 对生成站点无可观察影响，但与 LOCALES 保持一致以免困惑。
+        locales: ['zh', 'ja', 'en'],
         defaultLocale: 'zh',
         routing: {
             prefixDefaultLocale: true,
