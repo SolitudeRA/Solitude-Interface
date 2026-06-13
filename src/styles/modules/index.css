@@ -6,3 +6,4 @@
 @import './article/index.css'; /* 文章组件 */
 @import './navbar.css'; /* 导航栏组件 */
 @import './dock.css'; /* Dock 组件 */
+@import './post-view-timeline.css'; /* post-view 时间线 */
