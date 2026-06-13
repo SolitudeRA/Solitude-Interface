@@ -5,6 +5,7 @@ import {
     markerOpacity,
     DEFAULT_GEOMETRY,
     computeTimelineLayout,
+    computeMinimapWindow,
 } from './paginationGeometry';
 
 describe('smoothstep', () => {
@@ -121,5 +122,45 @@ describe('computeTimelineLayout', () => {
         expect(markers[7]!.opacity).toBe(1);
         expect(markers[6]!.opacity).toBe(1);
         expect(markers[5]!.opacity).toBeCloseTo(0.5, 5);
+    });
+});
+
+describe('computeMinimapWindow', () => {
+    it('returns zero window when there are no posts or none visible', () => {
+        expect(computeMinimapWindow([], 0)).toEqual({ left: 0, width: 0 });
+        expect(computeMinimapWindow([], 36)).toEqual({ left: 0, width: 0 });
+    });
+
+    it('maps the visible range to left/width percentages', () => {
+        expect(computeMinimapWindow([0, 1, 2], 36)).toEqual({
+            left: 0,
+            width: (3 / 36) * 100,
+        });
+    });
+
+    it('positions a mid-collection window', () => {
+        expect(computeMinimapWindow([10, 11, 12], 36)).toEqual({
+            left: (10 / 36) * 100,
+            width: (3 / 36) * 100,
+        });
+    });
+
+    it('handles a single visible post', () => {
+        expect(computeMinimapWindow([5], 10)).toEqual({ left: 50, width: 10 });
+    });
+
+    it('clamps to the ends (first and last post)', () => {
+        expect(computeMinimapWindow([0], 12)).toEqual({ left: 0, width: (1 / 12) * 100 });
+        expect(computeMinimapWindow([35], 36)).toEqual({
+            left: (35 / 36) * 100,
+            width: (1 / 36) * 100,
+        });
+    });
+
+    it('uses min/max so unordered indices still work', () => {
+        expect(computeMinimapWindow([12, 10, 11], 36)).toEqual({
+            left: (10 / 36) * 100,
+            width: (3 / 36) * 100,
+        });
     });
 });

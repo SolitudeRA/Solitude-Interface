@@ -81,6 +81,29 @@ export interface TimelineLayout {
     translateX: number;
 }
 
+export interface MinimapWindow {
+    /** 高亮段左缘占整条的百分比 [0,100] */
+    left: number;
+    /** 高亮段宽度占整条的百分比 [0,100] */
+    width: number;
+}
+
+/**
+ * minimap 总览底条上的高亮段 = 当前可见窗口在整体里的位置与占比。
+ * left = min(visible)/total,width = (max−min+1)/total(均为百分比)。
+ */
+export function computeMinimapWindow(visibleIndices: number[], totalPosts: number): MinimapWindow {
+    if (totalPosts <= 0 || visibleIndices.length === 0) {
+        return { left: 0, width: 0 };
+    }
+    const first = Math.min(...visibleIndices);
+    const last = Math.max(...visibleIndices);
+    return {
+        left: (first / totalPosts) * 100,
+        width: ((last - first + 1) / totalPosts) * 100,
+    };
+}
+
 /**
  * 计算整条时间线布局。窗口外 marker width/margin 为 0(不占位),故长度恒定。
  * translateX 让 active marker 的中心落在内容总宽的中点。
