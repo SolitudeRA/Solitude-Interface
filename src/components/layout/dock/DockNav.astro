@@ -25,7 +25,7 @@ const privacyLabel = 'Privacy';
 
 <!-- 移动端汉堡菜单 - 小于768px -->
 <div class="flex justify-center md:hidden">
-    <DockNavMobile client:load />
+    <DockNavMobile client:idle />
 </div>
 
 <!-- 桌面端导航栏 - 768px及以上 -->
@@ -71,7 +71,7 @@ const privacyLabel = 'Privacy';
         </div>
         <!-- RSS 选择器 - lg 时为右侧，xl 时为普通 -->
         <div class="dock-nav-item dock-nav-item-right-lg hidden lg:flex">
-            <RssSelector client:load showLabel={true} textLocale="en" />
+            <RssSelector client:idle showLabel={true} textLocale="en" />
         </div>
         <!-- Privacy Policy 仅在大屏显示，xl+ 为右侧 -->
         <div class="dock-nav-item-right hidden xl:flex">

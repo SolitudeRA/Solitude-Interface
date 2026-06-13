@@ -13,7 +13,7 @@ src/components/
 ├── common/           # 通用基础组件 (Button, Card, Badge, Tooltip, Switch 等)
 │   └── lib/          # 组件工具函数 (cn, utils)
 ├── home/             # 首页专用组件
-├── i18n/             # 国际化组件 (FallbackNotice, PostLanguageSwitcher)
+├── i18n/             # 国际化组件 (FallbackNotice)
 ├── layout/           # 布局组件
 │   ├── dock/         # Dock 底部导航栏
 │   └── navbar/       # 顶部导航栏
@@ -23,7 +23,7 @@ src/components/
 │   └── privacy-policy/
 ├── posts/            # 文章展示组件
 │   ├── detail/       # 文章详情组件 (PostContent, PostHeader, TableOfContents)
-│   └── view/         # 列表视图组件 (PostViewCarousel, PostViewPagination)
+│   └── view/         # 列表视图组件 (PostViewContainer, PostViewScrollContainer, PostViewPagination)
 └── utils/            # 工具组件 (GoogleAnalytics 等)
 ```
 

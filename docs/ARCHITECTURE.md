@@ -69,8 +69,10 @@
 用户交互 → React 组件 → Jotai Store → UI 更新
                 ↓
         src/stores/postViewAtom.ts
-        src/stores/themeAtom.ts
 ```
+
+> 注：主题切换不经 Jotai，由 `ThemeSwitch.astro` 的内联脚本直接读写 `localStorage['theme']`
+> 并派发 `themeChanged` 事件（在绘制前设置 `<html>` class，避免 FOUC）。
 
 ---
 
@@ -211,9 +213,8 @@ components/
 #### Jotai Atoms
 
 ```typescript
-// src/stores/themeAtom.ts
-// 主题状态 (持久化到 localStorage)
-export const themeAtom = atomWithLocalStorage<Theme>('theme', 'system');
+// 注意：主题切换不经 Jotai，由 ThemeSwitch.astro 的内联脚本直接读写
+// localStorage['theme'] 并派发 themeChanged 事件（避免 FOUC）。
 
 // src/stores/postViewAtom.ts
 // 文章视图状态

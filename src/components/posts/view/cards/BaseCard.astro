@@ -110,11 +110,11 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
 
     <div class="base-card-shade" aria-hidden="true"></div>
 
-    <div class="corner-grid" aria-label="Ghost tag groups">
-        <div class="corner-zone" aria-label="Post type">
+    <div class="corner-grid">
+        <div class="corner-zone">
             {typeLabel && <span class="corner-value is-type">{typeLabel}</span>}
         </div>
-        <div class="corner-zone" aria-label="Post series">
+        <div class="corner-zone">
             {
                 (seriesLabel || seriesNumber) && (
                     <span class="corner-series">
@@ -126,7 +126,7 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
                 )
             }
         </div>
-        <div class="corner-zone" aria-label="General tags">
+        <div class="corner-zone">
             {
                 generalTags.length > 0 && (
                     <span class="corner-tags">
@@ -137,7 +137,7 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
                 )
             }
         </div>
-        <div class="corner-zone" aria-label="Post category">
+        <div class="corner-zone">
             {categoryLabel && <span class="corner-value is-category">{categoryLabel}</span>}
         </div>
     </div>

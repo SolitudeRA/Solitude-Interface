@@ -272,6 +272,21 @@ Ghost 上に 3 つの独立投稿ができ、`#i18n-astro-guide` で関連付け
 | 「Astro入門ガイド」（日本語）          | `#lang-ja`, `#i18n-astro-guide`, `type-article`, `category-tech` |
 | 「Getting Started with Astro」（英語） | `#lang-en`, `#i18n-astro-guide`, `type-article`, `category-tech` |
 
+### 投稿 slug の命名規約（予約プレフィックス）
+
+内部タグに加えて、**Ghost の投稿 slug** から直接記事のアイデンティティを導出する仕組みもあり、規約は `{locale}-{key}` です：
+
+| 投稿 slug         | 解析結果                                                                |
+| ----------------- | ----------------------------------------------------------------------- |
+| `ja-homeserver-8` | locale = `ja`、翻訳グループ key = `homeserver-8` → `/ja/p/homeserver-8` |
+| `en-blog-project` | locale = `en`、翻訳グループ key = `blog-project` → `/en/p/blog-project` |
+
+> ⚠️ **`zh-` / `ja-` / `en-` は予約された slug プレフィックスです。** 有効な言語コード＋ハイフンで始まる slug は、`#lang-*` / `#i18n-*` タグが無くても、その言語の多言語投稿として解析されます。
+>
+> そのため、**通常（非多言語）の投稿に `zh-…` / `ja-…` / `en-…` のような slug を付けないでください**。誤って翻訳グループにまとめられ、誤った `/{locale}/p/{key}` ルートや hreflang が生成されます。通常の投稿には言語コードで始まらない slug を使ってください。
+>
+> 投稿に `#lang-*` タグがある場合：**言語**はタグを優先し slug プレフィックスはフォールバック、**翻訳グループ key** は slug を優先し `#i18n-*` タグをフォールバックとします。
+
 ### フォールバック（Fallback）動作
 
 - 対応言語の投稿が存在しない場合、デフォルト言語（中国語）を表示

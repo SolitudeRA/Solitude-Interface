@@ -34,8 +34,8 @@ const htmlLang = LOCALE_HTML_LANG[locale];
 
 const { siteTitle, siteDescription, logoUrl, coverImageUrl } = await initializeSiteData();
 
-// 获取所有文章
-const allPosts = await listAllPosts({ limit: 100 });
+// 获取完整候选集后再按语言和 i18n key 去重
+const allPosts = await listAllPosts();
 // 按语言过滤：优先显示当前语言，如果没有则显示其他语言版本
 const localizedPosts = filterPostsByLocale(allPosts, locale);
 // 提取文章对象（已按发布日期排序）

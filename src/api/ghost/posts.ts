@@ -158,16 +158,13 @@ export async function getPostByGroupAndLocale(key: string, locale: Locale): Prom
         return cachedPost;
     }
 
-    try {
-        const index = await getPostIndexByGroup();
-        const post = index.get(key)?.[locale] ?? null;
+    // fail-fast：后端错误应中止构建（与 listAllPosts 等一致），而非静默发布缺失该文章的站点。
+    // 注意「找不到该 key/locale 的变体」是正常情况，返回 null；只有 getPostIndexByGroup 抛错才会冒泡。
+    const index = await getPostIndexByGroup();
+    const post = index.get(key)?.[locale] ?? null;
 
-        setCache(cacheKey, post);
-        return post;
-    } catch (error) {
-        console.error(`Failed to get post for key=${key}, locale=${locale}:`, error);
-        return null;
-    }
+    setCache(cacheKey, post);
+    return post;
 }
 
 /**
@@ -183,22 +180,18 @@ export async function getVariantsByGroup(key: string): Promise<Record<Locale, Po
         return cachedVariants;
     }
 
-    try {
-        const index = await getPostIndexByGroup();
-        const indexedVariants = index.get(key);
-        const variants = createEmptyVariants();
+    // fail-fast：后端错误应中止构建，而非返回看似「无翻译版本」的空结果。
+    const index = await getPostIndexByGroup();
+    const indexedVariants = index.get(key);
+    const variants = createEmptyVariants();
 
-        for (const locale of LOCALES) {
-            variants[locale] = indexedVariants?.[locale] ?? null;
-        }
-
-        setCache(cacheKey, variants);
-
-        return variants;
-    } catch (error) {
-        console.error(`Failed to get variants for key=${key}:`, error);
-        return createEmptyVariants();
+    for (const locale of LOCALES) {
+        variants[locale] = indexedVariants?.[locale] ?? null;
     }
+
+    setCache(cacheKey, variants);
+
+    return variants;
 }
 
 /**
@@ -213,16 +206,12 @@ export async function listAllGroupKeys(): Promise<string[]> {
         return cachedKeys;
     }
 
-    try {
-        const postIndex = await getPostIndexByGroup();
-        const keysArray = Array.from(postIndex.keys());
-        setCache(cacheKey, keysArray);
+    // fail-fast：后端错误应中止构建，而非让 getStaticPaths 静默拿到 [] 而生成 0 篇详情页。
+    const postIndex = await getPostIndexByGroup();
+    const keysArray = Array.from(postIndex.keys());
+    setCache(cacheKey, keysArray);
 
-        return keysArray;
-    } catch (error) {
-        console.error('Failed to list all group keys:', error);
-        return [];
-    }
+    return keysArray;
 }
 
 /**

@@ -31,7 +31,7 @@ const htmlLang = LOCALE_HTML_LANG[locale];
 
 const { siteTitle, siteDescription, logoUrl, coverImageUrl } = await initializeSiteData();
 // 获取完整候选集后再按语言和 i18n key 去重，避免三语版本挤占首页卡片数量。
-const posts = await listAllPosts({ limit: 100 });
+const posts = await listAllPosts();
 
 // 生成 hreflang 链接
 const alternateLinks = generateAlternateLinks(env.site.url, '', LOCALES);

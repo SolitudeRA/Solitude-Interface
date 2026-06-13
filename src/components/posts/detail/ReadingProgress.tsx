@@ -139,6 +139,9 @@ export default function ReadingProgress({
                                                 ? 'mobile-toc-link is-active'
                                                 : 'mobile-toc-link'
                                         }
+                                        aria-current={
+                                            activeId === heading.id ? 'location' : undefined
+                                        }
                                         onClick={() => handleClick(heading.id)}
                                     >
                                         {heading.text}

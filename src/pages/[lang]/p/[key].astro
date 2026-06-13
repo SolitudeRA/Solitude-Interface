@@ -110,7 +110,7 @@ function toSeriesNavItem(candidate: (typeof seriesPosts)[number] | null) {
 
     return {
         title: candidate.title,
-        href: groupKey ? buildPostPath(locale, groupKey) : candidate.url.pathname,
+        href: groupKey ? buildPostPath(displayedLocale, groupKey) : candidate.url.pathname,
         published_at: candidate.published_at,
     };
 }
