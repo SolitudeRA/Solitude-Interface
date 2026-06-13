@@ -39,9 +39,18 @@ export class GhostAPIClient {
             'Accept-Version': env.ghost.version,
         };
 
-        if (env.cloudflare.accessClientId && env.cloudflare.accessClientSecret) {
-            headers['CF-Access-Client-Id'] = env.cloudflare.accessClientId;
-            headers['CF-Access-Client-Secret'] = env.cloudflare.accessClientSecret;
+        const { accessClientId, accessClientSecret } = env.cloudflare;
+        if (accessClientId && accessClientSecret) {
+            headers['CF-Access-Client-Id'] = accessClientId;
+            headers['CF-Access-Client-Secret'] = accessClientSecret;
+        } else if (Boolean(accessClientId) !== Boolean(accessClientSecret)) {
+            // 半配置：只设置了 id 或 secret 之一，CF Access 认证头不会发送，
+            // 对受 Cloudflare Access 保护的 Ghost 会导致 403。明确提示以便诊断。
+            console.warn(
+                '[GhostAPIClient] 仅配置了 CF Access 凭据中的一个' +
+                    '（CF_ACCESS_CLIENT_ID / CF_ACCESS_CLIENT_SECRET）；' +
+                    '认证头将不会发送。请同时设置两者，或都不设置。'
+            );
         }
 
         this.axiosInstance = axios.create({

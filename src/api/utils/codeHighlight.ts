@@ -69,7 +69,7 @@ const SUPPORTED_LANGUAGES = new Set<string>([
  * 匹配 <pre><code class="language-xxx">...</code></pre> 格式
  */
 const CODE_BLOCK_REGEX =
-    /<pre[^>]*>\s*<code[^>]*class="[^"]*language-(\w+)[^"]*"[^>]*>([\s\S]*?)<\/code>\s*<\/pre>/gi;
+    /<pre[^>]*>\s*<code[^>]*class="[^"]*language-([a-z0-9_+#-]+)[^"]*"[^>]*>([\s\S]*?)<\/code>\s*<\/pre>/gi;
 
 /**
  * 解码 HTML 实体

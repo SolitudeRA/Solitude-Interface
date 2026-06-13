@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { GhostAPIClient, getGhostClient, resetGhostClient } from '@api/clients/ghost';
+import { env } from '@api/config/env';
 import axios from 'axios';
 
 // Mock axios
@@ -220,6 +221,54 @@ describe('GhostAPIClient', () => {
             resetGhostClient();
             const client2 = getGhostClient();
             expect(client1).not.toBe(client2);
+        });
+    });
+
+    describe('Cloudflare Access 头配置', () => {
+        let warnSpy: ReturnType<typeof vi.spyOn>;
+
+        beforeEach(() => {
+            warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+            env.cloudflare.accessClientId = '';
+            env.cloudflare.accessClientSecret = '';
+        });
+
+        afterEach(() => {
+            env.cloudflare.accessClientId = '';
+            env.cloudflare.accessClientSecret = '';
+            warnSpy.mockRestore();
+        });
+
+        it('仅配置 client id 时发出警告', () => {
+            env.cloudflare.accessClientId = 'id-only';
+            new GhostAPIClient();
+            expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('CF Access'));
+        });
+
+        it('仅配置 client secret 时发出警告', () => {
+            env.cloudflare.accessClientSecret = 'secret-only';
+            new GhostAPIClient();
+            expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('CF Access'));
+        });
+
+        it('两者都配置时不警告，并设置 CF-Access 头', () => {
+            env.cloudflare.accessClientId = 'id';
+            env.cloudflare.accessClientSecret = 'secret';
+            new GhostAPIClient();
+            expect(warnSpy).not.toHaveBeenCalled();
+            expect(axios.create).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'CF-Access-Client-Id': 'id',
+                        'CF-Access-Client-Secret': 'secret',
+                    }),
+                })
+            );
+        });
+
+        it('两者都不配置时不警告', () => {
+            new GhostAPIClient();
+            expect(warnSpy).not.toHaveBeenCalled();
         });
     });
 });

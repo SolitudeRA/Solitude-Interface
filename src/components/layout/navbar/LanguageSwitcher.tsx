@@ -88,6 +88,8 @@ export default function LanguageSwitcher({
         if (e.key === 'Escape') {
             setIsOpen(false);
         } else if (canSwitchLocale && (e.key === 'Enter' || e.key === ' ')) {
+            // 阻止按键默认行为，否则原生 button 会再触发一次 onClick，导致菜单开后立即被关
+            e.preventDefault();
             setIsOpen(!isOpen);
         }
     };
