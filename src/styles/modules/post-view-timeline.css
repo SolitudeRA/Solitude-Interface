@@ -1,0 +1,102 @@
+/**
+ * post-view 时间线(PostViewPagination)样式。
+ * 动态值(width / marginInline / opacity / translateX)由组件 inline style 设置;
+ * 此处只放静态样式、过渡、keyframes 与降级。
+ */
+
+.pvp-track {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+    transition: transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.pvp-marker {
+    flex: 0 0 auto;
+    height: 6px;
+    border: 0;
+    padding: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    background: color-mix(in oklch, var(--foreground) 55%, transparent);
+    transition:
+        width 380ms cubic-bezier(0.22, 0.61, 0.36, 1),
+        margin 380ms cubic-bezier(0.22, 0.61, 0.36, 1),
+        opacity 380ms ease,
+        background 380ms ease;
+}
+
+.pvp-marker:focus-visible {
+    outline: 2px solid var(--toc-link-active, #6ee7ff);
+    outline-offset: 3px;
+}
+
+.pvp-marker.is-active {
+    background: linear-gradient(90deg, #ffd166, #6ee7ff, #8aa2ff, #6ee7ff, #ffd166);
+    background-size: 200% 100%;
+    box-shadow:
+        0 0 10px rgb(110 231 255 / 0.45),
+        0 0 20px rgb(138 162 255 / 0.28);
+    animation:
+        pvp-flow 3.2s linear infinite,
+        pvp-breathe 2.4s ease-in-out infinite;
+}
+
+.pvp-aura {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 60%;
+    height: 90px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    border-radius: 999px;
+    filter: blur(34px);
+    opacity: 0.5;
+    background: radial-gradient(
+        ellipse at 50% 50%,
+        rgb(110 231 255 / 0.16),
+        rgb(138 162 255 / 0.1) 38%,
+        rgb(255 209 102 / 0.045) 60%,
+        transparent 78%
+    );
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+}
+
+@keyframes pvp-flow {
+    from {
+        background-position: 0% 50%;
+    }
+    to {
+        background-position: 200% 50%;
+    }
+}
+
+@keyframes pvp-breathe {
+    0%,
+    100% {
+        box-shadow:
+            0 0 8px rgb(110 231 255 / 0.45),
+            0 0 16px rgb(138 162 255 / 0.28);
+    }
+    50% {
+        box-shadow:
+            0 0 16px rgb(110 231 255 / 0.45),
+            0 0 30px rgb(138 162 255 / 0.28);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pvp-track,
+    .pvp-marker {
+        transition: none;
+    }
+
+    .pvp-marker.is-active {
+        animation: none;
+    }
+}
