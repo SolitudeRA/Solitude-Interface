@@ -1,6 +1,7 @@
 /**
  * post-view 时间线的纯几何计算(无 DOM 依赖,可单测)。
  * 设计见 docs/superpowers/specs/2026-06-13-post-view-timeline-redesign-design.md
+ * minimap 总览窗口(computeMinimapWindow)见 docs/superpowers/specs/2026-06-13-post-view-timeline-v3-minimap.md
  */
 
 export interface GeometryParams {

@@ -163,4 +163,15 @@ describe('computeMinimapWindow', () => {
             width: (3 / 36) * 100,
         });
     });
+
+    it('spans the full track when every post is visible (left + width = 100)', () => {
+        const w = computeMinimapWindow([0, 1, 2], 3);
+        expect(w).toEqual({ left: 0, width: 100 });
+        expect(w.left + w.width).toBe(100);
+    });
+
+    it('keeps the last-index window flush to the right edge (left + width = 100)', () => {
+        const w = computeMinimapWindow([35], 36);
+        expect(w.left + w.width).toBeCloseTo(100, 10);
+    });
 });
