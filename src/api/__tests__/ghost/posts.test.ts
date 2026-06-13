@@ -1,5 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { getHighlightPosts, getPosts, listAllPosts } from '@api/ghost/posts';
+import {
+    getHighlightPosts,
+    getPosts,
+    listAllPosts,
+    listAllGroupKeys,
+    getVariantsByGroup,
+    getPostByGroupAndLocale,
+} from '@api/ghost/posts';
 import { getGhostClient } from '@api/clients/ghost';
 import * as cache from '@api/utils/cache';
 import type { FeaturedPost, Post, PostTag } from '@api/ghost/types';
@@ -407,6 +414,35 @@ describe('Posts API', () => {
                 },
             });
             expect(cache.setCache).toHaveBeenCalledWith('all_posts_view:2:1', expect.any(Array));
+        });
+    });
+
+    describe('数据层错误契约：后端失败时 fail-fast', () => {
+        it('listAllGroupKeys 在后端失败时抛错（而非静默返回 []）', async () => {
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+            mockGet.mockRejectedValue(new Error('Ghost backend down'));
+
+            await expect(listAllGroupKeys()).rejects.toThrow();
+
+            consoleErrorSpy.mockRestore();
+        });
+
+        it('getVariantsByGroup 在后端失败时抛错（而非返回空变体）', async () => {
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+            mockGet.mockRejectedValue(new Error('Ghost backend down'));
+
+            await expect(getVariantsByGroup('some-key')).rejects.toThrow();
+
+            consoleErrorSpy.mockRestore();
+        });
+
+        it('getPostByGroupAndLocale 在后端失败时抛错（而非返回 null）', async () => {
+            const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+            mockGet.mockRejectedValue(new Error('Ghost backend down'));
+
+            await expect(getPostByGroupAndLocale('some-key', 'zh')).rejects.toThrow();
+
+            consoleErrorSpy.mockRestore();
         });
     });
 });
