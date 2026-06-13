@@ -45,3 +45,19 @@ export function markerWidth(distance: number, p: GeometryParams): number {
     if (d > p.K + p.J) return 0;
     return lerp(p.barW, p.dotW, smoothstep(0, p.sharp, d));
 }
+
+/**
+ * 距 active 的距离 -> 透明度。
+ * 窗口外=0;d<=K 取 base(visible?1:0.5);K<d<=R 在 base 上按 smoothstep 渐隐到 0(表示"还有更多")。
+ */
+export function markerOpacity(
+    distance: number,
+    opts: { visible: boolean; K: number; J: number }
+): number {
+    const d = Math.abs(distance);
+    const r = opts.K + opts.J;
+    if (d > r) return 0;
+    const base = opts.visible ? 1 : 0.5;
+    if (d <= opts.K) return base;
+    return base * (1 - smoothstep(opts.K, r, d));
+}

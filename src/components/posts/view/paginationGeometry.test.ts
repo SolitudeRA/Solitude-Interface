@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { smoothstep, markerWidth, DEFAULT_GEOMETRY } from './paginationGeometry';
+import { smoothstep, markerWidth, markerOpacity, DEFAULT_GEOMETRY } from './paginationGeometry';
 
 describe('smoothstep', () => {
     it('clamps below edge0 to 0 and above edge1 to 1', () => {
@@ -46,5 +46,31 @@ describe('markerWidth', () => {
         expect(markerWidth(0, custom)).toBeCloseTo(10, 5); // barW
         expect(markerWidth(2, custom)).toBeCloseTo(2, 5); // smoothstep(0,2,2)=1 -> dotW
         expect(markerWidth(4, custom)).toBe(0); // > K+J = 3
+    });
+});
+
+describe('markerOpacity', () => {
+    const o = { K: 3, J: 4 }; // R = 7
+
+    it('is fully opaque for a visible marker inside the bar region (d <= K)', () => {
+        expect(markerOpacity(0, { visible: true, ...o })).toBe(1);
+        expect(markerOpacity(3, { visible: true, ...o })).toBe(1);
+    });
+
+    it('is dimmed (0.5) for a non-visible marker inside the bar region', () => {
+        expect(markerOpacity(2, { visible: false, ...o })).toBeCloseTo(0.5, 5);
+    });
+
+    it('fades to 0 at the window edge (d = R)', () => {
+        expect(markerOpacity(7, { visible: true, ...o })).toBeCloseTo(0, 5);
+    });
+
+    it('is 0 outside the window (d > R)', () => {
+        expect(markerOpacity(8, { visible: true, ...o })).toBe(0);
+    });
+
+    it('partially fades outer dots (K < d < R)', () => {
+        // smoothstep(3, 7, 5) === 0.5 -> 1 * (1 - 0.5) === 0.5
+        expect(markerOpacity(5, { visible: true, ...o })).toBeCloseTo(0.5, 5);
     });
 });
