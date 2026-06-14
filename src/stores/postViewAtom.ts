@@ -12,12 +12,6 @@ export interface PostViewState {
     activeIndex: number;
     /** 各文章的发布日期 */
     postDates: string[];
-    /** 滚动容器当前水平滚动量（px，用于 minimap 滑块定位） */
-    scrollLeft: number;
-    /** 滚动容器内容总宽（px，用于 minimap 滑块尺寸） */
-    scrollWidth: number;
-    /** 滚动容器可视宽（px，用于 minimap 滑块尺寸） */
-    clientWidth: number;
 }
 
 /**
@@ -28,9 +22,6 @@ const initialPostViewState: PostViewState = {
     visibleIndices: [],
     activeIndex: 0,
     postDates: [],
-    scrollLeft: 0,
-    scrollWidth: 0,
-    clientWidth: 0,
 };
 
 /**

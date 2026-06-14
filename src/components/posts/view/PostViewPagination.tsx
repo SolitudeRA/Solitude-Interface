@@ -1,11 +1,7 @@
 import { useAtomValue } from 'jotai';
 import { cn } from '@components/common/lib/utils';
 import { postViewAtom } from '@stores/postViewAtom';
-import {
-    computeTimelineLayout,
-    computeMinimapWindow,
-    DEFAULT_GEOMETRY,
-} from './paginationGeometry';
+import { computeTimelineLayout, DEFAULT_GEOMETRY } from './paginationGeometry';
 
 interface PostViewPaginationProps {
     /** 用于滚动到指定文章的回调函数 */
@@ -14,8 +10,7 @@ interface PostViewPaginationProps {
 }
 
 export default function PostViewPagination({ onScrollToPost, className }: PostViewPaginationProps) {
-    const { totalPosts, visibleIndices, activeIndex, scrollLeft, scrollWidth, clientWidth } =
-        useAtomValue(postViewAtom);
+    const { totalPosts, visibleIndices, activeIndex } = useAtomValue(postViewAtom);
 
     // 没有文章则不渲染
     if (totalPosts === 0) {
@@ -28,8 +23,6 @@ export default function PostViewPagination({ onScrollToPost, className }: PostVi
         visibleIndices,
         DEFAULT_GEOMETRY
     );
-    // minimap 为 scrollbar thumb:宽度=视口/内容比例(恒定),位置=滚动进度
-    const minimap = computeMinimapWindow(scrollLeft, scrollWidth, clientWidth);
 
     // sr-only 进度文本:当前可见范围(无可见项时退化为 active 篇)
     const firstVisible = visibleIndices.length > 0 ? Math.min(...visibleIndices) : activeIndex;
@@ -47,7 +40,7 @@ export default function PostViewPagination({ onScrollToPost, className }: PostVi
                 {`正在浏览第 ${firstVisible + 1} 到 ${lastVisible + 1} 篇,共 ${totalPosts} 篇`}
             </span>
 
-            {/* 时间线(主):aura 柔光底 + marker 轨道 */}
+            {/* 时间线:aura 柔光底 + marker 轨道 */}
             <div className="pvp-timeline">
                 <div className="pvp-aura" aria-hidden="true" />
                 <div
@@ -75,17 +68,6 @@ export default function PostViewPagination({ onScrollToPost, className }: PostVi
                         />
                     ))}
                 </div>
-            </div>
-
-            {/* minimap 总览底条(辅):当前可见窗口在整体里的位置 + 占比 */}
-            <div className="pvp-minimap" aria-hidden="true">
-                <div
-                    className="pvp-minimap-window"
-                    style={{
-                        left: `${minimap.left.toFixed(2)}%`,
-                        width: `${minimap.width.toFixed(2)}%`,
-                    }}
-                />
             </div>
         </div>
     );

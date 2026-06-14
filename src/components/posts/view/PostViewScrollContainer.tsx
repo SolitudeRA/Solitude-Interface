@@ -91,12 +91,9 @@ export default function PostViewScrollContainer({
         (container: HTMLDivElement) => {
             const metrics = getScrollMetrics(container);
             const visibleIndices: number[] = [];
-            const scrollLeft = container.scrollLeft;
-            const scrollWidth = container.scrollWidth;
-            const clientWidth = container.clientWidth;
-            const viewportLeft = scrollLeft;
-            const viewportRight = viewportLeft + clientWidth;
-            const viewportCenter = viewportLeft + clientWidth / 2;
+            const viewportLeft = container.scrollLeft;
+            const viewportRight = viewportLeft + container.clientWidth;
+            const viewportCenter = viewportLeft + container.clientWidth / 2;
             const firstCardCenter = metrics.paddingLeft + metrics.itemWidth / 2;
             const closestIndex =
                 metrics.totalPosts > 0
@@ -125,9 +122,6 @@ export default function PostViewScrollContainer({
                     prev.totalPosts === metrics.totalPosts &&
                     prev.activeIndex === nextActiveIndex &&
                     prev.postDates === nextPostDates &&
-                    prev.scrollLeft === scrollLeft &&
-                    prev.scrollWidth === scrollWidth &&
-                    prev.clientWidth === clientWidth &&
                     areNumberArraysEqual(prev.visibleIndices, visibleIndices)
                 ) {
                     return prev;
@@ -139,9 +133,6 @@ export default function PostViewScrollContainer({
                     visibleIndices,
                     activeIndex: nextActiveIndex,
                     postDates: nextPostDates,
-                    scrollLeft,
-                    scrollWidth,
-                    clientWidth,
                 };
             });
         },

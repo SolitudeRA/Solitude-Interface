@@ -1,6 +1,10 @@
 # Post-View 时间线 v3 — minimap 总览 + 叠放布局(替换进度数字)
 
-> 日期:2026-06-13 · 状态:设计已确认(经可交互 demo 反复打磨)
+> 日期:2026-06-13
+> **状态:minimap 暂缓 —— 设计待讨论。** 本分支仅落地「去进度数字 + 去切换 pop + 时间线打磨」;
+> minimap(总览底条 / scrollbar thumb 滑块)的渲染与配套代码已从分支移除,实现保留在 git 历史
+> (`feat: add computeMinimapWindow` / `make minimap a scrollbar thumb` / `cap minimap thumb width` 等提交),
+> 待方向定下后可取回。下文 §3.1–§3.6 的 minimap 设计仅作记录。
 > 对已上线 v2(`PostViewPagination`,进度数字 + 切换 pop + 响应式,PR #62)的修订。
 
 ## 1. 背景与现状
