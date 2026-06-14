@@ -89,20 +89,27 @@ export interface MinimapWindow {
     width: number;
 }
 
+/** minimap 滑块宽度上限(%)。文章少时真实视口/内容比例会偏大,封顶让滑块保持紧凑。 */
+export const DEFAULT_MINIMAP_MAX_WIDTH = 24;
+
 /**
  * minimap 总览滑块(scrollbar thumb 式)。
- * width = 视口占内容的比例(clientWidth/scrollWidth),与可见卡片数解耦,故滚动时长度恒定不抖;
- * left = 滚动进度(scrollLeft/scrollWidth),夹紧到 [0, 100−width] 以吃掉 rubber-band 过冲。
+ * width = min(视口占内容比例 clientWidth/scrollWidth, maxWidthPct):与可见卡片数解耦,
+ *   滚动时长度恒定不抖;文章越多滑块越短,文章少时封顶避免占去半条轨。
+ * left = 滚动进度 × (100−width):按进度映射满行程,故封顶变窄后末端仍贴右缘;
+ *   进度夹紧到 [0,1] 以吃掉 rubber-band 过冲。
  * 内容未超出视口时返回满轨;无可滚内容时返回空窗口。
  *
  * @param scrollLeft  容器当前水平滚动量(px)
  * @param scrollWidth 容器内容总宽(px)
  * @param clientWidth 容器可视宽(px)
+ * @param maxWidthPct 滑块宽度上限(%),默认 DEFAULT_MINIMAP_MAX_WIDTH
  */
 export function computeMinimapWindow(
     scrollLeft: number,
     scrollWidth: number,
-    clientWidth: number
+    clientWidth: number,
+    maxWidthPct: number = DEFAULT_MINIMAP_MAX_WIDTH
 ): MinimapWindow {
     if (scrollWidth <= 0 || clientWidth <= 0) {
         return { left: 0, width: 0 };
@@ -110,10 +117,11 @@ export function computeMinimapWindow(
     if (clientWidth >= scrollWidth) {
         return { left: 0, width: 100 };
     }
-    const width = (clientWidth / scrollWidth) * 100;
-    const maxLeft = 100 - width;
-    const rawLeft = (scrollLeft / scrollWidth) * 100;
-    const left = Math.min(Math.max(rawLeft, 0), maxLeft);
+    const ratio = (clientWidth / scrollWidth) * 100;
+    const width = Math.min(ratio, maxWidthPct);
+    const maxScroll = scrollWidth - clientWidth;
+    const progress = Math.min(Math.max(scrollLeft / maxScroll, 0), 1);
+    const left = progress * (100 - width);
     return { left, width };
 }
 

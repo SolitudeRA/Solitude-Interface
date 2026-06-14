@@ -27,20 +27,21 @@ v2 给时间线左侧加了**进度数字**(`03 / 36`)和 **切换 pop**(active 
 
 - **底轨**(`.pvp-minimap` 的 `::before` 伪元素):`background: color-mix(in oklch, var(--foreground) 5%, transparent)`(极淡),`mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent)`(两端各 30% 渐隐,只中段隐约可见,不全长抢视觉)。高 4px、圆角。
 - **高亮段 / 滑块**(`.pvp-minimap-window`,绝对定位)—— **scrollbar thumb 式**(改自初版"可见范围占比":占比绑定可见卡片数,滚动时数目在 ±1 抖动导致滑块长度抖且偏长):
-    - `width` = `clientWidth / scrollWidth`(视口占内容比例,百分比)。**与可见卡片数解耦,滚动时长度恒定不抖**;内容越多滑块越短。
-    - `left` = `scrollLeft / scrollWidth`(滚动进度,百分比),夹紧到 `[0, 100 − width]` 以吃掉 rubber-band 过冲。
+    - `width` = `min(clientWidth / scrollWidth, 上限)`(视口占内容比例,封顶 `DEFAULT_MINIMAP_MAX_WIDTH = 24%`)。**与可见卡片数解耦,滚动时长度恒定不抖**;文章多时按真实比例越来越短,文章少时封顶避免占去半条轨。
+    - `left` = `滚动进度 × (100 − width)`,进度 = `scrollLeft / (scrollWidth − clientWidth)` 夹紧到 `[0,1]`。**按进度映射满行程**,故封顶变窄后末端仍贴右缘;同时吃掉 rubber-band 过冲。
     - `background: color-mix(in oklch, var(--foreground) 68%, transparent)`(中性色,**不用品牌渐变**,避免与上方 active marker 抢色),`opacity: 0.5`,**无 box-shadow / 无流光动画**,圆角。
     - `transition`:**`left` 不加过渡**(直接跟随 `scrollLeft` 1:1,避免滞后飘移);`width` 仅在 resize 时平滑(240ms)。
 
 ### 3.2 纯函数 `computeMinimapWindow`
 
 ```
-computeMinimapWindow(scrollLeft: number, scrollWidth: number, clientWidth: number): { left: number; width: number }
+computeMinimapWindow(scrollLeft, scrollWidth, clientWidth, maxWidthPct = DEFAULT_MINIMAP_MAX_WIDTH): { left, width }
 ```
 
 - `scrollWidth <= 0` 或 `clientWidth <= 0` → `{ left: 0, width: 0 }`。
 - `clientWidth >= scrollWidth`(内容未超出视口)→ `{ left: 0, width: 100 }`(满轨)。
-- 否则 `width = clientWidth / scrollWidth * 100`;`left = clamp(scrollLeft / scrollWidth * 100, 0, 100 − width)`(百分比,组件设为 inline `style.left/width = 'x%'`)。
+- 否则 `width = min(clientWidth / scrollWidth * 100, maxWidthPct)`;`progress = clamp(scrollLeft / (scrollWidth − clientWidth), 0, 1)`;`left = progress * (100 − width)`(百分比,组件设为 inline `style.left/width = 'x%'`)。
+- `maxWidthPct` 默认 `DEFAULT_MINIMAP_MAX_WIDTH = 24`;组件按默认调用(传 `100` 可关闭封顶,仅供测试)。
 - 滚动尺寸经 `postViewAtom`(新增 `scrollLeft / scrollWidth / clientWidth` 字段,由 `PostViewScrollContainer` 的滚动监听写入)传入。
 
 ### 3.3 叠放布局
@@ -77,7 +78,7 @@ cluster 改为**垂直**(`flex-direction: column`):
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
 | 布局         | 垂直叠放(时间线上 / minimap 下)                                                                                                         |
 | minimap 底轨 | `--foreground` 5% 透明 · mask 两端各 30% 渐隐 · 高 4px                                                                                  |
-| minimap 滑块 | `--foreground` 68% · `opacity 0.5` · 无发光 · scrollbar thumb:`width = clientWidth/scrollWidth` · `left = scrollLeft/scrollWidth`(夹紧) |
+| minimap 滑块 | `--foreground` 68% · `opacity 0.5` · 无发光 · scrollbar thumb:`width = min(clientWidth/scrollWidth, 24%)` · `left = 进度 × (100−width)` |
 | 过渡         | `left` 无过渡(1:1 跟随滚动) · `width` 240ms(仅 resize)                                                                                  |
 | 时间线本体   | 不变(K3 / J4 / sharp3.7 / 流光3.2s / 呼吸2.4s / morph 380ms)                                                                            |
 | 已移除       | 进度数字、切换 pop                                                                                                                      |
