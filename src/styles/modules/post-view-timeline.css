@@ -4,67 +4,24 @@
  * 此处只放静态样式、过渡、keyframes 与降级。
  */
 
-/* cluster:进度数字 + 时间线(桌面左对齐,移动端居中) */
+/* cluster:容纳时间线(列向 —— 让时间线撑满宽度并在 caller 区域内垂直居中)。
+   注:minimap 总览条暂缓(设计待讨论),见 spec。 */
 .pvp-cluster {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
     justify-content: center;
-    gap: clamp(12px, 1.6vw, 22px);
 }
 
-/* 进度数字:当前篇号渐变高亮 + 灰色总数,等宽 */
-.pvp-num {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: baseline;
-    gap: 0.32em;
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-    user-select: none;
-}
-
-.pvp-num-cur {
-    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
-    font-weight: 850;
-    letter-spacing: 0.01em;
-    background: linear-gradient(90deg, #ffd166, #6ee7ff, #8aa2ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.pvp-num-sep {
-    font-size: clamp(1rem, 1.7vw, 1.35rem);
-    font-weight: 600;
-    color: color-mix(in oklch, var(--foreground) 32%, transparent);
-}
-
-.pvp-num-total {
-    font-size: clamp(0.95rem, 1.5vw, 1.2rem);
-    font-weight: 700;
-    color: color-mix(in oklch, var(--foreground) 50%, transparent);
-}
-
-/* 时间线 wrapper(aura + track 的定位上下文) */
+/* 时间线 wrapper:aura + track 的定位上下文 */
 .pvp-timeline {
     position: relative;
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 26px;
     overflow: visible;
-}
-
-/* 桌面(lg+):进度数字靠左,时间线撑开剩余宽度 */
-@media (min-width: 1024px) {
-    .pvp-cluster {
-        justify-content: flex-start;
-    }
-
-    .pvp-timeline {
-        flex: 1 1 auto;
-    }
 }
 
 .pvp-track {
@@ -103,11 +60,9 @@
     box-shadow:
         0 0 10px rgb(110 231 255 / 0.45),
         0 0 20px rgb(138 162 255 / 0.28);
-    transform-origin: center;
     animation:
         pvp-flow 3.2s linear infinite,
-        pvp-breathe 2.4s ease-in-out infinite,
-        pvp-pop 0.42s cubic-bezier(0.22, 0.61, 0.36, 1);
+        pvp-breathe 2.4s ease-in-out infinite;
 }
 
 .pvp-aura {
@@ -152,18 +107,6 @@
         box-shadow:
             0 0 16px rgb(110 231 255 / 0.45),
             0 0 30px rgb(138 162 255 / 0.28);
-    }
-}
-
-@keyframes pvp-pop {
-    0% {
-        transform: scaleY(1);
-    }
-    40% {
-        transform: scaleY(1.9);
-    }
-    100% {
-        transform: scaleY(1);
     }
 }
 
