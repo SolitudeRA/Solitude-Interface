@@ -1,19 +1,21 @@
+<div align="center">
+
 # Solitude Interface
 
-![thumbnail](../assets/thumbnail.png)
+<a href="https://www.solitudera.com"><img src="../assets/thumbnail.png" alt="Solitude Interface" width="100%" /></a>
 
-![Node.js](https://img.shields.io/badge/Node.js-≥18-339933?logo=node.js&logoColor=white)
-![pnpm](https://img.shields.io/badge/pnpm-≥9-F69220?logo=pnpm&logoColor=white)
-![Astro](https://img.shields.io/badge/Astro-5.x-BC52EE?logo=astro&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-blue)
+**[Astro](https://astro.build/) で構築し、[Ghost CMS](https://ghost.org/) の Content API で駆動するモダンな個人ブログ UI です。**
 
-Astro で構築し、Ghost CMS の Content API で駆動するモダンな個人ブログ UI です。
+[![Node.js](https://img.shields.io/badge/Node.js-≥18-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![pnpm](https://img.shields.io/badge/pnpm-≥9-F69220?style=flat-square&logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![Astro](https://img.shields.io/badge/Astro-5.x-BC52EE?style=flat-square&logo=astro&logoColor=white)](https://astro.build/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](../../LICENSE)
 
-**[ライブデモ](https://www.solitudera.com)** · [ドキュメント](../DEVELOPMENT.md)
+[**ライブデモ**](https://www.solitudera.com) · [**ドキュメント**](../DEVELOPMENT.md) · [English](../../README.md) · [简体中文](README.zh.md) · 日本語
+
+</div>
 
 > **このリポジトリについて** —— これは私の個人サイト（[solitudera.com](https://www.solitudera.com)）のソースで、主にショーケース・参考用として公開しています。**再利用可能なテンプレートとして保守しているわけではなく**、issue や Pull Request も積極的には扱っていません。MIT ライセンスなので、自由に閲覧・fork してください。
-
-Read this in: [English](../../README.md) | [简体中文](README.zh.md) | 日本語
 
 ---
 
@@ -30,12 +32,56 @@ Read this in: [English](../../README.md) | [简体中文](README.zh.md) | 日本
 
 ## ハイライト
 
-- **Astro 5 静的サイト + React アイランド** —— コンテンツはビルド時に事前レンダリングし、インタラクションは必要な箇所だけハイドレート（`client:idle` / `client:visible` / `client:load`）。
-- **型付き Ghost CMS データ層** —— ヘッドレス Ghost Content API クライアント（リトライ + タイムアウト付き）→ 型付きアダプター → キャッシュ・グルーピング済みの投稿。外部データ境界でランタイム検証を行います。
-- **多言語（zh / ja / en）** —— 投稿をタグ/slug で言語横断にグルーピングし、3 段階のフォールバックを提供。`hreflang`・`canonical`・ページ単位の `html lang` で SEO に対応。
-- **手作業で調整したモーション** —— バネ駆動の投稿タイムラインと、ビューポート最下層のアンビエント進捗バー（臨界減衰の rAF バネ + 速度連動のグロー）。すべて `prefers-reduced-motion` に追従します。
-- **OKLch デュアルテーマのデザインシステム** —— 明暗トークンを知覚的に均一な色空間で定義し、Tailwind v4 の CSS-first `@theme` 経由で接続。
-- **信頼性のためのエンジニアリング** —— 厳格な TypeScript（`exactOptionalPropertyTypes`）、ユニット + 統合テスト（Vitest）、多段の CI（lint / test / typecheck / build）。
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**Astro 5 静的サイト + React アイランド**
+
+コンテンツはビルド時に事前レンダリングし、インタラクションは必要な箇所だけハイドレート（`client:idle` / `client:visible` / `client:load`）。
+
+</td>
+<td width="50%" valign="top">
+
+**型付き Ghost CMS データ層**
+
+ヘッドレス Content API クライアント（リトライ + タイムアウト）→ 型付きアダプター → キャッシュ・グルーピング済みの投稿。外部データ境界でランタイム検証を行います。
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+**多言語（zh / ja / en）**
+
+投稿をタグ/slug で言語横断にグルーピングし、3 段階のフォールバックを提供。`hreflang`・`canonical`・ページ単位の `html lang` で SEO に対応。
+
+</td>
+<td width="50%" valign="top">
+
+**手作業で調整したモーション**
+
+バネ駆動の投稿タイムラインと、ビューポート最下層のアンビエント進捗バー（臨界減衰の rAF バネ + 速度連動のグロー）。すべて `prefers-reduced-motion` に追従します。
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+**OKLch デュアルテーマのデザインシステム**
+
+明暗トークンを知覚的に均一な色空間で定義し、Tailwind v4 の CSS-first `@theme` 経由で接続。
+
+</td>
+<td width="50%" valign="top">
+
+**信頼性のためのエンジニアリング**
+
+厳格な TypeScript（`exactOptionalPropertyTypes`）、ユニット + 統合テスト（Vitest）、多段の CI（lint / test / typecheck / build）。
+
+</td>
+</tr>
+</table>
 
 アーキテクチャ、コード参照、テストガイドは **[DEVELOPMENT.md](../DEVELOPMENT.md)** を参照してください。
 

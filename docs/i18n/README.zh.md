@@ -1,19 +1,21 @@
+<div align="center">
+
 # Solitude Interface
 
-![thumbnail](../assets/thumbnail.png)
+<a href="https://www.solitudera.com"><img src="../assets/thumbnail.png" alt="Solitude Interface" width="100%" /></a>
 
-![Node.js](https://img.shields.io/badge/Node.js-≥18-339933?logo=node.js&logoColor=white)
-![pnpm](https://img.shields.io/badge/pnpm-≥9-F69220?logo=pnpm&logoColor=white)
-![Astro](https://img.shields.io/badge/Astro-5.x-BC52EE?logo=astro&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-blue)
+**一个使用 [Astro](https://astro.build/) 构建、由 [Ghost CMS](https://ghost.org/) Content API 驱动的现代个人博客界面。**
 
-一个使用 Astro 构建、并由 Ghost CMS Content API 驱动的现代个人博客界面。
+[![Node.js](https://img.shields.io/badge/Node.js-≥18-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![pnpm](https://img.shields.io/badge/pnpm-≥9-F69220?style=flat-square&logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![Astro](https://img.shields.io/badge/Astro-5.x-BC52EE?style=flat-square&logo=astro&logoColor=white)](https://astro.build/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](../../LICENSE)
 
-**[在线预览](https://www.solitudera.com)** · [文档](../DEVELOPMENT.md)
+[**在线预览**](https://www.solitudera.com) · [**文档**](../DEVELOPMENT.md) · [English](../../README.md) · 简体中文 · [日本語](README.ja.md)
+
+</div>
 
 > **关于本仓库** —— 这是我的个人站点（[solitudera.com](https://www.solitudera.com)）的源码，开源主要用于展示与参考。它**并非按可复用模板来维护**，我也不会主动处理 issue 或 Pull Request。项目采用 MIT 许可，欢迎你随意浏览或 fork。
-
-阅读语言： [English](../../README.md) | 简体中文 | [日本語](README.ja.md)
 
 ---
 
@@ -30,12 +32,56 @@
 
 ## 亮点
 
-- **Astro 5 静态站点 + React 群岛** —— 内容在构建期预渲染，交互只在需要处按需水合（`client:idle` / `client:visible` / `client:load`）。
-- **类型化的 Ghost CMS 数据层** —— 无头 Ghost Content API 客户端（带重试 + 超时）→ 类型化适配器 → 缓存、分组后的文章，并在外部数据边界做运行时校验。
-- **多语言（zh / ja / en）** —— 文章按标签/slug 跨语言分组，提供三级回退；`hreflang`、`canonical` 与逐页 `html lang` 服务 SEO。
-- **手工调校的动效** —— 弹簧驱动的文章时间轴，以及视窗最底层的氛围进度条（临界阻尼 rAF 弹簧 + 速度感知光晕），全部遵循 `prefers-reduced-motion`。
-- **OKLch 双主题设计系统** —— 明暗 token 定义在感知均匀的色彩空间中，经 Tailwind v4 的 CSS-first `@theme` 接入。
-- **为可靠而工程化** —— 严格 TypeScript（`exactOptionalPropertyTypes`）、单元 + 集成测试（Vitest），以及多步 CI（lint / test / typecheck / build）。
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**Astro 5 静态站点 + React 群岛**
+
+内容在构建期预渲染，交互只在需要处按需水合（`client:idle` / `client:visible` / `client:load`）。
+
+</td>
+<td width="50%" valign="top">
+
+**类型化的 Ghost CMS 数据层**
+
+无头 Content API 客户端（重试 + 超时）→ 类型化适配器 → 缓存、分组后的文章，并在外部数据边界做运行时校验。
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+**多语言（zh / ja / en）**
+
+文章按标签/slug 跨语言分组，提供三级回退；`hreflang`、`canonical` 与逐页 `html lang` 服务 SEO。
+
+</td>
+<td width="50%" valign="top">
+
+**手工调校的动效**
+
+弹簧驱动的文章时间轴，以及视窗最底层的氛围进度条（临界阻尼 rAF 弹簧 + 速度感知光晕），全部遵循 `prefers-reduced-motion`。
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+**OKLch 双主题设计系统**
+
+明暗 token 定义在感知均匀的色彩空间中，经 Tailwind v4 的 CSS-first `@theme` 接入。
+
+</td>
+<td width="50%" valign="top">
+
+**为可靠而工程化**
+
+严格 TypeScript（`exactOptionalPropertyTypes`）、单元 + 集成测试（Vitest），以及多步 CI（lint / test / typecheck / build）。
+
+</td>
+</tr>
+</table>
 
 架构、代码索引与测试指南见 **[DEVELOPMENT.md](../DEVELOPMENT.md)**。
 

@@ -1,19 +1,21 @@
+<div align="center">
+
 # Solitude Interface
 
-![thumbnail](docs/assets/thumbnail.png)
+<a href="https://www.solitudera.com"><img src="docs/assets/thumbnail.png" alt="Solitude Interface" width="100%" /></a>
 
-![Node.js](https://img.shields.io/badge/Node.js-≥18-339933?logo=node.js&logoColor=white)
-![pnpm](https://img.shields.io/badge/pnpm-≥9-F69220?logo=pnpm&logoColor=white)
-![Astro](https://img.shields.io/badge/Astro-5.x-BC52EE?logo=astro&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-blue)
+**A modern personal blog interface built with [Astro](https://astro.build/), powered by the [Ghost CMS](https://ghost.org/) Content API.**
 
-A modern personal blog interface built with Astro and powered by the Ghost CMS Content API.
+[![Node.js](https://img.shields.io/badge/Node.js-≥18-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![pnpm](https://img.shields.io/badge/pnpm-≥9-F69220?style=flat-square&logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![Astro](https://img.shields.io/badge/Astro-5.x-BC52EE?style=flat-square&logo=astro&logoColor=white)](https://astro.build/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
-**[Live Demo](https://www.solitudera.com)** · [Documentation](docs/DEVELOPMENT.md)
+[**Live Demo**](https://www.solitudera.com) · [**Documentation**](docs/DEVELOPMENT.md) · English · [简体中文](docs/i18n/README.zh.md) · [日本語](docs/i18n/README.ja.md)
+
+</div>
 
 > **About this repo** — this is the source of my personal site ([solitudera.com](https://www.solitudera.com)), open-sourced as a showcase and for reference. It is **not maintained as a reusable template**, and I'm not actively taking issues or pull requests. It's MIT-licensed, so you're welcome to look around or fork it.
-
-Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](docs/i18n/README.ja.md)
 
 ---
 
@@ -30,12 +32,56 @@ Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](doc
 
 ## Highlights
 
-- **Astro 5 static site + React islands** — content is pre-rendered at build time; interactivity is hydrated only where it's needed (`client:idle` / `client:visible` / `client:load`).
-- **Typed Ghost CMS data layer** — a headless Ghost Content API client (with retry + timeout) → a typed adapter → cached, grouped posts, with runtime validation at the external-data boundary.
-- **Multi-language (zh / ja / en)** — posts are grouped across languages by tag/slug with a three-tier fallback; `hreflang`, `canonical`, and per-page `html lang` for SEO.
-- **Hand-tuned motion** — a spring-driven post timeline and an ambient bottom progress bar (critically-damped rAF spring with velocity-aware glow), all `prefers-reduced-motion` aware.
-- **OKLch dual-theme design system** — light/dark tokens defined in a perceptually-uniform color space, wired into Tailwind v4 via CSS-first `@theme`.
-- **Engineered for confidence** — strict TypeScript (`exactOptionalPropertyTypes`), unit + integration tests (Vitest), and a multi-step CI (lint / test / typecheck / build).
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**Astro 5 static site + React islands**
+
+Content is pre-rendered at build time; interactivity hydrates only where it's needed (`client:idle` / `client:visible` / `client:load`).
+
+</td>
+<td width="50%" valign="top">
+
+**Typed Ghost CMS data layer**
+
+A headless Content API client (retry + timeout) → typed adapter → cached, grouped posts, with runtime validation at the external-data boundary.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+**Multi-language (zh / ja / en)**
+
+Posts grouped across languages by tag/slug with a three-tier fallback; `hreflang`, `canonical`, and per-page `html lang` for SEO.
+
+</td>
+<td width="50%" valign="top">
+
+**Hand-tuned motion**
+
+A spring-driven post timeline and a viewport-bottom ambient progress bar (critically-damped rAF spring with velocity-aware glow), all `prefers-reduced-motion` aware.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+**OKLch dual-theme design system**
+
+Light/dark tokens defined in a perceptually-uniform color space, wired into Tailwind v4 via CSS-first `@theme`.
+
+</td>
+<td width="50%" valign="top">
+
+**Engineered for confidence**
+
+Strict TypeScript (`exactOptionalPropertyTypes`), unit + integration tests (Vitest), and a multi-step CI (lint / test / typecheck / build).
+
+</td>
+</tr>
+</table>
 
 For the architecture, code reference, and testing guide, see **[DEVELOPMENT.md](docs/DEVELOPMENT.md)**.
 
