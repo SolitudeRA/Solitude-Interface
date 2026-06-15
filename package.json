@@ -1,5 +1,6 @@
 {
   "name": "solitude-interface",
+  "description": "A modern personal blog interface built with Astro and powered by Ghost CMS API.",
   "type": "module",
   "version": "0.5.0-alpha",
   "engines": {

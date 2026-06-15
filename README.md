@@ -9,23 +9,29 @@
 
 A modern personal blog interface built with Astro and powered by Ghost CMS API.
 
+**[Live Demo](https://www.solitudera.com)** · [Documentation](docs/DEVELOPMENT.md) · [Report a Bug](https://github.com/SolitudeRA/Solitude-Interface/issues)
+
 Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](docs/i18n/README.ja.md)
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 
-- [Features](#-features)
-- [Screenshots](#-screenshots)
-- [Quick Start](#-quick-start)
-- [Content Publishing Guide](#-content-publishing-guide)
-- [Multi-language Content](#-multi-language-content)
-- [For Developers](#️-for-developers)
-- [License](#-license)
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Documentation](#documentation)
+- [Quick Start](#quick-start)
+- [Common Commands](#common-commands)
+- [Content Publishing Guide](#content-publishing-guide)
+- [Multi-language Content](#multi-language-content)
+- [For Developers](#for-developers)
+- [Support](#support)
+- [Acknowledgments](#acknowledgments)
+- [License](#license)
 
 ---
 
-## 🚀 Features
+## Features
 
 - High-performance static site built with Astro
 - Ghost CMS integration (Headless)
@@ -36,7 +42,7 @@ Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](doc
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 <details>
 <summary>Click to expand screenshots</summary>
@@ -61,7 +67,7 @@ Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](doc
 
 ---
 
-## 📖 Documentation
+## Documentation
 
 | Document                                  | Description                                                          |
 | ----------------------------------------- | -------------------------------------------------------------------- |
@@ -70,7 +76,7 @@ Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](doc
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Install Dependencies
 
@@ -170,23 +176,25 @@ pnpm dev
 
 Visit `http://localhost:4321` to see your site.
 
----
-
-## 🔧 Common Commands
-
-| Command            | Description                                                 |
-| ------------------ | ----------------------------------------------------------- |
-| `pnpm dev`         | Start the development server                                |
-| `pnpm build`       | Build the production site                                   |
-| `pnpm preview`     | Preview the production build                                |
-| `pnpm astro sync`  | Generate type definitions (useful after env/schema changes) |
-| `pnpm astro check` | Typecheck and validate Astro project                        |
-| `pnpm test`        | Run the test suite                                          |
-| `pnpm format`      | Format the codebase                                         |
+> **Deploying**: this is a static site — `pnpm build` outputs to `dist/`, which you can host on any static host (e.g. Cloudflare Pages). Remember to set the same environment variables on your host as in your local `.env`.
 
 ---
 
-## 📝 Content Publishing Guide
+## Common Commands
+
+| Command           | Description                                                 |
+| ----------------- | ----------------------------------------------------------- |
+| `pnpm dev`        | Start the development server                                |
+| `pnpm build`      | Build the production site                                   |
+| `pnpm preview`    | Preview the production build                                |
+| `pnpm astro sync` | Generate type definitions (useful after env/schema changes) |
+| `pnpm check`      | Lint + format check + typecheck (run before committing)     |
+| `pnpm test:run`   | Run the test suite once (`pnpm test` runs it in watch mode) |
+| `pnpm format`     | Format the codebase                                         |
+
+---
+
+## Content Publishing Guide
 
 ### Classification Tags
 
@@ -211,7 +219,7 @@ Use **regular tags** to classify your posts. The system recognizes special prefi
 
 ---
 
-## 🌐 Multi-language Content
+## Multi-language Content
 
 ### URL Structure
 
@@ -236,8 +244,16 @@ Use **internal tags** (starting with `#`) in Ghost:
 
 > **Note**: In Ghost Content API, internal tags `#xxx` are converted to slug format `hash-xxx`.
 
+### Slug Naming Convention (Reserved Prefixes)
+
+In addition to tags, the system derives a post's language and translation group from its Ghost **slug**, using the convention `{locale}-{key}` (for example, `ja-homeserver-8` resolves to locale `ja`, key `homeserver-8`).
+
+This means **any slug beginning with a valid locale code plus a hyphen (`zh-`, `ja-`, `en-`) is treated as a multi-language post of that locale — even if it has no `#lang-*` / `#i18n-*` tags.**
+
+> **Important**: Do **not** use `zh-` / `ja-` / `en-` as the slug prefix for ordinary (non-translated) posts. Such posts would be mis-grouped into a translation group and generate an incorrect `/{locale}/p/{key}` route. The `#lang-*` / `#i18n-*` tags remain the primary source of truth; the slug is only a fallback.
+
 <details>
-<summary><strong>📘 Step-by-Step Guide: Creating Multi-language Posts</strong></summary>
+<summary><strong>Step-by-Step Guide: Creating Multi-language Posts</strong></summary>
 
 **Important**: Each language version is a **separate post** in Ghost. They are linked together using the same `#i18n-{key}` tag.
 
@@ -312,14 +328,14 @@ Users can switch between versions using the language switcher on the article pag
 
 ---
 
-## 🛠️ For Developers
+## For Developers
 
 See [**docs/DEVELOPMENT.md**](docs/DEVELOPMENT.md) for:
 
-- 🔧 Tech Stack & Project Structure
-- 🧞 Available Commands
-- 📋 Testing Guide (Unit & Integration)
-- 🏗️ Architecture & Code Reference
+- Tech Stack & Project Structure
+- Available Commands
+- Testing Guide (Unit & Integration)
+- Architecture & Code Reference
 
 ### Contributing
 
@@ -327,7 +343,13 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 ---
 
-## 🙏 Acknowledgments
+## Support
+
+Questions, ideas, or bugs? Open an issue on [GitHub Issues](https://github.com/SolitudeRA/Solitude-Interface/issues).
+
+---
+
+## Acknowledgments
 
 - [Astro](https://astro.build/) - The web framework for content-driven websites
 - [Ghost](https://ghost.org/) - The professional publishing platform
@@ -336,6 +358,6 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 ---
 
-## 📄 License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
