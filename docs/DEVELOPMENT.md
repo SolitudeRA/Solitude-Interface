@@ -1,6 +1,6 @@
 # Development Guide
 
-This document covers development setup, architecture, and testing for the Solitude Interface project.
+This document covers development setup, architecture, and testing for the Solitude Interface project. It also doubles as the engineering reference for the showcase: if you're here to read how the data layer, i18n system, and tests are put together rather than to run your own instance, this is the place.
 
 ## 🔧 Tech Stack
 

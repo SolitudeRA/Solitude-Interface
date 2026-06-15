@@ -7,9 +7,11 @@
 ![Astro](https://img.shields.io/badge/Astro-5.x-BC52EE?logo=astro&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
-A modern personal blog interface built with Astro and powered by Ghost CMS API.
+A modern personal blog interface built with Astro and powered by the Ghost CMS Content API.
 
-**[Live Demo](https://www.solitudera.com)** · [Documentation](docs/DEVELOPMENT.md) · [Report a Bug](https://github.com/SolitudeRA/Solitude-Interface/issues)
+**[Live Demo](https://www.solitudera.com)** · [Documentation](docs/DEVELOPMENT.md)
+
+> **About this repo** — this is the source of my personal site ([solitudera.com](https://www.solitudera.com)), open-sourced as a showcase and for reference. It is **not maintained as a reusable template**, and I'm not actively taking issues or pull requests. It's MIT-licensed, so you're welcome to look around or fork it.
 
 Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](docs/i18n/README.ja.md)
 
@@ -17,28 +19,25 @@ Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](doc
 
 ## Table of Contents
 
-- [Features](#features)
+- [Highlights](#highlights)
 - [Screenshots](#screenshots)
-- [Documentation](#documentation)
-- [Quick Start](#quick-start)
-- [Common Commands](#common-commands)
-- [Content Publishing Guide](#content-publishing-guide)
-- [Multi-language Content](#multi-language-content)
-- [For Developers](#for-developers)
-- [Support](#support)
-- [Acknowledgments](#acknowledgments)
+- [Tech Stack & Architecture](#tech-stack--architecture)
+- [Run It Locally](#run-it-locally)
+- [Self-Hosting & Content Guide](#self-hosting--content-guide)
 - [License](#license)
 
 ---
 
-## Features
+## Highlights
 
-- High-performance static site built with Astro
-- Ghost CMS integration (Headless)
-- **Multi-language support (zh/ja/en)** with automatic fallback
-- Responsive design with dark/light theme toggle
-- Multiple post type displays (articles, gallery, video, music)
-- SEO optimized (hreflang, canonical, html lang)
+- **Astro 5 static site + React islands** — content is pre-rendered at build time; interactivity is hydrated only where it's needed (`client:idle` / `client:visible` / `client:load`).
+- **Typed Ghost CMS data layer** — a headless Ghost Content API client (with retry + timeout) → a typed adapter → cached, grouped posts, with runtime validation at the external-data boundary.
+- **Multi-language (zh / ja / en)** — posts are grouped across languages by tag/slug with a three-tier fallback; `hreflang`, `canonical`, and per-page `html lang` for SEO.
+- **Hand-tuned motion** — a spring-driven post timeline and an ambient bottom progress bar (critically-damped rAF spring with velocity-aware glow), all `prefers-reduced-motion` aware.
+- **OKLch dual-theme design system** — light/dark tokens defined in a perceptually-uniform color space, wired into Tailwind v4 via CSS-first `@theme`.
+- **Engineered for confidence** — strict TypeScript (`exactOptionalPropertyTypes`), unit + integration tests (Vitest), and a multi-step CI (lint / test / typecheck / build).
+
+For the architecture, code reference, and testing guide, see **[DEVELOPMENT.md](docs/DEVELOPMENT.md)**.
 
 ---
 
@@ -67,39 +66,47 @@ Read this in: English | [简体中文](docs/i18n/README.zh.md) | [日本語](doc
 
 ---
 
-## Documentation
+## Tech Stack & Architecture
 
-| Document                                  | Description                                                          |
-| ----------------------------------------- | -------------------------------------------------------------------- |
-| **README.md** (this file)                 | User guide - setup and content publishing                            |
-| [**DEVELOPMENT.md**](docs/DEVELOPMENT.md) | Developer guide - architecture, testing, workflows, and contributing |
+Astro 5 (SSG) · React 19 islands · Jotai · Tailwind v4 · Ghost CMS (headless) · shiki · motion · TypeScript (strict).
+
+Data flows in one direction: **Ghost → typed client → adapter → cached posts → pages (SSG) → presentational components**. The full picture — project structure, the tag / i18n systems, and the testing strategy — lives in **[DEVELOPMENT.md](docs/DEVELOPMENT.md)**.
 
 ---
 
-## Quick Start
+## Run It Locally
 
-### 1. Install Dependencies
-
-This project uses **pnpm**.
+Just want to explore the code? The fastest path uses the public Ghost Demo API — no account needed:
 
 ```bash
-# (Recommended) Enable pnpm via Corepack
-corepack enable pnpm
-
+corepack enable pnpm   # or: npm i -g pnpm
 pnpm install
-```
-
-> If `corepack` is not available on your system, you can install pnpm globally with `npm i -g pnpm`.
-
-### 2. Configure Environment
-
-Create a `.env` file from the template:
-
-```bash
 cp .env.example .env
+pnpm dev               # http://localhost:4321
 ```
 
-Edit `.env` with your Ghost instance information:
+Then point `.env` at the Ghost demo:
+
+```env
+GHOST_URL=https://demo.ghost.io
+GHOST_CONTENT_KEY=22444f78447824223cefc48062
+SITE_URL=http://localhost:4321
+```
+
+> Useful checks: `pnpm check` (lint + format + typecheck) and `pnpm test:run` (unit tests). See [DEVELOPMENT.md](docs/DEVELOPMENT.md) for the full command list.
+
+---
+
+## Self-Hosting & Content Guide
+
+The repo doubles as the real implementation of my site, so the full operator setup is here if you want to run it against your own Ghost instance or see how content is modeled.
+
+<details>
+<summary><strong>Setup, environment, content publishing, multi-language &amp; deployment</strong></summary>
+
+### Configure environment
+
+Edit `.env` with your own Ghost instance:
 
 ```env
 GHOST_URL=https://your-ghost-instance.com
@@ -111,9 +118,7 @@ IMAGE_HOST_URL=
 GOOGLE_ANALYTICS_TAG_ID=
 ```
 
-#### Environment Variables
-
-##### Required
+#### Required
 
 | Variable            | Description                                |
 | ------------------- | ------------------------------------------ |
@@ -121,7 +126,7 @@ GOOGLE_ANALYTICS_TAG_ID=
 | `GHOST_CONTENT_KEY` | Ghost Content API key                      |
 | `SITE_URL`          | Public site URL for canonical and hreflang |
 
-##### Optional
+#### Optional
 
 | Variable                  | Default | Description                                                                               |
 | ------------------------- | ------- | ----------------------------------------------------------------------------------------- |
@@ -132,80 +137,31 @@ GOOGLE_ANALYTICS_TAG_ID=
 | `CF_ACCESS_CLIENT_ID`     | -       | Cloudflare Access Service Token Client ID (if Ghost is protected by CF Access)            |
 | `CF_ACCESS_CLIENT_SECRET` | -       | Cloudflare Access Service Token Client Secret                                             |
 
-### Cloudflare Access Configuration (Optional)
-
-If your Ghost instance is protected by [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/policies/access/), you need to configure Service Tokens to allow API access:
-
-1. **Create a Service Token** in your Cloudflare Zero Trust dashboard:
-    - Go to **Access** → **Service Auth** → **Service Tokens**
-    - Click **Create Service Token**
-    - Copy the **Client ID** and **Client Secret**
-
-2. **Add the token to your `.env`**:
-
-    ```env
-    CF_ACCESS_CLIENT_ID=your-client-id.access
-    CF_ACCESS_CLIENT_SECRET=your-client-secret
-    ```
-
-3. **Add a bypass policy** in your Access Application:
-    - Go to **Access** → **Applications** → Your Ghost App
-    - Add a policy with **Action: Service Auth** and select your service token
-
-> **Note**: The API client only implements **Service Token** authentication — it automatically includes `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers when **both** variables are set (setting only one sends neither and logs a warning).
-
-#### Optional: dashboard-side allow rules
-
-The following are **Cloudflare dashboard policies, not implemented or read by this project** — they simply let the Content API requests through if you have added extra protection. Configure them only if needed:
-
-- **Bot Fight Mode**: Cloudflare → Security → WAF → Custom rules → add a rule where URI Path starts with `/ghost/api/content/`, Action = Skip → all Super Bot Fight Mode rules.
-- **Zero Trust Access Bypass**: Zero Trust → Access → Applications → add an application for `your-ghost-domain.com/ghost/api/content/*` with a **Bypass** policy.
-
-### 3. Get Your Ghost Content API Key
+#### Get your Ghost Content API key
 
 1. Log in to your Ghost Admin panel
 2. Navigate to **Settings** → **Integrations**
 3. Click **Add custom integration**
-4. Copy the **Content API Key** into your `.env` file
+4. Copy the **Content API Key** into your `.env`
 
-> **Tip**: Use the Ghost Demo API for testing:
->
-> ```env
-> GHOST_URL=https://demo.ghost.io
-> GHOST_CONTENT_KEY=22444f78447824223cefc48062
-> ```
+### Cloudflare Access (optional)
 
-### 4. Start Development Server
+If your Ghost instance is protected by [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/policies/access/), configure a **Service Token** so the API can be reached:
 
-```bash
-pnpm dev
-```
+1. **Create a Service Token** in Cloudflare Zero Trust: **Access** → **Service Auth** → **Service Tokens** → **Create Service Token**; copy the **Client ID** and **Client Secret**.
+2. **Add them to `.env`** as `CF_ACCESS_CLIENT_ID` / `CF_ACCESS_CLIENT_SECRET`.
+3. **Add a Service Auth policy** to your Ghost Access Application selecting that token.
 
-Visit `http://localhost:4321` to see your site.
+> **Note**: this project only implements **Service Token** authentication — it sends `CF-Access-Client-Id` / `CF-Access-Client-Secret` headers when **both** variables are set (setting only one sends neither and logs a warning).
 
-> **Deploying**: this is a static site (Astro SSG) — `pnpm build` outputs to `dist/`, which you can host on any static host (e.g. Cloudflare Pages). Set the same environment variables on your build platform as in your local `.env`: static generation happens **at build time**, so Ghost content is fetched and pre-rendered during the build and your credentials never ship to `dist/`.
+The following are **Cloudflare dashboard policies — not implemented or read by this project**; they merely let the Content API through if you have added extra protection:
 
----
+- **Bot Fight Mode**: Cloudflare → Security → WAF → Custom rules → URI Path starts with `/ghost/api/content/`, Action = Skip → all Super Bot Fight Mode rules.
+- **Zero Trust Access Bypass**: Zero Trust → Access → Applications → add `your-ghost-domain.com/ghost/api/content/*` with a **Bypass** policy.
 
-## Common Commands
+### Content publishing
 
-| Command           | Description                                                 |
-| ----------------- | ----------------------------------------------------------- |
-| `pnpm dev`        | Start the development server                                |
-| `pnpm build`      | Build the production site                                   |
-| `pnpm preview`    | Preview the production build                                |
-| `pnpm astro sync` | Generate type definitions (useful after env/schema changes) |
-| `pnpm check`      | Lint + format check + typecheck (run before committing)     |
-| `pnpm test:run`   | Run the test suite once (`pnpm test` runs it in watch mode) |
-| `pnpm format`     | Format the codebase                                         |
-
----
-
-## Content Publishing Guide
-
-### Classification Tags
-
-Use **regular tags** to classify your posts. The system recognizes special prefixes:
+Use **regular tags** to classify posts. Special prefixes are recognized:
 
 | Tag Prefix    | Purpose           | Example                                                    |
 | ------------- | ----------------- | ---------------------------------------------------------- |
@@ -213,8 +169,6 @@ Use **regular tags** to classify your posts. The system recognizes special prefi
 | `category-`   | Content category  | `category-tech`, `category-life`, `category-design`        |
 | `series-`     | Article series    | `series-astro-tutorial`, `series-web-dev-basics`           |
 | _(no prefix)_ | General tags      | `JavaScript`, `React`, `Photography`                       |
-
-#### Supported Post Types
 
 | Type Tag       | Display Style               |
 | -------------- | --------------------------- |
@@ -224,11 +178,7 @@ Use **regular tags** to classify your posts. The system recognizes special prefi
 | `type-music`   | Audio player embed          |
 | _(default)_    | Default card layout         |
 
----
-
-## Multi-language Content
-
-### URL Structure
+### Multi-language content
 
 | Route          | Description                                 |
 | -------------- | ------------------------------------------- |
@@ -236,11 +186,9 @@ Use **regular tags** to classify your posts. The system recognizes special prefi
 | `/zh/`         | Chinese posts listing                       |
 | `/ja/`         | Japanese posts listing                      |
 | `/en/`         | English posts listing                       |
-| `/zh/p/{key}/` | Chinese version of article                  |
-| `/ja/p/{key}/` | Japanese version of article                 |
-| `/en/p/{key}/` | English version of article                  |
-
-### Required Tags for Multi-language
+| `/zh/p/{key}/` | Chinese version of an article               |
+| `/ja/p/{key}/` | Japanese version of an article              |
+| `/en/p/{key}/` | English version of an article               |
 
 Use **internal tags** (starting with `#`) in Ghost:
 
@@ -249,125 +197,42 @@ Use **internal tags** (starting with `#`) in Ghost:
 | `#lang-{locale}` | Specify post language        | `#lang-zh`, `#lang-ja`, `#lang-en` |
 | `#i18n-{key}`    | Translation group identifier | `#i18n-intro-to-solitude`          |
 
-> **Note**: In Ghost Content API, internal tags `#xxx` are converted to slug format `hash-xxx`.
+> In the Ghost Content API, internal tags `#xxx` become slugs `hash-xxx`.
 
-### Slug Naming Convention (Reserved Prefixes)
+**Slug naming convention (reserved prefixes)** — besides internal tags, the system can also derive a post's identity from the Ghost **slug**, using `{locale}-{key}`:
 
-In addition to tags, the system derives a post's language and translation group from its Ghost **slug**, using the convention `{locale}-{key}` (for example, `ja-homeserver-8` resolves to locale `ja`, key `homeserver-8`).
+| Post slug         | Resolves to                                            |
+| ----------------- | ------------------------------------------------------ |
+| `ja-homeserver-8` | locale `ja`, key `homeserver-8` → `/ja/p/homeserver-8` |
+| `en-blog-project` | locale `en`, key `blog-project` → `/en/p/blog-project` |
 
-This means **any slug beginning with a valid locale code plus a hyphen (`zh-`, `ja-`, `en-`) is treated as a multi-language post of that locale — even if it has no `#lang-*` / `#i18n-*` tags.**
+> **Important: `zh-` / `ja-` / `en-` are reserved slug prefixes.** Any slug starting with a valid locale code plus a hyphen is treated as a multi-language post of that locale, **even without `#lang-*` / `#i18n-*` tags** — so don't give an ordinary (non-multilingual) post a `zh-…` / `ja-…` / `en-…` slug, or it will be merged into a translation group with wrong `/{locale}/p/{key}` routes and hreflang. When a post also carries a `#lang-*` tag: **language** comes from the tag first (slug prefix as fallback); the **translation-group key** comes from the slug first (`#i18n-*` tag as fallback).
 
-> **Important**: Do **not** use `zh-` / `ja-` / `en-` as the slug prefix for ordinary (non-translated) posts. Such posts would be mis-grouped into a translation group and generate an incorrect `/{locale}/p/{key}` route.
+**Creating a multi-language post** — each language version is a **separate post** in Ghost, linked by a shared `#i18n-{key}` tag:
 
-**Resolution priority** (as implemented): the **language** is taken from the `#lang-*` tag first, with the slug prefix as fallback; the **translation-group key** is taken from the slug first, with the `#i18n-*` tag as fallback.
+1. Pick a translation-group key (e.g. `astro-guide`) — it's used in the `#i18n-astro-guide` tag and the URL `/{locale}/p/astro-guide`.
+2. Create the Chinese post: write the content, add tags `#lang-zh` and `#i18n-astro-guide` (plus optional `type-article`, `category-tech`), publish.
+3. Create the Japanese post (a separate post): tags `#lang-ja` and the **same** `#i18n-astro-guide`, publish.
+4. Create the English post (a separate post): tags `#lang-en` and the **same** `#i18n-astro-guide`, publish.
 
-<details>
-<summary><strong>Step-by-Step Guide: Creating Multi-language Posts</strong></summary>
+The three become `/zh/p/astro-guide`, `/ja/p/astro-guide`, `/en/p/astro-guide`, switchable from the language switcher.
 
-**Important**: Each language version is a **separate post** in Ghost. They are linked together using the same `#i18n-{key}` tag.
+| Post title                   | Tags                                                             |
+| ---------------------------- | ---------------------------------------------------------------- |
+| "Astro 入门指南" (Chinese)   | `#lang-zh`, `#i18n-astro-guide`, `type-article`, `category-tech` |
+| "Astro入門ガイド" (Japanese) | `#lang-ja`, `#i18n-astro-guide`, `type-article`, `category-tech` |
+| "Getting Started…" (English) | `#lang-en`, `#i18n-astro-guide`, `type-article`, `category-tech` |
 
-#### Step 1: Plan your translation group key
+**Fallback**: if a requested language is missing, the default language (Chinese) is shown; if that's also missing, any available variant is shown in `LOCALES` order (`zh`, `ja`, `en`) — this order is load-bearing (Japanese is preferred over English when Chinese is absent). A banner indicates the fallback.
 
-Choose a unique key for your article, e.g., `astro-guide`. This key will be used in:
+### Deploying
 
-- The `#i18n-astro-guide` tag (to link all versions)
-- The URL: `/zh/p/astro-guide`, `/ja/p/astro-guide`, `/en/p/astro-guide`
-
-#### Step 2: Create the Chinese version
-
-In Ghost Admin, create a new post:
-
-1. Write your article content in Chinese
-2. Open the **Post settings** panel (gear icon)
-3. Scroll down to **Tags** section
-4. Add these tags:
-    - `#lang-zh` (language tag - note the `#` prefix!)
-    - `#i18n-astro-guide` (translation group tag)
-    - `type-article` (optional: post type)
-    - `category-tech` (optional: category)
-5. Publish the post
-
-#### Step 3: Create the Japanese version
-
-Create a **new, separate post** in Ghost:
-
-1. Write your article content in Japanese
-2. Add these tags:
-    - `#lang-ja` ← Different language
-    - `#i18n-astro-guide` ← **Same** translation key!
-    - `type-article`, `category-tech` (same as Chinese version)
-3. Publish the post
-
-#### Step 4: Create the English version
-
-Create another **new, separate post** in Ghost:
-
-1. Write your article content in English
-2. Add these tags:
-    - `#lang-en` ← Different language
-    - `#i18n-astro-guide` ← **Same** translation key!
-    - `type-article`, `category-tech` (same as other versions)
-3. Publish the post
-
-#### Result
-
-Now you have 3 separate posts in Ghost, all linked by `#i18n-astro-guide`:
-
-- Chinese post → accessible at `/zh/p/astro-guide`
-- Japanese post → accessible at `/ja/p/astro-guide`
-- English post → accessible at `/en/p/astro-guide`
-
-Users can switch between versions using the language switcher on the article page.
-
-### Complete Example
-
-| Post Title                             | Tags                                                             |
-| -------------------------------------- | ---------------------------------------------------------------- |
-| "Astro 入门指南" (Chinese)             | `#lang-zh`, `#i18n-astro-guide`, `type-article`, `category-tech` |
-| "Astro入門ガイド" (Japanese)           | `#lang-ja`, `#i18n-astro-guide`, `type-article`, `category-tech` |
-| "Getting Started with Astro" (English) | `#lang-en`, `#i18n-astro-guide`, `type-article`, `category-tech` |
+This is a static site (Astro SSG) — `pnpm build` outputs to `dist/`, hostable on any static host (e.g. Cloudflare Pages). Set the same environment variables on your build platform as in your local `.env`: static generation happens **at build time**, so Ghost content is fetched and pre-rendered during the build and your credentials never ship to `dist/`.
 
 </details>
-
-### Fallback Behavior
-
-- If a language version doesn't exist, the default language (Chinese) is shown
-- If the default language is also missing, any available variant is shown, picked in `LOCALES` order (`zh`, `ja`, `en`) — this order is load-bearing (e.g. when Chinese is missing, Japanese is preferred over English)
-- A notice banner appears indicating the fallback
-- Language switcher shows available/unavailable versions
-
----
-
-## For Developers
-
-See [**docs/DEVELOPMENT.md**](docs/DEVELOPMENT.md) for:
-
-- Tech Stack & Project Structure
-- Available Commands
-- Testing Guide (Unit & Integration)
-- Architecture & Code Reference
-
-### Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
-
----
-
-## Support
-
-Questions, ideas, or bugs? Open an issue on [GitHub Issues](https://github.com/SolitudeRA/Solitude-Interface/issues).
-
----
-
-## Acknowledgments
-
-- [Astro](https://astro.build/) - The web framework for content-driven websites
-- [Ghost](https://ghost.org/) - The professional publishing platform
-- [TailwindCSS](https://tailwindcss.com/) - A utility-first CSS framework
-- [React](https://react.dev/) - The library for web and native user interfaces
 
 ---
 
 ## License
 
-This project is open source and available under the [MIT License](LICENSE).
+MIT — see [LICENSE](LICENSE). Feel free to fork and adapt.
