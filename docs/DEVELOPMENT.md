@@ -1,8 +1,22 @@
 # Development Guide
 
-This document covers development setup, architecture, and testing for the Solitude Interface project.
+This document covers development setup, architecture, and testing for the Solitude Interface project. It also doubles as the engineering reference for the showcase: if you're here to read how the data layer, i18n system, and tests are put together rather than to run your own instance, this is the place.
 
-## 🔧 Tech Stack
+[Back to README](../README.md)
+
+## Table of Contents
+
+- [Tech Stack](#tech-stack)
+- [Package Manager](#package-manager-pnpm)
+- [Project Structure](#project-structure)
+- [Commands](#commands)
+- [Testing](#testing)
+- [Architecture](#architecture)
+- [Additional Resources](#additional-resources)
+
+---
+
+## Tech Stack
 
 - [Astro](https://astro.build/) - Static site generator
 - [React](https://reactjs.org/) - UI components
@@ -12,7 +26,9 @@ This document covers development setup, architecture, and testing for the Solitu
 - [Vitest](https://vitest.dev/) - Testing framework
 - **pnpm** - Package manager
 
-## 📦 Package Manager (pnpm)
+---
+
+## Package Manager (pnpm)
 
 This project uses **pnpm**.
 
@@ -35,7 +51,7 @@ pnpm -v
 pnpm install
 ```
 
-> If you ever see a warning like “Ignored build scripts …”, run:
+> If you ever see a warning like "Ignored build scripts ...", run:
 >
 > ```bash
 > pnpm approve-builds
@@ -43,7 +59,9 @@ pnpm install
 >
 > and allow trusted dependencies (e.g. `esbuild`, `sharp`).
 
-## 📂 Project Structure
+---
+
+## Project Structure
 
 ```
 src/
@@ -54,22 +72,26 @@ src/
 │   ├── ghost/              # Ghost-specific APIs
 │   ├── utils/              # Utilities (cache, error handlers)
 │   └── __tests__/          # API tests
+├── assets/                 # Static assets (avatar, etc.)
 ├── components/             # UI components
 │   ├── common/             # Shared components
 │   ├── home/               # Homepage components
 │   ├── i18n/               # Internationalization components
 │   ├── layout/             # Layout components (navbar, dock)
 │   ├── pages/              # Page-specific components
-│   └── posts/              # Post display components
+│   ├── posts/              # Post display components
+│   └── utils/              # Component-level utilities (analytics)
 ├── layouts/                # Astro layouts
-├── lib/                    # Core libraries (i18n)
+├── lib/                    # Core libraries (i18n, tag registry)
 ├── pages/                  # Astro pages
 ├── stores/                 # State management (Jotai)
 ├── styles/                 # Global styles
 └── types/                  # TypeScript types
 ```
 
-## 🧞 Commands
+---
+
+## Commands
 
 | Command                 | Action                                      |
 | :---------------------- | :------------------------------------------ |
@@ -88,7 +110,9 @@ src/
 | `pnpm test:coverage`    | Run tests with coverage report              |
 | `pnpm test:ui`          | Open Vitest UI for interactive testing      |
 
-## 📋 Testing
+---
+
+## Testing
 
 This project includes two types of tests:
 
@@ -115,9 +139,9 @@ pnpm test:run
 
 | Feature          | Unit Tests        | Integration Tests            |
 | ---------------- | ----------------- | ---------------------------- |
-| **Speed**        | ⚡ Fast (< 1s)    | 🐌 Slower (10-30s)           |
-| **Dependencies** | ✅ None           | ⚠️ Requires .env + Network   |
-| **API Calls**    | ❌ Mocked         | ✅ Real Ghost API            |
+| **Speed**        | Fast (< 1s)       | Slower (10-30s)              |
+| **Dependencies** | None              | Requires .env + network      |
+| **API Calls**    | Mocked            | Real Ghost API               |
 | **Use Case**     | Daily development | Pre-commit / CI verification |
 | **Command**      | `pnpm test:unit`  | `pnpm test:integration`      |
 
@@ -193,7 +217,9 @@ src/api/__tests__/
 - Unit tests: `*.test.ts`
 - Integration tests: `*.integration.test.ts`
 
-## 🏗️ Architecture
+---
+
+## Architecture
 
 ### Tag Processing System
 
@@ -204,12 +230,13 @@ const TAG_PREFIXES = {
     TYPE: 'type-',
     CATEGORY: 'category-',
     SERIES: 'series-',
+    HASH: 'hash-',
 } as const;
 ```
 
 ### i18n System
 
-The i18n system in `src/lib/i18n.ts` handles language tags:
+The i18n system (defined in `src/lib/i18nCore.ts`, re-exported via the `src/lib/i18n.ts` barrel) handles language tags:
 
 ```ts
 const LANG_TAG_PREFIX = 'hash-lang-'; // Ghost converts #lang-xx to hash-lang-xx
@@ -218,22 +245,24 @@ const I18N_TAG_PREFIX = 'hash-i18n-'; // Ghost converts #i18n-xx to hash-i18n-xx
 
 ### Multi-language Configuration
 
-Default language is set in `src/lib/i18n.ts`:
+Default language is set in `src/lib/i18nCore.ts`:
 
 ```ts
 export const DEFAULT_LOCALE: Locale = 'zh';
 ```
 
-To change the default, modify this value and update `astro.config.mjs`:
+To change the default, modify this value and update `astro.config.mjs`. The `locales` order is load-bearing — it drives the fallback precedence (Japanese before English when Chinese is missing), so keep it in sync with the runtime `LOCALES` array in `src/lib/i18nCore.ts`:
 
 ```js
 i18n: {
-    locales: ['zh', 'en', 'ja'],
+    locales: ['zh', 'ja', 'en'],
     defaultLocale: 'zh',  // Change this
 }
 ```
 
-## 📚 Additional Resources
+---
+
+## Additional Resources
 
 - [Ghost Content API Documentation](https://ghost.org/docs/content-api/)
 - [Ghost API Endpoints](https://ghost.org/docs/content-api/#endpoints)
