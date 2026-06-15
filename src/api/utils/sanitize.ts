@@ -162,7 +162,7 @@ const SANITIZE_CONFIG: Config = {
 
         // 时间属性
         'datetime',
-        // 注: data-* 属性已通过 ALLOW_DATA_ATTR: true 全局允许
+        // 注: data-* 属性由 uponSanitizeAttribute 钩子按白名单放行(见顶部 ALLOWED_DATA_ATTR_*)
     ],
 
     // 允许的 URI 协议
