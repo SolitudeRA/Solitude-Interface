@@ -3,7 +3,8 @@ export interface BasePost {
     slug?: string;
     title: string;
     url: URL;
-    feature_image: URL;
+    // 适配后为 URL 对象;无封面图或源 URL 畸形时为 null(消费方一律用 `?.toString()` 容错)
+    feature_image: URL | null;
     primary_tag?: PostTag;
     tags?: PostTag[];
     published_at: string;
@@ -58,9 +59,10 @@ export enum PostType {
 export interface SiteInformation {
     title: string;
     description: string;
-    logo: URL;
-    icon: URL;
-    cover_image: URL;
+    // Ghost Content API 返回的是字符串 URL(运行时为 string,集成测试亦断言 typeof string)
+    logo: string;
+    icon: string;
+    cover_image: string;
     twitter: string;
     timezone: string;
     navigation?: SiteNavigation[];

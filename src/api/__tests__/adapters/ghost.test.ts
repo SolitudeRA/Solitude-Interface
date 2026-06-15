@@ -124,8 +124,8 @@ describe('Ghost Adapters', () => {
 
             const adapted = adaptGhostPost(mockPost);
 
-            expect(adapted.feature_image.hostname).toBe('ghost.example.com');
-            expect(adapted.feature_image.pathname).toBe('/image.jpg');
+            expect(adapted.feature_image?.hostname).toBe('ghost.example.com');
+            expect(adapted.feature_image?.pathname).toBe('/image.jpg');
         });
 
         it('should correctly extract post_type tag', () => {

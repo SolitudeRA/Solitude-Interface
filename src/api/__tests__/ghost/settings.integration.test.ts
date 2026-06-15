@@ -60,15 +60,15 @@ describe('Settings API Integration Tests', () => {
             const siteInfo = await getSiteInformation();
 
             if (siteInfo.logo) {
-                expect(siteInfo.logo.protocol).toMatch(/^https?:/);
+                expect(siteInfo.logo).toMatch(/^https?:\/\//);
             }
 
             if (siteInfo.icon) {
-                expect(siteInfo.icon.protocol).toMatch(/^https?:/);
+                expect(siteInfo.icon).toMatch(/^https?:\/\//);
             }
 
             if (siteInfo.cover_image) {
-                expect(siteInfo.cover_image.protocol).toMatch(/^https?:/);
+                expect(siteInfo.cover_image).toMatch(/^https?:\/\//);
             }
         }, 15000);
     });
@@ -90,9 +90,9 @@ describe('Settings API Integration Tests', () => {
             expect(typeof siteData.logoUrl).toBe('string');
 
             expect(siteData).toHaveProperty('coverImageUrl');
-            // coverImageUrl 可以是 URL 或 null
+            // coverImageUrl 是字符串 URL 或 null
             if (siteData.coverImageUrl !== null) {
-                expect(siteData.coverImageUrl).toBeInstanceOf(URL);
+                expect(typeof siteData.coverImageUrl).toBe('string');
             }
         }, 15000);
 
@@ -111,10 +111,10 @@ describe('Settings API Integration Tests', () => {
         it('should handle coverImageUrl correctly', async () => {
             const siteData = await initializeSiteData();
 
-            // coverImageUrl 可以是 URL 对象或 null
+            // coverImageUrl 是字符串 URL 或 null
             if (siteData.coverImageUrl !== null) {
-                expect(siteData.coverImageUrl).toBeInstanceOf(URL);
-                expect(siteData.coverImageUrl.protocol).toMatch(/^https?:/);
+                expect(typeof siteData.coverImageUrl).toBe('string');
+                expect(siteData.coverImageUrl).toMatch(/^https?:\/\//);
             }
         }, 15000);
 

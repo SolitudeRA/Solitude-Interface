@@ -85,6 +85,14 @@ describe('HTML Sanitization', () => {
             expect(sanitizeHtml(input)).toBe(input);
         });
 
+        it('should drop non-allowlisted data-* attributes', () => {
+            // 任意 data-*(如注入的 data-xss)应被剔除,合法的 data-language 保留
+            const input = '<pre data-language="javascript" data-xss="evil"><code>x</code></pre>';
+            const result = sanitizeHtml(input);
+            expect(result).toContain('data-language="javascript"');
+            expect(result).not.toContain('data-xss');
+        });
+
         it('should add rel="noopener noreferrer" to target="_blank" links', () => {
             const input = '<a href="https://example.com" target="_blank">Link</a>';
             const result = sanitizeHtml(input);

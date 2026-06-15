@@ -128,6 +128,29 @@ function getValidLanguage(lang: string): SupportedLanguage {
     return 'plaintext';
 }
 
+/** 单块高亮超时(ms)。shiki 首次加载某语言可能较慢,超时则回退原始块,避免拖垮整体/挂起构建。 */
+const HIGHLIGHT_TIMEOUT_MS = 5000;
+
+/**
+ * 给 Promise 包一层超时与吞错:永不 reject —— 超时或失败都解析为 fallback。
+ * 这样上层用 Promise.all 也不会因单块失败而整体 reject。
+ */
+function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+    return new Promise((resolve) => {
+        const timer = setTimeout(() => resolve(fallback), ms);
+        promise.then(
+            (value) => {
+                clearTimeout(timer);
+                resolve(value);
+            },
+            () => {
+                clearTimeout(timer);
+                resolve(fallback);
+            }
+        );
+    });
+}
+
 /**
  * 高亮单个代码块
  */
@@ -194,9 +217,12 @@ export async function highlightCodeBlocks(html: string): Promise<string> {
         return html;
     }
 
-    // 并行处理所有代码块
+    // 并行处理所有代码块:每块带超时与吞错(withTimeout 永不 reject),
+    // 单块失败/超时回退原始块(下方 `highlighted` 为 null 时保留 fullMatch),不拖垮整体。
     const highlightedResults = await Promise.all(
-        matches.map(async ({ lang, code }) => highlightCode(code, lang))
+        matches.map(({ lang, code }) =>
+            withTimeout(highlightCode(code, lang), HIGHLIGHT_TIMEOUT_MS, null)
+        )
     );
 
     // 从后向前替换（避免索引偏移问题）

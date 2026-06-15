@@ -1,5 +1,5 @@
 import { getGhostClient } from '@api/clients/ghost';
-import { adaptGhostPost } from '@api/adapters/ghost';
+import { adaptGhostPost, isAdaptablePost } from '@api/adapters/ghost';
 import type { FeaturedPost, Post } from '@api/ghost/types';
 import { handleApiError } from '@api/utils/errorHandlers';
 import { getCache, setCache } from '@api/utils/cache';
@@ -38,7 +38,14 @@ function createEmptyVariants(): Record<Locale, Post | null> {
 async function adaptPosts<T extends Post | FeaturedPost>(posts: T[] | undefined): Promise<T[]> {
     const tagRegistry = await getTagRegistry();
 
-    return (posts || []).map((post) => adaptGhostPost(post, { tagRegistry }));
+    // 边界收敛:丢弃缺少必要字段的畸形条目(并告警),避免单条坏数据拖垮整批适配
+    const usable = (posts || []).filter((post) => {
+        if (isAdaptablePost(post)) return true;
+        console.warn('[posts] 跳过畸形 Ghost post(缺少 id/title):', (post as { id?: unknown })?.id);
+        return false;
+    });
+
+    return usable.map((post) => adaptGhostPost(post, { tagRegistry }));
 }
 
 async function fetchPostsPage(page: number, limit: number): Promise<GhostPostsResponse> {

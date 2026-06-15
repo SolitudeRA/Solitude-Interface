@@ -157,7 +157,7 @@ function ShowcaseCard({
             <div className="absolute inset-0 -z-30 overflow-hidden">
                 {hasImage ? (
                     <img
-                        src={post.feature_image.toString()}
+                        src={post.feature_image?.toString() ?? ''}
                         alt=""
                         loading={index < 2 ? 'eager' : 'lazy'}
                         decoding="async"

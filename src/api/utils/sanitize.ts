@@ -4,8 +4,37 @@ import DOMPurify, { type Config } from 'isomorphic-dompurify';
  * DOMPurify 配置选项
  * 针对博客文章内容优化的白名单配置
  */
+/**
+ * data-* 白名单。原 `ALLOW_DATA_ATTR: true` 全局放行任意 data-*(含被污染内容注入的 data-xss);
+ * 这里收敛为有限白名单:代码高亮/行号(data-language、data-line…)、文章增强(data-code-*)、
+ * Ghost Koenig 卡片(data-kg-*)。其余 data-* 一律剔除。见下方 uponSanitizeAttribute 钩子。
+ */
+const ALLOWED_DATA_ATTR_EXACT = new Set([
+    'data-language',
+    'data-line',
+    'data-lines',
+    'data-highlighted',
+]);
+const ALLOWED_DATA_ATTR_PREFIXES = ['data-kg-', 'data-code-'] as const;
+
+let dataAttrHookRegistered = false;
+function ensureDataAttrAllowlistHook(): void {
+    if (dataAttrHookRegistered) return;
+    dataAttrHookRegistered = true;
+    // ALLOW_DATA_ATTR 放行全部 data-*,再用钩子收敛到白名单(此模式比关 ALLOW_DATA_ATTR 更稳)
+    DOMPurify.addHook('uponSanitizeAttribute', (_node, data) => {
+        const name = data.attrName;
+        if (name?.startsWith('data-')) {
+            const allowed =
+                ALLOWED_DATA_ATTR_EXACT.has(name) ||
+                ALLOWED_DATA_ATTR_PREFIXES.some((prefix) => name.startsWith(prefix));
+            if (!allowed) data.keepAttr = false;
+        }
+    });
+}
+
 const SANITIZE_CONFIG: Config = {
-    // 允许所有 data-* 属性 (代码高亮、行号等功能需要)
+    // 放行全部 data-*,再由 uponSanitizeAttribute 钩子收敛到 ALLOWED_DATA_ATTR_PREFIXES 白名单
     ALLOW_DATA_ATTR: true,
 
     // 允许的 HTML 标签 - 博客文章常用标签
@@ -162,7 +191,8 @@ export function sanitizeHtml(html: string): string {
         return '';
     }
 
-    // 使用 DOMPurify 净化 HTML
+    // 注册 data-* 白名单钩子(幂等),再净化
+    ensureDataAttrAllowlistHook();
     const sanitized = DOMPurify.sanitize(html, SANITIZE_CONFIG);
 
     // 为外部链接添加安全属性

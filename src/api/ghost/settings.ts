@@ -50,11 +50,27 @@ export async function initializeSiteData() {
         return {
             siteTitle: siteInformation.title || 'Solitude',
             siteDescription: siteInformation.description || '',
-            logoUrl: siteInformation.logo?.toString() || '',
+            logoUrl: siteInformation.logo || '',
             coverImageUrl: siteInformation.cover_image || null,
         };
     } catch (error) {
-        console.error('Failed to initialize site data:', error);
+        // fail loud:生产构建时关键站点数据缺失应中止构建(与 posts.ts 的 fail-fast 一致),
+        // 而非静默发布带占位标题的「看似正常」站点,掩盖 Ghost 故障、延误定位。
+        // 开发环境则保留降级回退以便本地无 Ghost 时仍可运行。
+        const isProdBuild = (() => {
+            try {
+                return import.meta.env?.PROD ?? false;
+            } catch {
+                return false;
+            }
+        })();
+
+        if (isProdBuild) {
+            console.error('[settings] 站点数据初始化失败,中止生产构建:', error);
+            throw error instanceof Error ? error : new Error('Failed to initialize site data');
+        }
+
+        console.error('[settings] 站点数据初始化失败,开发环境降级回退:', error);
         return {
             siteTitle: 'Solitude',
             siteDescription: 'Failed to initialize site data',

@@ -1,4 +1,5 @@
 import { env } from '@api/config/env';
+import { safeCreateUrl } from '@api/utils/url';
 import type { FeaturedPost, Post, PostTag } from '@api/ghost/types';
 import {
     buildPostPathFromPost,
@@ -48,7 +49,8 @@ export function adaptGhostPost<T extends Post | FeaturedPost>(
     return {
         ...post,
         url: convertPostToFrontendUrl(post),
-        feature_image: post.feature_image,
+        // 收敛外部 URL:字符串→URL 对象,畸形/缺失则为 null(类型 URL | null)
+        feature_image: safeCreateUrl(post.feature_image),
         primary_tag: localizeTag(post.primary_tag, locale, options.tagRegistry),
         tags: localizeTags(post.tags, locale, options.tagRegistry),
         ...tagInfo,
@@ -56,8 +58,22 @@ export function adaptGhostPost<T extends Post | FeaturedPost>(
     };
 }
 
+/**
+ * 校验来自 Ghost 的原始 post 是否具备适配所需的最小字段,过滤畸形条目,
+ * 避免单条坏数据让整批适配崩溃(外部数据边界收敛)。
+ */
+export function isAdaptablePost(post: unknown): boolean {
+    return (
+        !!post &&
+        typeof post === 'object' &&
+        typeof (post as { id?: unknown }).id === 'string' &&
+        typeof (post as { title?: unknown }).title === 'string'
+    );
+}
+
 function convertPostToFrontendUrl(post: Pick<Post | FeaturedPost, 'id' | 'slug' | 'tags'>): URL {
-    return new URL(buildPostPathFromPost(post), env.site.url);
+    // 路径来自内部 i18nKey 规则;以站点 URL 为基准安全构造,异常时回退站点根
+    return safeCreateUrl(buildPostPathFromPost(post), env.site.url) ?? new URL(env.site.url);
 }
 
 /**
