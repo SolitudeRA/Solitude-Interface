@@ -123,14 +123,14 @@ GOOGLE_ANALYTICS_TAG_ID=
 
 ##### Optional
 
-| Variable                  | Default | Description                                                                    |
-| ------------------------- | ------- | ------------------------------------------------------------------------------ |
-| `GHOST_VERSION`           | `v5.0`  | Ghost Content API version                                                      |
-| `GHOST_TIMEOUT`           | `5000`  | Ghost request timeout in milliseconds                                          |
-| `IMAGE_HOST_URL`          | -       | Image host/CDN used for remote image domain allowlist                          |
-| `GOOGLE_ANALYTICS_TAG_ID` | -       | Google tag / GA4 Measurement ID (e.g., `G-XXXX`). Leave empty to disable       |
-| `CF_ACCESS_CLIENT_ID`     | -       | Cloudflare Access Service Token Client ID (if Ghost is protected by CF Access) |
-| `CF_ACCESS_CLIENT_SECRET` | -       | Cloudflare Access Service Token Client Secret                                  |
+| Variable                  | Default | Description                                                                               |
+| ------------------------- | ------- | ----------------------------------------------------------------------------------------- |
+| `GHOST_VERSION`           | `v5.0`  | Ghost Content API version                                                                 |
+| `GHOST_TIMEOUT`           | `5000`  | Ghost request timeout in milliseconds                                                     |
+| `IMAGE_HOST_URL`          | -       | Image host/CDN for the remote image domain allowlist (single URL or comma-separated list) |
+| `GOOGLE_ANALYTICS_TAG_ID` | -       | Google tag / GA4 Measurement ID (e.g., `G-XXXX`). Leave empty to disable                  |
+| `CF_ACCESS_CLIENT_ID`     | -       | Cloudflare Access Service Token Client ID (if Ghost is protected by CF Access)            |
+| `CF_ACCESS_CLIENT_SECRET` | -       | Cloudflare Access Service Token Client Secret                                             |
 
 ### Cloudflare Access Configuration (Optional)
 
@@ -152,7 +152,14 @@ If your Ghost instance is protected by [Cloudflare Access](https://developers.cl
     - Go to **Access** → **Applications** → Your Ghost App
     - Add a policy with **Action: Service Auth** and select your service token
 
-> **Note**: The API client will automatically include `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers when these environment variables are set.
+> **Note**: The API client only implements **Service Token** authentication — it automatically includes `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers when **both** variables are set (setting only one sends neither and logs a warning).
+
+#### Optional: dashboard-side allow rules
+
+The following are **Cloudflare dashboard policies, not implemented or read by this project** — they simply let the Content API requests through if you have added extra protection. Configure them only if needed:
+
+- **Bot Fight Mode**: Cloudflare → Security → WAF → Custom rules → add a rule where URI Path starts with `/ghost/api/content/`, Action = Skip → all Super Bot Fight Mode rules.
+- **Zero Trust Access Bypass**: Zero Trust → Access → Applications → add an application for `your-ghost-domain.com/ghost/api/content/*` with a **Bypass** policy.
 
 ### 3. Get Your Ghost Content API Key
 
@@ -176,7 +183,7 @@ pnpm dev
 
 Visit `http://localhost:4321` to see your site.
 
-> **Deploying**: this is a static site — `pnpm build` outputs to `dist/`, which you can host on any static host (e.g. Cloudflare Pages). Remember to set the same environment variables on your host as in your local `.env`.
+> **Deploying**: this is a static site (Astro SSG) — `pnpm build` outputs to `dist/`, which you can host on any static host (e.g. Cloudflare Pages). Set the same environment variables on your build platform as in your local `.env`: static generation happens **at build time**, so Ghost content is fetched and pre-rendered during the build and your credentials never ship to `dist/`.
 
 ---
 
@@ -250,7 +257,9 @@ In addition to tags, the system derives a post's language and translation group 
 
 This means **any slug beginning with a valid locale code plus a hyphen (`zh-`, `ja-`, `en-`) is treated as a multi-language post of that locale — even if it has no `#lang-*` / `#i18n-*` tags.**
 
-> **Important**: Do **not** use `zh-` / `ja-` / `en-` as the slug prefix for ordinary (non-translated) posts. Such posts would be mis-grouped into a translation group and generate an incorrect `/{locale}/p/{key}` route. The `#lang-*` / `#i18n-*` tags remain the primary source of truth; the slug is only a fallback.
+> **Important**: Do **not** use `zh-` / `ja-` / `en-` as the slug prefix for ordinary (non-translated) posts. Such posts would be mis-grouped into a translation group and generate an incorrect `/{locale}/p/{key}` route.
+
+**Resolution priority** (as implemented): the **language** is taken from the `#lang-*` tag first, with the slug prefix as fallback; the **translation-group key** is taken from the slug first, with the `#i18n-*` tag as fallback.
 
 <details>
 <summary><strong>Step-by-Step Guide: Creating Multi-language Posts</strong></summary>
@@ -323,6 +332,7 @@ Users can switch between versions using the language switcher on the article pag
 ### Fallback Behavior
 
 - If a language version doesn't exist, the default language (Chinese) is shown
+- If the default language is also missing, any available variant is shown, picked in `LOCALES` order (`zh`, `ja`, `en`) — this order is load-bearing (e.g. when Chinese is missing, Japanese is preferred over English)
 - A notice banner appears indicating the fallback
 - Language switcher shows available/unavailable versions
 
