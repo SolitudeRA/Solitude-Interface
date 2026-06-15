@@ -5,6 +5,7 @@ import type { FeaturedPost } from '@api/ghost/types';
 import { cn } from '@components/common/lib/utils';
 import { getUIText, DEFAULT_LOCALE, type Locale } from '@lib/i18n';
 import { useHorizontalScroll } from '@components/common/lib/useHorizontalScroll';
+import { withErrorBoundary } from '@components/common/ErrorBoundary';
 
 function isVisibleTag(value: string | null | undefined): value is string {
     return Boolean(value && value.trim() && value.trim().toLowerCase() !== 'default');
@@ -364,7 +365,10 @@ function ViewMoreCard({
 }
 
 // 主组件
-export default function PostsShowcaseCarousel({
+// island 入口:包一层错误边界,carousel 客户端异常不拖垮首页(降级为不渲染)
+export default withErrorBoundary(PostsShowcaseCarousel, { label: 'PostsShowcaseCarousel' });
+
+function PostsShowcaseCarousel({
     posts,
     className,
     postsPageUrl = '/post-view',

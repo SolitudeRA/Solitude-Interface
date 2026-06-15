@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useMemo, useState, useRef, useCallback } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { cn } from '@components/common/lib/utils';
+import { withErrorBoundary } from '@components/common/ErrorBoundary';
 import { postViewAtom, scrollToPostAtom } from '@stores/postViewAtom';
 
 import type { FeaturedPost } from '@api/ghost/types';
@@ -76,10 +77,10 @@ type TickData = {
     nextPostIndex?: number;
 };
 
-export default function DockTimelineContainer({
-    posts,
-    onScrollToPost,
-}: DockTimelineContainerProps) {
+// island 入口:包一层错误边界,timeline 客户端计算异常不拖垮 dock(降级为不渲染)
+export default withErrorBoundary(DockTimelineContainer, { label: 'DockTimeline' });
+
+function DockTimelineContainer({ posts, onScrollToPost }: DockTimelineContainerProps) {
     const postViewState = useAtomValue(postViewAtom);
     const { activeIndex, visibleIndices, postDates } = postViewState;
     const setScrollToPost = useSetAtom(scrollToPostAtom);

@@ -24,7 +24,7 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run --testNamePattern='(?<!Integration)' --exclude='**/*.integration.test.ts'",
-    "test:integration": "vitest run --testNamePattern='Integration'",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:all": "vitest run"
   },
   "lint-staged": {
