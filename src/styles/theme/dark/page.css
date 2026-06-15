@@ -7,9 +7,11 @@
     --page-accent: oklch(0.7 0.12 270);
     --page-accent-hover: oklch(0.78 0.1 270);
 
-    /* 链接 - 柔和蓝紫 */
-    --page-link: oklch(0.72 0.14 280);
-    --page-link-hover: oklch(0.8 0.12 280);
+    /* 交互主色(单一基座):链接等可交互元素统一从此派生 - 柔和蓝紫 */
+    --interaction-primary: oklch(0.72 0.14 280);
+    --interaction-primary-hover: oklch(0.8 0.12 280);
+    --page-link: var(--interaction-primary);
+    --page-link-hover: var(--interaction-primary-hover);
 
     /* Badge - 淡蓝紫 */
     --page-badge-text: oklch(0.75 0.1 270);

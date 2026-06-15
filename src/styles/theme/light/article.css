@@ -30,9 +30,9 @@
     --article-content-strong: oklch(0.15 0.025 264.665);
     --article-content-em: oklch(0.22 0.02 264.665);
 
-    /* 文章内容 - 链接 */
-    --article-content-link: var(--page-link);
-    --article-content-link-hover: var(--page-link-hover);
+    /* 文章内容 - 链接(派生自交互主色基座) */
+    --article-content-link: var(--interaction-primary);
+    --article-content-link-hover: var(--interaction-primary-hover);
 
     /* 文章内容 - 行内代码 */
     --article-content-code: oklch(0.48 0.16 294);

@@ -19,6 +19,9 @@
 .pvp-overview {
     height: 16px;
     pointer-events: none;
+    /* 总览条柔光基色(单一令牌):默认取前景色,随主题自适应(深色≈月白);
+       改这一处即可整体换光色,bloom/core/head 都从它派生,与基轨同一套 oklch 哲学。 */
+    --pvp-glow: var(--foreground);
 }
 /* 底边极淡基轨,两端渐隐不抢视觉 */
 .pvp-overview::before {
@@ -43,9 +46,9 @@
     filter: blur(7px);
     background: linear-gradient(
         90deg,
-        rgb(255 255 255 / 0) 0%,
-        rgb(255 255 255 / 0.12) 45%,
-        rgb(255 255 255 / 0.5) 100%
+        color-mix(in oklch, var(--pvp-glow) 0%, transparent) 0%,
+        color-mix(in oklch, var(--pvp-glow) 12%, transparent) 45%,
+        color-mix(in oklch, var(--pvp-glow) 50%, transparent) 100%
     );
 }
 /* 底边细芯线:同样随进度生长,前缘提亮 */
@@ -58,9 +61,9 @@
     border-radius: 999px;
     background: linear-gradient(
         90deg,
-        rgb(255 255 255 / 0) 0%,
-        rgb(255 255 255 / 0.35) 55%,
-        rgb(255 255 255 / 0.72) 100%
+        color-mix(in oklch, var(--pvp-glow) 0%, transparent) 0%,
+        color-mix(in oklch, var(--pvp-glow) 35%, transparent) 55%,
+        color-mix(in oklch, var(--pvp-glow) 72%, transparent) 100%
     );
 }
 /* 前缘柔焦光头:标记当前位置 */
@@ -75,8 +78,8 @@
     filter: blur(2px);
     background: radial-gradient(
         closest-side,
-        rgb(255 255 255 / 0.7),
-        rgb(255 255 255 / 0.28) 55%,
+        color-mix(in oklch, var(--pvp-glow) 70%, transparent),
+        color-mix(in oklch, var(--pvp-glow) 28%, transparent) 55%,
         transparent
     );
 }
