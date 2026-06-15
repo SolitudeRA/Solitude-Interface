@@ -26,6 +26,16 @@ export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = 'zh';
 
 /**
+ * 术语表(读本文件前先对齐词汇,避免 locale/lang 混淆):
+ * - `Locale`        内部语言代码:'zh' | 'ja' | 'en'(本系统的语言单一真源)
+ * - lang tag slug   Ghost 语言标签 slug:`hash-lang-{locale}`(如 hash-lang-ja),标「这篇是哪种语言」
+ * - i18n tag slug   Ghost 翻译组标签 slug:`hash-i18n-{key}`(如 hash-i18n-homeserver),标「这几篇是同一篇的不同语言」
+ * - i18nKey         翻译组 key(去前缀后的 {key}),跨语言文章的共同标识
+ * - HTML lang       BCP-47 文档语言(见 LOCALE_HTML_LANG,如 'zh-CN'),仅用于 <html lang>
+ * 约定:`locale` 始终指 `Locale`;涉及 Ghost slug 一律带 "tag/slug" 字样区分。
+ */
+
+/**
  * Ghost internal tag 前缀
  * Ghost Content API 中 internal tag (#xxx) 的 slug 会变成 hash-xxx
  */

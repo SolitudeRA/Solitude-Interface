@@ -13,6 +13,22 @@ interface UseHorizontalScrollOptions<T extends HTMLElement = HTMLElement> {
     dependencyKey?: unknown;
 }
 
+/**
+ * 纯计算:把目标元素在容器中水平居中所需的 scrollLeft,并夹紧到 [0, maxScroll]。
+ * 与 DOM 读取分离(scrollToIndex 负责读 rect,这里只做数学)。
+ */
+function centerTargetScrollLeft(metrics: {
+    /** 目标左缘相对内容起点的偏移(已含当前 scrollLeft) */
+    targetLeftInContent: number;
+    targetWidth: number;
+    clientWidth: number;
+    scrollWidth: number;
+}): number {
+    const centered = metrics.targetLeftInContent - (metrics.clientWidth - metrics.targetWidth) / 2;
+    const maxScrollLeft = Math.max(metrics.scrollWidth - metrics.clientWidth, 0);
+    return Math.min(Math.max(centered, 0), maxScrollLeft);
+}
+
 export function useHorizontalScroll<T extends HTMLElement = HTMLDivElement>({
     itemSelector,
     itemGap,
@@ -104,10 +120,12 @@ export function useHorizontalScroll<T extends HTMLElement = HTMLDivElement>({
 
             const containerRect = container.getBoundingClientRect();
             const targetRect = target.getBoundingClientRect();
-            const targetLeft = targetRect.left - containerRect.left + container.scrollLeft;
-            const centeredLeft = targetLeft - (container.clientWidth - targetRect.width) / 2;
-            const maxScrollLeft = Math.max(container.scrollWidth - container.clientWidth, 0);
-            const left = Math.min(Math.max(centeredLeft, 0), maxScrollLeft);
+            const left = centerTargetScrollLeft({
+                targetLeftInContent: targetRect.left - containerRect.left + container.scrollLeft,
+                targetWidth: targetRect.width,
+                clientWidth: container.clientWidth,
+                scrollWidth: container.scrollWidth,
+            });
 
             container.scrollTo({
                 left,

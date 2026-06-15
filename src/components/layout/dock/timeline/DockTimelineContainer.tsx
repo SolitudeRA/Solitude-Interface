@@ -1,3 +1,7 @@
+/**
+ * DockTimelineContainer —— dock 时间线的 React 岛(由 DockTimeline.astro 以 client:load 水合)。
+ * 「Container」沿用全仓 *Container 约定(承载状态/交互的客户端根组件),与 PostViewScrollContainer 等一致。
+ */
 import * as React from 'react';
 import { useMemo, useState, useRef, useCallback } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';

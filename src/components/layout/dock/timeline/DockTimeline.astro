@@ -1,4 +1,8 @@
 ---
+/**
+ * DockTimeline —— 「岛壳」:仅负责挂载并水合 React 岛 DockTimelineContainer(client:load)。
+ * 逻辑/渲染都在 DockTimelineContainer.tsx;本文件只做 Astro→React 的水合边界。
+ */
 import DockTimelineContainer from '@components/layout/dock/timeline/DockTimelineContainer.tsx';
 import type { FeaturedPost } from '@api/ghost/types';
 
