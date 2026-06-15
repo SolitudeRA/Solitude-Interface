@@ -1,4 +1,8 @@
 ---
+/**
+ * Dock —— 底部 dock 的「壳/原语」:只负责栅格布局、固定定位与响应式收拢,内容由 <slot/> 注入。
+ * 页面可直接用它自定义插槽内容;需要现成「导航 + 社交」三栏组合时用 SiteDock(它包装本组件)。
+ */
 interface Props {
     isFixed?: boolean;
     readerMode?: boolean;
