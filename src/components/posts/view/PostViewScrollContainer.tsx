@@ -194,7 +194,8 @@ export default function PostViewScrollContainer({
         requireHover: false,
         observeMutations: true,
         onScrollUpdate: handleScrollUpdate,
-        dependencyKey: `${postCountHint}:${postDates.length}`,
+        // 追踪内容而非仅长度:postDates 引用变更(即便长度不变)也应重建观察器
+        dependencyKey: `${postCountHint}:${postDates.join('|')}`,
     });
 
     const fadeMotion = prefersReducedMotion

@@ -24,7 +24,7 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run --testNamePattern='(?<!Integration)' --exclude='**/*.integration.test.ts'",
-    "test:integration": "vitest run --testNamePattern='Integration'",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:all": "vitest run"
   },
   "lint-staged": {
@@ -41,9 +41,6 @@
     "@astrojs/react": "^4.4.2",
     "@astrojs/rss": "^4.0.14",
     "@astrojs/ts-plugin": "^1.10.6",
-    "@emotion/cache": "^11.14.0",
-    "@emotion/react": "^11.14.0",
-    "@emotion/server": "^11.11.0",
     "@fontsource-variable/noto-sans": "^5.2.10",
     "@fontsource-variable/noto-sans-jp": "^5.2.9",
     "@fontsource-variable/noto-sans-sc": "^5.2.9",
@@ -53,7 +50,6 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.16.5",
-    "astro-emotion": "^3.0.1",
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

@@ -11,7 +11,7 @@ import { DEFAULT_LOCALE, type Locale } from '@lib/i18n';
 
 interface Props {
     title: string;
-    feature_image: URL;
+    feature_image: URL | null;
     primary_tag?: PostTag | undefined;
     tags?: PostTag[] | undefined;
     published_at: string;

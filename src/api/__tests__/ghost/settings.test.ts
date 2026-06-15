@@ -16,9 +16,9 @@ describe('Settings API', () => {
     const mockSiteInfo: SiteInformation = {
         title: 'Test Site',
         description: 'A test site description',
-        logo: new URL('https://ghost.example.com/logo.png'),
-        icon: new URL('https://ghost.example.com/icon.png'),
-        cover_image: new URL('https://ghost.example.com/cover.jpg'),
+        logo: 'https://ghost.example.com/logo.png',
+        icon: 'https://ghost.example.com/icon.png',
+        cover_image: 'https://ghost.example.com/cover.jpg',
         twitter: '@testsite',
         timezone: 'Asia/Tokyo',
     };
@@ -113,8 +113,10 @@ describe('Settings API', () => {
 
             const result = await initializeSiteData();
 
-            // coverImageUrl 可以是 URL 对象或 null
-            expect(result.coverImageUrl === null || result.coverImageUrl instanceof URL).toBe(true);
+            // coverImageUrl 是字符串 URL 或 null
+            expect(result.coverImageUrl === null || typeof result.coverImageUrl === 'string').toBe(
+                true
+            );
         });
 
         it('should return default values on error', async () => {

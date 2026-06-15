@@ -133,6 +133,42 @@ jobs:
         run: pnpm test:run
 
   # ============================================
+  # Integration job: Run integration tests against demo Ghost
+  # 非阻塞(continue-on-error):打外部 demo Ghost,用于尽早暴露 API 契约变更;
+  # demo 内容可能漂移/偶发不可用,故不阻断 PR(但会在 CI 中显式标黄)。
+  # ============================================
+  integration:
+    name: 🔗 Integration (demo Ghost)
+    runs-on: ubuntu-latest
+    needs: setup
+    timeout-minutes: 10
+    continue-on-error: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Restore dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            node_modules
+            .astro
+          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          fail-on-cache-miss: true
+
+      - name: Integration tests (vitest, demo Ghost)
+        run: pnpm test:integration
+
+  # ============================================
   # Typecheck job: Validate Astro and TypeScript
   # ============================================
   typecheck:

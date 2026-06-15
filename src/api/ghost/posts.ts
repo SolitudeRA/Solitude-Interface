@@ -1,8 +1,9 @@
 import { getGhostClient } from '@api/clients/ghost';
-import { adaptGhostPost } from '@api/adapters/ghost';
+import { adaptGhostPost, isAdaptablePost } from '@api/adapters/ghost';
 import type { FeaturedPost, Post } from '@api/ghost/types';
 import { handleApiError } from '@api/utils/errorHandlers';
 import { getCache, setCache } from '@api/utils/cache';
+import { CACHE_KEYS } from '@api/utils/cacheKeys';
 import { getTagRegistry } from '@api/ghost/tagRegistry';
 import {
     type Locale,
@@ -14,7 +15,7 @@ import {
 } from '@lib/i18n';
 
 const MAX_GHOST_PAGE_SIZE = 100;
-const POST_INDEX_BY_GROUP_CACHE_KEY = 'post_index_by_group';
+const POST_INDEX_BY_GROUP_CACHE_KEY = CACHE_KEYS.postIndexByGroup();
 
 interface GhostPostsResponse {
     posts: Post[];
@@ -38,7 +39,14 @@ function createEmptyVariants(): Record<Locale, Post | null> {
 async function adaptPosts<T extends Post | FeaturedPost>(posts: T[] | undefined): Promise<T[]> {
     const tagRegistry = await getTagRegistry();
 
-    return (posts || []).map((post) => adaptGhostPost(post, { tagRegistry }));
+    // 边界收敛:丢弃缺少必要字段的畸形条目(并告警),避免单条坏数据拖垮整批适配
+    const usable = (posts || []).filter((post) => {
+        if (isAdaptablePost(post)) return true;
+        console.warn('[posts] 跳过畸形 Ghost post(缺少 id/title):', (post as { id?: unknown })?.id);
+        return false;
+    });
+
+    return usable.map((post) => adaptGhostPost(post, { tagRegistry }));
 }
 
 async function fetchPostsPage(page: number, limit: number): Promise<GhostPostsResponse> {
@@ -83,7 +91,7 @@ export async function getHighlightPosts(
     fields: string = 'id,slug,title,url,feature_image,primary_tag,published_at',
     include: string = 'tags'
 ): Promise<FeaturedPost[]> {
-    const cacheKey = `featured_posts:${limit}:${fields}:${include}`;
+    const cacheKey = CACHE_KEYS.featuredPosts(limit, fields, include);
     const cachedPosts = getCache<FeaturedPost[]>(cacheKey);
     if (cachedPosts !== undefined) {
         return cachedPosts;
@@ -116,7 +124,7 @@ export async function listPostsByLocale(
 ): Promise<Post[]> {
     const { page = 1, limit = 15 } = options;
     const langTag = localeToLangTag(locale);
-    const cacheKey = `posts_by_locale:${locale}:${page}:${limit}`;
+    const cacheKey = CACHE_KEYS.postsByLocale(locale, page, limit);
 
     const cachedPosts = getCache<Post[]>(cacheKey);
     if (cachedPosts !== undefined) {
@@ -151,7 +159,7 @@ export async function listPostsByLocale(
  * @param locale - 语言代码
  */
 export async function getPostByGroupAndLocale(key: string, locale: Locale): Promise<Post | null> {
-    const cacheKey = `post_by_group:${key}:${locale}`;
+    const cacheKey = CACHE_KEYS.postByGroup(key, locale);
 
     const cachedPost = getCache<Post | null>(cacheKey);
     if (cachedPost !== undefined) {
@@ -173,7 +181,7 @@ export async function getPostByGroupAndLocale(key: string, locale: Locale): Prom
  * @returns 包含每个语言版本是否存在的记录
  */
 export async function getVariantsByGroup(key: string): Promise<Record<Locale, Post | null>> {
-    const cacheKey = `variants_by_group:${key}`;
+    const cacheKey = CACHE_KEYS.variantsByGroup(key);
 
     const cachedVariants = getCache<Record<Locale, Post | null>>(cacheKey);
     if (cachedVariants !== undefined) {
@@ -199,7 +207,7 @@ export async function getVariantsByGroup(key: string): Promise<Record<Locale, Po
  * @returns 所有翻译组 key 的数组
  */
 export async function listAllGroupKeys(): Promise<string[]> {
-    const cacheKey = 'all_group_keys';
+    const cacheKey = CACHE_KEYS.allGroupKeys();
 
     const cachedKeys = getCache<string[]>(cacheKey);
     if (cachedKeys !== undefined) {
@@ -272,7 +280,7 @@ export async function getPostWithFallback(
 
 export async function getPosts(include: string = 'tags'): Promise<Post[]> {
     // 生成缓存键
-    const cacheKey = `all_posts:${include}`;
+    const cacheKey = CACHE_KEYS.allPosts(include);
 
     // 尝试从缓存获取
     const cachedPosts = getCache<Post[]>(cacheKey);
@@ -305,7 +313,7 @@ export async function listAllPosts(
     options: { page?: number; limit?: number } = {}
 ): Promise<Post[]> {
     const { page, limit = MAX_GHOST_PAGE_SIZE } = options;
-    const cacheKey = page ? `all_posts_view:${page}:${limit}` : `all_posts_view:all:${limit}`;
+    const cacheKey = CACHE_KEYS.allPostsView(page, limit);
 
     const cachedPosts = getCache<Post[]>(cacheKey);
     if (cachedPosts !== undefined) {

@@ -3,7 +3,7 @@ import type { APIContext } from 'astro';
 import { listPostsByLocale } from '@api/ghost/posts';
 import { getSiteInformation } from '@api/ghost/settings';
 import type { Post } from '@api/ghost/types';
-import { type Locale, LOCALES, isLocale, extractI18nKeyFromPost, LOCALE_NAMES } from '@lib/i18n';
+import { type Locale, LOCALES, isLocale, LOCALE_NAMES } from '@lib/i18n';
 import { SITE_URL } from 'astro:env/server';
 
 /**
@@ -48,20 +48,13 @@ export async function GET(context: APIContext) {
         title: `${siteInfo.title} (${languageName})`,
         description: siteInfo.description || `${siteInfo.title} RSS Feed`,
         site: siteUrl,
-        items: posts.map((post: Post) => {
-            // 提取 i18n key 作为文章路径
-            const i18nKey = extractI18nKeyFromPost(post);
-            // 使用 i18n key 或者从 URL 提取 slug
-            const postSlug = i18nKey || post.url.toString().split('/').filter(Boolean).pop();
-            const postPath = `/${locale}/p/${postSlug}`;
-
-            return {
-                title: post.title,
-                pubDate: new Date(post.published_at),
-                description: post.excerpt || '',
-                link: `${siteUrl}${postPath}`,
-            };
-        }),
+        // 链接直接复用 adapter 构建的 post.url(单一来源,含 i18nKey→/p/ 或旧帖→/posts/ 的正确路由)
+        items: posts.map((post: Post) => ({
+            title: post.title,
+            pubDate: new Date(post.published_at),
+            description: post.excerpt || '',
+            link: post.url.toString(),
+        })),
         customData: `<language>${locale}</language>`,
     });
 }

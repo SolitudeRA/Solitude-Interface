@@ -3,6 +3,26 @@
  */
 
 /**
+ * 安全构造 URL:失败返回 null 而非抛出 TypeError。
+ * 用于收敛来自 Ghost 等外部源的、不可信的 URL 字符串(可能畸形/为空)。
+ * @param input - URL 字符串或 URL 对象
+ * @param base - 可选基准 URL(用于相对路径)
+ * @returns URL 对象,或在无效时返回 null
+ */
+export function safeCreateUrl(
+    input: string | URL | undefined | null,
+    base?: string | URL
+): URL | null {
+    if (!input) return null;
+    try {
+        return base !== undefined ? new URL(input, base) : new URL(input);
+    } catch {
+        console.warn(`[url] Failed to construct URL from: ${String(input)}`);
+        return null;
+    }
+}
+
+/**
  * 从 URL 中提取域名
  * @param url - 完整的 URL
  * @returns 域名或空字符串
