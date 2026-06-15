@@ -9,9 +9,29 @@
 
 一个使用 Astro 构建、并由 Ghost CMS Content API 驱动的现代个人博客界面。
 
+**[在线预览](https://www.solitudera.com)** · [文档](../DEVELOPMENT.md) · [反馈问题](https://github.com/SolitudeRA/Solitude-Interface/issues)
+
 阅读语言： [English](../../README.md) | 简体中文 | [日本語](README.ja.md)
 
-## 🚀 功能特性
+---
+
+## 目录
+
+- [功能特性](#功能特性)
+- [截图](#截图)
+- [文档](#文档)
+- [快速开始](#快速开始)
+- [常用命令](#常用命令)
+- [内容发布指南](#内容发布指南)
+- [多语言内容](#多语言内容)
+- [给开发者](#给开发者)
+- [支持](#支持)
+- [致谢](#致谢)
+- [许可证](#许可证)
+
+---
+
+## 功能特性
 
 - 使用 Astro 构建的高性能静态站点
 - Ghost CMS 集成（Headless）
@@ -20,7 +40,12 @@
 - 多种文章展示类型（文章、画廊、视频、音乐）
 - SEO 优化（hreflang、canonical、html lang）
 
-## Screenshots
+---
+
+## 截图
+
+<details>
+<summary>点击展开截图</summary>
 
 ### Home
 
@@ -38,7 +63,11 @@
 
 ![Post-Detail](../assets/post-detail.png)
 
-## 📖 文档
+</details>
+
+---
+
+## 文档
 
 | 文档                                    | 说明                                                               |
 | --------------------------------------- | ------------------------------------------------------------------ |
@@ -47,7 +76,7 @@
 
 ---
 
-## 🚀 快速开始
+## 快速开始
 
 ### 1. 安装依赖
 
@@ -91,35 +120,39 @@ GOOGLE_ANALYTICS_TAG_ID=
 | `GHOST_VERSION`           | 否   | Ghost Content API 版本（默认：`v5.0`）                                                    |
 | `GHOST_TIMEOUT`           | 否   | Ghost 请求超时时间（毫秒，默认：`5000`）                                                  |
 | `SITE_URL`                | 是   | 站点公开 URL（用于 canonical / hreflang）                                                 |
-| `IMAGE_HOST_URL`          | 否   | 可选：图片域名/CDN，用于远程图片域名白名单（默认：空）                                    |
+| `IMAGE_HOST_URL`          | 否   | 可选：图片域名/CDN，用于远程图片域名白名单；支持单个或逗号分隔的多个 URL（默认：空）      |
 | `GOOGLE_ANALYTICS_TAG_ID` | 否   | 可选：Google tag / GA4 Measurement ID（如 `G-XXXX`）。留空即可关闭统计                    |
 | `CF_ACCESS_CLIENT_ID`     | 否   | Cloudflare Access Service Token Client ID（仅当 Ghost 使用 Cloudflare Access 保护时需要） |
 | `CF_ACCESS_CLIENT_SECRET` | 否   | Cloudflare Access Service Token Client Secret                                             |
 
-### Cloudflare 配置（可选）
+### Cloudflare Access 配置（可选）
 
-如果你的 Ghost 实例使用 Cloudflare 保护，可能需要额外配置：
+如果你的 Ghost 实例被 [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/policies/access/) 保护，需要配置 Service Token 才能访问 API：
 
-#### Bot Fight Mode
+1. **创建 Service Token**（在 Cloudflare Zero Trust 后台）：
+    - 进入 **Access** → **Service Auth** → **Service Tokens**
+    - 点击 **Create Service Token**
+    - 复制 **Client ID** 与 **Client Secret**
 
-创建 WAF 自定义规则跳过 API 的机器人保护：
+2. **写入 `.env`**：
 
-1. Cloudflare Dashboard → **Security** → **WAF** → **Custom rules**
-2. 创建规则：URI Path `starts with` `/ghost/api/content/`
-3. Action: **Skip** → 勾选 "All Super Bot Fight Mode rules"
+    ```env
+    CF_ACCESS_CLIENT_ID=your-client-id.access
+    CF_ACCESS_CLIENT_SECRET=your-client-secret
+    ```
 
-#### Zero Trust Access
+3. **在对应 Access Application 中添加放行策略**：
+    - 进入 **Access** → **Applications** → 你的 Ghost App
+    - 添加一条 **Action: Service Auth** 策略并选中该 token
 
-如果使用 Cloudflare Zero Trust Access：
+> **说明**：本项目只实现 **Service Token** 认证 —— 当两个变量**成对设置**时，API 客户端会自动附带 `CF-Access-Client-Id` / `CF-Access-Client-Secret` 头（只设其一则都不会发送，并打印告警）。
 
-1. Zero Trust Dashboard → **Access** → **Applications**
-2. 为 `your-ghost-domain.com/ghost/api/content/*` 添加应用
-3. 策略设置为 **Bypass**
+#### 可选：面板侧放行规则
 
-或使用 Service Auth Token：
+以下是 **Cloudflare 面板侧的策略，本项目代码并不实现、也不读取** —— 它们只是放行 Content API 请求，仅在你额外加了防护时才需要：
 
-1. Zero Trust → **Access** → **Service Auth** → 创建 Service Token
-2. 将 Client ID 和 Secret 添加到 `.env` 文件
+- **Bot Fight Mode**：Cloudflare → Security → WAF → Custom rules，新建规则：URI Path `starts with` `/ghost/api/content/`，Action = Skip → 勾选 All Super Bot Fight Mode rules。
+- **Zero Trust Access Bypass**：Zero Trust → Access → Applications，为 `your-ghost-domain.com/ghost/api/content/*` 添加应用，策略设为 **Bypass**。
 
 ### 3. 获取 Ghost Content API Key
 
@@ -143,21 +176,25 @@ pnpm dev
 
 访问 `http://localhost:4321` 查看站点。
 
-## 常用命令
-
-| 命令               | 说明                                    |
-| ------------------ | --------------------------------------- |
-| `pnpm dev`         | 启动开发服务器                          |
-| `pnpm build`       | 构建生产环境产物                        |
-| `pnpm preview`     | 预览生产构建结果                        |
-| `pnpm astro sync`  | 生成类型定义（env/schema 修改后很有用） |
-| `pnpm astro check` | 类型检查并验证 Astro 项目               |
-| `pnpm test`        | 运行测试                                |
-| `pnpm format`      | 格式化代码                              |
+> **部署**：这是纯静态站点（Astro SSG）—— `pnpm build` 产物输出到 `dist/`，可托管到任意静态主机（如 Cloudflare Pages）。请在部署平台的构建环境中配置与本地 `.env` 相同的环境变量：静态生成发生在**构建期**，Ghost 内容在构建时抓取并预渲染，凭据不会进入 `dist/`。
 
 ---
 
-## 📝 内容发布指南
+## 常用命令
+
+| 命令              | 说明                                      |
+| ----------------- | ----------------------------------------- |
+| `pnpm dev`        | 启动开发服务器                            |
+| `pnpm build`      | 构建生产环境产物                          |
+| `pnpm preview`    | 预览生产构建结果                          |
+| `pnpm astro sync` | 生成类型定义（env/schema 修改后很有用）   |
+| `pnpm check`      | Lint + 格式检查 + 类型检查（提交前运行）  |
+| `pnpm test:run`   | 运行一次测试（`pnpm test` 为 watch 模式） |
+| `pnpm format`     | 格式化代码                                |
+
+---
+
+## 内容发布指南
 
 ### 分类标签（Tags）
 
@@ -182,7 +219,7 @@ pnpm dev
 
 ---
 
-## 🌐 多语言内容
+## 多语言内容
 
 ### URL 结构
 
@@ -207,7 +244,23 @@ pnpm dev
 
 > **注意**：在 Ghost Content API 中，内部标签 `#xxx` 会被转换为 slug 形式 `hash-xxx`。
 
-### 步骤：创建多语言文章
+### 文章 slug 命名约定（保留前缀）
+
+除内部标签外，系统还支持直接从 **Ghost post slug** 派生文章身份，约定为 `{locale}-{key}`：
+
+| Post slug         | 解析结果                                                          |
+| ----------------- | ----------------------------------------------------------------- |
+| `ja-homeserver-8` | locale = `ja`，翻译组 key = `homeserver-8` → `/ja/p/homeserver-8` |
+| `en-blog-project` | locale = `en`，翻译组 key = `blog-project` → `/en/p/blog-project` |
+
+> **重要：`zh-` / `ja-` / `en-` 是保留的 slug 前缀。** 任何以合法语言代码加连字符开头的 slug，都会被当作该语言的多语言文章来解析（即使没有 `#lang-*` / `#i18n-*` 标签）。
+>
+> 因此**不要给普通（非多语言）文章起 `zh-…` / `ja-…` / `en-…` 这样的 slug**，否则它会被误并入翻译组、生成错误的 `/{locale}/p/{key}` 路由与 hreflang。普通文章请使用不以语言代码开头的 slug。
+>
+> 当文章同时带 `#lang-*` 标签时：**语言**以标签为准、slug 前缀仅作回退；**翻译组 key** 则优先取自 slug，`#i18n-*` 标签作为回退。
+
+<details>
+<summary><strong>分步指南：创建多语言文章</strong></summary>
 
 **重要**：每种语言版本在 Ghost 中都是一篇**独立的 Post**。它们通过相同的 `#i18n-{key}` 标签关联在一起。
 
@@ -272,40 +325,47 @@ pnpm dev
 | “Astro入門ガイド”（日文）            | `#lang-ja`, `#i18n-astro-guide`, `type-article`, `category-tech` |
 | “Getting Started with Astro”（英文） | `#lang-en`, `#i18n-astro-guide`, `type-article`, `category-tech` |
 
-### 文章 slug 命名约定（保留前缀）
-
-除内部标签外，系统还支持直接从 **Ghost post slug** 派生文章身份，约定为 `{locale}-{key}`：
-
-| Post slug         | 解析结果                                                          |
-| ----------------- | ----------------------------------------------------------------- |
-| `ja-homeserver-8` | locale = `ja`，翻译组 key = `homeserver-8` → `/ja/p/homeserver-8` |
-| `en-blog-project` | locale = `en`，翻译组 key = `blog-project` → `/en/p/blog-project` |
-
-> ⚠️ **`zh-` / `ja-` / `en-` 是保留的 slug 前缀。** 任何以合法语言代码加连字符开头的 slug，都会被当作该语言的多语言文章来解析（即使没有 `#lang-*` / `#i18n-*` 标签）。
->
-> 因此**不要给普通（非多语言）文章起 `zh-…` / `ja-…` / `en-…` 这样的 slug**，否则它会被误并入翻译组、生成错误的 `/{locale}/p/{key}` 路由与 hreflang。普通文章请使用不以语言代码开头的 slug。
->
-> 当文章同时带 `#lang-*` 标签时：**语言**以标签为准、slug 前缀仅作回退；**翻译组 key** 则优先取自 slug，`#i18n-*` 标签作为回退。
+</details>
 
 ### 回退（Fallback）行为
 
 - 若某语言版本不存在，则展示默认语言（中文）
+- 若默认语言也不存在，则按 `LOCALES` 顺序（`zh`、`ja`、`en`）取任意可用变体——该顺序是 load-bearing 的（例如中文缺失时，日文优先于英文）
 - 页面会显示提示横幅，说明发生了回退
 - 语言切换器会标识哪些语言版本可用/不可用
 
 ---
 
-## 🛠️ 给开发者
+## 给开发者
 
 请查看 [**docs/DEVELOPMENT.md**](../DEVELOPMENT.md)，包含：
 
-- 🔧 技术栈与项目结构
-- 🧞 可用命令说明
-- 📋 测试指南（单元测试 & 集成测试）
-- 🏗️ 架构说明与代码参考
+- 技术栈与项目结构
+- 可用命令说明
+- 测试指南（单元测试 & 集成测试）
+- 架构说明与代码参考
+
+### 贡献
+
+欢迎贡献！请提交 Pull Request。重大改动请先开 issue 讨论你想做的改动。
 
 ---
 
-## 📄 许可证
+## 支持
+
+有问题、想法或 Bug？请到 [GitHub Issues](https://github.com/SolitudeRA/Solitude-Interface/issues) 反馈。
+
+---
+
+## 致谢
+
+- [Astro](https://astro.build/) - 面向内容驱动型网站的 Web 框架
+- [Ghost](https://ghost.org/) - 专业的内容发布平台
+- [TailwindCSS](https://tailwindcss.com/) - 实用优先的 CSS 框架
+- [React](https://react.dev/) - 用于构建用户界面的库
+
+---
+
+## 许可证
 
 本项目为开源项目，使用 [MIT License](../../LICENSE)。
