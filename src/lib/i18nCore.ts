@@ -1,0 +1,294 @@
+import type { PostTag } from '@api/ghost/types';
+
+/**
+ * i18n 核心:语言集合、UI 文案、tag/slug 身份解析。
+ * 这是叶子模块(不依赖 routing/filtering),供 i18nRouting / i18nFiltering 复用,
+ * 并经 i18n.ts(barrel)统一再导出。
+ */
+
+/**
+ * 支持的语言列表。
+ *
+ * ⚠️ 数组顺序是 load-bearing：getPostWithFallback 在请求语言与默认语言(zh)都缺失时，
+ * 按此顺序选取「任意可用变体」(故 zh 缺失时 ja 优先于 en)。这里是语言集合的单一真源；
+ * astro.config.mjs 的 i18n.locales 仅用于路由前缀，但两处的语言集合必须保持一致。
+ */
+export const LOCALES = ['zh', 'ja', 'en'] as const;
+
+/**
+ * 语言类型
+ */
+export type Locale = (typeof LOCALES)[number];
+
+/**
+ * 默认语言
+ */
+export const DEFAULT_LOCALE: Locale = 'zh';
+
+/**
+ * Ghost internal tag 前缀
+ * Ghost Content API 中 internal tag (#xxx) 的 slug 会变成 hash-xxx
+ */
+const LANG_TAG_PREFIX = 'hash-lang-';
+const I18N_TAG_PREFIX = 'hash-i18n-';
+
+/**
+ * 语言名称映射（用于 UI 显示）
+ */
+export const LOCALE_NAMES: Record<Locale, string> = {
+    zh: '中文',
+    ja: '日本語',
+    en: 'English',
+};
+
+export const LOCALE_FLAGS: Record<Locale, string> = {
+    zh: '🇨🇳',
+    ja: '🇯🇵',
+    en: '🇺🇸',
+};
+
+/**
+ * 语言 HTML lang 属性映射
+ */
+export const LOCALE_HTML_LANG: Record<Locale, string> = {
+    zh: 'zh-CN',
+    ja: 'ja',
+    en: 'en',
+};
+
+/**
+ * UI 文本翻译字典
+ */
+export const UI_TEXTS = {
+    home: {
+        viewAllPosts: {
+            zh: '查看全部文章',
+            ja: 'すべての記事を見る',
+            en: 'View All Posts',
+        },
+        exploreMore: {
+            zh: '探索更多内容',
+            ja: 'もっと探索する',
+            en: 'Explore more content',
+        },
+        noPosts: {
+            zh: '暂无文章',
+            ja: '記事はまだありません',
+            en: 'No posts yet',
+        },
+    },
+    nav: {
+        home: {
+            zh: '首页',
+            ja: 'ホーム',
+            en: 'Home',
+        },
+        posts: {
+            zh: '文章',
+            ja: '記事',
+            en: 'Posts',
+        },
+        about: {
+            zh: '关于',
+            ja: 'プロフィール',
+            en: 'About',
+        },
+        aboutMe: {
+            zh: '关于我',
+            ja: 'プロフィール',
+            en: 'About Me',
+        },
+        contact: {
+            zh: '联系',
+            ja: '連絡先',
+            en: 'Contact',
+        },
+        privacy: {
+            zh: '隐私',
+            ja: 'プライバシー',
+            en: 'Privacy',
+        },
+        privacyPolicy: {
+            zh: '隐私政策',
+            ja: 'プライバシーポリシー',
+            en: 'Privacy Policy',
+        },
+    },
+    rss: {
+        label: {
+            zh: 'RSS',
+            ja: 'RSS',
+            en: 'RSS',
+        },
+        allLanguages: {
+            zh: '全部语言',
+            ja: 'すべての言語',
+            en: 'All Languages',
+        },
+        current: {
+            zh: '当前',
+            ja: '現在',
+            en: 'Current',
+        },
+    },
+} as const;
+
+/**
+ * 获取 UI 翻译文本
+ * @param section 文本分组 (如 'home')
+ * @param key 文本键名
+ * @param locale 目标语言
+ * @returns 翻译后的文本
+ */
+export function getUIText<S extends keyof typeof UI_TEXTS>(
+    section: S,
+    key: keyof (typeof UI_TEXTS)[S],
+    locale: Locale
+): string {
+    const texts = UI_TEXTS[section][key] as Record<Locale, string>;
+    return texts[locale] ?? texts[DEFAULT_LOCALE];
+}
+
+/**
+ * 检查是否为有效的语言代码
+ */
+export function isLocale(x: unknown): x is Locale {
+    return typeof x === 'string' && LOCALES.includes(x as Locale);
+}
+
+/**
+ * 将语言代码转换为 Ghost tag slug 格式
+ * @example localeToLangTag('en') => 'hash-lang-en'
+ */
+export function localeToLangTag(locale: Locale): string {
+    return `${LANG_TAG_PREFIX}${locale}`;
+}
+
+/**
+ * 将翻译组 key 转换为 Ghost tag slug 格式
+ * @example i18nKeyToTag('intro-to-solitude') => 'hash-i18n-intro-to-solitude'
+ */
+export function i18nKeyToTag(key: string): string {
+    return `${I18N_TAG_PREFIX}${key}`;
+}
+
+/**
+ * 从 Ghost tag slug 中提取语言代码
+ * @example extractLocaleFromTagSlug('hash-lang-ja') => 'ja'
+ */
+export function extractLocaleFromTagSlug(slug: string): Locale | null {
+    if (!slug.startsWith(LANG_TAG_PREFIX)) {
+        return null;
+    }
+    const locale = slug.replace(LANG_TAG_PREFIX, '');
+    return isLocale(locale) ? locale : null;
+}
+
+/**
+ * 从 Ghost tag slug 中提取翻译组 key
+ * @example extractI18nKeyFromTagSlug('hash-i18n-intro-to-solitude') => 'intro-to-solitude'
+ */
+export function extractI18nKeyFromTagSlug(slug: string): string | null {
+    if (!slug.startsWith(I18N_TAG_PREFIX)) {
+        return null;
+    }
+    return slug.replace(I18N_TAG_PREFIX, '');
+}
+
+export interface PostIdentitySource {
+    slug?: string | null;
+    tags?: PostTag[];
+}
+
+export interface PostSlugIdentity {
+    locale: Locale;
+    i18nKey: string;
+}
+
+/**
+ * 从 Ghost post slug 中提取文章身份。
+ * 约定：`{locale}-{key}`，例如 ja-homeserver-8 -> locale=ja, i18nKey=homeserver-8。
+ *
+ * ⚠️ 取舍（有意设计）：`zh-` / `ja-` / `en-` 是**保留 slug 前缀**。任何以合法语言代码加连字符
+ * 开头的 slug 都会被解析为该语言的多语言文章——即使它没有 #lang-* / #i18n-* 标签。因此普通
+ * （非多语言）文章不应使用以语言代码开头的 slug，否则会被误并入翻译组、生成错误的
+ * /{locale}/p/{key} 路由。该保留命名空间约定见 docs/i18n/README，并由 i18n.test.ts 钉住。
+ */
+export function extractPostSlugIdentity(slug: string | null | undefined): PostSlugIdentity | null {
+    const normalizedSlug = slug?.trim().toLowerCase();
+    if (!normalizedSlug) {
+        return null;
+    }
+
+    const [localeCandidate, ...keyParts] = normalizedSlug.split('-');
+    if (!isLocale(localeCandidate) || keyParts.length === 0) {
+        return null;
+    }
+
+    const i18nKey = keyParts.join('-');
+    return i18nKey ? { locale: localeCandidate, i18nKey } : null;
+}
+
+/**
+ * 从文章的 tags 数组中提取语言代码
+ */
+export function extractLocaleFromTags(tags: PostTag[] | undefined): Locale | null {
+    if (!tags?.length) {
+        return null;
+    }
+
+    for (const tag of tags) {
+        const locale = extractLocaleFromTagSlug(tag.slug);
+        if (locale) {
+            return locale;
+        }
+    }
+
+    return null;
+}
+
+/**
+ * 从 Ghost post slug 中提取语言代码。
+ */
+export function extractLocaleFromPostSlug(slug: string | null | undefined): Locale | null {
+    return extractPostSlugIdentity(slug)?.locale ?? null;
+}
+
+/**
+ * 从文章的 tags 数组中提取翻译组 key
+ */
+export function extractI18nKey(tags: PostTag[] | undefined): string | null {
+    if (!tags?.length) {
+        return null;
+    }
+
+    for (const tag of tags) {
+        const key = extractI18nKeyFromTagSlug(tag.slug);
+        if (key) {
+            return key;
+        }
+    }
+
+    return null;
+}
+
+/**
+ * 从 Ghost post slug 中提取跨语言文章 key。
+ */
+export function extractI18nKeyFromPostSlug(slug: string | null | undefined): string | null {
+    return extractPostSlugIdentity(slug)?.i18nKey ?? null;
+}
+
+/**
+ * 获取文章语言。语言 tag 仍是主来源，slug 里的语言只作为 fallback。
+ */
+export function extractLocaleFromPost(post: PostIdentitySource): Locale | null {
+    return extractLocaleFromTags(post.tags) ?? extractLocaleFromPostSlug(post.slug);
+}
+
+/**
+ * 获取跨语言文章 key。新格式优先从 Ghost slug 解析，旧 #i18n-* tag 作为兼容 fallback。
+ */
+export function extractI18nKeyFromPost(post: PostIdentitySource): string | null {
+    return extractI18nKeyFromPostSlug(post.slug) ?? extractI18nKey(post.tags);
+}
