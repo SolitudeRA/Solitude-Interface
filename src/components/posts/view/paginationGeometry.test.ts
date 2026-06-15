@@ -5,6 +5,7 @@ import {
     markerOpacity,
     DEFAULT_GEOMETRY,
     computeTimelineLayout,
+    computeScrollProgress,
 } from './paginationGeometry';
 
 describe('smoothstep', () => {
@@ -121,5 +122,27 @@ describe('computeTimelineLayout', () => {
         expect(markers[7]!.opacity).toBe(1);
         expect(markers[6]!.opacity).toBe(1);
         expect(markers[5]!.opacity).toBeCloseTo(0.5, 5);
+    });
+});
+
+describe('computeScrollProgress', () => {
+    it('returns 0 when content fits the viewport (not scrollable)', () => {
+        expect(computeScrollProgress(0, 800, 800)).toBe(0);
+        expect(computeScrollProgress(0, 800, 1000)).toBe(0);
+    });
+
+    it('is 0 at the start and 1 at max scroll', () => {
+        expect(computeScrollProgress(0, 1000, 500)).toBe(0);
+        expect(computeScrollProgress(500, 1000, 500)).toBe(1); // maxScroll = 500
+    });
+
+    it('is the linear fraction in between', () => {
+        expect(computeScrollProgress(125, 1000, 500)).toBeCloseTo(0.25, 10);
+        expect(computeScrollProgress(250, 1000, 500)).toBeCloseTo(0.5, 10);
+    });
+
+    it('clamps overscroll on both ends', () => {
+        expect(computeScrollProgress(-80, 1000, 500)).toBe(0);
+        expect(computeScrollProgress(900, 1000, 500)).toBe(1);
     });
 });

@@ -31,6 +31,28 @@ const initialPostViewState: PostViewState = {
 export const postViewAtom = atom<PostViewState>(initialPostViewState);
 
 /**
+ * 滚动容器度量（px），用于 minimap 总览滑块的尺寸与定位。
+ * 单独成 atom：滚动每帧都会更新它，只让订阅它的 minimap 重渲染，
+ * 不波及只读 postViewAtom 的时间线（避免每帧重渲染时间线）。
+ */
+export interface PostViewScrollMetrics {
+    /** 容器当前水平滚动量 */
+    scrollLeft: number;
+    /** 容器内容总宽 */
+    scrollWidth: number;
+    /** 容器可视宽 */
+    clientWidth: number;
+}
+
+const initialScrollMetrics: PostViewScrollMetrics = {
+    scrollLeft: 0,
+    scrollWidth: 0,
+    clientWidth: 0,
+};
+
+export const postViewScrollAtom = atom<PostViewScrollMetrics>(initialScrollMetrics);
+
+/**
  * 只读派生 atom：获取当前活动文章的日期
  */
 export const activePostDateAtom = atom((get) => {
