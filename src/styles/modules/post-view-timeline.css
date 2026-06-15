@@ -4,13 +4,81 @@
  * 此处只放静态样式、过渡、keyframes 与降级。
  */
 
-/* cluster:容纳时间线(列向 —— 让时间线撑满宽度并在 caller 区域内垂直居中)。
-   注:minimap 总览条暂缓(设计待讨论),见 spec。 */
+/* cluster:容纳时间线(列向 —— 让时间线撑满宽度并在 caller 区域内垂直居中)。 */
 .pvp-cluster {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     justify-content: center;
+}
+
+/* 底边总览进度条(氛围光晕 × 进度填充):全宽钉在视窗最底边。
+   柔光从左随滚动进度生长、前缘最亮 + 柔焦光头标记当前位置。纯视觉(aria-hidden)。
+   定位(fixed bottom 全宽)由调用方 className 设置;此处只放视觉样式。
+   bloom/core 宽度、head 位置由组件 rAF 弹簧命令式写 style(故无 CSS 过渡)。 */
+.pvp-overview {
+    height: 16px;
+    pointer-events: none;
+}
+/* 底边极淡基轨,两端渐隐不抢视觉 */
+.pvp-overview::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: color-mix(in oklch, var(--foreground) 6%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+/* 模糊柔光带:宽度跟随进度,越靠前缘越亮 */
+.pvp-overview-bloom {
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    height: 15px;
+    width: 0;
+    border-radius: 999px;
+    filter: blur(7px);
+    background: linear-gradient(
+        90deg,
+        rgb(255 255 255 / 0) 0%,
+        rgb(255 255 255 / 0.12) 45%,
+        rgb(255 255 255 / 0.5) 100%
+    );
+}
+/* 底边细芯线:同样随进度生长,前缘提亮 */
+.pvp-overview-core {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 0;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        rgb(255 255 255 / 0) 0%,
+        rgb(255 255 255 / 0.35) 55%,
+        rgb(255 255 255 / 0.72) 100%
+    );
+}
+/* 前缘柔焦光头:标记当前位置 */
+.pvp-overview-head {
+    position: absolute;
+    bottom: -7px;
+    left: 0;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 17px;
+    border-radius: 999px;
+    filter: blur(2px);
+    background: radial-gradient(
+        closest-side,
+        rgb(255 255 255 / 0.7),
+        rgb(255 255 255 / 0.28) 55%,
+        transparent
+    );
 }
 
 /* 时间线 wrapper:aura + track 的定位上下文 */

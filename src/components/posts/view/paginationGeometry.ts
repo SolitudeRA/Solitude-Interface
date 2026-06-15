@@ -82,6 +82,20 @@ export interface TimelineLayout {
 }
 
 /**
+ * 滚动进度 [0,1]:scrollLeft / (scrollWidth − clientWidth),夹紧到 [0,1]。
+ * 内容未超出视口(不可滚)时返回 0。用于底边总览进度条的填充比例。
+ */
+export function computeScrollProgress(
+    scrollLeft: number,
+    scrollWidth: number,
+    clientWidth: number
+): number {
+    const maxScroll = scrollWidth - clientWidth;
+    if (maxScroll <= 0) return 0;
+    return Math.min(Math.max(scrollLeft / maxScroll, 0), 1);
+}
+
+/**
  * 计算整条时间线布局。窗口外 marker width/margin 为 0(不占位),故长度恒定。
  * translateX 让 active marker 的中心落在内容总宽的中点。
  */

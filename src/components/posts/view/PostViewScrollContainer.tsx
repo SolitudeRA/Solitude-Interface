@@ -5,8 +5,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSetAtom, useAtomValue } from 'jotai';
 import { cn } from '@components/common/lib/utils';
 import { useHorizontalScroll } from '@components/common/lib/useHorizontalScroll';
-import { postViewAtom, scrollToPostAtom } from '@stores/postViewAtom';
+import { postViewAtom, postViewScrollAtom, scrollToPostAtom } from '@stores/postViewAtom';
 import PostViewPagination from './PostViewPagination';
+import PostViewOverview from './PostViewOverview';
 
 interface PostViewScrollContainerProps {
     children: React.ReactNode;
@@ -44,6 +45,7 @@ export default function PostViewScrollContainer({
     className,
 }: PostViewScrollContainerProps) {
     const setPostViewState = useSetAtom(postViewAtom);
+    const setPostViewScroll = useSetAtom(postViewScrollAtom);
     const scrollToPostRequest = useAtomValue(scrollToPostAtom);
     const setScrollToPostRequest = useSetAtom(scrollToPostAtom);
     const postCountHint = postDates.length || React.Children.count(children);
@@ -91,9 +93,12 @@ export default function PostViewScrollContainer({
         (container: HTMLDivElement) => {
             const metrics = getScrollMetrics(container);
             const visibleIndices: number[] = [];
-            const viewportLeft = container.scrollLeft;
-            const viewportRight = viewportLeft + container.clientWidth;
-            const viewportCenter = viewportLeft + container.clientWidth / 2;
+            const scrollLeft = container.scrollLeft;
+            const scrollWidth = container.scrollWidth;
+            const clientWidth = container.clientWidth;
+            const viewportLeft = scrollLeft;
+            const viewportRight = viewportLeft + clientWidth;
+            const viewportCenter = viewportLeft + clientWidth / 2;
             const firstCardCenter = metrics.paddingLeft + metrics.itemWidth / 2;
             const closestIndex =
                 metrics.totalPosts > 0
@@ -135,8 +140,20 @@ export default function PostViewScrollContainer({
                     postDates: nextPostDates,
                 };
             });
+
+            // 滚动度量单独写入(供 minimap),仅在数值变化时更新以减少重渲染
+            setPostViewScroll((prev) => {
+                if (
+                    prev.scrollLeft === scrollLeft &&
+                    prev.scrollWidth === scrollWidth &&
+                    prev.clientWidth === clientWidth
+                ) {
+                    return prev;
+                }
+                return { scrollLeft, scrollWidth, clientWidth };
+            });
         },
-        [getScrollMetrics, postDates, setPostViewState]
+        [getScrollMetrics, postDates, setPostViewState, setPostViewScroll]
     );
 
     const markContainerScrolling = useCallback((container: HTMLDivElement) => {
@@ -357,6 +374,15 @@ export default function PostViewScrollContainer({
                     {children}
                 </div>
             </div>
+
+            {/* 底边总览进度条:全宽钉在视窗最底边(氛围光晕 × 进度填充),与角落时间线分离。
+                边缘依托 + 全宽,避免中段悬空的突兀感。 */}
+            <PostViewOverview
+                className={cn(
+                    'pointer-events-none hidden lg:block',
+                    'lg:fixed lg:right-0 lg:bottom-0 lg:left-0 lg:z-[55]'
+                )}
+            />
 
             <PostViewPagination
                 onScrollToPost={scrollToPost}
