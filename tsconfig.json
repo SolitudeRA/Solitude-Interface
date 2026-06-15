@@ -15,7 +15,7 @@
       "@lib/*": ["src/lib/*"]
     },
     "jsx": "react-jsx",
-    "jsxImportSource": "@emotion/react",
+    "jsxImportSource": "react",
     "plugins": [
       {
         "name": "@astrojs/ts-plugin"
