@@ -12,9 +12,11 @@ import { DEFAULT_LOCALE, getUIText, type Locale } from '@lib/i18n';
 interface Props {
     posts: Post[];
     locale?: Locale;
+    /** 画廊末尾「查看全部」入口卡的文案；省略则不渲染入口卡 */
+    viewAllLabel?: string;
 }
 
-const { posts, locale = DEFAULT_LOCALE } = Astro.props;
+const { posts, locale = DEFAULT_LOCALE, viewAllLabel } = Astro.props;
 
 // 提取所有文章的发布日期
 const postDates = posts.map((post) => post.published_at);
@@ -53,6 +55,22 @@ const noPostsText = getUIText('home', 'noPosts', locale);
                     </a>
                 );
             })}
+            {viewAllLabel && (
+                <button
+                    type="button"
+                    data-view-switch="list"
+                    class="post-card-wrapper post-view-all-card flex shrink-0 cursor-pointer flex-col items-center justify-center gap-4 rounded-[35px] border border-dashed border-[var(--border)] bg-[var(--card)]/40 text-[var(--muted-foreground)] transition-all duration-300 ease-out hover:scale-[1.02] hover:border-[var(--ring)] hover:text-[var(--foreground)] focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:outline-none"
+                    aria-label={viewAllLabel}
+                >
+                    <span
+                        class="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--background)]/60 text-2xl"
+                        aria-hidden="true"
+                    >
+                        &rarr;
+                    </span>
+                    <span class="px-6 text-center text-sm font-semibold">{viewAllLabel}</span>
+                </button>
+            )}
         </PostViewScrollContainer>
     ) : (
         <section class="post-view-empty flex h-[75svh] min-h-[420px] items-center justify-center px-6">
