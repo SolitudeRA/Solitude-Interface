@@ -29,12 +29,14 @@ env:
 
 jobs:
   # ============================================
-  # Setup job: Install dependencies and cache
+  # Single job: install once, then lint / test /
+  # typecheck / build as sequential steps. Uses
+  # setup-node's built-in pnpm-store cache.
   # ============================================
-  setup:
-    name: 📦 Setup
+  ci:
+    name: Lint · Test · Typecheck · Build
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
@@ -55,192 +57,11 @@ jobs:
       - name: Astro sync (generate types)
         run: pnpm astro sync
 
-      - name: Cache dependencies
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            node_modules
-            .astro
-          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-
-  # ============================================
-  # Lint job: Format checking with Prettier
-  # ============================================
-  lint:
-    name: 🎨 Lint
-    runs-on: ubuntu-latest
-    needs: setup
-    timeout-minutes: 10
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Restore dependencies
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            node_modules
-            .astro
-          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
-
-      - name: Format check (prettier)
-        run: pnpm format:check
-
-      - name: Lint (eslint)
-        run: pnpm lint
-
-  # ============================================
-  # Test job: Run unit tests with Vitest
-  # ============================================
-  test:
-    name: 🧪 Test
-    runs-on: ubuntu-latest
-    needs: setup
-    timeout-minutes: 10
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Restore dependencies
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            node_modules
-            .astro
-          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
+      - name: Check (lint + format + typecheck)
+        run: pnpm check
 
       - name: Test (vitest run)
         run: pnpm test:run
 
-  # ============================================
-  # Integration job: Run integration tests against demo Ghost
-  # 非阻塞(continue-on-error):打外部 demo Ghost,用于尽早暴露 API 契约变更;
-  # demo 内容可能漂移/偶发不可用,故不阻断 PR(但会在 CI 中显式标黄)。
-  # ============================================
-  integration:
-    name: 🔗 Integration (demo Ghost)
-    runs-on: ubuntu-latest
-    needs: setup
-    timeout-minutes: 10
-    continue-on-error: true
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Restore dependencies
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            node_modules
-            .astro
-          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
-
-      - name: Integration tests (vitest, demo Ghost)
-        run: pnpm test:integration
-
-  # ============================================
-  # Typecheck job: Validate Astro and TypeScript
-  # ============================================
-  typecheck:
-    name: 🔎 Typecheck
-    runs-on: ubuntu-latest
-    needs: setup
-    timeout-minutes: 10
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Restore dependencies
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            node_modules
-            .astro
-          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
-
-      - name: Typecheck (astro check)
-        run: pnpm typecheck
-
-  # ============================================
-  # Build job: Build the project
-  # ============================================
-  build:
-    name: 🏗️ Build
-    runs-on: ubuntu-latest
-    needs: [lint, test, typecheck]
-    timeout-minutes: 15
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Restore dependencies
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            node_modules
-            .astro
-          key: deps-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          fail-on-cache-miss: true
-
       - name: Build
         run: pnpm build
-
-      - name: Summary
-        run: |
-          echo "## ✅ CI Passed" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Lint | ✅ |" >> $GITHUB_STEP_SUMMARY
-          echo "| Test | ✅ |" >> $GITHUB_STEP_SUMMARY
-          echo "| Typecheck | ✅ |" >> $GITHUB_STEP_SUMMARY
-          echo "| Build | ✅ |" >> $GITHUB_STEP_SUMMARY

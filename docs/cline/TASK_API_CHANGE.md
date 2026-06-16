@@ -205,7 +205,7 @@ describe('Integration: getNewResources', () => {
 pnpm test              # watch 模式
 pnpm test:unit         # 单元测试
 pnpm test:integration  # 集成测试
-pnpm test:run          # 全部测试 (单次)
+pnpm test:run          # 单元测试 (单次)
 pnpm test:coverage     # 测试覆盖率
 ```
 

@@ -103,11 +103,11 @@ src/
 | `pnpm astro check`      | Typecheck and validate Astro project        |
 | `pnpm format`           | Format code with Prettier (writes changes)  |
 | `pnpm format:check`     | Check formatting with Prettier (no changes) |
-| `pnpm test`             | Run tests in watch mode                     |
-| `pnpm test:run`         | Run all tests once (CI-friendly)            |
-| `pnpm test:unit`        | Run unit tests only (fast, with mocks)      |
+| `pnpm test`             | Run unit tests in watch mode                |
+| `pnpm test:run`         | Run the unit suite once (CI-friendly)       |
+| `pnpm test:unit`        | Run unit tests once (alias of `test:run`)   |
 | `pnpm test:integration` | Run integration tests (real API calls)      |
-| `pnpm test:coverage`    | Run tests with coverage report              |
+| `pnpm test:coverage`    | Run unit tests with coverage report         |
 | `pnpm test:ui`          | Open Vitest UI for interactive testing      |
 
 ---
@@ -131,7 +131,7 @@ pnpm test:unit
 # Run only integration tests (requires .env configuration)
 pnpm test:integration
 
-# Run all tests once (CI-friendly)
+# Run the unit suite once (CI-friendly)
 pnpm test:run
 ```
 
@@ -142,7 +142,7 @@ pnpm test:run
 | **Speed**        | Fast (< 1s)       | Slower (10-30s)              |
 | **Dependencies** | None              | Requires .env + network      |
 | **API Calls**    | Mocked            | Real Ghost API               |
-| **Use Case**     | Daily development | Pre-commit / CI verification |
+| **Use Case**     | Daily development | Scheduled / on-demand checks |
 | **Command**      | `pnpm test:unit`  | `pnpm test:integration`      |
 
 ### Available Test Commands
@@ -151,13 +151,10 @@ pnpm test:run
 # Watch mode - runs tests on file changes
 pnpm test
 
-# Run all tests once
+# Run the unit suite once (CI-friendly)
 pnpm test:run
 
-# Alias: run all tests once
-pnpm test:all
-
-# Run unit tests only
+# Run unit tests only (alias of test:run)
 pnpm test:unit
 
 # Run integration tests only

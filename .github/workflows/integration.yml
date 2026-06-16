@@ -1,0 +1,47 @@
+name: Integration (demo Ghost)
+
+# Integration tests hit the public demo.ghost.io to surface Ghost API contract
+# changes early. The demo content can drift or be transiently down, so these run
+# on a schedule and on demand rather than blocking every push/PR.
+on:
+  schedule:
+    - cron: '0 0 * * 1' # weekly, Monday 00:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  GHOST_URL: https://demo.ghost.io
+  GHOST_CONTENT_KEY: '22444f78447824223cefc48062'
+  GHOST_VERSION: v5.0
+  GHOST_TIMEOUT: '5000'
+  SITE_URL: https://example.com
+
+jobs:
+  integration:
+    name: Integration tests (demo Ghost)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Astro sync (generate types)
+        run: pnpm astro sync
+
+      - name: Integration tests (vitest, demo Ghost)
+        run: pnpm test:integration
