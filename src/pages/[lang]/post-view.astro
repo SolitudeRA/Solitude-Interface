@@ -288,6 +288,15 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
         height: auto;
     }
 
+    /* 列表视图：纯净深色背景 + 极淡封面纹理，避免密集网格浮在繁忙封面上
+       （与 about 等内容页的"内容坐在纯深色上"保持一致；画廊仍用沉浸封面） */
+    :global(html[data-post-view-mode='list'] body) {
+        background-color: var(--background);
+    }
+    :global(html[data-post-view-mode='list'] .solitude-body) {
+        opacity: 0.05;
+    }
+
     /* 隐藏的视图段彻底移除（防止 flex/grid 类覆盖 [hidden]） */
     :global([data-view-section][hidden]) {
         display: none !important;
