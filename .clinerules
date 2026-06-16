@@ -224,7 +224,7 @@ pnpm preview          # 预览生产构建
 pnpm test             # 运行测试 (watch 模式)
 pnpm test:unit        # 仅运行单元测试
 pnpm test:integration # 仅运行集成测试
-pnpm test:run         # 运行全部测试 (单次)
+pnpm test:run         # 运行单元测试 (单次, CI 用)
 pnpm test:coverage    # 生成测试覆盖率报告
 pnpm format           # 格式化代码
 pnpm astro check      # TypeScript 类型检查
