@@ -209,7 +209,7 @@ function FilterBar({
     const t = (key: PostViewKey) => getUIText('postView', key, locale);
 
     return (
-        <div className="border-border/70 bg-background/70 sticky top-0 z-20 -mx-4 mb-6 border-b px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div className="border-border/70 bg-background/85 sticky top-[12svh] z-20 -mx-4 mb-6 border-b px-4 py-3 backdrop-blur-md sm:top-[13svh] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
             {facets.categories.length > 0 && (
                 <ChipRow
                     label={t('category')}

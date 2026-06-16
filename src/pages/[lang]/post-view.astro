@@ -89,32 +89,39 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
         homeUrl={`/${locale}`}
     />
 
-    {/* 视图切换器（画廊 ⇄ 列表）；浮于右上，不占用画廊高度 */}
+    {
+        /* 视图切换器（画廊 ⇄ 列表）：水平居中、垂直对齐到导航栏控件行，
+       落在导航栏空着的中段，形成「Brand / 切换 / 语言主题」三段式 */
+    }
     <div
-        class="post-view-toggle fixed top-20 right-4 z-[70] flex rounded-full border border-[var(--border)] bg-[var(--background)]/85 p-1 text-xs font-medium shadow-lg backdrop-blur-md lg:right-8"
-        role="tablist"
-        aria-label={`${galleryLabel} / ${listLabel}`}
+        class="post-view-toggle pointer-events-none fixed inset-x-0 top-0 z-[70] flex h-[12svh] items-center justify-center sm:h-[13svh]"
     >
-        <button
-            type="button"
-            role="tab"
-            data-view-toggle="gallery"
-            data-active="true"
-            aria-selected="true"
-            class="rounded-full px-3.5 py-1.5 text-[var(--muted-foreground)] transition-colors data-[active=true]:bg-[var(--primary)] data-[active=true]:text-[var(--primary-foreground)]"
+        <div
+            class="pointer-events-auto flex rounded-full border border-[var(--border)] bg-[var(--background)]/85 p-1 text-xs font-medium shadow-lg backdrop-blur-md"
+            role="tablist"
+            aria-label={`${galleryLabel} / ${listLabel}`}
         >
-            {galleryLabel}
-        </button>
-        <button
-            type="button"
-            role="tab"
-            data-view-toggle="list"
-            data-active="false"
-            aria-selected="false"
-            class="rounded-full px-3.5 py-1.5 text-[var(--muted-foreground)] transition-colors data-[active=true]:bg-[var(--primary)] data-[active=true]:text-[var(--primary-foreground)]"
-        >
-            {listLabel}
-        </button>
+            <button
+                type="button"
+                role="tab"
+                data-view-toggle="gallery"
+                data-active="true"
+                aria-selected="true"
+                class="rounded-full px-3.5 py-1.5 text-[var(--muted-foreground)] transition-colors data-[active=true]:bg-[var(--primary)] data-[active=true]:text-[var(--primary-foreground)]"
+            >
+                {galleryLabel}
+            </button>
+            <button
+                type="button"
+                role="tab"
+                data-view-toggle="list"
+                data-active="false"
+                aria-selected="false"
+                class="rounded-full px-3.5 py-1.5 text-[var(--muted-foreground)] transition-colors data-[active=true]:bg-[var(--primary)] data-[active=true]:text-[var(--primary-foreground)]"
+            >
+                {listLabel}
+            </button>
+        </div>
     </div>
 
     {/* 画廊视图（默认） */}
