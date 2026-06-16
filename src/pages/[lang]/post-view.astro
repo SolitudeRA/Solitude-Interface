@@ -3,6 +3,7 @@ import DockNav from '@components/layout/dock/DockNav.astro';
 import DockSocial from '@components/layout/dock/DockSocial.astro';
 import Dock from '@components/layout/dock/Dock.astro';
 import PostViewContainer from '@components/posts/view/PostViewContainer.astro';
+import PostListView, { type PostListItem } from '@components/posts/view/PostListView';
 import { listAllPosts } from '@api/ghost/posts';
 import { initializeSiteData } from '@api/ghost/settings';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
@@ -14,6 +15,7 @@ import {
     LOCALE_HTML_LANG,
     generateAlternateLinks,
     filterPostsByLocale,
+    getUIText,
 } from '@lib/i18n';
 import { env } from '@api/config/env';
 
@@ -22,6 +24,9 @@ export async function getStaticPaths() {
         params: { lang },
     }));
 }
+
+/** 画廊默认展示的精选/最近文章数；超出的进入列表视图 */
+const FEATURED_COUNT = 16;
 
 const { lang } = Astro.params;
 
@@ -41,6 +46,30 @@ const localizedPosts = filterPostsByLocale(allPosts, locale);
 // 提取文章对象（已按发布日期排序）
 const posts = localizedPosts.map((item) => item.post);
 
+// 画廊：精选/最近 N 篇（已按日期排序，slice 即最近）
+const featuredPosts = posts.slice(0, FEATURED_COUNT);
+
+// 列表：全量精简元数据（去 html、URL 转字符串），客户端筛选/分页
+const listItems: PostListItem[] = posts.map((post) => ({
+    id: post.id,
+    title: post.title,
+    excerpt: post.excerpt,
+    url: post.url.toString(),
+    feature_image: post.feature_image ? post.feature_image.toString() : null,
+    published_at: post.published_at,
+    post_type: post.post_type,
+    post_category: post.post_category,
+    ...(post.post_type_label ? { post_type_label: post.post_type_label } : {}),
+    ...(post.post_category_label ? { post_category_label: post.post_category_label } : {}),
+}));
+
+const galleryLabel = getUIText('postView', 'galleryView', locale);
+const listLabel = getUIText('postView', 'listView', locale);
+const viewAllLabel = getUIText('postView', 'viewAll', locale).replace(
+    '{total}',
+    String(posts.length)
+);
+
 // 生成 hreflang 链接
 const alternateLinks = generateAlternateLinks(env.site.url, '/post-view', LOCALES);
 const canonicalUrl = `${env.site.url}/${locale}/post-view`;
@@ -59,13 +88,114 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
         siteSubTitle={siteDescription}
         homeUrl={`/${locale}`}
     />
-    <PostViewContainer posts={posts} locale={locale} />
+
+    {/* 视图切换器（画廊 ⇄ 列表）；浮于右上，不占用画廊高度 */}
+    <div
+        class="post-view-toggle fixed top-20 right-4 z-[70] flex rounded-full border border-[var(--border)] bg-[var(--background)]/85 p-1 text-xs font-medium shadow-lg backdrop-blur-md lg:right-8"
+        role="tablist"
+        aria-label={`${galleryLabel} / ${listLabel}`}
+    >
+        <button
+            type="button"
+            role="tab"
+            data-view-toggle="gallery"
+            data-active="true"
+            aria-selected="true"
+            class="rounded-full px-3.5 py-1.5 text-[var(--muted-foreground)] transition-colors data-[active=true]:bg-[var(--primary)] data-[active=true]:text-[var(--primary-foreground)]"
+        >
+            {galleryLabel}
+        </button>
+        <button
+            type="button"
+            role="tab"
+            data-view-toggle="list"
+            data-active="false"
+            aria-selected="false"
+            class="rounded-full px-3.5 py-1.5 text-[var(--muted-foreground)] transition-colors data-[active=true]:bg-[var(--primary)] data-[active=true]:text-[var(--primary-foreground)]"
+        >
+            {listLabel}
+        </button>
+    </div>
+
+    {/* 画廊视图（默认） */}
+    <div data-view-section="gallery">
+        <PostViewContainer posts={featuredPosts} locale={locale} viewAllLabel={viewAllLabel} />
+    </div>
+
+    {/* 列表视图 —— 首屏 SSR、默认隐藏，由脚本按 ?view= 显隐 */}
+    <div data-view-section="list" hidden>
+        <PostListView client:load posts={listItems} locale={locale} />
+    </div>
+
     <Dock isFixed={true}>
         <div class="hidden md:block" aria-hidden="true"></div>
         <DockNav lang={locale} />
         <DockSocial lang={locale} />
     </Dock>
 
+    {/* 视图控制：以 URL ?view= 为单一真源，切换 section 显隐 + body 滚动锁 */}
+    <script is:inline>
+        (() => {
+            const currentView = () =>
+                new URLSearchParams(window.location.search).get('view') === 'list'
+                    ? 'list'
+                    : 'gallery';
+
+            const applyView = (view) => {
+                document.documentElement.dataset.postViewMode = view;
+                document.querySelectorAll('[data-view-section]').forEach((el) => {
+                    el.hidden = el.getAttribute('data-view-section') !== view;
+                });
+                document.querySelectorAll('[data-view-toggle]').forEach((btn) => {
+                    const active = btn.getAttribute('data-view-toggle') === view;
+                    btn.dataset.active = String(active);
+                    btn.setAttribute('aria-selected', String(active));
+                });
+            };
+
+            const setView = (view) => {
+                const params = new URLSearchParams(window.location.search);
+                if (view === 'list') params.set('view', 'list');
+                else params.delete('view');
+                const qs = params.toString();
+                window.history.pushState(
+                    null,
+                    '',
+                    qs ? window.location.pathname + '?' + qs : window.location.pathname
+                );
+                applyView(view);
+            };
+
+            const bind = () => {
+                document
+                    .querySelectorAll('[data-view-switch], [data-view-toggle]')
+                    .forEach((el) => {
+                        if (el.dataset.viewBound === '1') return;
+                        el.dataset.viewBound = '1';
+                        el.addEventListener('click', (event) => {
+                            const target =
+                                el.getAttribute('data-view-switch') ||
+                                el.getAttribute('data-view-toggle');
+                            if (!target) return;
+                            event.preventDefault();
+                            setView(target);
+                        });
+                    });
+                applyView(currentView());
+            };
+
+            window.addEventListener('popstate', () => applyView(currentView()));
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', bind, { once: true });
+            } else {
+                bind();
+            }
+            document.addEventListener('astro:page-load', bind);
+        })();
+    </script>
+
+    {/* 画廊横向滚轮支持（沿用原逻辑，仅作用于画廊容器） */}
     <script is:inline>
         (() => {
             const selector = '[data-post-view-scroll]';
@@ -144,10 +274,22 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
 </BaseLayout>
 
 <style>
-    /* 禁止页面垂直滚动，让滚轮事件只作用于横向滚动容器 */
+    /* 画廊视图：锁定页面滚动，让滚轮只作用于横向容器（默认态） */
     :global(html),
     :global(body) {
         overflow: hidden;
         height: 100vh;
+    }
+
+    /* 列表视图：恢复正常竖向滚动 */
+    :global(html[data-post-view-mode='list']),
+    :global(html[data-post-view-mode='list'] body) {
+        overflow: visible;
+        height: auto;
+    }
+
+    /* 隐藏的视图段彻底移除（防止 flex/grid 类覆盖 [hidden]） */
+    :global([data-view-section][hidden]) {
+        display: none !important;
     }
 </style>

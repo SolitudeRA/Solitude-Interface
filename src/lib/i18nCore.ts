@@ -87,6 +87,68 @@ export const UI_TEXTS = {
             en: 'No posts yet',
         },
     },
+    postView: {
+        galleryView: {
+            zh: '画廊',
+            ja: 'ギャラリー',
+            en: 'Gallery',
+        },
+        listView: {
+            zh: '列表',
+            ja: 'リスト',
+            en: 'List',
+        },
+        viewAll: {
+            zh: '查看全部 {total} 篇',
+            ja: 'すべて見る（{total} 件）',
+            en: 'View all {total}',
+        },
+        category: {
+            zh: '分类',
+            ja: 'カテゴリ',
+            en: 'Category',
+        },
+        type: {
+            zh: '类型',
+            ja: 'タイプ',
+            en: 'Type',
+        },
+        all: {
+            zh: '全部',
+            ja: 'すべて',
+            en: 'All',
+        },
+        searchPlaceholder: {
+            zh: '搜索标题或摘要',
+            ja: 'タイトル・抜粋を検索',
+            en: 'Search title or excerpt',
+        },
+        clear: {
+            zh: '清除筛选',
+            ja: 'フィルターをクリア',
+            en: 'Clear filters',
+        },
+        resultCount: {
+            zh: '共 {total} 篇 · 匹配 {count} 篇',
+            ja: '全 {total} 件 · 該当 {count} 件',
+            en: '{count} of {total} posts',
+        },
+        empty: {
+            zh: '没有匹配的文章，试试清除筛选',
+            ja: '該当する記事がありません。フィルターをクリアしてみてください',
+            en: 'No posts match your filters — try clearing them',
+        },
+        prevPage: {
+            zh: '上一页',
+            ja: '前のページ',
+            en: 'Previous page',
+        },
+        nextPage: {
+            zh: '下一页',
+            ja: '次のページ',
+            en: 'Next page',
+        },
+    },
     nav: {
         home: {
             zh: '首页',
