@@ -26,8 +26,6 @@ export default [
             '*.min.css',
             // 配置文件（由 Prettier 处理）
             '.prettierrc.mjs',
-            // Astro 布局文件（复杂模板导致解析问题）
-            'src/layouts/base/BaseLayout.astro',
         ],
     },
 
@@ -135,19 +133,16 @@ export default [
             'react/prop-types': 'off', // TypeScript 已处理
             'react/react-in-jsx-scope': 'off', // React 17+ 不需要
             'react/display-name': 'off',
-            'react/no-unknown-property': ['error', { ignore: ['css'] }], // Emotion CSS prop
+            // 预留：若将来采用 Emotion CSS-in-JS（见 docs/cline 方案 C）则放行 css prop；当前未使用
+            'react/no-unknown-property': ['error', { ignore: ['css'] }],
 
             // Hooks 规则
             'react-hooks/rules-of-hooks': 'error',
             'react-hooks/exhaustive-deps': 'warn',
             // 允许在 effect 中设置初始状态（客户端初始化场景常见）
-            ...(reactHooks.configs.recommended.rules['react-hooks/set-state-in-effect'] && {
-                'react-hooks/set-state-in-effect': 'off',
-            }),
+            'react-hooks/set-state-in-effect': 'off',
             // 允许修改 window.location 等浏览器全局对象
-            ...(reactHooks.configs.recommended.rules['react-hooks/immutability'] && {
-                'react-hooks/immutability': 'off',
-            }),
+            'react-hooks/immutability': 'off',
 
             // 可访问性规则调整
             'jsx-a11y/anchor-is-valid': 'warn',
@@ -182,10 +177,7 @@ export default [
             'prefer-const': 'error',
             'no-var': 'error',
             eqeqeq: ['error', 'always', { null: 'ignore' }],
-
-            // 代码风格 (与 Prettier 配合)
-            'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],
-            'no-trailing-spaces': 'error',
+            // 纯格式规则（trailing spaces、连续空行等）交由 Prettier 处理，此处不重复
         },
     },
 
@@ -197,16 +189,6 @@ export default [
         rules: {
             '@typescript-eslint/no-explicit-any': 'off',
             'no-console': 'off',
-        },
-    },
-
-    // ============================================================
-    // 配置文件 (允许 CommonJS)
-    // ============================================================
-    {
-        files: ['*.config.js', '*.config.mjs', '*.config.cjs', 'postcss.config.cjs'],
-        rules: {
-            '@typescript-eslint/no-require-imports': 'off',
         },
     },
 ];
