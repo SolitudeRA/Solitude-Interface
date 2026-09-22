@@ -148,10 +148,14 @@ const { labels, codeLabels, contentSelector = '.solitude-article-content' } = As
             const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
             const timers = new Set<number>();
             let headings: HTMLElement[] = [];
+            let headingOffsets: number[] = [];
             let tocItems: TocItem[] = [];
             let activeId = '';
             let lastHashId = window.location.hash.slice(1);
             let frame: number | null = null;
+            let rebuildRequested = false;
+            let contentStart = 0;
+            let contentEnd = 1;
             let headingObserver: IntersectionObserver | null = null;
             let contentObserver: ResizeObserver | null = null;
             let mutationObserver: MutationObserver | null = null;
@@ -232,7 +236,7 @@ const { labels, codeLabels, contentSelector = '.solitude-article-content' } = As
             };
 
             const updateHash = (id: string) => {
-                if (!id || id === lastHashId || window.scrollY < content.offsetTop - 80) return;
+                if (!id || id === lastHashId || window.scrollY < contentStart - 80) return;
 
                 const url = new URL(window.location.href);
                 url.hash = id;
@@ -241,16 +245,26 @@ const { labels, codeLabels, contentSelector = '.solitude-article-content' } = As
             };
 
             const updateReadingState = () => {
-                const start = content.offsetTop;
-                const end = Math.max(start + content.scrollHeight - window.innerHeight, start + 1);
-                const progress = Math.min(1, Math.max(0, (window.scrollY - start) / (end - start)));
+                const progress = Math.min(
+                    1,
+                    Math.max(0, (window.scrollY - contentStart) / (contentEnd - contentStart))
+                );
                 if (progressBar) progressBar.style.transform = `scaleX(${progress})`;
 
                 const scrollPosition = window.scrollY + 140;
-                let nextActiveId = headings[0]?.id ?? '';
-                for (const heading of headings) {
-                    if (heading.offsetTop <= scrollPosition) nextActiveId = heading.id;
+                let low = 0;
+                let high = headingOffsets.length - 1;
+                let activeIndex = -1;
+                while (low <= high) {
+                    const middle = (low + high) >>> 1;
+                    if ((headingOffsets[middle] ?? Number.POSITIVE_INFINITY) <= scrollPosition) {
+                        activeIndex = middle;
+                        low = middle + 1;
+                    } else {
+                        high = middle - 1;
+                    }
                 }
+                const nextActiveId = headings[Math.max(activeIndex, 0)]?.id ?? '';
 
                 if (nextActiveId !== activeId) {
                     activeId = nextActiveId;
@@ -263,8 +277,25 @@ const { labels, codeLabels, contentSelector = '.solitude-article-content' } = As
                 if (frame !== null) return;
                 frame = window.requestAnimationFrame(() => {
                     frame = null;
-                    updateReadingState();
+                    if (rebuildRequested) {
+                        rebuildRequested = false;
+                        rebuild();
+                    } else {
+                        updateReadingState();
+                    }
                 });
+            };
+
+            const refreshMetrics = () => {
+                const contentRect = content.getBoundingClientRect();
+                contentStart = contentRect.top + window.scrollY;
+                contentEnd = Math.max(
+                    contentStart + content.scrollHeight - window.innerHeight,
+                    contentStart + 1
+                );
+                headingOffsets = headings.map(
+                    (heading) => heading.getBoundingClientRect().top + window.scrollY
+                );
             };
 
             const rebuild = () => {
@@ -279,6 +310,8 @@ const { labels, codeLabels, contentSelector = '.solitude-article-content' } = As
                         };
                     })
                     .filter((item) => item.text);
+
+                refreshMetrics();
 
                 activeId = tocItems.some((item) => item.id === activeId)
                     ? activeId
@@ -298,11 +331,8 @@ const { labels, codeLabels, contentSelector = '.solitude-article-content' } = As
             };
 
             const scheduleRebuild = () => {
-                if (frame !== null) return;
-                frame = window.requestAnimationFrame(() => {
-                    frame = null;
-                    rebuild();
-                });
+                rebuildRequested = true;
+                scheduleUpdate();
             };
 
             const closeMobileToc = () => {
@@ -439,7 +469,7 @@ const { labels, codeLabels, contentSelector = '.solitude-article-content' } = As
             window.addEventListener('orientationchange', scheduleRebuild, { passive: true });
 
             if ('ResizeObserver' in window) {
-                contentObserver = new ResizeObserver(scheduleUpdate);
+                contentObserver = new ResizeObserver(scheduleRebuild);
                 contentObserver.observe(content);
             }
             if ('MutationObserver' in window) {
@@ -469,6 +499,7 @@ const { labels, codeLabels, contentSelector = '.solitude-article-content' } = As
                 timers.clear();
                 if (frame !== null) window.cancelAnimationFrame(frame);
                 frame = null;
+                rebuildRequested = false;
             };
         };
 

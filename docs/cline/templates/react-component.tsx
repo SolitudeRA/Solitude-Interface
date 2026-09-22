@@ -7,12 +7,11 @@
  * - TypeScript 类型定义
  * - TailwindCSS 样式
  * - Motion 动画 (可选)
- * - Jotai 状态管理 (可选)
+ * - 组件局部状态（避免默认引入全局 store）
  */
 import * as React from 'react';
 import { useState, useCallback } from 'react';
 // import { motion } from 'motion/react';
-// import { useAtom } from 'jotai';
 import { cn } from '@components/common/lib/utils';
 
 // ============================================================

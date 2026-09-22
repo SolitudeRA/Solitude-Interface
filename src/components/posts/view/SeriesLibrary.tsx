@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { cn } from '@components/common/lib/utils';
 import { ArchiveGroupPagination } from '@components/posts/view/PostArchiveControls';
@@ -122,70 +121,63 @@ export default function SeriesLibrary({
                 </header>
 
                 <div className="relative min-h-0 overflow-hidden rounded-[1.2rem] bg-[linear-gradient(135deg,var(--card-image-fallback-start),var(--card-image-fallback-end))]">
-                    <AnimatePresence initial={false} mode="sync">
-                        <motion.button
-                            key={previewGroup.key}
-                            type="button"
-                            data-archive-series-preview
-                            data-archive-series-key={previewGroup.key}
-                            aria-label={openLabel}
-                            onClick={() => selectGroup(previewGroup)}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                            className="group/series-preview focus-visible:ring-ring absolute inset-0 grid h-full w-full min-w-0 grid-rows-[auto_1fr] overflow-hidden rounded-[1.2rem] text-left text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
-                        >
-                            {previewCoverPost?.feature_image && (
-                                <img
-                                    src={previewCoverPost.feature_image}
-                                    srcSet={previewCoverPost.feature_image_srcset}
-                                    sizes={previewCoverPost.feature_image_sizes}
-                                    alt=""
-                                    loading="eager"
-                                    decoding="async"
-                                    onLoad={() =>
-                                        setLoadedCovers((current) => {
-                                            const next = new Set(current);
-                                            next.add(previewGroup.key);
-                                            return next;
-                                        })
-                                    }
-                                    className={cn(
-                                        'archive-series-preview-image absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-500 group-hover/series-preview:scale-[1.025] motion-reduce:transform-none',
-                                        previewLoaded ? 'opacity-80' : 'opacity-0'
-                                    )}
-                                />
-                            )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/52 to-black/12" />
-                            <div className="relative flex items-center justify-between gap-3 px-4 pt-4 text-[0.56rem] font-semibold tracking-[0.12em] text-white/62 uppercase">
-                                <span>{getUIText('postView', 'seriesPreview', locale)}</span>
-                                <span>{countLabel(previewGroup.posts.length)}</span>
-                            </div>
-                            <div className="relative self-end p-4 sm:p-5">
-                                <h3 className="line-clamp-2 max-w-[18ch] text-xl leading-[1.02] font-bold tracking-[-0.05em] sm:text-2xl">
-                                    {previewGroup.label}
-                                </h3>
-                                {previewDescription && (
-                                    <p className="mt-2 line-clamp-3 max-w-[46ch] text-[0.68rem] leading-relaxed text-white/68 sm:text-xs">
-                                        {previewDescription}
-                                    </p>
+                    <button
+                        key={previewGroup.key}
+                        type="button"
+                        data-archive-series-preview
+                        data-archive-series-key={previewGroup.key}
+                        aria-label={openLabel}
+                        onClick={() => selectGroup(previewGroup)}
+                        className="archive-preview-enter group/series-preview focus-visible:ring-ring absolute inset-0 grid h-full w-full min-w-0 grid-rows-[auto_1fr] overflow-hidden rounded-[1.2rem] text-left text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
+                    >
+                        {previewCoverPost?.feature_image && (
+                            <img
+                                src={previewCoverPost.feature_image}
+                                srcSet={previewCoverPost.feature_image_srcset}
+                                sizes={previewCoverPost.feature_image_sizes}
+                                alt=""
+                                loading="eager"
+                                decoding="async"
+                                onLoad={() =>
+                                    setLoadedCovers((current) => {
+                                        const next = new Set(current);
+                                        next.add(previewGroup.key);
+                                        return next;
+                                    })
+                                }
+                                className={cn(
+                                    'archive-series-preview-image absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-500 group-hover/series-preview:scale-[1.025] motion-reduce:transform-none',
+                                    previewLoaded ? 'opacity-80' : 'opacity-0'
                                 )}
-                                <p className="mt-2 text-[0.58rem] font-medium text-white/48">
-                                    {previewUpdated}
+                            />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/52 to-black/12" />
+                        <div className="relative flex items-center justify-between gap-3 px-4 pt-4 text-[0.56rem] font-semibold tracking-[0.12em] text-white/62 uppercase">
+                            <span>{getUIText('postView', 'seriesPreview', locale)}</span>
+                            <span>{countLabel(previewGroup.posts.length)}</span>
+                        </div>
+                        <div className="relative self-end p-4 sm:p-5">
+                            <h3 className="line-clamp-2 max-w-[18ch] text-xl leading-[1.02] font-bold tracking-[-0.05em] sm:text-2xl">
+                                {previewGroup.label}
+                            </h3>
+                            {previewDescription && (
+                                <p className="mt-2 line-clamp-3 max-w-[46ch] text-[0.68rem] leading-relaxed text-white/68 sm:text-xs">
+                                    {previewDescription}
                                 </p>
-                            </div>
-                        </motion.button>
-                    </AnimatePresence>
+                            )}
+                            <p className="mt-2 text-[0.58rem] font-medium text-white/48">
+                                {previewUpdated}
+                            </p>
+                        </div>
+                    </button>
                 </div>
 
                 <div className="flex min-h-0 flex-wrap content-stretch justify-center gap-2 pt-3">
-                    {groups.map((group, index) => {
+                    {groups.map((group) => {
                         const selected = group.key === selectedGroup.key;
                         const previewed = group.key === previewGroup.key;
                         return (
-                            <motion.button
-                                layout
+                            <button
                                 key={group.key}
                                 type="button"
                                 data-archive-series-entry
@@ -200,13 +192,6 @@ export default function SeriesLibrary({
                                 onPointerEnter={() => setPreviewGroupKey(group.key)}
                                 onFocus={() => setPreviewGroupKey(group.key)}
                                 onClick={() => selectGroup(group)}
-                                initial={{ opacity: 0, y: 5 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{
-                                    duration: 0.21,
-                                    delay: Math.min(index, 6) * 0.015,
-                                    ease: [0.22, 1, 0.36, 1],
-                                }}
                                 className={cn(
                                     'archive-series-entry focus-visible:ring-ring grid min-h-16 min-w-0 grid-cols-[0.25rem_minmax(0,1fr)_auto] items-center gap-2 overflow-hidden rounded-xl border p-2.5 text-left transition-[color,border-color,background-color,transform] duration-200 focus:outline-none focus-visible:ring-2 motion-reduce:transform-none',
                                     selected
@@ -230,7 +215,7 @@ export default function SeriesLibrary({
                                     </small>
                                 </span>
                                 <ArrowRight aria-hidden="true" className="size-3 opacity-40" />
-                            </motion.button>
+                            </button>
                         );
                     })}
                 </div>
@@ -275,62 +260,52 @@ export default function SeriesLibrary({
                     data-archive-group-list={selectedGroup.key}
                     className="relative min-h-0 overflow-y-auto overscroll-contain px-3 pb-3 [scrollbar-width:thin]"
                 >
-                    <AnimatePresence initial={false} mode="wait">
-                        <motion.ol
-                            key={`${selectedGroup.key}:${selectedGroup.page}`}
-                            initial={{ opacity: 0, y: 4 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -3 }}
-                            transition={{
-                                duration: 0.21,
-                                ease: [0.22, 1, 0.36, 1],
-                            }}
-                            className="m-0 list-none p-0"
-                        >
-                            {selectedGroup.visiblePosts.map((post, index) => (
-                                <li key={post.id}>
-                                    <a
-                                        href={post.url}
-                                        data-post-transition-source
-                                        data-astro-prefetch="tap"
-                                        data-archive-post-id={post.id}
-                                        data-archive-group-key={selectedGroup.key}
-                                        data-archive-group-page={selectedGroup.page}
-                                        onPointerEnter={() => onActivate(post.id)}
-                                        onPointerMove={() => {
-                                            if (post.id !== activePost?.id) onActivate(post.id);
-                                        }}
-                                        onFocus={() => onActivate(post.id)}
-                                        aria-current={
-                                            post.id === activePost?.id ? 'true' : undefined
-                                        }
-                                        className={cn(
-                                            'focus-visible:ring-ring grid min-h-14 grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-2 border-b border-[var(--page-surface-border)] px-1 py-2.5 transition-colors focus:outline-none focus-visible:ring-2',
-                                            post.id === activePost?.id
-                                                ? 'bg-foreground/[0.055] text-foreground'
-                                                : 'text-muted-foreground hover:bg-foreground/[0.035] hover:text-foreground'
-                                        )}
+                    <ol
+                        key={`${selectedGroup.key}:${selectedGroup.page}`}
+                        className="archive-page-enter m-0 list-none p-0"
+                    >
+                        {selectedGroup.visiblePosts.map((post, index) => (
+                            <li key={post.id}>
+                                <a
+                                    href={post.url}
+                                    data-post-transition-source
+                                    data-astro-prefetch="tap"
+                                    data-archive-post-id={post.id}
+                                    data-archive-group-key={selectedGroup.key}
+                                    data-archive-group-page={selectedGroup.page}
+                                    onPointerEnter={() => onActivate(post.id)}
+                                    onPointerMove={() => {
+                                        if (post.id !== activePost?.id) onActivate(post.id);
+                                    }}
+                                    onFocus={() => onActivate(post.id)}
+                                    aria-current={post.id === activePost?.id ? 'true' : undefined}
+                                    className={cn(
+                                        'focus-visible:ring-ring grid min-h-14 grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-2 border-b border-[var(--page-surface-border)] px-1 py-2.5 transition-colors focus:outline-none focus-visible:ring-2',
+                                        post.id === activePost?.id
+                                            ? 'bg-foreground/[0.055] text-foreground'
+                                            : 'text-muted-foreground hover:bg-foreground/[0.035] hover:text-foreground'
+                                    )}
+                                >
+                                    <span className="text-muted-foreground text-[0.64rem] font-semibold tabular-nums">
+                                        {post.post_series_number ||
+                                            String(selectedGroup.startIndex + index + 1).padStart(
+                                                2,
+                                                '0'
+                                            )}
+                                    </span>
+                                    <span
+                                        data-post-transition-title
+                                        className="line-clamp-2 text-[0.78rem] leading-snug font-semibold sm:text-[0.84rem]"
                                     >
-                                        <span className="text-muted-foreground text-[0.64rem] font-semibold tabular-nums">
-                                            {post.post_series_number ||
-                                                String(
-                                                    selectedGroup.startIndex + index + 1
-                                                ).padStart(2, '0')}
-                                        </span>
-                                        <span
-                                            data-post-transition-title
-                                            className="line-clamp-2 text-[0.78rem] leading-snug font-semibold sm:text-[0.84rem]"
-                                        >
-                                            {post.title}
-                                        </span>
-                                        <time className="text-muted-foreground text-[0.58rem] tabular-nums">
-                                            {formatArchiveYear(post.published_at)}
-                                        </time>
-                                    </a>
-                                </li>
-                            ))}
-                        </motion.ol>
-                    </AnimatePresence>
+                                        {post.title}
+                                    </span>
+                                    <time className="text-muted-foreground text-[0.58rem] tabular-nums">
+                                        {formatArchiveYear(post.published_at)}
+                                    </time>
+                                </a>
+                            </li>
+                        ))}
+                    </ol>
                 </div>
             </section>
         </div>

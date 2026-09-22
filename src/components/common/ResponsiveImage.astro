@@ -1,6 +1,7 @@
 ---
 import { Image, getImage } from 'astro:assets';
 import { getRemoteImageDimensions } from '@lib/remoteImageDimensions';
+import { createRemoteImageWidthPlan } from '@lib/responsiveImageWidths';
 
 interface Props {
     src: string;
@@ -10,6 +11,7 @@ interface Props {
     sizes: string;
     priority?: boolean;
     critical?: boolean;
+    eagerLow?: boolean;
     progressive?: boolean;
     quality?: number;
     'data-post-transition-media'?: boolean;
@@ -23,6 +25,7 @@ const {
     sizes,
     priority = false,
     critical = false,
+    eagerLow = false,
     progressive = false,
     quality = 72,
     'data-post-transition-media': transitionMedia = false,
@@ -38,27 +41,30 @@ const pathname = (() => {
 const canOptimize = /\.(?:avif|jpe?g|png|webp)$/i.test(pathname);
 const isHttpRemote = /^https?:\/\//i.test(src);
 const remoteDimensions = canOptimize && isHttpRemote ? await getRemoteImageDimensions(src) : null;
-const deferLowStage = !priority && !critical;
+const remoteWidthPlan = remoteDimensions
+    ? createRemoteImageWidthPlan(widths, remoteDimensions.width)
+    : null;
+const deferLowStage = !eagerLow && !priority && !critical;
 const progressiveSources = await (async () => {
     if (!progressive || !canOptimize) return null;
     if (isHttpRemote && !remoteDimensions) return null;
 
-    if (remoteDimensions) {
+    if (remoteDimensions && remoteWidthPlan) {
         const scaledHeight = (width: number) =>
             Math.max(1, Math.round((width / remoteDimensions.width) * remoteDimensions.height));
 
         return Promise.all([
             getImage({
                 src,
-                width: 160,
-                height: scaledHeight(160),
+                width: remoteWidthPlan.low,
+                height: scaledHeight(remoteWidthPlan.low),
                 format: 'webp',
                 quality: 45,
             }),
             getImage({
                 src,
-                width: 480,
-                height: scaledHeight(480),
+                width: remoteWidthPlan.medium,
+                height: scaledHeight(remoteWidthPlan.medium),
                 format: 'webp',
                 quality: 68,
             }),
@@ -66,7 +72,7 @@ const progressiveSources = await (async () => {
                 src,
                 width: remoteDimensions.width,
                 height: remoteDimensions.height,
-                widths,
+                widths: remoteWidthPlan.high,
                 format: 'webp',
                 quality,
             }),
@@ -146,7 +152,7 @@ const progressiveSources = await (async () => {
             src={src}
             width={remoteDimensions.width}
             height={remoteDimensions.height}
-            widths={widths}
+            widths={remoteWidthPlan?.high ?? widths}
             sizes={sizes}
             format="webp"
             quality={quality}
@@ -376,6 +382,9 @@ const progressiveSources = await (async () => {
             const deferredSrcset = image.dataset.progressiveSrcset;
             const deferredSrc = image.dataset.progressiveSrc;
 
+            // Programmatic activation is the single visibility gate. Keeping native lazy loading
+            // here can defer an already-approved stage again, especially for fixed backgrounds.
+            image.loading = 'eager';
             if (deferredSizes) image.sizes = deferredSizes;
             if (deferredSrcset) image.srcset = deferredSrcset;
             if (deferredSrc) image.src = deferredSrc;
@@ -438,6 +447,16 @@ const progressiveSources = await (async () => {
             frame.dataset.progressivePhase = 'high';
             frame.dataset.progressiveReady = 'true';
             frame.setAttribute('aria-busy', 'false');
+
+            // Once the sharp layer is fully opaque, remove the superseded textures from the
+            // render tree. Long horizontal galleries otherwise retain three composited images
+            // per visited card even though only the high stage remains visible.
+            window.setTimeout(() => {
+                if (!frame.isConnected || frame.dataset.progressivePhase !== 'high') return;
+                const { low, medium } = getStages(frame);
+                if (low) low.hidden = true;
+                if (medium) medium.hidden = true;
+            }, 200);
         };
 
         const startCritical = async (frame: HTMLElement, batch: CriticalBatch) => {
@@ -476,7 +495,9 @@ const progressiveSources = await (async () => {
                 batch.markHigh();
                 return;
             }
-            const highReady = await activateDeferredImage(high);
+            const highReady = await highQueue.enqueue(() =>
+                frame.isConnected ? activateDeferredImage(high) : Promise.resolve(false)
+            );
             await waitForInteractionIdle();
             if (frame.isConnected && highReady) finishHighStage(frame);
             batch.markHigh();
@@ -518,7 +539,11 @@ const progressiveSources = await (async () => {
             if (!isPriority) await waitForInteractionIdle();
             if (frame.isConnected && mediumReady) frame.dataset.progressivePhase = 'medium';
 
-            await gates.high;
+            // Priority cards are already in the user's immediate reading path. Do not make
+            // their sharp stage wait for the decorative fullscreen background to finish its
+            // deliberately delayed high stage; non-priority frames keep the global gate so
+            // they cannot compete with critical media.
+            if (!isPriority) await gates.high;
             if (!frame.isConnected) return;
 
             await waitForIdle(frame.dataset.progressivePriority === 'true' ? 650 : 1200);

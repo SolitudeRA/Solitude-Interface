@@ -103,6 +103,36 @@ export const UI_TEXTS = {
             ja: 'すべて見る（{total} 件）',
             en: 'View all {total}',
         },
+        galleryListLabel: {
+            zh: '文章列表',
+            ja: '記事一覧',
+            en: 'Article list',
+        },
+        scrollLeft: {
+            zh: '向左滚动',
+            ja: '左へスクロール',
+            en: 'Scroll left',
+        },
+        scrollRight: {
+            zh: '向右滚动',
+            ja: '右へスクロール',
+            en: 'Scroll right',
+        },
+        browsingStatus: {
+            zh: '正在浏览第 {current} 篇，共 {total} 篇',
+            ja: '全 {total} 件中 {current} 件目を表示',
+            en: 'Viewing post {current} of {total}',
+        },
+        currentPost: {
+            zh: '第 {current} 篇文章',
+            ja: '{current} 件目の記事',
+            en: 'Post {current}',
+        },
+        jumpToPost: {
+            zh: '跳转到第 {current} 篇文章',
+            ja: '{current} 件目の記事へ移動',
+            en: 'Jump to post {current}',
+        },
         category: {
             zh: '分类',
             ja: 'カテゴリ',

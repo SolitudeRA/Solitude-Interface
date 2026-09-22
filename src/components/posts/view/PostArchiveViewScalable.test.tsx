@@ -169,6 +169,7 @@ beforeAll(() => {
 
 beforeEach(() => {
     window.history.replaceState(null, '', ARCHIVE_PATH);
+    document.documentElement.dataset.postViewMode = 'list';
     document.body.innerHTML = `
         <div id="post-archive-pagination-host"></div>
         <div id="archive-root"></div>
@@ -178,10 +179,24 @@ beforeEach(() => {
 
 afterEach(async () => {
     await act(async () => root.unmount());
+    delete document.documentElement.dataset.postViewMode;
     document.body.innerHTML = '';
 });
 
 describe('PostArchiveView scalable group pagination', () => {
+    it('renders Dock pagination for an initial list document without a view query', async () => {
+        window.history.replaceState(null, '', '/design-demos/archive-scale');
+        document.documentElement.dataset.postViewMode = 'list';
+
+        await act(async () => {
+            root.render(
+                <PostArchiveView posts={makeSeriesCatalog()} locale="zh" initialLayout="series" />
+            );
+        });
+
+        expect(getDockPager().textContent).toContain('01 / 10');
+    });
+
     it('shows seven peer series per Dock batch without introducing a featured entry', async () => {
         await renderSeriesCatalog();
 

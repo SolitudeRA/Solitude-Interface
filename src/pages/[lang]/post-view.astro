@@ -4,17 +4,8 @@ import DockSocial from '@components/layout/dock/DockSocial.astro';
 import Dock from '@components/layout/dock/Dock.astro';
 import PostViewContainer from '@components/posts/view/PostViewContainer.astro';
 import PostArchiveView from '@components/posts/view/PostArchiveView';
-import PostArchiveSearch from '@components/posts/view/PostArchiveSearch';
-import PostArchiveNavbar from '@components/posts/view/PostArchiveNavbar';
-import {
-    parseArchiveParams,
-    type ArchiveSeriesMetadataMap,
-    type PostArchiveItem,
-} from '@lib/postArchive';
-import { extractFacets } from '@lib/postBrowse';
 import { listAllPosts } from '@api/ghost/posts';
 import { initializeSiteData } from '@api/ghost/settings';
-import { getTagRegistry } from '@api/ghost/tagRegistry';
 import BaseLayout from '@layouts/base/BaseLayout.astro';
 import SiteNavbar from '@components/layout/navbar/SiteNavbar.astro';
 import PageStage from '@components/layout/PageStage.astro';
@@ -28,9 +19,6 @@ import {
     getUIText,
 } from '@lib/i18n';
 import { env } from '@api/config/env';
-import { getImage } from 'astro:assets';
-import { getRemoteImageDimensions } from '@lib/remoteImageDimensions';
-import { getTagDescription, getTagLabel } from '@lib/tagRegistry';
 
 export async function getStaticPaths() {
     return LOCALES.map((lang) => ({
@@ -58,76 +46,12 @@ const allPosts = await listAllPosts();
 const localizedPosts = filterPostsByLocale(allPosts, locale);
 // 提取文章对象（已按发布日期排序）
 const posts = localizedPosts.map((item) => item.post);
-const tagRegistry = await getTagRegistry();
-const seriesMetadata: ArchiveSeriesMetadataMap = {};
-
-posts.forEach((post) => {
-    const slug = post.post_series_slug?.trim();
-    if (!slug || seriesMetadata[slug]) return;
-    const registryEntry = tagRegistry[slug];
-    const seriesTag = post.tags?.find((tag) => tag.slug === slug);
-    const description =
-        getTagDescription(slug, locale, tagRegistry) || seriesTag?.description?.trim() || '';
-
-    seriesMetadata[slug] = {
-        label: getTagLabel(slug, locale, seriesTag?.name, tagRegistry),
-        ...(description ? { description } : {}),
-        ...(registryEntry?.order !== undefined ? { order: registryEntry.order } : {}),
-        ...(registryEntry?.color ? { color: registryEntry.color } : {}),
-    };
-});
 
 // 画廊：精选/最近 N 篇（已按日期排序，slice 即最近）
 const featuredPosts = posts.slice(0, FEATURED_COUNT);
-
-// 列表：全量精简元数据（去 html、URL 转字符串），客户端筛选/分页
-const listItems: PostArchiveItem[] = await Promise.all(
-    posts.map(async (post) => {
-        const featureImageUrl = post.feature_image?.toString() ?? null;
-        const featureImageDimensions = featureImageUrl
-            ? await getRemoteImageDimensions(featureImageUrl)
-            : null;
-        const featureImage =
-            featureImageUrl && featureImageDimensions
-                ? await getImage({
-                      src: featureImageUrl,
-                      width: featureImageDimensions.width,
-                      height: featureImageDimensions.height,
-                      widths: [320, 480, 640, 960],
-                      format: 'webp',
-                      quality: 74,
-                  })
-                : null;
-
-        return {
-            id: post.id,
-            title: post.title,
-            excerpt: post.excerpt,
-            url: post.url.pathname,
-            feature_image: featureImage?.src ?? featureImageUrl,
-            ...(featureImage?.srcSet.attribute
-                ? {
-                      feature_image_srcset: featureImage.srcSet.attribute,
-                      feature_image_sizes:
-                          '(max-width: 639px) calc(100vw - 2rem), (max-width: 1279px) 48vw, 35vw',
-                  }
-                : {}),
-            published_at: post.published_at,
-            post_type: post.post_type,
-            post_category: post.post_category,
-            post_series: post.post_series,
-            ...(post.post_series_slug ? { post_series_slug: post.post_series_slug } : {}),
-            ...(post.post_series_label ? { post_series_label: post.post_series_label } : {}),
-            ...(post.post_series_number ? { post_series_number: post.post_series_number } : {}),
-            ...(post.post_type_label ? { post_type_label: post.post_type_label } : {}),
-            ...(post.post_category_label ? { post_category_label: post.post_category_label } : {}),
-        };
-    })
-);
-const initialArchiveState = parseArchiveParams(Astro.url.searchParams);
-const archiveFacets = extractFacets(listItems);
 const initialPostViewMode = Astro.url.searchParams.get('view') === 'list' ? 'list' : 'gallery';
 const isInitialList = initialPostViewMode === 'list';
+const archiveDataUrl = `/${locale}/post-archive.json`;
 
 const galleryLabel = getUIText('postView', 'galleryView', locale);
 const listLabel = getUIText('postView', 'listView', locale);
@@ -150,6 +74,7 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
     canonicalUrl={canonicalUrl}
     alternateLinks={alternateLinks}
     initialPostViewMode={initialPostViewMode}
+    fontProfile="system"
 >
     <SiteNavbar
         logoUrl={logoUrl}
@@ -158,14 +83,12 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
         homeUrl={`/${locale}`}
         hideTitleOnMobile={true}
     >
-        <div slot="utility-secondary" data-post-view-secondary class="w-max max-w-full">
-            <PostArchiveNavbar
-                client:load
-                locale={locale}
-                categories={archiveFacets.categories}
-                initialLayout={initialArchiveState.layout}
-                initialCategory={initialArchiveState.filters.category}
-            />
+        <div
+            slot="utility-secondary"
+            id="post-archive-header-host"
+            data-post-view-secondary
+            class="w-max max-w-full"
+        >
         </div>
         <div slot="utility-start" class="contents">
             <div
@@ -202,11 +125,7 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
             </div>
         </div>
         <div slot="utility-end" class="contents">
-            <PostArchiveSearch
-                client:load
-                locale={locale}
-                initialQuery={initialArchiveState.filters.query}
-            />
+            <div id="post-archive-search-host" class="contents"></div>
         </div>
     </SiteNavbar>
 
@@ -228,17 +147,10 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
             role="tabpanel"
             aria-labelledby="post-view-tab-list"
             data-view-section="list"
+            data-post-archive-source={archiveDataUrl}
             hidden={!isInitialList}
         >
-            <PostArchiveView
-                client:visible
-                posts={listItems}
-                locale={locale}
-                seriesMetadata={seriesMetadata}
-                initialFilters={initialArchiveState.filters}
-                initialLayout={initialArchiveState.layout}
-                initialPagination={initialArchiveState.pagination}
-            />
+            <PostArchiveView client:visible dataUrl={archiveDataUrl} locale={locale} />
         </div>
     </PageStage>
 
@@ -251,9 +163,11 @@ const canonicalUrl = `${env.site.url}/${locale}/post-view`;
 
     <script>
         import { initPostViewModeController } from '@lib/navigation/postViewModeController';
+        import { initPostArchivePreload } from '@components/posts/view/postArchivePreload';
         import { initPostViewScrollFallback } from '@components/posts/view/postViewScrollFallback';
 
         initPostViewModeController();
+        initPostArchivePreload();
         initPostViewScrollFallback();
     </script>
 </BaseLayout>

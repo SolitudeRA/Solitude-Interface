@@ -19,6 +19,8 @@ interface Props {
     locale?: 'zh' | 'ja' | 'en';
     /** SSR 阶段写入文章浏览模式，避免 Navbar 次级控件在水合前闪现。 */
     initialPostViewMode?: 'gallery' | 'list';
+    /** Keep Noto for reading surfaces; lighter routes can opt into the system font stack. */
+    fontProfile?: 'system' | 'noto';
 }
 
 const {
@@ -30,14 +32,18 @@ const {
     alternateLinks = [],
     locale = 'zh',
     initialPostViewMode,
+    fontProfile = 'noto',
 } = Astro.props;
 
 const documentTitle = pageTitle ? `${pageTitle} · ${siteTitle}` : siteTitle;
-const fontStylesheet = {
-    zh: notoSansScStylesheet,
-    ja: notoSansJpStylesheet,
-    en: notoSansStylesheet,
-}[locale];
+const fontStylesheet =
+    fontProfile === 'noto'
+        ? {
+              zh: notoSansScStylesheet,
+              ja: notoSansJpStylesheet,
+              en: notoSansStylesheet,
+          }[locale]
+        : undefined;
 const skipToContentLabel = {
     zh: '跳到主要内容',
     ja: '本文へスキップ',
@@ -66,7 +72,11 @@ const imageOrigin = (() => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         {imageOrigin && <link rel="preconnect" href={imageOrigin} crossorigin="anonymous" />}
-        <link rel="stylesheet" href={fontStylesheet} data-solitude-font={locale} />
+        {
+            fontStylesheet && (
+                <link rel="stylesheet" href={fontStylesheet} data-solitude-font={locale} />
+            )
+        }
         <meta name="generator" content={Astro.generator} />
 
         <!-- Security Headers -->
@@ -238,7 +248,7 @@ const imageOrigin = (() => {
                         alt=""
                         widths={[480, 960, 1440, 1920, 2560, 3840]}
                         sizes="100vw"
-                        quality={100}
+                        quality={84}
                         priority
                         critical
                         progressive

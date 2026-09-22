@@ -89,4 +89,28 @@ describe('post archive URL hydration', () => {
             document.querySelector<HTMLButtonElement>('[data-archive-search-button]')
         );
     });
+
+    it('keeps the input and URL synchronized without losing the latest query', async () => {
+        await act(async () => {
+            root.render(<PostArchiveSearch locale="zh" />);
+        });
+        await act(async () => {
+            document.querySelector<HTMLButtonElement>('[data-archive-search-button]')?.click();
+        });
+
+        const input = document.querySelector<HTMLInputElement>(
+            '[data-archive-search-panel] input'
+        )!;
+        await act(async () => {
+            const valueSetter = Object.getOwnPropertyDescriptor(
+                HTMLInputElement.prototype,
+                'value'
+            )?.set;
+            valueSetter?.call(input, 'motion');
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+
+        expect(input.value).toBe('motion');
+        expect(new URLSearchParams(window.location.search).get('q')).toBe('motion');
+    });
 });

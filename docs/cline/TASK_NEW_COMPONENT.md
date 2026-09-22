@@ -23,7 +23,7 @@ src/components/
 │   └── privacy-policy/
 ├── posts/            # 文章展示组件
 │   ├── detail/       # 文章详情组件 (PostContent, PostHeader, TableOfContents)
-│   └── view/         # 列表视图组件 (PostViewContainer, PostViewScrollContainer, PostViewPagination)
+│   └── view/         # 文章视图组件 (PostViewContainer, PostViewGalleryShell, PostArchiveView)
 └── utils/            # 工具组件 (GoogleAnalytics 等)
 ```
 
@@ -34,12 +34,15 @@ src/components/
 
 ### 选择 Astro 还是 React?
 
-| 使用 Astro (.astro) | 使用 React (.tsx)       |
-| ------------------- | ----------------------- |
-| 纯静态内容          | 需要客户端交互          |
-| 服务端数据获取      | 使用 useState/useEffect |
-| 无 JavaScript 开销  | 需要动画 (Motion)       |
-| 布局容器            | 需要 Jotai 状态         |
+| 使用 Astro (.astro)                    | 使用 React (.tsx)                        |
+| -------------------------------------- | ---------------------------------------- |
+| 纯静态内容与服务端数据获取             | 需要持续的组件局部状态                   |
+| 全局壳层与布局容器                     | 复杂组合界面，原生控制器会显著增加复杂度 |
+| 事件委托、DOM dataset 可完成的轻量交互 | 可独立、按实际使用时机延迟水合的功能边界 |
+| vanilla controller 渐进增强            | 已确认需要 React 生命周期的交互          |
+
+默认从 Astro SSR + vanilla controller 开始。不要仅为轮播、滚动、菜单、hover 或单个开关引入 React
+runtime；确需 React 时，选择与可见性和交互时机匹配的 `client:*` 指令。
 
 ---
 
@@ -226,23 +229,13 @@ const buttonVariants = cva('rounded-lg font-medium', {
 });
 ```
 
-### 状态管理 (Jotai)
+### 状态与交互边界
 
-```typescript
-import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
-
-// 定义 atom
-const countAtom = atom(0);
-
-// 读取和写入
-const [count, setCount] = useAtom(countAtom);
-
-// 仅读取
-const count = useAtomValue(countAtom);
-
-// 仅写入
-const setCount = useSetAtom(countAtom);
-```
+- 可分享、可回退的状态放在 URL。
+- 一次页面往返需要恢复的状态放在 `sessionStorage`。
+- Astro 渐进增强优先使用 controller 局部闭包、DOM dataset 和自定义事件。
+- React island 使用组件局部状态；新增跨页面全局 store 前必须先完成架构评审。
+- Archive 是当前生产路由中的复杂 React island，保持 `client:visible`，不要改为默认首屏水合。
 
 ---
 
@@ -258,13 +251,13 @@ const setCount = useSetAtom(countAtom);
 
 ## ⚠️ 注意事项
 
-1. **客户端指令**: React 交互组件需要在 Astro 中使用 `client:*` 指令
+1. **客户端指令**: React 交互组件需要在 Astro 中使用 `client:*` 指令，并选择最晚仍满足体验的水合时机
 
     ```astro
     <MyComponent client:load />
-    <!-- 页面加载时立即水合 -->
+    <!-- 仅首屏立即可交互且确有必要时使用 -->
     <MyComponent client:visible />
-    <!-- 进入视口时水合 -->
+    <!-- 进入视口时水合，复杂的非首屏界面优先 -->
     <MyComponent client:idle />
     <!-- 浏览器空闲时水合 -->
     ```

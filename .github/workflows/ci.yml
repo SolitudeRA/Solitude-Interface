@@ -65,3 +65,6 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Performance budget
+        run: pnpm perf:budget

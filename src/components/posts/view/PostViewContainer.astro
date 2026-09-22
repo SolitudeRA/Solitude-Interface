@@ -6,7 +6,7 @@ import ArticleCard from './cards/ArticleCard.astro';
 import MusicCard from './cards/MusicCard.astro';
 import VideoCard from './cards/VideoCard.astro';
 import GalleryCard from './cards/GalleryCard.astro';
-import PostViewScrollContainer from './PostViewScrollContainer';
+import PostViewGalleryShell from './PostViewGalleryShell.astro';
 import { DEFAULT_LOCALE, getUIText, type Locale } from '@lib/i18n';
 
 interface Props {
@@ -18,14 +18,12 @@ interface Props {
 
 const { posts, locale = DEFAULT_LOCALE, viewAllLabel } = Astro.props;
 
-// 提取所有文章的发布日期
-const postDates = posts.map((post) => post.published_at);
 const noPostsText = getUIText('home', 'noPosts', locale);
 ---
 
 {
     posts.length > 0 ? (
-        <PostViewScrollContainer client:load postDates={postDates}>
+        <PostViewGalleryShell totalItems={posts.length + (viewAllLabel ? 1 : 0)} locale={locale}>
             {posts.map((post, index) => {
                 const PostCardComponent = (() => {
                     switch (post.post_type) {
@@ -63,6 +61,7 @@ const noPostsText = getUIText('home', 'noPosts', locale);
                     type="button"
                     data-view-switch="list"
                     class="post-card-wrapper post-view-all-card flex shrink-0 cursor-pointer flex-col items-center justify-center gap-4 rounded-[35px] border border-dashed border-[var(--border)] bg-[var(--card)]/40 text-[var(--muted-foreground)] transition-[transform,border-color,color] duration-300 ease-out hover:scale-[1.02] hover:border-[var(--ring)] hover:text-[var(--foreground)] focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:outline-none"
+                    role="listitem"
                     aria-label={viewAllLabel}
                 >
                     <span
@@ -74,7 +73,7 @@ const noPostsText = getUIText('home', 'noPosts', locale);
                     <span class="px-6 text-center text-sm font-semibold">{viewAllLabel}</span>
                 </button>
             )}
-        </PostViewScrollContainer>
+        </PostViewGalleryShell>
     ) : (
         <section class="post-view-empty flex h-[75svh] min-h-[420px] items-center justify-center px-6">
             <p class="rounded-lg border border-[var(--border)] bg-[var(--background)]/70 px-5 py-3 text-sm font-medium text-[var(--muted-foreground)] shadow-sm backdrop-blur-sm">

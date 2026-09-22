@@ -114,7 +114,7 @@
 
 ## 技术栈与架构
 
-Astro 5（SSG）· React 19 群岛 · Jotai · Tailwind v4 · Ghost CMS（无头）· shiki · motion · TypeScript（严格模式）。
+Astro 5（SSG）· React 19 群岛 · Tailwind v4 · Ghost CMS（无头）· shiki · motion · TypeScript（严格模式）。
 
 数据单向流动：**Ghost → 类型化客户端 → 适配器 → 缓存文章 → 页面（SSG）→ 表现层组件**。完整说明——项目结构、标签 / i18n 系统、测试策略——见 **[DEVELOPMENT.md](../DEVELOPMENT.md)**。
 

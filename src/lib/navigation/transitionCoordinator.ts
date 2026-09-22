@@ -2,6 +2,7 @@ import {
     clearPostArchiveScroll,
     clearPostInputModality,
     clearPostReturnUrl,
+    clearPostViewScroll,
     readPostArchiveScroll,
     readPostDestination,
     readPostInputModality,
@@ -62,20 +63,48 @@ let pendingPostReturnFocus: PendingPostReturnFocus | null = null;
 let postReturnFocusScheduled = false;
 let postArchiveFocusReady = false;
 let currentInputModality: PostInputModality = 'pointer';
+let transitionGeneration = 0;
+let activeTransitionGeneration = 0;
+let pendingPostReturnRestoreGeneration = 0;
 
 function getActiveTransition(): string | null {
     return document.documentElement.getAttribute(SITE_TRANSITION_ATTRIBUTE);
 }
 
-function setSiteTransition(transition: SiteTransition): void {
+function setSiteTransition(transition: SiteTransition): number {
+    activeTransitionGeneration = ++transitionGeneration;
+    if (transition !== SITE_TRANSITIONS.postReturn) {
+        pendingPostReturnRestoreGeneration = 0;
+    }
     document.documentElement.setAttribute(SITE_TRANSITION_ATTRIBUTE, transition);
+    return activeTransitionGeneration;
 }
 
-function clearSiteTransition(expectedTransition?: SiteTransition): void {
-    const activeTransition = getActiveTransition();
-    if (!expectedTransition || activeTransition === expectedTransition) {
-        document.documentElement.removeAttribute(SITE_TRANSITION_ATTRIBUTE);
+function clearPendingPostReturnRestore(expectedGeneration?: number): boolean {
+    if (
+        expectedGeneration !== undefined &&
+        pendingPostReturnRestoreGeneration !== expectedGeneration
+    ) {
+        return false;
     }
+
+    pendingPostReturnRestoreGeneration = 0;
+    return true;
+}
+
+function clearSiteTransition(
+    expectedTransition?: SiteTransition,
+    expectedGeneration?: number
+): boolean {
+    const activeTransition = getActiveTransition();
+    if (expectedTransition && activeTransition !== expectedTransition) return false;
+    if (expectedGeneration !== undefined && activeTransitionGeneration !== expectedGeneration) {
+        return false;
+    }
+
+    document.documentElement.removeAttribute(SITE_TRANSITION_ATTRIBUTE);
+    activeTransitionGeneration = 0;
+    return true;
 }
 
 function clearPostTransitionSource(root: Document | Element = document): void {
@@ -231,14 +260,16 @@ function handleBeforePreparation(event: BeforePreparationEvent): void {
     if (!isPostReturn) {
         pendingPostReturnFocus = null;
         postArchiveFocusReady = false;
+        clearPendingPostReturnRestore();
     }
 
     if (!isPostReturn) {
         clearSiteTransition(SITE_TRANSITIONS.postReturn);
         if (getActiveTransition() === SITE_TRANSITIONS.postForward) {
+            const navigationGeneration = activeTransitionGeneration;
             event.signal?.addEventListener(
                 'abort',
-                () => clearSiteTransition(SITE_TRANSITIONS.postForward),
+                () => clearSiteTransition(SITE_TRANSITIONS.postForward, navigationGeneration),
                 { once: true }
             );
         }
@@ -250,17 +281,20 @@ function handleBeforePreparation(event: BeforePreparationEvent): void {
         event.to = storedDestination;
     }
 
-    setSiteTransition(SITE_TRANSITIONS.postReturn);
+    const navigationGeneration = setSiteTransition(SITE_TRANSITIONS.postReturn);
+    pendingPostReturnRestoreGeneration = navigationGeneration;
     event.signal?.addEventListener(
         'abort',
-        () => clearSiteTransition(SITE_TRANSITIONS.postReturn),
+        () => {
+            clearSiteTransition(SITE_TRANSITIONS.postReturn, navigationGeneration);
+            clearPendingPostReturnRestore(navigationGeneration);
+        },
         { once: true }
     );
 }
 
-function finishTransition(activeTransition: SiteTransition): void {
-    clearSiteTransition(activeTransition);
-    clearPostTransitionSource();
+function finishTransition(activeTransition: SiteTransition, generation: number): void {
+    if (clearSiteTransition(activeTransition, generation)) clearPostTransitionSource();
 }
 
 function findReturnTarget(
@@ -295,14 +329,18 @@ function handleBeforeSwap(event: BeforeSwapEvent): void {
 
     const activeTransition = getActiveTransition();
     if (isSiteTransition(activeTransition)) {
+        const generation = activeTransitionGeneration;
         newDocument.documentElement.setAttribute(SITE_TRANSITION_ATTRIBUTE, activeTransition);
         if (event.viewTransition) {
             void event.viewTransition.finished.then(
-                () => finishTransition(activeTransition),
-                () => finishTransition(activeTransition)
+                () => finishTransition(activeTransition, generation),
+                () => finishTransition(activeTransition, generation)
             );
         } else {
-            finishTransition(activeTransition);
+            // No native View Transition will carry this state into a completion callback. The
+            // destination document must not inherit a permanent post transition marker.
+            newDocument.documentElement.removeAttribute(SITE_TRANSITION_ATTRIBUTE);
+            finishTransition(activeTransition, generation);
         }
     }
 
@@ -390,7 +428,13 @@ function preparePostReturnFocus(): void {
 }
 
 function restorePostViewScroll(): void {
-    if (getActiveTransition() !== SITE_TRANSITIONS.postReturn) return;
+    const isAnimatedPostReturn = getActiveTransition() === SITE_TRANSITIONS.postReturn;
+    const pendingRestoreGeneration = pendingPostReturnRestoreGeneration;
+    if (!isAnimatedPostReturn && pendingRestoreGeneration === 0) return;
+
+    if (pendingRestoreGeneration !== 0) {
+        clearPendingPostReturnRestore(pendingRestoreGeneration);
+    }
 
     const scrollLeft = readPostViewScroll();
     const scrollContainer = document.querySelector<HTMLElement>('[data-post-view-scroll]');
@@ -403,6 +447,7 @@ function restorePostViewScroll(): void {
         scrollContainer.style.scrollSnapType = 'none';
         scrollContainer.scrollLeft = scrollLeft;
         void scrollContainer.offsetWidth;
+        clearPostViewScroll();
 
         window.requestAnimationFrame(() => {
             if (previousScrollSnapType) {

@@ -114,7 +114,7 @@
 
 ## 技術スタックとアーキテクチャ
 
-Astro 5（SSG）· React 19 アイランド · Jotai · Tailwind v4 · Ghost CMS（ヘッドレス）· shiki · motion · TypeScript（厳格）。
+Astro 5（SSG）· React 19 アイランド · Tailwind v4 · Ghost CMS（ヘッドレス）· shiki · motion · TypeScript（厳格）。
 
 データは一方向に流れます：**Ghost → 型付きクライアント → アダプター → キャッシュ済み投稿 → ページ（SSG）→ 表示用コンポーネント**。全体像——プロジェクト構成、タグ / i18n システム、テスト戦略——は **[DEVELOPMENT.md](../DEVELOPMENT.md)** にまとめています。
 

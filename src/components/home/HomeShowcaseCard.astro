@@ -1,6 +1,7 @@
 ---
 import type { FeaturedPost } from '@api/ghost/types';
 import ResponsiveImage from '@components/common/ResponsiveImage.astro';
+import '@styles/modules/media-card-protocol.css';
 
 interface Props {
     post: FeaturedPost;
@@ -51,10 +52,11 @@ const categoryLabel = isVisibleTag(post.post_category_label)
                     alt=""
                     widths={[320, 480, 640, 960, 1280]}
                     sizes="(max-width: 639px) 240px, (max-width: 767px) 272px, (max-width: 1023px) 304px, (max-width: 1535px) 336px, (max-width: 2047px) 368px, 416px"
-                    quality={100}
+                    quality={82}
                     priority={index < 2}
+                    eagerLow
                     progressive
-                    className="h-full w-full scale-[1.02] object-cover object-center transition-transform duration-[620ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform group-hover:scale-[1.045] motion-reduce:transform-none motion-reduce:transition-none"
+                    className="h-full w-full object-cover object-center transition-transform duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.025] motion-reduce:transform-none motion-reduce:transition-none"
                 />
             ) : (
                 <div class="h-full w-full bg-[radial-gradient(circle_at_30%_20%,var(--card-image-fallback-highlight),transparent_32%),linear-gradient(135deg,var(--card-image-fallback-start),var(--card-image-fallback-end))]" />

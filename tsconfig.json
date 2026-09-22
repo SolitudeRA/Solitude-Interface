@@ -9,7 +9,6 @@
       "@components/*": ["src/components/*"],
       "@layouts/*": ["src/layouts/*"],
       "@styles/*": ["src/styles/*"],
-      "@stores/*": ["src/stores/*"],
       "@assets/*": ["src/assets/*"],
       "@lib/*": ["src/lib/*"]
     },

@@ -1,7 +1,7 @@
 /**
- * post-view 时间线(PostViewPagination)样式。
- * 动态值(width / marginInline / opacity / translateX)由组件 inline style 设置;
- * 此处只放静态样式、过渡、keyframes 与降级。
+ * post-view Gallery 时间线样式。
+ * 动态值(scaleX / opacity / translate3d)由增强脚本写入 CSS 变量；
+ * marker 和总览条都保持固定几何，只更新合成属性，避免滚动时触发布局。
  */
 
 /* cluster:容纳时间线(列向 —— 让时间线撑满宽度并在 caller 区域内垂直居中)。 */
@@ -15,7 +15,7 @@
 /* 底边总览进度条(氛围光晕 × 进度填充):全宽钉在视窗最底边。
    柔光从左随滚动进度生长、前缘最亮 + 柔焦光头标记当前位置。纯视觉(aria-hidden)。
    定位(fixed bottom 全宽)由调用方 className 设置;此处只放视觉样式。
-   bloom/core 宽度、head 位置由组件 rAF 弹簧命令式写 style(故无 CSS 过渡)。 */
+   bloom/core 缩放、head 位移由滚动帧命令式写 transform。 */
 .pvp-overview {
     height: 16px;
     pointer-events: none;
@@ -41,9 +41,12 @@
     left: 0;
     bottom: -6px;
     height: 15px;
-    width: 0;
+    width: 100%;
     border-radius: 999px;
     filter: blur(7px);
+    transform: scaleX(0);
+    transform-origin: left center;
+    will-change: transform, opacity;
     background: linear-gradient(
         90deg,
         color-mix(in oklch, var(--pvp-glow) 0%, transparent) 0%,
@@ -57,8 +60,11 @@
     left: 0;
     bottom: 0;
     height: 3px;
-    width: 0;
+    width: 100%;
     border-radius: 999px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    will-change: transform;
     background: linear-gradient(
         90deg,
         color-mix(in oklch, var(--pvp-glow) 0%, transparent) 0%,
@@ -71,7 +77,7 @@
     position: absolute;
     bottom: -7px;
     left: 0;
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
     width: 28px;
     height: 17px;
     border-radius: 999px;
@@ -82,15 +88,13 @@
         color-mix(in oklch, var(--pvp-glow) 28%, transparent) 55%,
         transparent
     );
+    will-change: transform, opacity;
 }
 
 /* 时间线 wrapper:aura + track 的定位上下文 */
 .pvp-timeline {
     position: relative;
     flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     height: 26px;
     /* 轨道会随 active marker 横移；只裁掉横向越界，保留 aura 的纵向柔光。 */
     overflow-x: clip;
@@ -98,26 +102,31 @@
 }
 
 .pvp-track {
-    position: relative;
+    position: absolute;
+    left: 50%;
+    top: 50%;
     z-index: 10;
     display: flex;
     align-items: center;
-    justify-content: center;
+    transform: translate3d(var(--pvp-track-x, -26px), -50%, 0);
     will-change: transform;
     transition: transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .pvp-marker {
     flex: 0 0 auto;
+    width: 36px;
     height: 6px;
+    margin-inline: 8px;
     border: 0;
     padding: 0;
     border-radius: 999px;
     cursor: pointer;
     background: color-mix(in oklch, var(--foreground) 55%, transparent);
+    transform: scaleX(var(--pvp-marker-scale, 0));
+    will-change: transform, opacity;
     transition:
-        width 380ms cubic-bezier(0.22, 0.61, 0.36, 1),
-        margin 380ms cubic-bezier(0.22, 0.61, 0.36, 1),
+        transform 380ms cubic-bezier(0.22, 0.61, 0.36, 1),
         opacity 380ms ease,
         background 380ms ease;
 }
@@ -125,6 +134,10 @@
 .pvp-marker:focus-visible {
     outline: 2px solid var(--toc-link-active, #6ee7ff);
     outline-offset: 3px;
+}
+
+.pvp-marker[aria-hidden='true'] {
+    pointer-events: none;
 }
 
 .pvp-marker.is-active {
@@ -181,6 +194,24 @@
             0 0 16px rgb(110 231 255 / 0.45),
             0 0 30px rgb(138 162 255 / 0.28);
     }
+}
+
+/* Keep only the structural progress indicators while the gallery or route is moving. The
+   blurred aura and infinite active-marker effects otherwise compete with image raster work. */
+:is(html[data-dock-navigation-pending='true'], html[data-post-view-scrolling='true'])
+    :is(.pvp-overview-bloom, .pvp-overview-head, .pvp-aura) {
+    display: none;
+}
+
+:is(html[data-dock-navigation-pending='true'], html[data-post-view-scrolling='true'])
+    :is(.pvp-track, .pvp-marker) {
+    transition: none;
+}
+
+:is(html[data-dock-navigation-pending='true'], html[data-post-view-scrolling='true'])
+    .pvp-marker.is-active {
+    box-shadow: none;
+    animation: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

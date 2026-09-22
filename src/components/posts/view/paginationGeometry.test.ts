@@ -4,6 +4,7 @@ import {
     markerWidth,
     markerOpacity,
     DEFAULT_GEOMETRY,
+    computeCompositedTimelineLayout,
     computeTimelineLayout,
     computeScrollProgress,
 } from './paginationGeometry';
@@ -122,6 +123,33 @@ describe('computeTimelineLayout', () => {
         expect(markers[7]!.opacity).toBe(1);
         expect(markers[6]!.opacity).toBe(1);
         expect(markers[5]!.opacity).toBeCloseTo(0.5, 5);
+    });
+});
+
+describe('computeCompositedTimelineLayout', () => {
+    const p = DEFAULT_GEOMETRY;
+
+    it('keeps fixed slots and centers the active marker with a track translation', () => {
+        const start = computeCompositedTimelineLayout(16, 0, [0], p);
+        const middle = computeCompositedTimelineLayout(16, 5, [4, 5, 6], p);
+
+        expect(start.translateX).toBe(-(p.barW + p.gap) / 2);
+        expect(middle.translateX).toBe(-(5 * (p.barW + p.gap) + (p.barW + p.gap) / 2));
+        expect(middle.markers[5]).toMatchObject({ scaleX: 1, opacity: 1, isActive: true });
+    });
+
+    it('expresses collapsed marker widths as transform scale without changing geometry', () => {
+        const { markers } = computeCompositedTimelineLayout(20, 10, [10], p);
+
+        expect(markers[10]!.scaleX).toBe(1);
+        expect(markers[17]!.scaleX).toBeCloseTo(p.dotW / p.barW, 5);
+        expect(markers[18]!.scaleX).toBe(0);
+        expect(markers[18]!.inWindow).toBe(false);
+    });
+
+    it('clamps an out-of-range active index', () => {
+        const { markers } = computeCompositedTimelineLayout(3, 99, [], p);
+        expect(markers.map((marker) => marker.isActive)).toEqual([false, false, true]);
     });
 });
 

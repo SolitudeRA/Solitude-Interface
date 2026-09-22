@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { Post } from '@api/ghost/types';
 import {
+    buildPostSearchKey,
     extractFacets,
     filterPosts,
     paginate,
@@ -120,6 +121,18 @@ describe('filterPosts', () => {
             makePost({ id: '2', title: 'Other', post_series_label: 'Writing Notes' }),
         ];
         expect(filterPosts(posts, { query: 'server' }).map((post) => post.id)).toEqual(['1']);
+    });
+
+    it('uses a precomputed normalized search key when archive data provides one', () => {
+        const post = {
+            ...makePost({ id: '1', title: 'Display title', excerpt: '' }),
+            search_key: 'cached full width token',
+        };
+
+        expect(filterPosts([post], { query: 'FULL WIDTH' }).map((item) => item.id)).toEqual(['1']);
+        expect(
+            buildPostSearchKey(makePost({ title: 'Ｆｕｌｌ Ｗｉｄｔｈ', excerpt: '' }))
+        ).toContain('full width');
     });
 
     it('combines filters with AND', () => {

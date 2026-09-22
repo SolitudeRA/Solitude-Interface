@@ -4,7 +4,13 @@ type DockNavigationWindow = Window & {
 
 const DOCK_ROUTE_SELECTOR = 'a[data-dock-route]';
 const DOCK_NAVIGATION_PENDING_ATTRIBUTE = 'data-dock-navigation-pending';
-let pendingDockRoute: HTMLAnchorElement | null = null;
+interface PendingDockNavigation {
+    id: number;
+    route: HTMLAnchorElement;
+}
+
+let nextDockNavigationId = 0;
+let pendingDockNavigation: PendingDockNavigation | null = null;
 
 type BeforePreparationEvent = Event & {
     signal?: AbortSignal;
@@ -22,27 +28,32 @@ export function isCurrentDockDestination(current: URL, destination: URL): boolea
     );
 }
 
-function clearDockNavigationPending(expectedRoute?: HTMLAnchorElement): void {
-    if (expectedRoute && pendingDockRoute !== expectedRoute) return;
+function clearDockNavigationPending(expectedNavigationId?: number): void {
+    if (expectedNavigationId !== undefined && pendingDockNavigation?.id !== expectedNavigationId) {
+        return;
+    }
 
     document.documentElement.removeAttribute(DOCK_NAVIGATION_PENDING_ATTRIBUTE);
-    pendingDockRoute?.removeAttribute(DOCK_NAVIGATION_PENDING_ATTRIBUTE);
-    pendingDockRoute?.removeAttribute('aria-busy');
-    pendingDockRoute = null;
+    pendingDockNavigation?.route.removeAttribute(DOCK_NAVIGATION_PENDING_ATTRIBUTE);
+    pendingDockNavigation?.route.removeAttribute('aria-busy');
+    pendingDockNavigation = null;
 }
 
 function markDockNavigationPending(link: HTMLAnchorElement): void {
     clearDockNavigationPending();
-    pendingDockRoute = link;
+    pendingDockNavigation = {
+        id: ++nextDockNavigationId,
+        route: link,
+    };
     document.documentElement.setAttribute(DOCK_NAVIGATION_PENDING_ATTRIBUTE, 'true');
     link.setAttribute(DOCK_NAVIGATION_PENDING_ATTRIBUTE, 'true');
     link.setAttribute('aria-busy', 'true');
 }
 
 function handleBeforePreparation(event: BeforePreparationEvent): void {
-    const routeForNavigation = pendingDockRoute;
-    if (!routeForNavigation) return;
-    event.signal?.addEventListener('abort', () => clearDockNavigationPending(routeForNavigation), {
+    const navigation = pendingDockNavigation;
+    if (!navigation) return;
+    event.signal?.addEventListener('abort', () => clearDockNavigationPending(navigation.id), {
         once: true,
     });
 }

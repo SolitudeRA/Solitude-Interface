@@ -1,4 +1,4 @@
-import { paginate, parseBrowseParams, type BrowsePost } from './postBrowse';
+import { paginate, parseBrowseParams, type BrowsePost, type Facets } from './postBrowse';
 
 export interface PostArchiveItem extends BrowsePost {
     id: string;
@@ -51,6 +51,13 @@ export interface ArchiveSeriesMetadata {
 }
 
 export type ArchiveSeriesMetadataMap = Record<string, ArchiveSeriesMetadata>;
+
+export interface PostArchivePayload {
+    version: 1;
+    posts: PostArchiveItem[];
+    facets: Facets;
+    seriesMetadata: ArchiveSeriesMetadataMap;
+}
 
 export interface ArchiveGroupPage extends ArchiveGroup {
     visiblePosts: PostArchiveItem[];

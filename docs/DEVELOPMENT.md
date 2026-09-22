@@ -84,7 +84,6 @@ src/
 ├── layouts/                # Astro layouts
 ├── lib/                    # Core libraries (i18n, tag registry)
 ├── pages/                  # Astro pages
-├── stores/                 # State management (Jotai)
 ├── styles/                 # Global styles
 └── types/                  # TypeScript types
 ```

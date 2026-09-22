@@ -11,6 +11,11 @@
 export interface BrowsePost {
     title: string;
     excerpt: string;
+    /**
+     * Optional build-time normalized search haystack. Archive JSON includes this so repeated
+     * client-side searches do not rebuild and lowercase the same strings on every keystroke.
+     */
+    search_key?: string;
     post_type: string;
     post_type_label?: string;
     post_category: string;
@@ -124,6 +129,16 @@ export function extractFacets(posts: readonly BrowsePost[]): Facets {
     };
 }
 
+export function normalizePostSearchText(value: string): string {
+    return value.normalize('NFKC').trim().toLocaleLowerCase();
+}
+
+export function buildPostSearchKey(post: BrowsePost): string {
+    return normalizePostSearchText(
+        `${post.title} ${post.excerpt} ${post.post_series ?? ''} ${post.post_series_label ?? ''}`
+    );
+}
+
 /** 按分类 / 类型 / 关键词（标题 + 摘要子串，大小写无关）做 AND 筛选 */
 export function filterPosts<T extends BrowsePost>(
     posts: readonly T[],
@@ -131,14 +146,13 @@ export function filterPosts<T extends BrowsePost>(
 ): T[] {
     const category = filters.category ?? null;
     const type = filters.type ?? null;
-    const query = filters.query?.trim().toLowerCase() ?? '';
+    const query = normalizePostSearchText(filters.query ?? '');
 
     return posts.filter((post) => {
         if (category && post.post_category !== category) return false;
         if (type && post.post_type !== type) return false;
         if (query) {
-            const haystack =
-                `${post.title} ${post.excerpt} ${post.post_series ?? ''} ${post.post_series_label ?? ''}`.toLowerCase();
+            const haystack = post.search_key ?? buildPostSearchKey(post);
             if (!haystack.includes(query)) return false;
         }
         return true;
