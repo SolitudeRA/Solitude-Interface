@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:fixture": "node scripts/build-fixture.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "perf:budget": "node scripts/check-performance-budget.mjs",

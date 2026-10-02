@@ -310,6 +310,7 @@ function PostArchiveContent({
 
     const { filters, layout, pagination } = archiveState;
     const deferredQuery = useDeferredValue(filters.query);
+    const isQueryStale = deferredQuery !== filters.query;
     const filtered = useMemo(
         () =>
             filterPosts(posts, {
@@ -420,6 +421,9 @@ function PostArchiveContent({
               : yearsPage.totalPages;
 
     useEffect(() => {
+        // History can change both the query and pagination. Deferred results still belong to
+        // the previous query, so they must not signal that the restored archive is ready.
+        if (isQueryStale) return;
         window.dispatchEvent(
             new CustomEvent(POST_ARCHIVE_RENDER_EVENT, {
                 detail: {
@@ -430,7 +434,7 @@ function PostArchiveContent({
                 },
             })
         );
-    }, [currentPage, layout, pagination.group, pagination.groupPage]);
+    }, [currentPage, isQueryStale, layout, pagination.group, pagination.groupPage]);
 
     const visiblePosts = useMemo(() => {
         if (layout === 'ledger') return ledgerPage.items;
@@ -451,9 +455,10 @@ function PostArchiveContent({
     }, [activePost, layout, selectedSeriesGroup, visibleYearGroups]);
 
     useEffect(() => {
+        if (isQueryStale) return;
         if (activePostId && visiblePosts.some((post) => post.id === activePostId)) return;
         setActivePostId(visiblePosts[0]?.id ?? '');
-    }, [activePostId, visiblePosts]);
+    }, [activePostId, isQueryStale, visiblePosts]);
 
     const currentGroupPage = useMemo(() => {
         if (layout === 'ledger' || !pagination.group) return null;
@@ -462,6 +467,8 @@ function PostArchiveContent({
     }, [layout, pagination.group, visibleSeriesGroups, visibleYearGroups]);
 
     useEffect(() => {
+        // Do not clamp a history destination using the previous query's page/group counts.
+        if (isQueryStale) return;
         const groupExists =
             layout !== 'ledger' &&
             Boolean(pagination.group) &&
@@ -493,6 +500,7 @@ function PostArchiveContent({
         archiveState,
         currentGroupPage,
         currentPage,
+        isQueryStale,
         layout,
         pagination.group,
         pagination.groupPage,

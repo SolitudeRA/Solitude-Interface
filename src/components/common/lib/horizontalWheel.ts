@@ -5,7 +5,13 @@ export type HorizontalWheelIntent =
 
 export interface PageWheelBurstDecision {
     shouldPage: boolean;
-    lockedUntil: number;
+    state: PageWheelBurstState;
+}
+
+export interface PageWheelBurstState {
+    direction: -1 | 1;
+    lastIntentAt: number;
+    lastPageAt: number;
 }
 
 interface WheelDeltaInput {
@@ -14,17 +20,29 @@ interface WheelDeltaInput {
 }
 
 /**
- * Treats consecutive page-style wheel intents as one burst. Every intent extends the lock, so a
- * new page step is allowed only after the full quiet window has elapsed since the previous intent.
+ * Coalesce a short wheel burst, but let sustained input keep advancing at a bounded cadence.
+ * Reversing direction expresses a new intent and must not wait for the previous burst to settle.
  */
 export function registerPageWheelIntent(
-    lockedUntil: number,
+    previous: PageWheelBurstState | null,
+    direction: -1 | 1,
     now: number,
-    quietWindow: number
+    quietWindow = 180,
+    maxHold = 400
 ): PageWheelBurstDecision {
+    const shouldPage =
+        previous === null ||
+        previous.direction !== direction ||
+        now - previous.lastIntentAt >= quietWindow ||
+        now - previous.lastPageAt >= maxHold;
+
     return {
-        shouldPage: now >= lockedUntil,
-        lockedUntil: now + quietWindow,
+        shouldPage,
+        state: {
+            direction,
+            lastIntentAt: now,
+            lastPageAt: shouldPage ? now : previous!.lastPageAt,
+        },
     };
 }
 

@@ -183,9 +183,8 @@ const exploreMoreText = getUIText('home', 'exploreMore', locale);
     import {
         classifyHorizontalWheel,
         registerPageWheelIntent,
+        type PageWheelBurstState,
     } from '@components/common/lib/horizontalWheel';
-
-    const VERTICAL_WHEEL_LOCK_MS = 180;
 
     interface HomeShowcaseController {
         initialize: () => void;
@@ -210,7 +209,7 @@ const exploreMoreText = getUIText('home', 'exploreMore', locale);
             let frame: number | null = null;
             let wheelFrame: number | null = null;
             let pendingPageDirection: -1 | 0 | 1 = 0;
-            let wheelLockedUntil = 0;
+            let wheelBurst: PageWheelBurstState | null = null;
             let cardStride = 320;
             const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
             const measureCardStride = () => {
@@ -263,11 +262,11 @@ const exploreMoreText = getUIText('home', 'exploreMore', locale);
 
                 event.preventDefault();
                 const burst = registerPageWheelIntent(
-                    wheelLockedUntil,
-                    performance.now(),
-                    VERTICAL_WHEEL_LOCK_MS
+                    wheelBurst,
+                    intent.direction,
+                    performance.now()
                 );
-                wheelLockedUntil = burst.lockedUntil;
+                wheelBurst = burst.state;
                 if (!burst.shouldPage) return;
                 pendingPageDirection = intent.direction;
                 if (wheelFrame === null) wheelFrame = window.requestAnimationFrame(flushWheel);

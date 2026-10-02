@@ -25,7 +25,7 @@ function setDimension(
     Object.defineProperty(element, property, { configurable: true, value });
 }
 
-function renderGallery(): {
+function renderGallery(cardCount = 3): {
     root: HTMLElement;
     container: HTMLElement;
     scrollBy: ReturnType<typeof vi.fn>;
@@ -38,9 +38,7 @@ function renderGallery(): {
             <button data-post-view-scroll-control="left"></button>
             <button data-post-view-scroll-control="right"></button>
             <div data-post-view-scroll style="column-gap: 60px; padding-left: 20px">
-                <a class="post-card-wrapper"></a>
-                <a class="post-card-wrapper"></a>
-                <a class="post-card-wrapper"></a>
+                ${Array.from({ length: cardCount }, () => '<a class="post-card-wrapper"></a>').join('')}
             </div>
             <div data-post-view-overview>
                 <div data-post-view-overview-bloom></div>
@@ -49,8 +47,10 @@ function renderGallery(): {
             </div>
             <div data-post-view-pagination>
                 <span data-post-view-status></span>
-                <div data-post-view-track>
-                    ${Array.from({ length: 10 }, (_, index) => `<button data-post-view-marker="${index}"></button>`).join('')}
+                <div class="pvp-timeline">
+                    <div data-post-view-track>
+                        ${Array.from({ length: 10 }, (_, index) => `<button data-post-view-marker="${index}"></button>`).join('')}
+                    </div>
                 </div>
             </div>
         </div>
@@ -60,6 +60,7 @@ function renderGallery(): {
     const container = root.querySelector<HTMLElement>('[data-post-view-scroll]')!;
     setDimension(container, 'clientWidth', 400);
     setDimension(container, 'scrollWidth', 1500);
+    setDimension(root.querySelector<HTMLElement>('.pvp-timeline')!, 'clientWidth', 390);
     root.querySelectorAll<HTMLElement>('.post-card-wrapper').forEach((card) => {
         card.getBoundingClientRect = () =>
             ({ width: 300, height: 600, left: 0, right: 300, top: 0, bottom: 600 }) as DOMRect;
@@ -144,42 +145,49 @@ describe('post view gallery progressive enhancement', () => {
         cleanup();
     });
 
-    it('keeps a sustained vertical wheel burst locked until 180ms after its last intent', () => {
+    it('continues paging under sustained wheel input instead of requiring a pause', () => {
+        const { root, container, scrollBy } = renderGallery(10);
+        setDimension(container, 'scrollWidth', 4000);
+        const cleanup = bindPostViewGallery(root)!;
+        const now = vi.spyOn(performance, 'now');
+        flushFrames();
+
+        for (let timestamp = 100; timestamp <= 1300; timestamp += 100) {
+            now.mockReturnValue(timestamp);
+            const event = new WheelEvent('wheel', {
+                deltaY: 100,
+                bubbles: true,
+                cancelable: true,
+            });
+            container.dispatchEvent(event);
+            flushFrames();
+            expect(event.defaultPrevented).toBe(true);
+        }
+        expect(scrollBy).toHaveBeenCalledTimes(4);
+        expect(container.scrollLeft).toBe(1440);
+        cleanup();
+        now.mockRestore();
+    });
+
+    it('reverses the page direction without waiting for the burst timeout', () => {
         const { root, container, scrollBy } = renderGallery();
+        container.scrollLeft = 360;
         const cleanup = bindPostViewGallery(root)!;
         const now = vi.spyOn(performance, 'now');
         flushFrames();
 
         now.mockReturnValue(100);
-        container.dispatchEvent(
-            new WheelEvent('wheel', { deltaY: 100, bubbles: true, cancelable: true })
-        );
+        container.dispatchEvent(new WheelEvent('wheel', { deltaY: 100, cancelable: true }));
+        flushFrames();
+        now.mockReturnValue(120);
+        container.dispatchEvent(new WheelEvent('wheel', { deltaY: -100, cancelable: true }));
         flushFrames();
 
-        now.mockReturnValue(250);
-        container.dispatchEvent(
-            new WheelEvent('wheel', { deltaY: 100, bubbles: true, cancelable: true })
-        );
-        now.mockReturnValue(420);
-        container.dispatchEvent(
-            new WheelEvent('wheel', { deltaY: 100, bubbles: true, cancelable: true })
-        );
-        flushFrames();
-        expect(scrollBy).toHaveBeenCalledTimes(1);
-
-        now.mockReturnValue(599);
-        container.dispatchEvent(
-            new WheelEvent('wheel', { deltaY: 100, bubbles: true, cancelable: true })
-        );
-        flushFrames();
-        expect(scrollBy).toHaveBeenCalledTimes(1);
-
-        now.mockReturnValue(780);
-        container.dispatchEvent(
-            new WheelEvent('wheel', { deltaY: 100, bubbles: true, cancelable: true })
-        );
-        flushFrames();
-        expect(scrollBy).toHaveBeenCalledTimes(2);
+        expect(scrollBy.mock.calls).toEqual([
+            [{ left: 360, behavior: 'smooth' }],
+            [{ left: -360, behavior: 'smooth' }],
+        ]);
+        expect(container.scrollLeft).toBe(360);
         cleanup();
         now.mockRestore();
     });
@@ -358,6 +366,38 @@ describe('post view gallery progressive enhancement', () => {
                 .querySelector<HTMLElement>('[data-post-view-marker="2"]')
                 ?.getAttribute('aria-label')
         ).toBe('Jump to post 3 of 10');
+        cleanup();
+    });
+
+    it('hides clipped markers from keyboard focus and uses valid ARIA after a round trip', () => {
+        const { root, container } = renderGallery(10);
+        setDimension(container, 'scrollWidth', 4000);
+        const cleanup = bindPostViewGallery(root)!;
+        flushFrames();
+        const first = root.querySelector<HTMLButtonElement>('[data-post-view-marker="0"]')!;
+        const clipped = root.querySelector<HTMLButtonElement>('[data-post-view-marker="4"]')!;
+
+        expect(first.tabIndex).toBe(0);
+        expect(first.hasAttribute('aria-hidden')).toBe(false);
+        expect(clipped.tabIndex).toBe(-1);
+        expect(clipped.getAttribute('aria-hidden')).toBe('true');
+
+        container.scrollLeft = 8 * 360;
+        container.dispatchEvent(new Event('scroll'));
+        flushFrames();
+        expect(first.tabIndex).toBe(-1);
+        expect(first.getAttribute('aria-hidden')).toBe('true');
+
+        container.scrollLeft = 0;
+        container.dispatchEvent(new Event('scroll'));
+        flushFrames();
+        expect(first.tabIndex).toBe(0);
+        expect(first.hasAttribute('aria-hidden')).toBe(false);
+
+        container.scrollLeft = 8 * 360;
+        container.dispatchEvent(new Event('scroll'));
+        flushFrames();
+        expect(first.getAttribute('aria-hidden')).toBe('true');
         cleanup();
     });
 

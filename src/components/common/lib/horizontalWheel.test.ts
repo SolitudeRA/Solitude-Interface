@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { classifyHorizontalWheel, registerPageWheelIntent } from './horizontalWheel';
+import {
+    classifyHorizontalWheel,
+    registerPageWheelIntent,
+    type PageWheelBurstState,
+} from './horizontalWheel';
 
 describe('classifyHorizontalWheel', () => {
     it('leaves a precise horizontal gesture to native overflow scrolling', () => {
@@ -32,19 +36,30 @@ describe('classifyHorizontalWheel', () => {
 });
 
 describe('registerPageWheelIntent', () => {
-    it('extends the burst lock until the last page intent has been quiet long enough', () => {
-        const first = registerPageWheelIntent(0, 100, 180);
-        expect(first).toEqual({ shouldPage: true, lockedUntil: 280 });
+    it('coalesces a short burst and permits a new step after a quiet window', () => {
+        const first = registerPageWheelIntent(null, 1, 100);
+        expect(first.shouldPage).toBe(true);
+        const repeated = registerPageWheelIntent(first.state, 1, 150);
+        expect(repeated.shouldPage).toBe(false);
+        expect(registerPageWheelIntent(repeated.state, 1, 329).shouldPage).toBe(false);
+        expect(registerPageWheelIntent(repeated.state, 1, 330).shouldPage).toBe(true);
+    });
 
-        const sustained = registerPageWheelIntent(first.lockedUntil, 250, 180);
-        expect(sustained).toEqual({ shouldPage: false, lockedUntil: 430 });
+    it('keeps sustained input moving without allowing every wheel event to page', () => {
+        let state: PageWheelBurstState | null = null;
+        const pageTimes: number[] = [];
+        for (let now = 0; now <= 3000; now += 100) {
+            const decision = registerPageWheelIntent(state, 1, now);
+            state = decision.state;
+            if (decision.shouldPage) pageTimes.push(now);
+        }
+        expect(pageTimes).toEqual([0, 400, 800, 1200, 1600, 2000, 2400, 2800]);
+    });
 
-        const stillSustained = registerPageWheelIntent(sustained.lockedUntil, 420, 180);
-        expect(stillSustained).toEqual({ shouldPage: false, lockedUntil: 600 });
-
-        expect(registerPageWheelIntent(stillSustained.lockedUntil, 600, 180)).toEqual({
-            shouldPage: true,
-            lockedUntil: 780,
-        });
+    it('responds immediately to a direction reversal and coalesces its follow-up events', () => {
+        const forward = registerPageWheelIntent(null, 1, 100);
+        const reverse = registerPageWheelIntent(forward.state, -1, 120);
+        expect(reverse.shouldPage).toBe(true);
+        expect(registerPageWheelIntent(reverse.state, -1, 140).shouldPage).toBe(false);
     });
 });

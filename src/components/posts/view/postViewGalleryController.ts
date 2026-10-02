@@ -1,6 +1,7 @@
 import {
     classifyHorizontalWheel,
     registerPageWheelIntent,
+    type PageWheelBurstState,
 } from '@components/common/lib/horizontalWheel';
 import {
     computeCompositedTimelineLayout,
@@ -11,7 +12,6 @@ import {
 const CARD_SELECTOR = '.post-card-wrapper';
 const SCROLL_KEY = 'solitude:post-view-scroll-left';
 const SCROLL_IDLE_MS = 160;
-const VERTICAL_WHEEL_LOCK_MS = 180;
 
 interface ScrollMetrics {
     totalItems: number;
@@ -29,6 +29,7 @@ interface GalleryElements {
     leftControl: HTMLButtonElement | null;
     rightControl: HTMLButtonElement | null;
     track: HTMLElement | null;
+    timeline: HTMLElement | null;
     markers: HTMLButtonElement[];
     status: HTMLElement | null;
     overview: HTMLElement | null;
@@ -40,7 +41,7 @@ interface GalleryElements {
 interface WheelFrameState {
     frame: number | null;
     pageDirection: -1 | 0 | 1;
-    lockedUntil: number;
+    burst: PageWheelBurstState | null;
 }
 
 function clampIndex(index: number, total: number): number {
@@ -58,6 +59,7 @@ function readElements(root: HTMLElement): GalleryElements | null {
         leftControl: root.querySelector('[data-post-view-scroll-control="left"]'),
         rightControl: root.querySelector('[data-post-view-scroll-control="right"]'),
         track: root.querySelector('[data-post-view-track]'),
+        timeline: root.querySelector('.pvp-timeline'),
         markers: Array.from(root.querySelectorAll('[data-post-view-marker]')),
         status: root.querySelector('[data-post-view-status]'),
         overview: root.querySelector('[data-post-view-overview]'),
@@ -176,7 +178,7 @@ export function bindPostViewGallery(root: HTMLElement): (() => void) | null {
     const wheel: WheelFrameState = {
         frame: null,
         pageDirection: 0,
-        lockedUntil: 0,
+        burst: null,
     };
 
     const getMetrics = (): ScrollMetrics => {
@@ -223,6 +225,8 @@ export function bindPostViewGallery(root: HTMLElement): (() => void) | null {
             visibleIndices,
             DEFAULT_GEOMETRY
         );
+        const timelineWidth = elements.timeline?.clientWidth ?? 0;
+        const slotWidth = DEFAULT_GEOMETRY.barW + DEFAULT_GEOMETRY.gap;
         elements.track?.style.setProperty('--pvp-track-x', `${layout.translateX.toFixed(2)}px`);
 
         layout.markers.forEach((marker, index) => {
@@ -231,9 +235,22 @@ export function bindPostViewGallery(root: HTMLElement): (() => void) | null {
 
             element.style.setProperty('--pvp-marker-scale', marker.scaleX.toFixed(4));
             element.style.opacity = marker.opacity.toFixed(3);
-            element.style.pointerEvents = marker.inWindow ? 'auto' : 'none';
-            element.tabIndex = marker.inWindow ? 0 : -1;
-            element.toggleAttribute('aria-hidden', !marker.inWindow);
+            // Fixed slots can lie outside the clipped timeline even inside the logical window.
+            // Keep their focus outlines inside the visible strip instead of adding invisible stops.
+            const fitsTimeline =
+                timelineWidth > 0 &&
+                Math.abs(index - activeIndex) * slotWidth +
+                    (marker.scaleX * DEFAULT_GEOMETRY.barW) / 2 +
+                    5 <=
+                    timelineWidth / 2;
+            const isAccessible = marker.inWindow && marker.opacity > 0 && fitsTimeline;
+            element.style.pointerEvents = isAccessible ? 'auto' : 'none';
+            element.tabIndex = isAccessible ? 0 : -1;
+            if (isAccessible) {
+                element.removeAttribute('aria-hidden');
+            } else {
+                element.setAttribute('aria-hidden', 'true');
+            }
             element.classList.toggle('is-active', marker.isActive);
 
             if (marker.isActive) {
@@ -353,12 +370,8 @@ export function bindPostViewGallery(root: HTMLElement): (() => void) | null {
         event.preventDefault();
         event.stopPropagation();
 
-        const burst = registerPageWheelIntent(
-            wheel.lockedUntil,
-            performance.now(),
-            VERTICAL_WHEEL_LOCK_MS
-        );
-        wheel.lockedUntil = burst.lockedUntil;
+        const burst = registerPageWheelIntent(wheel.burst, intent.direction, performance.now());
+        wheel.burst = burst.state;
         if (!burst.shouldPage) return;
 
         wheel.pageDirection = intent.direction;
@@ -416,9 +429,11 @@ export function bindPostViewGallery(root: HTMLElement): (() => void) | null {
             ? null
             : new ResizeObserver(() => {
                   invalidateMetrics();
+                  lastTimelineSignature = null;
                   scheduleUpdate();
               });
     resizeObserver?.observe(container);
+    if (elements.timeline) resizeObserver?.observe(elements.timeline);
     const firstItem = container.querySelector<HTMLElement>(CARD_SELECTOR);
     if (firstItem) resizeObserver?.observe(firstItem);
 

@@ -4,6 +4,7 @@ import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { PostArchiveItem } from '@lib/postArchive';
+import { POST_ARCHIVE_RENDER_EVENT } from '@lib/navigation/postArchiveStateController';
 import PostArchiveView from './PostArchiveViewScalable';
 
 vi.mock('motion/react', async () => {
@@ -373,6 +374,86 @@ describe('PostArchiveView scalable group pagination', () => {
 
         expect(pager.textContent).toContain('01 / 02');
         expect(document.querySelector('a[aria-label="Part 1"]')).not.toBeNull();
+    });
+
+    it('restores a ledger page when history also clears a restrictive query', async () => {
+        window.history.replaceState(null, '', '/zh/post-view?view=list&q=Post%201');
+        await act(async () => {
+            root.render(
+                <PostArchiveView
+                    posts={makePosts(45, 'series')}
+                    locale="zh"
+                    initialFilters={{ category: null, type: null, query: 'Post 1' }}
+                />
+            );
+        });
+        expect(document.querySelectorAll('[data-archive-post-id]')).toHaveLength(11);
+
+        const renderedPages: number[] = [];
+        const recordRender = (event: Event) => {
+            renderedPages.push((event as CustomEvent<{ page: number }>).detail.page);
+        };
+        window.addEventListener(POST_ARCHIVE_RENDER_EVENT, recordRender);
+        try {
+            await act(async () => {
+                window.history.replaceState(null, '', '/zh/post-view?view=list&archivePage=3');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+            });
+
+            expect(new URLSearchParams(window.location.search).get('archivePage')).toBe('3');
+            expect(
+                document.querySelector('[data-post-list-root]')?.getAttribute('data-archive-page')
+            ).toBe('3');
+            expect(document.querySelectorAll('[data-archive-post-id]')).toHaveLength(5);
+            expect(renderedPages).toEqual([3]);
+        } finally {
+            window.removeEventListener(POST_ARCHIVE_RENDER_EVENT, recordRender);
+        }
+    });
+
+    it('preserves the selected series and inner page while a history query catches up', async () => {
+        window.history.replaceState(null, '', `${ARCHIVE_PATH}&q=Series%2001`);
+        await act(async () => {
+            root.render(
+                <PostArchiveView
+                    posts={makeSeriesCatalog()}
+                    locale="zh"
+                    initialLayout="series"
+                    initialFilters={{ category: null, type: null, query: 'Series 01' }}
+                />
+            );
+        });
+        expect(getSeriesEntryKeys()).toEqual(['series-01']);
+
+        const renderedGroups: string[] = [];
+        const recordRender = () => {
+            renderedGroups.push(getDirectory().dataset.archiveSeriesKey!);
+        };
+        window.addEventListener(POST_ARCHIVE_RENDER_EVENT, recordRender);
+        try {
+            await act(async () => {
+                window.history.replaceState(
+                    null,
+                    '',
+                    `${ARCHIVE_PATH}&archivePage=2&archiveGroup=series-10&archiveGroupPage=2`
+                );
+                window.dispatchEvent(new PopStateEvent('popstate'));
+            });
+
+            const params = new URLSearchParams(window.location.search);
+            expect(params.get('archivePage')).toBe('2');
+            expect(params.get('archiveGroup')).toBe('series-10');
+            expect(params.get('archiveGroupPage')).toBe('2');
+            expect(getDockPager().textContent).toContain('02 / 02');
+            expect(getDirectory().dataset.archiveSeriesKey).toBe('series-10');
+            expect(getDirectoryPostIds()[0]).toBe('series-10-part-07');
+            expect(document.getElementById('archive-panel-series')?.dataset.mobileView).toBe(
+                'focus'
+            );
+            expect(renderedGroups).toEqual(['series-10']);
+        } finally {
+            window.removeEventListener(POST_ARCHIVE_RENDER_EVENT, recordRender);
+        }
     });
 
     it('renders only the clamped ledger slice for a large article collection', async () => {
