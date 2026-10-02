@@ -296,12 +296,199 @@ describe('site navigation motion lifecycle', () => {
         expect(scrollContainer.style.scrollBehavior).toBe('auto');
         expect(scrollContainer.style.scrollSnapType).toBe('none');
         expect(readPostReturnUrl()).toBeNull();
+        expect(readPostViewScroll()).toBeNull();
 
         flushAnimationFrames();
         expect(scrollContainer.dataset.postViewRestoring).toBeUndefined();
         expect(scrollContainer.style.scrollBehavior).toBe('smooth');
         expect(scrollContainer.style.scrollSnapType).toBe('x mandatory');
         finishTransition?.();
+    });
+
+    it('does not let an older same-type transition completion clear a newer transition', async () => {
+        document.body.innerHTML = `
+            <main data-page-stage="posts">
+                <a href="/zh/p/homeserver-1" data-post-transition-source>Home server</a>
+            </main>
+        `;
+        const link = document.querySelector<HTMLAnchorElement>('a[data-post-transition-source]')!;
+        link.addEventListener('click', (event) => event.preventDefault());
+
+        let finishFirst: (() => void) | undefined;
+        let finishSecond: (() => void) | undefined;
+        const firstFinished = new Promise<void>((resolve) => {
+            finishFirst = resolve;
+        });
+        const secondFinished = new Promise<void>((resolve) => {
+            finishSecond = resolve;
+        });
+
+        link.dispatchEvent(new MouseEvent('click', { bubbles: true, button: 0 }));
+        dispatchLifecycleEvent('astro:before-swap', {
+            newDocument: document.implementation.createHTMLDocument('First'),
+            viewTransition: { finished: firstFinished },
+        });
+
+        link.dispatchEvent(new MouseEvent('click', { bubbles: true, button: 0 }));
+        dispatchLifecycleEvent('astro:before-swap', {
+            newDocument: document.implementation.createHTMLDocument('Second'),
+            viewTransition: { finished: secondFinished },
+        });
+
+        finishFirst?.();
+        await firstFinished;
+        await Promise.resolve();
+        expect(document.documentElement.getAttribute(SITE_TRANSITION_ATTRIBUTE)).toBe(
+            SITE_TRANSITIONS.postForward
+        );
+
+        finishSecond?.();
+        await secondFinished;
+        await Promise.resolve();
+        expect(document.documentElement.hasAttribute(SITE_TRANSITION_ATTRIBUTE)).toBe(false);
+    });
+
+    it('does not leave transition state on the destination when native view transitions are unavailable', () => {
+        document.body.innerHTML = `
+            <main data-page-stage="posts">
+                <a href="/zh/p/homeserver-1" data-post-transition-source>Home server</a>
+            </main>
+        `;
+        const link = document.querySelector<HTMLAnchorElement>('a[data-post-transition-source]')!;
+        link.addEventListener('click', (event) => event.preventDefault());
+        link.dispatchEvent(new MouseEvent('click', { bubbles: true, button: 0 }));
+
+        const newDocument = document.implementation.createHTMLDocument('Article');
+        dispatchLifecycleEvent('astro:before-swap', { newDocument });
+
+        expect(document.documentElement.hasAttribute(SITE_TRANSITION_ATTRIBUTE)).toBe(false);
+        expect(newDocument.documentElement.hasAttribute(SITE_TRANSITION_ATTRIBUTE)).toBe(false);
+    });
+
+    it('restores return state and keyboard focus without a native view transition', () => {
+        document.body.innerHTML = `
+            <main data-page-stage="posts">
+                <div data-post-view-scroll>
+                    <a href="/zh/p/homeserver-1" data-post-transition-source>
+                        <img data-post-transition-media alt="" />
+                        Home server
+                    </a>
+                </div>
+            </main>
+        `;
+        const scrollContainer = document.querySelector<HTMLElement>('[data-post-view-scroll]')!;
+        const sourceLink = document.querySelector<HTMLAnchorElement>(
+            'a[data-post-transition-source]'
+        )!;
+        scrollContainer.scrollLeft = 384;
+        sourceLink.addEventListener('click', (event) => event.preventDefault());
+        sourceLink.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+        sourceLink.dispatchEvent(new MouseEvent('click', { bubbles: true, button: 0 }));
+
+        setPath('/zh/p/homeserver-1');
+        document.body.innerHTML = '<div class="solitude-article-meta-motion-media"></div>';
+        dispatchLifecycleEvent('astro:before-preparation', {
+            to: new URL('/zh/post-view', window.location.origin),
+            signal: new AbortController().signal,
+        });
+
+        const newDocument = document.implementation.createHTMLDocument('Posts');
+        newDocument.head.innerHTML = `<base href="${window.location.origin}/" />`;
+        newDocument.body.innerHTML = `
+            <section data-view-section="gallery">
+                <a href="/zh/p/homeserver-1" data-post-transition-source>
+                    <img data-post-transition-media alt="" />
+                </a>
+            </section>
+        `;
+        dispatchLifecycleEvent('astro:before-swap', { newDocument });
+
+        expect(document.documentElement.hasAttribute(SITE_TRANSITION_ATTRIBUTE)).toBe(false);
+        expect(newDocument.documentElement.hasAttribute(SITE_TRANSITION_ATTRIBUTE)).toBe(false);
+
+        setPath('/zh/post-view');
+        document.body.innerHTML = `
+            <section data-view-section="gallery">
+                <div data-post-view-scroll></div>
+                <a href="/zh/p/homeserver-1" data-post-transition-source>Home server</a>
+            </section>
+        `;
+        const restoredScrollContainer =
+            document.querySelector<HTMLElement>('[data-post-view-scroll]')!;
+        const returnTarget = document.querySelector<HTMLAnchorElement>(
+            'a[data-post-transition-source]'
+        )!;
+        const focus = vi.spyOn(returnTarget, 'focus');
+
+        dispatchLifecycleEvent('astro:after-swap');
+
+        expect(restoredScrollContainer.scrollLeft).toBe(384);
+        expect(readPostReturnUrl()).toBeNull();
+        expect(readPostViewScroll()).toBeNull();
+        expect(readPostInputModality()).toBeNull();
+        expect(focus).not.toHaveBeenCalled();
+
+        flushAnimationFrames();
+        expect(focus).toHaveBeenCalledWith({ preventScroll: true });
+    });
+
+    it('keeps the latest return restore armed when an older navigation aborts', () => {
+        setPath('/zh/p/homeserver-1');
+        document.body.innerHTML = '<div class="solitude-article-meta-motion-media"></div>';
+        rememberPostDestination('/zh/p/homeserver-1');
+        rememberPostReturnUrl('/zh/post-view');
+        rememberPostViewScroll(216);
+
+        const staleController = new AbortController();
+        dispatchLifecycleEvent('astro:before-preparation', {
+            to: new URL('/zh/post-view', window.location.origin),
+            signal: staleController.signal,
+        });
+        dispatchLifecycleEvent('astro:before-preparation', {
+            to: new URL('/zh/post-view', window.location.origin),
+            signal: new AbortController().signal,
+        });
+
+        staleController.abort();
+        expect(document.documentElement.getAttribute(SITE_TRANSITION_ATTRIBUTE)).toBe(
+            SITE_TRANSITIONS.postReturn
+        );
+
+        const newDocument = document.implementation.createHTMLDocument('Posts');
+        dispatchLifecycleEvent('astro:before-swap', { newDocument });
+        document.body.innerHTML = '<div data-post-view-scroll></div>';
+        const restoredScrollContainer =
+            document.querySelector<HTMLElement>('[data-post-view-scroll]')!;
+        dispatchLifecycleEvent('astro:after-swap');
+
+        expect(restoredScrollContainer.scrollLeft).toBe(216);
+        expect(readPostReturnUrl()).toBeNull();
+        expect(readPostViewScroll()).toBeNull();
+    });
+
+    it('does not apply stale return state after a newer non-return navigation', () => {
+        setPath('/zh/p/homeserver-1');
+        document.body.innerHTML = '<div class="solitude-article-meta-motion-media"></div>';
+        rememberPostReturnUrl('/zh/post-view');
+        rememberPostViewScroll(144);
+        dispatchLifecycleEvent('astro:before-preparation', {
+            to: new URL('/zh/post-view', window.location.origin),
+            signal: new AbortController().signal,
+        });
+        dispatchLifecycleEvent('astro:before-preparation', {
+            to: new URL('/zh/about', window.location.origin),
+            signal: new AbortController().signal,
+        });
+
+        const newDocument = document.implementation.createHTMLDocument('About');
+        dispatchLifecycleEvent('astro:before-swap', { newDocument });
+        document.body.innerHTML = '<div data-post-view-scroll></div>';
+        const scrollContainer = document.querySelector<HTMLElement>('[data-post-view-scroll]')!;
+        dispatchLifecycleEvent('astro:after-swap');
+
+        expect(scrollContainer.scrollLeft).toBe(0);
+        expect(readPostReturnUrl()).toBe('/zh/post-view');
+        expect(readPostViewScroll()).toBe(144);
     });
 
     it('restores keyboard focus to the originating article after restoring the list position', () => {

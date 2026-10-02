@@ -13,7 +13,7 @@
 | **类型系统** | TypeScript | 5.x (严格模式) |
 | **样式** | TailwindCSS + Emotion CSS-in-JS | 4.x |
 | **UI 组件** | Radix UI | 最新 |
-| **状态管理** | Jotai | 2.x |
+| **客户端状态** | URL + DOM dataset + 组件局部状态 | - |
 | **动画** | Motion (Framer Motion) | 12.x |
 | **代码高亮** | Shiki | 3.x |
 | **CMS** | Ghost Content API | - |
@@ -62,7 +62,6 @@ src/
 │   ├── [lang]/             # 多语言动态路由
 │   │   └── p/              # 文章详情页
 │   └── posts/              # 文章页面
-├── stores/                 # Jotai 状态管理
 ├── styles/                 # 样式系统
 │   ├── index.css           # 样式入口
 │   ├── tailwind-settings.css # TailwindCSS 配置
@@ -87,7 +86,6 @@ src/
 | `@components/*` | `src/components/*` | UI 组件 |
 | `@layouts/*` | `src/layouts/*` | 布局 |
 | `@styles/*` | `src/styles/*` | 样式 |
-| `@stores/*` | `src/stores/*` | 状态管理 |
 | `@assets/*` | `src/assets/*` | 静态资源 |
 | `@types/*` | `src/types/*` | 类型定义 |
 | `@lib/*` | `src/lib/*` | 核心库 |
@@ -96,8 +94,8 @@ src/
 ```typescript
 import { getPosts } from '@api/ghost/posts';
 import { Button } from '@components/common';
-import { postViewAtom } from '@stores/postViewAtom';
 import { cn } from '@components/common/lib/utils';
+import { initPostViewModeController } from '@lib/navigation/postViewModeController';
 ```
 
 ---

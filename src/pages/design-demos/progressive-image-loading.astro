@@ -2,7 +2,9 @@
 import { Image, getImage } from 'astro:assets';
 import '@styles/index.css';
 
-const sourceImage = 'https://ghost.solitudera.com/content/images/2026/01/91719981_p0.jpg';
+const sourceImage =
+    process.env.SOLITUDE_FIXTURE_IMAGE_URL ??
+    'https://ghost.solitudera.com/content/images/2026/01/91719981_p0.jpg';
 const lowStage = await getImage({
     src: sourceImage,
     inferSize: true,

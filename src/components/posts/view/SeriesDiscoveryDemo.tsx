@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, MotionConfig, type MotionStyle } from 'motion/react';
+import '@styles/modules/media-card-protocol.css';
 import {
     ArrowLeft,
     ArrowRight,

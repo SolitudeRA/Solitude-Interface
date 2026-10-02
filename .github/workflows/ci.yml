@@ -16,11 +16,11 @@ permissions:
 
 # ==============================================
 # CI Environment Variables
-# Uses Ghost Demo API for build validation only
+# Placeholder values for type generation. The build wrapper supplies its local fixture URL.
 # ==============================================
 env:
-  GHOST_URL: https://demo.ghost.io
-  GHOST_CONTENT_KEY: '22444f78447824223cefc48062'
+  GHOST_URL: http://127.0.0.1
+  GHOST_CONTENT_KEY: fixture-content-key
   GHOST_VERSION: v5.0
   GHOST_TIMEOUT: '5000'
   SITE_URL: https://example.com
@@ -63,5 +63,8 @@ jobs:
       - name: Test (vitest run)
         run: pnpm test:run
 
-      - name: Build
-        run: pnpm build
+      - name: Build deterministic Ghost fixture
+        run: pnpm build:fixture
+
+      - name: Performance budget
+        run: pnpm perf:budget

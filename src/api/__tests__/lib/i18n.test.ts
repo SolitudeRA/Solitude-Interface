@@ -22,6 +22,7 @@ import {
     getFallbackMessage,
     LOCALE_HTML_LANG,
     LOCALE_NAMES,
+    getUIText,
 } from '@lib/i18n';
 import type { PostTag } from '@api/ghost/types';
 
@@ -49,6 +50,23 @@ describe('i18n utilities', () => {
             expect(LOCALE_HTML_LANG.zh).toBe('zh-CN');
             expect(LOCALE_HTML_LANG.ja).toBe('ja');
             expect(LOCALE_HTML_LANG.en).toBe('en');
+        });
+
+        it('should localize gallery accessibility labels for every locale', () => {
+            const keys = [
+                'galleryListLabel',
+                'scrollLeft',
+                'scrollRight',
+                'browsingStatus',
+                'currentPost',
+                'jumpToPost',
+            ] as const;
+
+            for (const locale of LOCALES) {
+                for (const key of keys) {
+                    expect(getUIText('postView', key, locale)).not.toHaveLength(0);
+                }
+            }
         });
     });
 

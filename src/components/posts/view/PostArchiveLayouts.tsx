@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
 import { cn } from '@components/common/lib/utils';
 import { ArchiveGroupPagination } from '@components/posts/view/PostArchiveControls';
 import { getUIText, type Locale } from '@lib/i18n';
@@ -172,26 +171,18 @@ export function YearColumns({
                         data-archive-group-list={group.key}
                         className="relative min-h-0 overflow-y-auto px-4 pb-4 [scrollbar-width:thin]"
                     >
-                        <AnimatePresence initial={false} mode="wait">
-                            <motion.div
-                                key={`${group.key}:${group.page}`}
-                                initial={{ opacity: 0, y: 4 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -3 }}
-                                transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-                            >
-                                {group.visiblePosts.map((post) => (
-                                    <ArchiveRow
-                                        key={post.id}
-                                        post={post}
-                                        active={post.id === activePost?.id}
-                                        onActivate={onActivate}
-                                        groupKey={group.key}
-                                        groupPage={group.page}
-                                    />
-                                ))}
-                            </motion.div>
-                        </AnimatePresence>
+                        <div key={`${group.key}:${group.page}`} className="archive-page-enter">
+                            {group.visiblePosts.map((post) => (
+                                <ArchiveRow
+                                    key={post.id}
+                                    post={post}
+                                    active={post.id === activePost?.id}
+                                    onActivate={onActivate}
+                                    groupKey={group.key}
+                                    groupPage={group.page}
+                                />
+                            ))}
+                        </div>
                     </div>
                 </section>
             ))}

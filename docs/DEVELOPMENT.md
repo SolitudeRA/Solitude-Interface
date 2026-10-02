@@ -84,7 +84,6 @@ src/
 ├── layouts/                # Astro layouts
 ├── lib/                    # Core libraries (i18n, tag registry)
 ├── pages/                  # Astro pages
-├── stores/                 # State management (Jotai)
 ├── styles/                 # Global styles
 └── types/                  # TypeScript types
 ```
@@ -93,22 +92,38 @@ src/
 
 ## Commands
 
-| Command                 | Action                                      |
-| :---------------------- | :------------------------------------------ |
-| `pnpm install`          | Install dependencies                        |
-| `pnpm dev`              | Start local dev server at `localhost:4321`  |
-| `pnpm build`            | Build production site to `./dist/`          |
-| `pnpm preview`          | Preview build locally before deploying      |
-| `pnpm astro sync`       | Generate Astro type definitions             |
-| `pnpm astro check`      | Typecheck and validate Astro project        |
-| `pnpm format`           | Format code with Prettier (writes changes)  |
-| `pnpm format:check`     | Check formatting with Prettier (no changes) |
-| `pnpm test`             | Run unit tests in watch mode                |
-| `pnpm test:run`         | Run the unit suite once (CI-friendly)       |
-| `pnpm test:unit`        | Run unit tests once (alias of `test:run`)   |
-| `pnpm test:integration` | Run integration tests (real API calls)      |
-| `pnpm test:coverage`    | Run unit tests with coverage report         |
-| `pnpm test:ui`          | Open Vitest UI for interactive testing      |
+| Command                 | Action                                            |
+| :---------------------- | :------------------------------------------------ |
+| `pnpm install`          | Install dependencies                              |
+| `pnpm dev`              | Start local dev server at `localhost:4321`        |
+| `pnpm build`            | Build production site to `./dist/`                |
+| `pnpm build:fixture`    | Build deterministic local CI content to `./dist/` |
+| `pnpm preview`          | Preview build locally before deploying            |
+| `pnpm astro sync`       | Generate Astro type definitions                   |
+| `pnpm astro check`      | Typecheck and validate Astro project              |
+| `pnpm format`           | Format code with Prettier (writes changes)        |
+| `pnpm format:check`     | Check formatting with Prettier (no changes)       |
+| `pnpm test`             | Run unit tests in watch mode                      |
+| `pnpm test:run`         | Run the unit suite once (CI-friendly)             |
+| `pnpm test:unit`        | Run unit tests once (alias of `test:run`)         |
+| `pnpm test:integration` | Run integration tests (real API calls)            |
+| `pnpm test:coverage`    | Run unit tests with coverage report               |
+| `pnpm test:ui`          | Open Vitest UI for interactive testing            |
+
+CI builds against the local Ghost fixture in `scripts/fixtures/ghost.mjs`, then runs
+`pnpm perf:budget` with the same limits as a production build. Run
+`node scripts/build-fixture.mjs --check` to smoke-test its HTTP API and images without building.
+The fixture includes 12 translation groups in three languages, a legacy article, paginated
+responses, long articles with highlighted code and tables, and deterministic local PNGs.
+The wrapper checks generated article routes and closes its temporary loopback server on exit.
+It overrides Ghost credentials and Cloudflare Access headers; no live CMS credentials are needed.
+The image-loading demo also receives a local image through `SOLITUDE_FIXTURE_IMAGE_URL`, so its
+usual sample image does not introduce an external build request.
+
+Like `pnpm build`, the fixture build replaces `dist/`. Fixture output is for CI inspection,
+not deployment. Its synthetic content makes bundle regressions repeatable; production content
+and real image transfer still require a production build and browser acceptance. Run
+`pnpm build` again before deployment or production-preview measurements.
 
 ---
 

@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence, motion, MotionConfig, type Variants } from 'motion/react';
+import PostArchiveNavbar from '@components/posts/view/PostArchiveNavbar';
+import PostArchiveSearch from '@components/posts/view/PostArchiveSearch';
 import { ArchivePagination } from '@components/posts/view/PostArchiveControls';
 import { ArchiveRail, LedgerView, YearColumns } from '@components/posts/view/PostArchiveLayouts';
 import SeriesLibrary from '@components/posts/view/SeriesLibrary';
@@ -22,6 +23,7 @@ import {
     type ArchivePaginationState,
     type ArchiveSeriesMetadataMap,
     type ArchiveState,
+    type PostArchivePayload,
     type PostArchiveItem,
 } from '@lib/postArchive';
 import {
@@ -30,34 +32,46 @@ import {
     readPostArchiveState,
     writePostArchiveState,
 } from '@lib/navigation/postArchiveStateController';
-import { filterPosts, paginate, type PaginationResult } from '@lib/postBrowse';
+import {
+    extractFacets,
+    filterPosts,
+    paginate,
+    type Facets,
+    type PaginationResult,
+} from '@lib/postBrowse';
+import { clearPostArchiveDataRequest, loadPostArchiveData } from '@lib/postArchiveDataClient';
+import '@styles/modules/media-card-protocol.css';
+import './PostArchiveView.css';
 
 type PostViewKey = 'empty' | 'prevPage' | 'nextPage' | 'articleCount';
 type GroupLayout = Exclude<ArchiveLayout, 'ledger'>;
 type GroupPageMap = Record<string, number>;
 const EMPTY_SERIES_METADATA: ArchiveSeriesMetadataMap = {};
 
-const ARCHIVE_PANEL_VARIANTS: Variants = {
-    enter: (direction: number) => ({
-        opacity: 0,
-        x: direction * 12,
-    }),
-    visible: {
-        opacity: 1,
-        x: 0,
-        transition: {
-            opacity: { duration: 0.24, ease: 'linear' },
-            x: { duration: 0.28, ease: [0.22, 1, 0.36, 1] },
-        },
+interface PostArchiveViewProps {
+    posts?: PostArchiveItem[];
+    dataUrl?: string;
+    locale: Locale;
+    facets?: Facets;
+    seriesMetadata?: ArchiveSeriesMetadataMap;
+    initialFilters?: ArchiveFilters;
+    initialLayout?: ArchiveLayout;
+    initialPagination?: ArchivePaginationState;
+}
+
+interface LoadedArchiveState {
+    payload: PostArchivePayload;
+    initialState: ArchiveState;
+}
+
+const ARCHIVE_STATUS_LABELS: Record<Locale, { loading: string; error: string; retry: string }> = {
+    zh: { loading: '正在加载全部文章…', error: '全部文章加载失败。', retry: '重试' },
+    ja: {
+        loading: 'すべての記事を読み込んでいます…',
+        error: '記事の読み込みに失敗しました。',
+        retry: '再試行',
     },
-    exit: (direction: number) => ({
-        opacity: 0,
-        x: direction * -6,
-        transition: {
-            opacity: { duration: 0.24, ease: 'linear' },
-            x: { duration: 0.22, ease: [0.4, 0, 0.2, 1] },
-        },
-    }),
+    en: { loading: 'Loading all posts…', error: 'Could not load all posts.', retry: 'Retry' },
 };
 
 function getGroupPageKey(layout: GroupLayout, groupKey: string): string {
@@ -98,21 +112,120 @@ function paginateGroups(
     return paginate(groups, page, perPage);
 }
 
-export default function PostArchiveView({
+function ArchiveStatusPanel({
+    locale,
+    failed,
+    onRetry,
+}: {
+    locale: Locale;
+    failed: boolean;
+    onRetry?: () => void;
+}) {
+    const labels = ARCHIVE_STATUS_LABELS[locale];
+    return (
+        <div
+            data-post-list-root
+            data-post-archive-status={failed ? 'error' : 'loading'}
+            data-view-motion-content
+            className="post-view-main-viewport flex w-full items-center justify-center px-4"
+            role={failed ? 'alert' : 'status'}
+            aria-live="polite"
+        >
+            <div className="border-border/55 bg-background/72 text-muted-foreground flex min-h-28 min-w-[min(22rem,calc(100vw-2rem))] flex-col items-center justify-center gap-4 rounded-2xl border px-6 text-center text-sm shadow-xl backdrop-blur-xl">
+                <p>{failed ? labels.error : labels.loading}</p>
+                {failed && onRetry && (
+                    <button
+                        type="button"
+                        onClick={onRetry}
+                        className="site-top-control site-top-control-item focus-visible:ring-ring focus:outline-none focus-visible:ring-2"
+                    >
+                        {labels.retry}
+                    </button>
+                )}
+            </div>
+        </div>
+    );
+}
+
+export default function PostArchiveView(props: PostArchiveViewProps) {
+    const { posts, dataUrl, locale } = props;
+    const [loaded, setLoaded] = useState<LoadedArchiveState | null>(null);
+    const [failed, setFailed] = useState(false);
+    const [attempt, setAttempt] = useState(0);
+
+    useEffect(() => {
+        if (posts || !dataUrl) return;
+        let active = true;
+        setLoaded(null);
+        setFailed(false);
+        void loadPostArchiveData(dataUrl)
+            .then((payload) => {
+                if (!active) return;
+                setLoaded({ payload, initialState: readPostArchiveState() });
+            })
+            .catch(() => {
+                if (active) setFailed(true);
+            });
+        return () => {
+            active = false;
+        };
+    }, [attempt, dataUrl, posts]);
+
+    if (posts) {
+        return (
+            <PostArchiveContent
+                {...props}
+                posts={posts}
+                facets={props.facets ?? extractFacets(posts)}
+            />
+        );
+    }
+
+    if (!dataUrl || failed) {
+        return (
+            <ArchiveStatusPanel
+                locale={locale}
+                failed
+                {...(dataUrl
+                    ? {
+                          onRetry: () => {
+                              clearPostArchiveDataRequest(dataUrl);
+                              setAttempt((value) => value + 1);
+                          },
+                      }
+                    : {})}
+            />
+        );
+    }
+
+    if (!loaded) return <ArchiveStatusPanel locale={locale} failed={false} />;
+
+    return (
+        <PostArchiveContent
+            locale={locale}
+            posts={loaded.payload.posts}
+            facets={loaded.payload.facets}
+            seriesMetadata={loaded.payload.seriesMetadata}
+            initialFilters={loaded.initialState.filters}
+            initialLayout={loaded.initialState.layout}
+            initialPagination={loaded.initialState.pagination}
+        />
+    );
+}
+
+function PostArchiveContent({
     posts,
     locale,
+    facets,
     seriesMetadata = EMPTY_SERIES_METADATA,
     initialFilters = INITIAL_ARCHIVE_FILTERS,
     initialLayout = DEFAULT_ARCHIVE_LAYOUT,
     initialPagination = INITIAL_ARCHIVE_PAGINATION,
-}: {
-    posts: PostArchiveItem[];
-    locale: Locale;
-    seriesMetadata?: ArchiveSeriesMetadataMap;
-    initialFilters?: ArchiveFilters;
-    initialLayout?: ArchiveLayout;
-    initialPagination?: ArchivePaginationState;
-}) {
+}: Required<Pick<PostArchiveViewProps, 'posts' | 'locale' | 'facets'>> &
+    Pick<
+        PostArchiveViewProps,
+        'seriesMetadata' | 'initialFilters' | 'initialLayout' | 'initialPagination'
+    >) {
     const [archiveState, setArchiveState] = useState<ArchiveState>(() => ({
         filters: initialFilters,
         layout: initialLayout,
@@ -124,6 +237,8 @@ export default function PostArchiveView({
     const [groupPages, setGroupPages] = useState<GroupPageMap>(() => seedGroupPages(archiveState));
     const [activePostId, setActivePostId] = useState('');
     const [paginationPortalHost, setPaginationPortalHost] = useState<HTMLElement | null>(null);
+    const [headerPortalHost, setHeaderPortalHost] = useState<HTMLElement | null>(null);
+    const [searchPortalHost, setSearchPortalHost] = useState<HTMLElement | null>(null);
     const [isListVisible, setIsListVisible] = useState(false);
     const rootRef = useRef<HTMLDivElement>(null);
 
@@ -173,10 +288,17 @@ export default function PostArchiveView({
 
     useEffect(() => {
         const syncVisibility = () => {
-            setIsListVisible(new URLSearchParams(window.location.search).get('view') === 'list');
+            const documentMode = document.documentElement.dataset.postViewMode;
+            setIsListVisible(
+                documentMode
+                    ? documentMode === 'list'
+                    : new URLSearchParams(window.location.search).get('view') === 'list'
+            );
         };
 
         setPaginationPortalHost(document.getElementById('post-archive-pagination-host'));
+        setHeaderPortalHost(document.getElementById('post-archive-header-host'));
+        setSearchPortalHost(document.getElementById('post-archive-search-host'));
         syncVisibility();
         window.addEventListener('popstate', syncVisibility);
         window.addEventListener('post-view-change', syncVisibility);
@@ -187,20 +309,28 @@ export default function PostArchiveView({
     }, []);
 
     const { filters, layout, pagination } = archiveState;
+    const deferredQuery = useDeferredValue(filters.query);
+    const isQueryStale = deferredQuery !== filters.query;
     const filtered = useMemo(
         () =>
             filterPosts(posts, {
                 category: filters.category,
                 type: filters.type,
-                query: filters.query,
+                query: deferredQuery,
             }),
-        [posts, filters.category, filters.type, filters.query]
+        [posts, filters.category, filters.type, deferredQuery]
     );
-    const yearGroups = useMemo(() => groupArchivePostsByYear(filtered), [filtered]);
+    const yearGroups = useMemo(
+        () => (layout === 'years' ? groupArchivePostsByYear(filtered) : []),
+        [filtered, layout]
+    );
     const standalone = getUIText('postView', 'standalonePosts', locale);
     const seriesGroups = useMemo(
-        () => groupArchivePostsBySeries(filtered, standalone, seriesMetadata),
-        [filtered, seriesMetadata, standalone]
+        () =>
+            layout === 'series'
+                ? groupArchivePostsBySeries(filtered, standalone, seriesMetadata)
+                : [],
+        [filtered, layout, seriesMetadata, standalone]
     );
 
     const activeGroups = useMemo(
@@ -216,21 +346,36 @@ export default function PostArchiveView({
     }, [activeGroupPageSize, activeGroups, layout, pagination.group, pagination.page]);
 
     const ledgerPage = useMemo(
-        () => paginate(filtered, requestedOuterPage, ARCHIVE_PAGE_SIZES.ledger),
-        [filtered, requestedOuterPage]
+        () =>
+            paginate(
+                layout === 'ledger' ? filtered : [],
+                layout === 'ledger' ? requestedOuterPage : 1,
+                ARCHIVE_PAGE_SIZES.ledger
+            ),
+        [filtered, layout, requestedOuterPage]
     );
     const seriesPage = useMemo(
-        () => paginateGroups(seriesGroups, requestedOuterPage, ARCHIVE_PAGE_SIZES.series),
-        [requestedOuterPage, seriesGroups]
+        () =>
+            paginateGroups(
+                seriesGroups,
+                layout === 'series' ? requestedOuterPage : 1,
+                ARCHIVE_PAGE_SIZES.series
+            ),
+        [layout, requestedOuterPage, seriesGroups]
     );
     const yearsPage = useMemo(
-        () => paginateGroups(yearGroups, requestedOuterPage, ARCHIVE_PAGE_SIZES.years),
-        [requestedOuterPage, yearGroups]
+        () =>
+            paginateGroups(
+                yearGroups,
+                layout === 'years' ? requestedOuterPage : 1,
+                ARCHIVE_PAGE_SIZES.years
+            ),
+        [layout, requestedOuterPage, yearGroups]
     );
 
     const ledgerGroups = useMemo(
-        () => groupArchivePostsByYear(ledgerPage.items),
-        [ledgerPage.items]
+        () => (layout === 'ledger' ? groupArchivePostsByYear(ledgerPage.items) : []),
+        [layout, ledgerPage.items]
     );
     const visibleSeriesGroups = useMemo<ArchiveGroupPage[]>(
         () =>
@@ -276,6 +421,9 @@ export default function PostArchiveView({
               : yearsPage.totalPages;
 
     useEffect(() => {
+        // History can change both the query and pagination. Deferred results still belong to
+        // the previous query, so they must not signal that the restored archive is ready.
+        if (isQueryStale) return;
         window.dispatchEvent(
             new CustomEvent(POST_ARCHIVE_RENDER_EVENT, {
                 detail: {
@@ -286,7 +434,7 @@ export default function PostArchiveView({
                 },
             })
         );
-    }, [currentPage, layout, pagination.group, pagination.groupPage]);
+    }, [currentPage, isQueryStale, layout, pagination.group, pagination.groupPage]);
 
     const visiblePosts = useMemo(() => {
         if (layout === 'ledger') return ledgerPage.items;
@@ -307,9 +455,10 @@ export default function PostArchiveView({
     }, [activePost, layout, selectedSeriesGroup, visibleYearGroups]);
 
     useEffect(() => {
+        if (isQueryStale) return;
         if (activePostId && visiblePosts.some((post) => post.id === activePostId)) return;
         setActivePostId(visiblePosts[0]?.id ?? '');
-    }, [activePostId, visiblePosts]);
+    }, [activePostId, isQueryStale, visiblePosts]);
 
     const currentGroupPage = useMemo(() => {
         if (layout === 'ledger' || !pagination.group) return null;
@@ -318,6 +467,8 @@ export default function PostArchiveView({
     }, [layout, pagination.group, visibleSeriesGroups, visibleYearGroups]);
 
     useEffect(() => {
+        // Do not clamp a history destination using the previous query's page/group counts.
+        if (isQueryStale) return;
         const groupExists =
             layout !== 'ledger' &&
             Boolean(pagination.group) &&
@@ -349,6 +500,7 @@ export default function PostArchiveView({
         archiveState,
         currentGroupPage,
         currentPage,
+        isQueryStale,
         layout,
         pagination.group,
         pagination.groupPage,
@@ -463,7 +615,26 @@ export default function PostArchiveView({
     const countLabel = (count: number) => t('articleCount').replace('{count}', String(count));
 
     return (
-        <MotionConfig reducedMotion="user">
+        <>
+            {headerPortalHost &&
+                isListVisible &&
+                createPortal(
+                    <PostArchiveNavbar
+                        locale={locale}
+                        categories={facets.categories}
+                        initialLayout={layout}
+                        initialCategory={filters.category}
+                    />,
+                    headerPortalHost
+                )}
+
+            {searchPortalHost &&
+                isListVisible &&
+                createPortal(
+                    <PostArchiveSearch locale={locale} initialQuery={filters.query} />,
+                    searchPortalHost
+                )}
+
             {paginationPortalHost &&
                 isListVisible &&
                 createPortal(
@@ -489,74 +660,68 @@ export default function PostArchiveView({
                 <div className="flex min-h-0 min-w-0 flex-1 items-center overflow-x-hidden px-2 sm:px-4 md:px-6">
                     <div className="mx-auto flex h-[var(--post-view-content-height)] min-h-0 w-full max-w-[var(--site-wide-content)] min-w-0 flex-col overflow-x-hidden">
                         <div className="relative min-h-0 min-w-0 flex-1 overflow-x-hidden">
-                            <AnimatePresence initial={false} mode="sync" custom={layoutDirection}>
-                                <motion.div
-                                    key={layout}
-                                    custom={layoutDirection}
-                                    variants={ARCHIVE_PANEL_VARIANTS}
-                                    initial="enter"
-                                    animate="visible"
-                                    exit="exit"
-                                    data-archive-motion-panel={layout}
-                                    className="absolute inset-0 h-full min-h-0 w-full"
-                                >
-                                    {filtered.length === 0 ? (
-                                        <p className="text-muted-foreground flex h-full items-center justify-center rounded-2xl border border-[var(--page-surface-border)] bg-[var(--page-surface-bg)] px-5 text-center text-sm shadow-[0_12px_34px_var(--page-surface-shadow)]">
-                                            {t('empty')}
-                                        </p>
-                                    ) : layout === 'ledger' ? (
-                                        <LedgerView
-                                            groups={ledgerGroups}
-                                            activePost={activePost}
-                                            onActivate={setActivePostId}
-                                            countLabel={countLabel}
-                                            totalCount={filtered.length}
-                                            locale={locale}
-                                        />
-                                    ) : (
-                                        <ArchiveRail
-                                            activePost={activePost}
-                                            locale={locale}
-                                            desktopPreviewOnly={layout === 'series'}
-                                            {...(activeGroupPage
-                                                ? {
-                                                      activeGroupKey: activeGroupPage.key,
-                                                      activeGroupPage: activeGroupPage.page,
-                                                  }
-                                                : {})}
-                                        >
-                                            {layout === 'series' ? (
-                                                <SeriesLibrary
-                                                    groups={visibleSeriesGroups}
-                                                    selectedGroupKey={pagination.group}
-                                                    activePost={activePost}
-                                                    onActivate={setActivePostId}
-                                                    onSelectGroup={selectSeriesGroup}
-                                                    countLabel={countLabel}
-                                                    previousLabel={t('prevPage')}
-                                                    nextLabel={t('nextPage')}
-                                                    onGroupPage={changeGroupPage}
-                                                    locale={locale}
-                                                />
-                                            ) : (
-                                                <YearColumns
-                                                    groups={visibleYearGroups}
-                                                    activePost={activePost}
-                                                    onActivate={setActivePostId}
-                                                    countLabel={countLabel}
-                                                    previousLabel={t('prevPage')}
-                                                    nextLabel={t('nextPage')}
-                                                    onGroupPage={changeGroupPage}
-                                                />
-                                            )}
-                                        </ArchiveRail>
-                                    )}
-                                </motion.div>
-                            </AnimatePresence>
+                            <div
+                                key={layout}
+                                data-archive-motion-panel={layout}
+                                data-archive-direction={layoutDirection < 0 ? 'back' : 'forward'}
+                                className="archive-layout-enter absolute inset-0 h-full min-h-0 w-full"
+                            >
+                                {filtered.length === 0 ? (
+                                    <p className="text-muted-foreground flex h-full items-center justify-center rounded-2xl border border-[var(--page-surface-border)] bg-[var(--page-surface-bg)] px-5 text-center text-sm shadow-[0_12px_34px_var(--page-surface-shadow)]">
+                                        {t('empty')}
+                                    </p>
+                                ) : layout === 'ledger' ? (
+                                    <LedgerView
+                                        groups={ledgerGroups}
+                                        activePost={activePost}
+                                        onActivate={setActivePostId}
+                                        countLabel={countLabel}
+                                        totalCount={filtered.length}
+                                        locale={locale}
+                                    />
+                                ) : (
+                                    <ArchiveRail
+                                        activePost={activePost}
+                                        locale={locale}
+                                        desktopPreviewOnly={layout === 'series'}
+                                        {...(activeGroupPage
+                                            ? {
+                                                  activeGroupKey: activeGroupPage.key,
+                                                  activeGroupPage: activeGroupPage.page,
+                                              }
+                                            : {})}
+                                    >
+                                        {layout === 'series' ? (
+                                            <SeriesLibrary
+                                                groups={visibleSeriesGroups}
+                                                selectedGroupKey={pagination.group}
+                                                activePost={activePost}
+                                                onActivate={setActivePostId}
+                                                onSelectGroup={selectSeriesGroup}
+                                                countLabel={countLabel}
+                                                previousLabel={t('prevPage')}
+                                                nextLabel={t('nextPage')}
+                                                onGroupPage={changeGroupPage}
+                                                locale={locale}
+                                            />
+                                        ) : (
+                                            <YearColumns
+                                                groups={visibleYearGroups}
+                                                activePost={activePost}
+                                                onActivate={setActivePostId}
+                                                countLabel={countLabel}
+                                                previousLabel={t('prevPage')}
+                                                nextLabel={t('nextPage')}
+                                                onGroupPage={changeGroupPage}
+                                            />
+                                        )}
+                                    </ArchiveRail>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </MotionConfig>
+        </>
     );
 }

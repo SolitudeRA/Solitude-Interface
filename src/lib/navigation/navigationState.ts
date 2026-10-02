@@ -83,6 +83,10 @@ export function readPostViewScroll(storage?: StorageReader): number | null {
     return Number.isFinite(scrollLeft) ? Math.max(scrollLeft, 0) : null;
 }
 
+export function clearPostViewScroll(): void {
+    withSessionStorage(undefined, (storage) => storage.removeItem(POST_VIEW_SCROLL_KEY));
+}
+
 function normalizeScrollValue(value: unknown): number {
     return typeof value === 'number' && Number.isFinite(value) ? Math.max(value, 0) : 0;
 }

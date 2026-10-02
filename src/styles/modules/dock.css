@@ -20,6 +20,43 @@
             inset 0 -1px 1px oklch(0 0 0 / 0.05);
     }
 
+    /* Avoid recompositing a live backdrop while the gallery is moving or a route snapshot is
+       being prepared. Mixing with the opaque page color preserves the glass contrast. */
+    :is(html[data-dock-navigation-pending='true'], html[data-post-view-scrolling='true'])
+        .dock-nav {
+        background: color-mix(in oklch, var(--dock-nav-bg) 88%, var(--background));
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    /* Drop decorative compositor layers while input or route work is in flight. */
+    :is(html[data-dock-navigation-pending='true'], html[data-post-view-scrolling='true'])
+        .dock-nav::before,
+    :is(html[data-dock-navigation-pending='true'], html[data-post-view-scrolling='true'])
+        .dock-nav::after,
+    :is(html[data-dock-navigation-pending='true'], html[data-post-view-scrolling='true'])
+        .dock-nav
+        :is(
+            .dock-nav-item,
+            .dock-nav-item-left,
+            .dock-nav-item-right,
+            .dock-nav-item-right-md,
+            .dock-nav-item-right-lg
+        )::before,
+    :is(html[data-dock-navigation-pending='true'], html[data-post-view-scrolling='true'])
+        .dock-nav
+        :is(
+            .dock-nav-item,
+            .dock-nav-item-left,
+            .dock-nav-item-right,
+            .dock-nav-item-right-md,
+            .dock-nav-item-right-lg
+        )::after {
+        opacity: 0;
+        filter: none;
+        transition: none;
+    }
+
     /* 顶部光泽渐变 - 玻璃高光效果 + 彩虹光晕 */
     .dock-nav::before {
         content: '';
@@ -732,6 +769,14 @@
         @apply scale-110;
     }
 
+    :is(html[data-dock-navigation-pending='true'], html[data-post-view-scrolling='true'])
+        .dock-social-inline {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        transform: none;
+        transition: none;
+    }
+
     [data-dock-root].dock-reader {
         min-height: 6.75vh;
         transition:
@@ -777,6 +822,25 @@
         background: var(--dock-menu-bg);
         box-shadow: 0 25px 50px -12px var(--dock-menu-shadow);
         @apply rounded-2xl backdrop-blur-md;
+    }
+
+    html[data-dock-navigation-pending='true'] :is(.dock-overlay, .dock-menu) {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        transition: none !important;
+    }
+
+    html[data-dock-navigation-pending='true']
+        [data-dock-menu-root]
+        :is(
+            [data-dock-nav-overlay],
+            [data-dock-social-overlay],
+            [data-dock-nav-panel],
+            [data-dock-social-panel]
+        ) {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition: none !important;
     }
 
     /* ===== 菜单项 ===== */

@@ -114,7 +114,7 @@ For the architecture, code reference, and testing guide, see **[DEVELOPMENT.md](
 
 ## Tech Stack & Architecture
 
-Astro 5 (SSG) · React 19 islands · Jotai · Tailwind v4 · Ghost CMS (headless) · shiki · motion · TypeScript (strict).
+Astro 5 (SSG) · React 19 islands · Tailwind v4 · Ghost CMS (headless) · shiki · motion · TypeScript (strict).
 
 Data flows in one direction: **Ghost → typed client → adapter → cached posts → pages (SSG) → presentational components**. The full picture — project structure, the tag / i18n systems, and the testing strategy — lives in **[DEVELOPMENT.md](docs/DEVELOPMENT.md)**.
 

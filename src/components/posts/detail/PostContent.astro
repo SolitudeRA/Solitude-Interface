@@ -2,6 +2,7 @@
 import PostHeader from './PostHeader.astro';
 import ArticleReadingTools from './ArticleReadingTools.astro';
 import ResponsiveImage from '@components/common/ResponsiveImage.astro';
+import '@styles/modules/article/index.css';
 import type { PostTag } from '@api/ghost/types';
 import { sanitizeHtml, containsSuspiciousContent } from '@api/utils/sanitize';
 import { highlightCodeBlocks } from '@api/utils/codeHighlight';
@@ -148,9 +149,9 @@ const articleHtml = prepareArticleHtml(highlightedHtml, copy.code, copy.tableReg
                         <ResponsiveImage
                             src={featureImageUrl}
                             alt=""
-                            widths={[480, 768, 1200, 1600, 2400]}
+                            widths={[480, 768, 960, 1200, 1440, 1600, 1920, 2400]}
                             sizes="(min-width: 1280px) 58vw, 100vw"
-                            quality={100}
+                            quality={84}
                             priority
                             critical
                             progressive

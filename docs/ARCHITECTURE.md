@@ -66,8 +66,11 @@
 ### 客户端交互流程
 
 ```
-常规岛组件交互
-用户交互 → React 组件 → Jotai Store / 组件局部状态 → UI 更新
+轻量页面交互
+用户交互 → Astro SSR DOM → vanilla controller → DOM dataset / 自定义事件 → UI 更新
+
+复杂岛组件交互
+用户交互 → 按需水合的 React island → 组件局部状态 / URL 状态 → UI 更新
 
 跨页面导航
 用户点击链接 → Astro ClientRouter → 导航动效内核 → 文档交换
@@ -76,10 +79,10 @@
                                       └─ 返回位置恢复
 ```
 
-> 注：主题切换不经 Jotai，由 `ThemeSwitch.astro` 的内联脚本直接读写 `localStorage['theme']`
+> 注：主题切换由 `ThemeSwitch.astro` 的内联脚本直接读写 `localStorage['theme']`
 > 并派发 `themeChanged` 事件（在绘制前设置 `<html>` class，避免 FOUC）。
 >
-> 导航状态也不进入 Jotai。可分享、可回退的状态保存在 URL；只服务于一次详情往返的文章路径、
+> 可分享、可回退的导航状态保存在 URL；只服务于一次详情往返的文章路径、
 > 返回 URL 和滚动位置保存在 `sessionStorage`。
 
 ---
@@ -212,48 +215,32 @@ components/
 | -------------- | --------------- | ------------------------------------------ |
 | 静态布局       | `.astro`        | Navbar, Footer, PageHero                   |
 | 轻量 DOM 交互  | `.astro`        | ThemeSwitch, 菜单、RSS、文章目录与代码复制 |
-| 有状态复杂交互 | `.tsx`          | Carousel, ScrollContainer, ArchiveView     |
+| 有状态复杂交互 | `.tsx`          | ArchiveView 等独立、按需水合的复杂界面     |
 | 混合组件       | `.astro` + slot | 布局包裹交互内容                           |
 
-React island 只用于需要持续组件状态、复杂组合或跨组件状态同步的交互。能通过事件委托、DOM 属性和
-Astro 生命周期完成的全局壳层与文章增强功能保持为 `.astro` 原生脚本，避免静态路由仅为小控件加载 React
-运行时。
+React island 只用于需要持续组件状态或复杂组合的交互，并按可见性或实际使用时机延迟水合。能通过事件
+委托、DOM 属性和 Astro 生命周期完成的全局壳层、轮播与文章增强功能保持为 `.astro` SSR + vanilla
+controller，避免静态路由仅为小控件加载 React 运行时。
 
 ---
 
-### 4. 状态管理 (`src/stores/`)
+### 4. 客户端状态与交互
 
-#### Jotai Atoms
+默认文章画廊不依赖全局 React store。`PostViewGalleryShell.astro` 输出完整 SSR 结构，
+`postViewGalleryController.ts` 用局部闭包、DOM dataset 和自定义事件维护滚动、时间线与视图状态；
+布局测量按容器缓存，并由 `ResizeObserver` 失效。Archive 是按可见性水合的独立 React island，
+仅在切到「全部」后通过 URL 状态与事件同步筛选和分页。
 
-```typescript
-// 注意：主题切换不经 Jotai，由 ThemeSwitch.astro 的内联脚本直接读写
-// localStorage['theme'] 并派发 themeChanged 事件（避免 FOUC）。
-
-// src/stores/postViewAtom.ts
-// 文章视图状态
-export const postViewAtom = atom<PostViewState>({
-    totalPosts: 0,
-    visibleIndices: [],
-    activeIndex: 0,
-    postDates: [],
-});
-
-// 跨组件通信: 时间线 → 滚动容器
-export const scrollToPostAtom = atom<number | null>(null);
-```
-
-#### 状态流向
+#### Gallery 状态流向
 
 ```
-用户点击时间线节点
+用户滚轮 / 点击时间线节点
     ↓
-DockTimelineMain.tsx
-    ↓ setScrollToPostRequest(index)
-scrollToPostAtom 更新
-    ↓
-PostViewScrollContainer.tsx (监听)
-    ↓ scrollToPost(index)
-滚动到对应文章
+PostViewGalleryShell.astro (SSR DOM)
+    ↓ progressive enhancement
+postViewGalleryController.ts
+    ↓ cached metrics + requestAnimationFrame
+横向滚动 / timeline transform / data-post-view-scrolling
 ```
 
 ---
@@ -264,7 +251,7 @@ PostViewScrollContainer.tsx (监听)
 
 ```
 styles/
-├── index.css              # 入口 (导入所有样式)
+├── index.css              # 全局入口（Tailwind、主题、导航壳层与工具类）
 ├── tailwind-settings.css  # Tailwind 配置
 ├── theme.css              # 主题变量 (CSS 自定义属性)
 ├── components/
@@ -276,6 +263,9 @@ styles/
 └── utilities/
     └── text-utilities.css
 ```
+
+文章正文、媒体卡片、文章画廊时间线和 Archive island 的样式由对应组件或路由按需导入，不进入所有页面
+共享的全局样式入口。
 
 #### 主题系统
 
@@ -418,7 +408,10 @@ DOM、History API、sessionStorage 与 Astro 生命周期事件验证；路由�
 - 远程图片域名从 `.env` 和运行时环境共同加载到 Astro 白名单，避免构建阶段因配置读取时机错误而
   退化成原图直出
 - 内容封面统一通过 `ResponsiveImage.astro` 生成响应式 WebP；`widths` 和 `sizes` 必须匹配真实布局，
-  首屏关键图使用 eager/high，其余图片保持 lazy/async
+  关键预览使用 eager，其余阶段由渐进式调度器控制，避免原生 lazy 再次延迟已获准加载的图片
+- 精选卡片先加载低清预览，再按实际视口提升中清／高清层；可见卡片不等待装饰背景的升级门限，
+  仅接近视口的卡片仍保守预热。解码队列受并发限制，待执行的可见任务优先；滚动安静后才提交高清层
+- 高清层淡入完成后隐藏低清／中清层；页面交换后重新观察未完成的卡片，旧页面节点不得继续激活资源
 - 无法由 Astro 优化的格式保留原生 `img` 回退，不能因此阻断页面构建
 
 ---

@@ -118,4 +118,34 @@ describe('dock navigation guard', () => {
         expect(contactLink!.dataset.dockNavigationPending).toBeUndefined();
         expect(contactLink!.hasAttribute('aria-busy')).toBe(false);
     });
+
+    it('does not let an aborted earlier navigation clear a repeated click on the same route', () => {
+        document.body.innerHTML = '<a data-dock-route href="/zh/about">About</a>';
+        const link = document.querySelector<HTMLAnchorElement>('a')!;
+        const firstNavigation = new AbortController();
+        const secondNavigation = new AbortController();
+        const dispatchPreparation = (signal: AbortSignal) => {
+            const event = new Event('astro:before-preparation');
+            Object.defineProperty(event, 'signal', { value: signal });
+            document.dispatchEvent(event);
+        };
+
+        link.addEventListener('click', (event) => event.preventDefault());
+        link.dispatchEvent(new MouseEvent('click', { bubbles: true, button: 0, cancelable: true }));
+        dispatchPreparation(firstNavigation.signal);
+        link.dispatchEvent(new MouseEvent('click', { bubbles: true, button: 0, cancelable: true }));
+        dispatchPreparation(secondNavigation.signal);
+
+        firstNavigation.abort();
+
+        expect(document.documentElement.dataset.dockNavigationPending).toBe('true');
+        expect(link.dataset.dockNavigationPending).toBe('true');
+        expect(link.getAttribute('aria-busy')).toBe('true');
+
+        secondNavigation.abort();
+
+        expect(document.documentElement.dataset.dockNavigationPending).toBeUndefined();
+        expect(link.dataset.dockNavigationPending).toBeUndefined();
+        expect(link.hasAttribute('aria-busy')).toBe(false);
+    });
 });

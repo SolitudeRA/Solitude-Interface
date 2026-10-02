@@ -2,6 +2,7 @@
 import type { Post } from '@api/ghost/types';
 import { DEFAULT_LOCALE, type Locale } from '@lib/i18n';
 import ResponsiveImage from '@components/common/ResponsiveImage.astro';
+import '@styles/modules/media-card-protocol.css';
 
 interface Props {
     post: Post;
@@ -99,9 +100,10 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
                 src={featureImageUrl}
                 alt=""
                 widths={[320, 480, 640, 960, 1280]}
-                sizes="(max-width: 640px) 82vw, (min-width: 2560px) 505px, (min-width: 1920px) 428px, 394px"
-                quality={100}
+                sizes="(pointer: coarse) 320px, (pointer: fine) and (max-height: 780px) 320px, (pointer: fine) and (min-width: 2560px) and (min-height: 1600px) 505px, (pointer: fine) and (min-width: 1920px) 428px, 394px"
+                quality={82}
                 priority={priority}
+                eagerLow
                 progressive
                 className="base-card-media base-card-image"
                 data-post-transition-media
@@ -232,9 +234,8 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
         height: 100%;
         width: 100%;
         object-fit: cover;
-        filter: var(--post-view-media-card-filter, saturate(1.05) contrast(0.98));
-        transform: scale(1.025) translate3d(0, 0, 0);
-        transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+        filter: none;
+        transform: none;
     }
 
     /* ResponsiveImage is a child Astro component, so the generated img intentionally does not
@@ -247,9 +248,8 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
         height: 100%;
         width: 100%;
         object-fit: cover;
-        filter: var(--post-view-media-card-filter, saturate(1.05) contrast(0.98));
-        transform: scale(1.025) translate3d(0, 0, 0);
-        transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+        filter: none;
+        transform: none;
     }
 
     .base-card-image-fallback {
@@ -278,28 +278,32 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
         background: var(--post-view-media-card-glow);
         content: '';
         opacity: 0;
-        transform: translate3d(0, 10px, 0);
+        transform: translateY(10px);
         transition:
             opacity 520ms ease,
             transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    :global(.post-card-wrapper:hover) .base-card-media,
-    :global(.post-card-wrapper:focus-visible) .base-card-media,
-    .base-card:hover .base-card-media {
-        transform: scale(1.04) translate3d(0, 0, 0);
-    }
+    @media (hover: hover) and (pointer: fine) {
+        .base-card-media,
+        :global(.base-card-image) {
+            transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
 
-    :global(.post-card-wrapper:hover .base-card-image),
-    :global(.post-card-wrapper:focus-visible .base-card-image),
-    :global(.base-card:hover .base-card-image) {
-        transform: scale(1.04) translate3d(0, 0, 0);
+        :global(.post-card-wrapper:hover) .base-card-media,
+        :global(.post-card-wrapper:focus-visible) .base-card-media,
+        .base-card:hover .base-card-media,
+        :global(.post-card-wrapper:hover .base-card-image),
+        :global(.post-card-wrapper:focus-visible .base-card-image),
+        :global(.base-card:hover .base-card-image) {
+            transform: scale(1.025);
+        }
     }
 
     :global(.post-view-scroll-container[data-post-view-scrolling='true'])
         .post-card-wrapper
         .base-card-media {
-        transform: scale(1.025) translate3d(0, 0, 0);
+        transform: none;
         transition: none;
     }
 
@@ -308,7 +312,7 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
             .post-card-wrapper
             .base-card-image
     ) {
-        transform: scale(1.025) translate3d(0, 0, 0);
+        transform: none;
         transition: none;
     }
 
@@ -328,7 +332,7 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
         .post-card-wrapper
         .base-card-shade::after {
         opacity: 0;
-        transform: translate3d(0, 10px, 0);
+        transform: translateY(10px);
         transition: none;
     }
 
@@ -336,7 +340,7 @@ const generalTags = (post.post_general_tags ?? []).filter(isVisibleTag);
     :global(.post-card-wrapper:focus-visible) .base-card-shade::after,
     .base-card:hover .base-card-shade::after {
         opacity: 1;
-        transform: translate3d(0, 0, 0);
+        transform: translateY(0);
     }
 
     .corner-grid {

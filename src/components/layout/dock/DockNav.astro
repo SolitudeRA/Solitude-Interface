@@ -107,30 +107,5 @@ const getPrefetchStrategy = (href: string) =>
 <script>
     import { initDockNavigationGuard } from '@lib/navigation/dockNavigationGuard';
 
-    // 方向感知下划线效果
-    function initDirectionalUnderline() {
-        const items = document.querySelectorAll('.dock-nav-item');
-
-        items.forEach((item) => {
-            const link = item.querySelector('.dock-nav-link');
-            if (!link) return;
-
-            item.addEventListener('mouseenter', (e) => {
-                const rect = item.getBoundingClientRect();
-                const mouseX = (e as MouseEvent).clientX;
-                const centerX = rect.left + rect.width / 2;
-
-                // 根据鼠标进入位置判断方向
-                const direction = mouseX < centerX ? 'left' : 'right';
-                link.setAttribute('data-direction', direction);
-            });
-        });
-    }
-
-    // 页面加载时初始化
-    initDirectionalUnderline();
     initDockNavigationGuard();
-
-    // 支持 Astro 视图过渡
-    document.addEventListener('astro:after-swap', initDirectionalUnderline);
 </script>

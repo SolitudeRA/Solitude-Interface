@@ -81,6 +81,60 @@ export interface TimelineLayout {
     translateX: number;
 }
 
+export interface CompositedMarkerLayout {
+    /** 固定宽度 marker 的横向缩放；只触发合成，不改变 flex 几何。 */
+    scaleX: number;
+    opacity: number;
+    inWindow: boolean;
+    isActive: boolean;
+}
+
+export interface CompositedTimelineLayout {
+    markers: CompositedMarkerLayout[];
+    /** 固定 slot 轨道的位移；消费方通过 translate3d 应用。 */
+    translateX: number;
+}
+
+/**
+ * 生成不修改 width/left 的时间线布局。
+ * 每个 marker 始终占据 barW + gap 的固定 slot，视觉宽度只用 scaleX 表达；
+ * 轨道以 left:50% 为原点，因此位移需要把活动 slot 的中心拉回原点。
+ */
+export function computeCompositedTimelineLayout(
+    total: number,
+    activeIndex: number,
+    visibleIndices: number[],
+    p: GeometryParams
+): CompositedTimelineLayout {
+    if (total <= 0) return { markers: [], translateX: 0 };
+
+    const clampedActiveIndex = Math.min(Math.max(activeIndex, 0), total - 1);
+    const r = p.K + p.J;
+    const visible = new Set(visibleIndices);
+    const markers: CompositedMarkerLayout[] = [];
+
+    for (let index = 0; index < total; index += 1) {
+        const distance = Math.abs(index - clampedActiveIndex);
+        const inWindow = distance <= r;
+        markers.push({
+            scaleX: markerWidth(distance, p) / p.barW,
+            opacity: markerOpacity(distance, {
+                visible: visible.has(index),
+                K: p.K,
+                J: p.J,
+            }),
+            inWindow,
+            isActive: index === clampedActiveIndex,
+        });
+    }
+
+    const slotWidth = p.barW + p.gap;
+    return {
+        markers,
+        translateX: -(clampedActiveIndex * slotWidth + slotWidth / 2),
+    };
+}
+
 /**
  * 滚动进度 [0,1]:scrollLeft / (scrollWidth − clientWidth),夹紧到 [0,1]。
  * 内容未超出视口(不可滚)时返回 0。用于底边总览进度条的填充比例。

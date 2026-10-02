@@ -125,7 +125,7 @@ html[data-media-card-protocol='v2']
         [data-media-card-media]
         > :is(.responsive-image-frame, img, div) {
         transform: none;
-        scale: 1.02;
+        scale: 1;
     }
 
     html[data-media-card-protocol='v2']
@@ -141,7 +141,8 @@ html[data-media-card-protocol='v2']
     html[data-media-card-protocol='v2']
         .post-card-wrapper:hover
         :is(.base-card-media, .base-card-image) {
-        transform: scale(1.025) translate3d(0, 0, 0);
+        transform: none;
+        scale: 1;
     }
 
     html[data-media-card-protocol='v2'] .showcase-card:active,
@@ -172,7 +173,9 @@ html[data-media-card-protocol='v2']
     }
 
     html[data-media-card-protocol='v2'] .showcase-card,
+    html[data-media-card-protocol='v2'] .showcase-card:is(:hover, :active, :focus-visible),
     html[data-media-card-protocol='v2'] .post-card-wrapper,
+    html[data-media-card-protocol='v2'] .post-card-wrapper:is(:hover, :active, :focus-visible),
     html[data-media-card-protocol='v2'] [data-media-card='archive-preview'],
     html[data-media-card-protocol='v2'] [data-archive-series-entry] {
         transform: none;
@@ -183,9 +186,13 @@ html[data-media-card-protocol='v2']
     html[data-media-card-protocol='v2']
         .showcase-card
         [data-media-card-media]
+        > :is(.responsive-image-frame, img, div),
+    html[data-media-card-protocol='v2']
+        .showcase-card:is(:hover, :focus-visible)
+        [data-media-card-media]
         > :is(.responsive-image-frame, img, div) {
         transform: none;
-        scale: 1.02;
+        scale: 1;
     }
 
     html[data-media-card-protocol='v2']
@@ -196,7 +203,11 @@ html[data-media-card-protocol='v2']
         scale: 1;
     }
 
-    html[data-media-card-protocol='v2'] :is(.base-card-media, .base-card-image) {
-        transform: scale(1.025) translate3d(0, 0, 0);
+    html[data-media-card-protocol='v2'] :is(.base-card-media, .base-card-image),
+    html[data-media-card-protocol='v2']
+        .post-card-wrapper:is(:hover, :focus-within)
+        :is(.base-card-media, .base-card-image) {
+        transform: none;
+        scale: 1;
     }
 }

@@ -67,7 +67,7 @@ const exploreMoreText = getUIText('home', 'exploreMore', locale);
 
     <div
         data-home-showcase-scroll
-        class="scrollbar-none flex touch-pan-x gap-4 overflow-x-auto scroll-smooth px-4 py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        class="scrollbar-none flex touch-pan-x gap-4 overflow-x-auto px-4 py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         role="list"
         aria-label="推荐文章列表"
     >
@@ -180,6 +180,12 @@ const exploreMoreText = getUIText('home', 'exploreMore', locale);
 </style>
 
 <script>
+    import {
+        classifyHorizontalWheel,
+        registerPageWheelIntent,
+        type PageWheelBurstState,
+    } from '@components/common/lib/horizontalWheel';
+
     interface HomeShowcaseController {
         initialize: () => void;
     }
@@ -201,7 +207,18 @@ const exploreMoreText = getUIText('home', 'exploreMore', locale);
             if (!container || !previous || !next) return;
 
             let frame: number | null = null;
+            let wheelFrame: number | null = null;
+            let pendingPageDirection: -1 | 0 | 1 = 0;
+            let wheelBurst: PageWheelBurstState | null = null;
+            let cardStride = 320;
             const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+            const measureCardStride = () => {
+                const card = container.querySelector<HTMLElement>('.showcase-card');
+                if (!card) return;
+                const styles = window.getComputedStyle(container);
+                const gap = Number.parseFloat(styles.columnGap || styles.gap) || 16;
+                cardStride = card.getBoundingClientRect().width + gap;
+            };
             const update = () => {
                 frame = null;
                 const maxScroll = Math.max(container.scrollWidth - container.clientWidth, 0);
@@ -219,30 +236,40 @@ const exploreMoreText = getUIText('home', 'exploreMore', locale);
                 frame = window.requestAnimationFrame(update);
             };
             const scrollByCard = (direction: -1 | 1) => {
-                const card = container.querySelector<HTMLElement>('.showcase-card');
-                const distance = (card?.getBoundingClientRect().width ?? 304) + 16;
                 container.scrollBy({
-                    left: direction * distance,
+                    left: direction * cardStride,
                     behavior: reducedMotion.matches ? 'auto' : 'smooth',
                 });
             };
+            const flushWheel = () => {
+                wheelFrame = null;
+                const pageDirection = pendingPageDirection;
+                pendingPageDirection = 0;
+
+                if (pageDirection) scrollByCard(pageDirection);
+            };
             const handleWheel = (event: WheelEvent) => {
-                const delta =
-                    Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-                if (!delta) return;
+                const intent = classifyHorizontalWheel({
+                    deltaX: event.deltaX,
+                    deltaY: event.deltaY,
+                });
+                if (intent.kind === 'none' || intent.kind === 'native') return;
+
                 const maxScroll = container.scrollWidth - container.clientWidth;
-                const atStart = container.scrollLeft <= 0 && delta < 0;
-                const atEnd = container.scrollLeft >= maxScroll - 1 && delta > 0;
+                const atStart = container.scrollLeft <= 0 && intent.direction < 0;
+                const atEnd = container.scrollLeft >= maxScroll - 1 && intent.direction > 0;
                 if (maxScroll <= 0 || atStart || atEnd) return;
 
                 event.preventDefault();
-                const horizontal = Math.abs(event.deltaX) > Math.abs(event.deltaY);
-                const card = container.querySelector<HTMLElement>('.showcase-card');
-                const distance = (card?.getBoundingClientRect().width ?? 304) + 16;
-                container.scrollBy({
-                    left: horizontal ? event.deltaX : Math.sign(delta) * distance,
-                    behavior: horizontal || reducedMotion.matches ? 'auto' : 'smooth',
-                });
+                const burst = registerPageWheelIntent(
+                    wheelBurst,
+                    intent.direction,
+                    performance.now()
+                );
+                wheelBurst = burst.state;
+                if (!burst.shouldPage) return;
+                pendingPageDirection = intent.direction;
+                if (wheelFrame === null) wheelFrame = window.requestAnimationFrame(flushWheel);
             };
             const handlePointerEnter = () => {
                 root.dataset.hovered = 'true';
@@ -253,14 +280,20 @@ const exploreMoreText = getUIText('home', 'exploreMore', locale);
             const handlePrevious = () => scrollByCard(-1);
             const handleNext = () => scrollByCard(1);
 
-            const resizeObserver = new ResizeObserver(scheduleUpdate);
+            const resizeObserver = new ResizeObserver(() => {
+                measureCardStride();
+                scheduleUpdate();
+            });
             resizeObserver.observe(container);
+            const firstCard = container.querySelector<HTMLElement>('.showcase-card');
+            if (firstCard) resizeObserver.observe(firstCard);
             container.addEventListener('scroll', scheduleUpdate, { passive: true });
             container.addEventListener('wheel', handleWheel, { passive: false });
             root.addEventListener('pointerenter', handlePointerEnter);
             root.addEventListener('pointerleave', handlePointerLeave);
             previous.addEventListener('click', handlePrevious);
             next.addEventListener('click', handleNext);
+            measureCardStride();
             update();
 
             cleanups.set(root, () => {
@@ -272,6 +305,7 @@ const exploreMoreText = getUIText('home', 'exploreMore', locale);
                 previous.removeEventListener('click', handlePrevious);
                 next.removeEventListener('click', handleNext);
                 if (frame !== null) window.cancelAnimationFrame(frame);
+                if (wheelFrame !== null) window.cancelAnimationFrame(wheelFrame);
             });
         };
 
